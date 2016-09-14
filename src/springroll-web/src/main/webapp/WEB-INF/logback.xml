@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds" debug="true">
+    <appender name="IM_DEBUG_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+        <file>/tmp/im_debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.directory}/im_debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>25MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS}[%thread] %-5level %L %-35logger{0}: %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{HH:mm:ss.SSS}[%thread] %-5level %-35logger{0}[%L]: %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.hibernate" level="ERROR"/>
+    <logger name="org.hibernate.SQL" level="ERROR"/>
+    <logger name="org.hibernate.type.EnumType" level="ERROR"/>
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="ERROR"/>
+    <logger name="com.springroll" level="DEBUG"/>
+
+    <logger name="org.apache.camel" level="WARN"/>
+    <logger name="org.springframework" level="WARN" />
+    <logger name="org.springframework.jms" level="WARN"/>
+    <logger name="org.springframework.transaction" level="WARN"/>
+    <logger name="org.springframework.web" level="WARN"/>
+    <logger name="org.apache.camel" level="WARN"/>
+    <logger name="com.atomikos" level="WARN"/>
+
+
+    <root level="WARN">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="IM_DEBUG_LOG"/>
+        <!--<appender-ref ref="EMAIL"/>-->
+    </root>
+</configuration>

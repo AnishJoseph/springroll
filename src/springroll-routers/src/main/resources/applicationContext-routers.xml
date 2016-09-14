@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:broker="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+        http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.5.0.xsd">
+
+    <broker:broker id="springrollBroker"  brokerName="SpringrollBroker" persistent="true" useJmx="false" start="true" useShutdownHook="false" startAsync="true">
+        <broker:transportConnectors>
+            <broker:transportConnector uri="${sr.activemq.server.url}" />
+        </broker:transportConnectors>
+        <broker:persistenceAdapter>
+            <broker:jdbcPersistenceAdapter dataSource="#jmsDataSource" />
+        </broker:persistenceAdapter>
+    </broker:broker>
+
+    <bean id="jmsDataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+        <property name="driverClassName" value="${sr.datasource.driverClassName}"/>
+        <property name="url" value="${sr.datasource.url}"/>
+        <property name="username" value="${sr.datasource.username}"/>
+        <property name="password" value="${sr.datasource.password}"/>
+        <property name="initialSize" value="${sr.activemq.pool.initialSize}" />
+        <property name="maxActive" value="${sr.activemq.pool.maxActive}" />
+        <property name="maxIdle" value="${sr.activemq.pool.maxIdle}" />
+        <property name="minIdle" value="${sr.activemq.pool.minIdle}" />
+        <property name="validationQuery" value="${sr.datasource.testquery}"/>
+        <property name="testWhileIdle" value="${sr.activemq.pool.testWhileIdle}"/>
+    </bean>
+
+
+    <camel:camelContext id="SpringrollCamelContext" depends-on="springrollBroker jms">
+        <camel:endpoint id="synchronousEndPoint" pattern="InOut" uri="direct:synchronousEndPoint" />
+        <camel:endpoint id="jmsEndPoint" pattern="InOnly" uri="jms:queue:asynchronousEndPoint"  />
+        <camel:endpoint id="deadLetterQueue" pattern="InOnly" uri="jms:queue:ActiveMQ.DLQ"  />
+        <camel:endpoint id="dynamicRouterEndPoint" pattern="InOnly" uri="direct:dynamicRouterEndPoint"/>
+        <camel:route>
+            <camel:from ref="synchronousEndPoint" />
+            <camel:onException>
+                <camel:exception>java.lang.Throwable</camel:exception>
+                <camel:redeliveryPolicy logRetryStackTrace="false" logStackTrace="false"/>
+            </camel:onException>
+            <camel:to uri="bean:startSynchFlow"/>
+            <camel:to uri="bean:eventCreator"/>
+        </camel:route>
+
+        <camel:route id="JMSEndPoint">
+            <camel:from ref="jmsEndPoint"/>
+            <camel:transacted />
+            <camel:to uri="bean:jmsEntryPoint"/>
+            <camel:to ref="dynamicRouterEndPoint" />
+        </camel:route>
+
+        <camel:route>
+            <camel:from ref="dynamicRouterEndPoint"/>
+            <camel:onException>
+                <camel:exception>java.lang.Throwable</camel:exception>
+                <camel:redeliveryPolicy logRetryStackTrace="false" logStackTrace="false"/>
+                <camel:to uri="bean:asynchSideExceptionHandler"/>
+            </camel:onException>
+            <camel:transacted />
+            <camel:dynamicRouter id="DynamicRouter">
+                <camel:method ref="dynamicRouter" method="route" />
+            </camel:dynamicRouter>
+        </camel:route>
+
+        <camel:route>
+            <camel:from ref="deadLetterQueue"/>
+            <camel:to uri="bean:deadLetterQueueHandler"/>
+        </camel:route>
+    </camel:camelContext>
+
+    <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQXAConnectionFactory">
+        <property name="brokerURL" value="${sr.activemq.client.url}" />
+        <property name="redeliveryPolicy" ref="redeliveryPolicy" />
+        <property name="prefetchPolicy" ref="prefetchPolicy" />
+        <property name="trustAllPackages" value="true" />
+    </bean>
+
+    <bean id="prefetchPolicy" class="org.apache.activemq.ActiveMQPrefetchPolicy">
+        <property name="all" value="0" />
+    </bean>
+
+    <bean id="redeliveryPolicy" class="org.apache.activemq.RedeliveryPolicy">
+        <property name="maximumRedeliveries" value="0"/>
+    </bean>
+
+    <bean id="pooledConnectionFactory" class="com.atomikos.jms.AtomikosConnectionFactoryBean" init-method="init" destroy-method="close">
+        <property name="uniqueResourceName" value="springrolljms" />
+        <property name="xaConnectionFactory" ref="jmsConnectionFactory" />
+        <property name="minPoolSize" value="10"/>
+        <property name="maxPoolSize" value="30"/>
+        <property name="borrowConnectionTimeout" value="600"/>
+    </bean>
+
+    <bean id="jmsConfig" class="org.apache.activemq.camel.component.ActiveMQConfiguration">
+        <property name="connectionFactory" ref="pooledConnectionFactory" />
+        <property name="maxConcurrentConsumers" value="30"/>
+        <property name="concurrentConsumers" value="1" />
+        <property name="transacted" value="true" />
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="cacheLevelName" value="CACHE_NONE"/>
+        <property name="errorHandlerLogStackTrace" value="false"/>
+    </bean>
+
+    <bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+        <property name="configuration" ref="jmsConfig" />
+    </bean>
+
+    <!--<bean class="com.springroll.router.DTOTypeBuilder" init-method="init" id="dtoTypeBuilder"/>-->
+</beans>

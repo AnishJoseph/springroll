@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.springrollexample</groupId>
+    <artifactId>springrollexample</artifactId>
+    <name>springrollexample</name>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <source.encoding>UTF-8</source.encoding>
+        <java.version>1.8</java.version>
+        <springroll.version>1.0.0</springroll.version>
+        <springrollexample.version>1.0.0-SNAPSHOT</springrollexample.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target></properties>
+
+    <modules>
+        <module>springrollexample-api-facade</module>
+        <module>springrollexample-web</module>
+        <module>springrollexample-orm</module>
+        <module>springrollexample-routers</module>
+    </modules>
+
+    <dependencyManagement>
+		<dependencies>
+            <dependency>
+                <groupId>com.springrollexample</groupId>
+                <artifactId>springrollexample-api-facade</artifactId>
+                <version>${springrollexample.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.springrollexample</groupId>
+                <artifactId>springrollexample-orm</artifactId>
+                <version>${springrollexample.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.springrollexample</groupId>
+                <artifactId>springrollexample-routers</artifactId>
+                <version>${springrollexample.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.springrollexample</groupId>
+                <artifactId>springrollexample-web</artifactId>
+                <version>${springrollexample.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.springroll</groupId>
+                <artifactId>springroll-web</artifactId>
+                <classifier>classes</classifier>
+                <version>${springroll.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <repositories>
+        <repository>
+            <id>EclipseLink Repo</id>
+            <url>http://download.eclipse.org/rt/eclipselink/maven.repo</url>
+            <name>EclipseLink Repo</name>
+        </repository>
+        <repository>
+            <id>lib</id>
+            <url>file:///Users/anishjoseph/.m2/repository/com</url>
+        </repository></repositories>
+</project>
