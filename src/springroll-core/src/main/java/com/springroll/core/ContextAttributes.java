@@ -1,13 +1,9 @@
 package com.springroll.core;
 
-import com.springroll.core.Principal;
-
-import java.math.BigDecimal;
-
 /**
  * Created by anishjoseph on 14/09/16.
  */
-public class AsynchSideContextAttributes {
+public class ContextAttributes {
     private Long jobId = null;
     private Long legId = null;
     private Principal principal;

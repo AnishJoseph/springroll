@@ -3,12 +3,10 @@ package com.springrollexample.router.test;
 import com.springroll.core.DTO;
 import com.springroll.router.NewTransaction;
 import com.springroll.router.SpringrollEndPoint;
-import com.springrollexample.core.IPrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
@@ -24,9 +22,6 @@ public class TestEndPoint extends SpringrollEndPoint {
 
     @PersistenceContext
     EntityManager entityManager;
-
-    @Resource(name = "userContext")
-    private IPrincipal principal;
 
     private void lockTest(TestDTO testDTO) {
         String tableName = "TestTableWithLocking";

@@ -8,14 +8,14 @@ import org.slf4j.LoggerFactory;
  */
 public class UserContextFactory {
     private static final Logger logger = LoggerFactory.getLogger(UserContextFactory.class);
-    private static final ThreadLocal<AsynchSideContextAttributes> threadScopeAttributesHolder = new InheritableThreadLocal<AsynchSideContextAttributes>();
+    private static final ThreadLocal<ContextAttributes> threadScopeAttributesHolder = new InheritableThreadLocal<ContextAttributes>();
 
     public static void on(IEvent event) {
         /* Called when the event comes from JMS - it will be in a new thread so set these attributes for the new thread */
         setUserContextInThreadScope(event.getPrincipal(), event.getJobId(), event.getLegId());
     }
     public static void setUserContextInThreadScope(Principal principal, Long jobId, Long legId){
-        AsynchSideContextAttributes scopeAttributes = new AsynchSideContextAttributes();
+        ContextAttributes scopeAttributes = new ContextAttributes();
         scopeAttributes.setPrincipal(principal);
         scopeAttributes.setJobId(jobId);
         scopeAttributes.setLegId(legId);

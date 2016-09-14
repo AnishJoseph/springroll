@@ -3,17 +3,4 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-    <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
-        <property name="scopes">
-            <map>
-                <entry key="springrollScope">
-                    <bean class="com.springroll.core.SpringrollScope"/>
-                </entry>
-            </map>
-        </property>
-    </bean>
-    <bean class="${sr.principal.class}" id="userContext" scope="springrollScope">
-        <aop:scoped-proxy proxy-target-class="false" />
-    </bean>
-
 </beans>
