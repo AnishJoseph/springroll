@@ -48,7 +48,7 @@
         <camel:route id="JMSEndPoint">
             <camel:from ref="jmsEndPoint"/>
             <camel:transacted />
-            <camel:to uri="bean:jmsEntryPoint"/>
+            <camel:to uri="class:com.springroll.router.JmsEntryPoint"/>
             <camel:to ref="dynamicRouterEndPoint" />
         </camel:route>
 
@@ -59,7 +59,6 @@
                 <camel:redeliveryPolicy logRetryStackTrace="false" logStackTrace="false"/>
                 <camel:to uri="bean:asynchSideExceptionHandler"/>
             </camel:onException>
-            <camel:transacted />
             <camel:dynamicRouter id="DynamicRouter">
                 <camel:method ref="dynamicRouter" method="route" />
             </camel:dynamicRouter>

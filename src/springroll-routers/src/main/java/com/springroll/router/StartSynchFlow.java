@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class StartSynchFlow {
-    public Object on(Job job){
-        return job;
+    public JobMeta on(JobMeta jobMeta){
+        return jobMeta;
     }
 }

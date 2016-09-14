@@ -20,7 +20,7 @@ import java.util.List;
 @Entity
 public class Job extends AbstractEntity {
 
-    private transient List<DTO> payloads;
+    private transient List<? extends DTO> payloads;
 
 
     public Job(){
@@ -54,13 +54,13 @@ public class Job extends AbstractEntity {
         this.endTime = endTime;
     }
 
-    public List<DTO> getPayloads() {
+    public List<? extends DTO> getPayloads() {
         if (this.payloads == null)
-            this.payloads = (List<DTO>) SerializationHelper.deserialize(serializedPayloads);
+            this.payloads = (List<? extends DTO>) SerializationHelper.deserialize(serializedPayloads);
         return payloads;
     }
 
-    public void setPayloads(List<DTO> payloads) {
+    public void setPayloads(List<? extends DTO> payloads) {
         this.payloads = payloads;
         serializedPayloads = SerializationHelper.serialize((Serializable) payloads);
     }

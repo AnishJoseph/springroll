@@ -1,5 +1,6 @@
 package com.springrollexample.router.test;
 
+import com.springroll.core.DTO;
 import com.springroll.router.NewTransaction;
 import com.springroll.router.SpringrollEndPoint;
 import org.slf4j.Logger;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -98,6 +101,11 @@ public class TestEndPoint extends SpringrollEndPoint {
     }
     public void on(TE1_7 event){
         checkAndRunTest(event);
+        SynchToAsynchDTO dto = new SynchToAsynchDTO();
+        List<DTO> payloads = new ArrayList<>(1);
+        payloads.add(dto);
+        routeToSynchronousSide(payloads);
+        System.out.println("Othrside odne");
     }
     public void on(TestRootEvent event) {
         int testCase = event.getPayload().getTestCase();
@@ -193,6 +201,9 @@ public class TestEndPoint extends SpringrollEndPoint {
     }
     public void on(TE2_4 event){
         checkAndRunTest(event);
+    }
+    public void on(TE_SynchFromAsynchSide event){
+        System.out.println(event);
     }
     public void on(TE3_1 event){
         checkAndRunTest(event);

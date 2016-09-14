@@ -1,13 +1,13 @@
 package com.springroll.router;
 
 import com.springroll.core.DTO;
-import com.springroll.orm.entities.Job;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.ProducerTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,19 +16,22 @@ import java.util.List;
 @Component
 public class SynchEndPoint {
 
-//    private static final Logger logger = LoggerFactory.getLogger(SynchronousEndpoint.class);
+    private static final Logger logger = LoggerFactory.getLogger(SynchEndPoint.class);
 
     @EndpointInject(ref = "synchronousEndPoint")
     private ProducerTemplate synchronousEndPoint;
 
-    public Long route(DTO payload){
-        List<DTO> payloads = new ArrayList<DTO>(1);
-        payloads.add(payload);
-        return route(payloads);
-    }
     public Long route(List<DTO> payloads){
-        Job job = new Job();
-        job.setPayloads(payloads);
-        return (Long) synchronousEndPoint.sendBody(synchronousEndPoint.getDefaultEndpoint(), ExchangePattern.InOut, job);
+        JobMeta jobMeta = new JobMeta(payloads, null, null, null, true, true);
+        return (Long) synchronousEndPoint.sendBody(synchronousEndPoint.getDefaultEndpoint(), ExchangePattern.InOut, jobMeta);
     }
+    public Long routeSynchronous(List<DTO> payloads){
+        JobMeta jobMeta = new JobMeta(payloads, null, null, null, true, false);
+        return (Long) synchronousEndPoint.sendBody(synchronousEndPoint.getDefaultEndpoint(), ExchangePattern.InOut, jobMeta);
+    }
+    public Long routeSynchronous(List<? extends DTO> payloads, Long jobId){
+        JobMeta jobMeta = new JobMeta(payloads, null, jobId, null, true, false);
+        return (Long) synchronousEndPoint.sendBody(synchronousEndPoint.getDefaultEndpoint(), ExchangePattern.InOut, jobMeta);
+    }
+
 }

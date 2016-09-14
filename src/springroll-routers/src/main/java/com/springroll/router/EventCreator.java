@@ -31,8 +31,8 @@ public class EventCreator {
     EntityManager em;
 
 
-    public Long on(Job job){
-        Class<? extends IEvent> eventClass = dtoMeta.getEventForDTO(job.getPayloads().get(0));
+    public Long on(JobMeta jobMeta){
+        Class<? extends IEvent> eventClass = dtoMeta.getEventForDTO(jobMeta.getPayloads().get(0));
         AbstractEvent event;
         try {
             event = (AbstractEvent) eventClass.newInstance();
@@ -40,10 +40,23 @@ public class EventCreator {
             logger.error("Unable to instantiate Event class '{}'", eventClass.getSimpleName());
             return new Long(-1);
         }
-        event.setPayloads(job.getPayloads());
-        asynchSideEndPoints.routeWithNewTransaction(event);
-        jobRepository.save(job);
-        return job.getID();
+        event.setPayloads(jobMeta.getPayloads());
+        Job job = null;
+        if(jobMeta.getJobId() == null) {
+            job = new Job();
+            job.setPayloads(jobMeta.getPayloads());
+            job.setParentId(jobMeta.getParentJobId());
+            jobRepository.save(job);
+            event.setJobId(job.getID());
+        } else {
+            event.setJobId(jobMeta.getJobId());
+        }
+        if(jobMeta.isAsynchronous()) {
+            asynchSideEndPoints.routeWithNewTransaction(event);
+        }else {
+            asynchSideEndPoints.routeInSameTransaction(event);
+        }
+        return event.getJobId();
     }
 
 }

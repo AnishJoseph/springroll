@@ -15,7 +15,7 @@ public class AbstractEvent<T extends DTO> implements IEvent<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractEvent.class);
 
-
+    private Principal principal;
     private List<T>  _payloads;
     protected boolean translatable =false;
     private boolean translated =false;
@@ -127,5 +127,15 @@ public class AbstractEvent<T extends DTO> implements IEvent<T> {
 
     public void setMsgId(int msgId) {
         this.msgId = msgId;
+    }
+
+    @Override
+    public Principal getPrincipal() {
+        return principal;
+    }
+
+    @Override
+    public void setPrincipal(Principal principal) {
+        this.principal = principal;
     }
 }

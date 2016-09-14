@@ -26,4 +26,6 @@ public interface IEvent<T extends DTO> extends Serializable {
     void setFirstTransactionLeg(boolean firstTransactionLeg);
     int getMsgId();
     void setMsgId(int hexMsgId);
+    Principal getPrincipal();
+    void setPrincipal(Principal principal);
 }

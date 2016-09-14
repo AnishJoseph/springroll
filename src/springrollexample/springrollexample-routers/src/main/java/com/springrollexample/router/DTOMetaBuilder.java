@@ -1,6 +1,8 @@
 package com.springrollexample.router;
 
 import com.springroll.core.DTOMeta;
+import com.springrollexample.router.test.SynchToAsynchDTO;
+import com.springrollexample.router.test.TE_SynchFromAsynchSide;
 import com.springrollexample.router.test.TestDTO;
 import com.springrollexample.router.test.TestRootEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ public class DTOMetaBuilder {
 
     @PostConstruct public void init(){
         dtoMeta.addDTOType(TestDTO.class, TestRootEvent.class);
+        dtoMeta.addDTOType(SynchToAsynchDTO.class, TE_SynchFromAsynchSide.class);
 
     }
 }

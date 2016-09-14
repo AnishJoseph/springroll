@@ -23,35 +23,16 @@ public class SpringrollAPI extends AbstractAPI {
     @Autowired
     CustomerRepository customerRepository;
 
-    @RequestMapping(value = "/testPlainStrReturn", method = RequestMethod.GET)
-    public String testPlainStrReturn() {
-        return "hello world";
-    }
-    @RequestMapping(value = "/testObjectReturn", method = RequestMethod.GET)
-    public Test testObjectReturn() {
-        return new Test("hello", "world");
-    }
-
-    @RequestMapping(value = "/testObjectPost", method = RequestMethod.POST)
-    public Test testObjectPost(@RequestBody Test test) {
-        return test;
-    }
-
-    @RequestMapping(value = "/testPipeline", method = RequestMethod.POST)
-    public Long testPipeline(@RequestBody Test test) {
-        return new Long(1);
-//        return synchEndPoint.route(test);
-    }
-
     @RequestMapping(value = "/testPipelineSimple", method = RequestMethod.GET)
     public Long testPipelineSimple() {
         TestDTO testDTO = new TestDTO();
-        testDTO.setTestCase(2);
+        testDTO.setTestCase(1);
         testDTO.setTestLocation(0);
+        testDTO.setTestType(TestDTO.TestType.HAPPY_FLOW);
         TestRootEvent testRootEvent = new TestRootEvent();
         testRootEvent.setPayload(testDTO);
         Customer customer = new Customer("a", "b");
         customerRepository.save(customer);
-        return synchEndPoint.route(testDTO);
+        return route(testDTO);
     }
 }
