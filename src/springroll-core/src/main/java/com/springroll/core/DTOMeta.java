@@ -15,18 +15,25 @@ public class DTOMeta implements IDTOMeta{
     public void addDTOType(Class<? extends DTO> clazz, Class<? extends IEvent> eventClass){
         dtoMeta.put(clazz, new DTOType(eventClass));
     }
+    public void addDTOType(Class<? extends DTO> clazz, Class<? extends IEvent> eventClass, DTOEnricher enricher){
+        dtoMeta.put(clazz, new DTOType(enricher, eventClass));
+    }
 
     public Class<? extends IEvent> getEventForDTO(DTO dto) {
         DTOType dtoType = dtoMeta.get(dto.getClass());
         return dtoType.eventClass;
     }
+    public DTOEnricher getEnricherForDTO(DTO dto) {
+        DTOType dtoType = dtoMeta.get(dto.getClass());
+        return dtoType.enricher;
+    }
 
     private class DTOType {
-        private Class<DTOEnricher> enricherClass;
+        private DTOEnricher enricher;
         private Class<? extends IEvent> eventClass;
 
-        public DTOType(Class<DTOEnricher> enricherClass, Class<AbstractEvent> eventClass) {
-            this.enricherClass = enricherClass;
+        public DTOType(DTOEnricher enricher, Class<? extends IEvent> eventClass) {
+            this.enricher = enricher;
             this.eventClass = eventClass;
         }
         public DTOType( Class<? extends IEvent> eventClass) {

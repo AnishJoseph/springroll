@@ -1,4 +1,4 @@
-package com.springroll.router;
+package com.springroll.core;
 
 import com.springroll.core.Principal;
 

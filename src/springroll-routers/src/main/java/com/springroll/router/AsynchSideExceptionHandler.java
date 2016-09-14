@@ -14,6 +14,8 @@ public class AsynchSideExceptionHandler {
 
     public void on(Exchange exchange) throws Exception {
         logger.debug("Received Exception on Asynch Side");
+        Throwable caused = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
+        caused.printStackTrace();
     }
 
 }

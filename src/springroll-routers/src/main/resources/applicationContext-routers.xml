@@ -42,13 +42,14 @@
                 <camel:redeliveryPolicy logRetryStackTrace="false" logStackTrace="false"/>
             </camel:onException>
             <camel:to uri="bean:startSynchFlow"/>
+            <camel:to uri="bean:enricher"/>
             <camel:to uri="bean:eventCreator"/>
         </camel:route>
 
         <camel:route id="JMSEndPoint">
             <camel:from ref="jmsEndPoint"/>
             <camel:transacted />
-            <camel:to uri="class:com.springroll.router.JmsEntryPoint"/>
+            <camel:to uri="class:com.springroll.core.UserContextFactory"/>
             <camel:to ref="dynamicRouterEndPoint" />
         </camel:route>
 

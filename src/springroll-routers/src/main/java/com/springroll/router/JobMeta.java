@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class JobMeta {
     private List<? extends DTO> payloads;
-    private Principal userContext;
+    private Principal principal;
     private Long jobId;
     private Long parentJobId;
     boolean needsBusinessValidation = true;
@@ -19,7 +19,7 @@ public class JobMeta {
 
     public JobMeta(List<? extends DTO> payloads, Principal userContext, Long jobId, Long parentJobId, boolean needsBusinessValidation, boolean isAsynchronous) {
         this.payloads = payloads;
-        this.userContext = userContext;
+        this.principal = userContext;
         this.jobId = jobId;
         this.parentJobId = parentJobId;
         this.needsBusinessValidation = needsBusinessValidation;
@@ -28,18 +28,6 @@ public class JobMeta {
 
     public List<? extends DTO> getPayloads() {
         return payloads;
-    }
-
-    public void setPayloads(List<DTO> payloads) {
-        this.payloads = payloads;
-    }
-
-    public Principal getUserContext() {
-        return userContext;
-    }
-
-    public void setUserContext(Principal userContext) {
-        this.userContext = userContext;
     }
 
     public Long getJobId() {
@@ -72,5 +60,17 @@ public class JobMeta {
 
     public void setAsynchronous(boolean asynchronous) {
         isAsynchronous = asynchronous;
+    }
+
+    public Principal getPrincipal() {
+        return principal;
+    }
+
+    public void setPrincipal(Principal principal) {
+        this.principal = principal;
+    }
+
+    public void setPayloads(List<? extends DTO> payloads) {
+        this.payloads = payloads;
     }
 }

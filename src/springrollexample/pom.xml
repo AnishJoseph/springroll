@@ -17,6 +17,7 @@
         <maven.compiler.target>1.8</maven.compiler.target></properties>
 
     <modules>
+        <module>springrollexample-core</module>
         <module>springrollexample-api-facade</module>
         <module>springrollexample-web</module>
         <module>springrollexample-orm</module>
@@ -38,6 +39,11 @@
             <dependency>
                 <groupId>com.springrollexample</groupId>
                 <artifactId>springrollexample-routers</artifactId>
+                <version>${springrollexample.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.springrollexample</groupId>
+                <artifactId>springrollexample-core</artifactId>
                 <version>${springrollexample.version}</version>
             </dependency>
             <dependency>

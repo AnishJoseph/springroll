@@ -10,11 +10,10 @@
 	<name>springrollexample-routers</name>
 
 	<dependencies>
-        <dependency>
-            <groupId>com.springroll</groupId>
-            <artifactId>springroll-web</artifactId>
-            <classifier>classes</classifier>
-        </dependency>
+		<dependency>
+			<groupId>com.springrollexample</groupId>
+			<artifactId>springrollexample-core</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

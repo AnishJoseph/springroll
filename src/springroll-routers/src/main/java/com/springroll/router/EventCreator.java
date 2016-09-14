@@ -48,6 +48,7 @@ public class EventCreator {
             job.setParentId(jobMeta.getParentJobId());
             jobRepository.save(job);
             event.setJobId(job.getID());
+            event.setPrincipal(jobMeta.getPrincipal());
         } else {
             event.setJobId(jobMeta.getJobId());
         }

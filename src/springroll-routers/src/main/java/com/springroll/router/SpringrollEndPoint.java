@@ -2,8 +2,10 @@ package com.springroll.router;
 
 import com.springroll.core.DTO;
 import com.springroll.core.IEvent;
+import com.springroll.core.UserContextFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -17,13 +19,13 @@ public abstract class SpringrollEndPoint {
     private SynchEndPoint synchEndPoint;
 
     public void route(IEvent event){
-        event.setJobId(JmsEntryPoint.getJobId());
-        event.setLegId(JmsEntryPoint.getLegId());
-        event.setPrincipal(JmsEntryPoint.getPrincipal());
+        event.setJobId(UserContextFactory.getJobId());
+        event.setLegId(UserContextFactory.getLegId());
+        event.setPrincipal(UserContextFactory.getPrincipal());
         asynchSideEndPoints.routeInSameTransaction(event);
     }
 
-    public Long routeToSynchronousSide(List<? extends DTO> payloads){
-        return synchEndPoint.routeSynchronous(payloads, JmsEntryPoint.getJobId());
+    public Long routeToSynchronousSideFromAsynchronousSide(List<? extends DTO> payloads){
+        return synchEndPoint.routeSynchronous(payloads, UserContextFactory.getJobId(), UserContextFactory.getPrincipal());
     }
 }

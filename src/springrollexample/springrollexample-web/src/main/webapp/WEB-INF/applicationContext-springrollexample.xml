@@ -10,4 +10,6 @@
     <tx:annotation-driven/>
     <mvc:annotation-driven />
 
+    <import resource="classpath:applicationContext-core.xml"/>
+
 </beans>

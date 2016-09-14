@@ -6,13 +6,14 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>springrollexample-orm</artifactId>
-	<name>springrollexample-orm</name>
+	<artifactId>springrollexample-core</artifactId>
+	<name>springrollexample-core</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.springrollexample</groupId>
-			<artifactId>springrollexample-core</artifactId>
+			<groupId>com.springroll</groupId>
+			<artifactId>springroll-web</artifactId>
+			<classifier>classes</classifier>
 		</dependency>
 	</dependencies>
 
