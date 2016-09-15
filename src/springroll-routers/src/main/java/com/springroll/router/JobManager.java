@@ -25,7 +25,7 @@ public class JobManager {
     private static final Logger logger = LoggerFactory.getLogger(JobManager.class);
 
     @Autowired
-    JobRepository jobRepository;
+    private JobRepository jobRepository;
 
     public Long registerNewTransactionLeg(Long jobId){
         Long newLegId = 1l;
@@ -43,7 +43,7 @@ public class JobManager {
         }
         return newLegId;
     }
-    private void removeTransactionLegReference(Long jobId, Long legId, String status){
+    public void removeTransactionLegReference(Long jobId, Long legId, String status){
         if(jobId == null || legId == null){
             logger.debug("In delete reference : Either jobId or legId is null");
             return;
