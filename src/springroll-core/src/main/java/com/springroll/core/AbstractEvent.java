@@ -3,7 +3,6 @@ package com.springroll.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class AbstractEvent<T extends DTO> implements IEvent<T> {
     private List<T>  _payloads;
     protected boolean translatable =false;
     private boolean translated =false;
-    private boolean reRouted = false;
+    private boolean routed = false;
     private String destinationBean;
     private Long jobId = new Long(0);
     private Long legId = new Long(0);
@@ -55,11 +54,11 @@ public class AbstractEvent<T extends DTO> implements IEvent<T> {
     }
 
     public boolean isRouted() {
-        return reRouted;
+        return routed;
     }
 
     public void setRouted(boolean isNewTransaction) {
-        this.reRouted = isNewTransaction;
+        this.routed = isNewTransaction;
     }
 
 
@@ -77,7 +76,7 @@ public class AbstractEvent<T extends DTO> implements IEvent<T> {
     }
 
     public final boolean isTranslationNeededAndIsNotReRouted() {
-        return ((translatable && !translated) && !reRouted);
+        return ((translatable && !translated) && !routed);
     }
 
 //    public IUserContext getUserContext() {

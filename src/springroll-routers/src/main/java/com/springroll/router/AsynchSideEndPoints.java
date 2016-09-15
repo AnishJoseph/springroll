@@ -18,10 +18,10 @@ public class AsynchSideEndPoints {
     @EndpointInject(ref = "dynamicRouterEndPoint")
     private ProducerTemplate dynamicRouterEndPoint;
 
-    public void routeWithNewTransaction(IEvent payload){
+    public void routeToJms(IEvent payload){
         jmsEndPoint.sendBody(jmsEndPoint.getDefaultEndpoint(), ExchangePattern.InOnly, payload);
     }
-    public void routeInSameTransaction(IEvent payload){
+    public void routeToDynamicRouter(IEvent payload){
         dynamicRouterEndPoint.sendBody(dynamicRouterEndPoint.getDefaultEndpoint(), ExchangePattern.InOnly, payload);
     }
 }

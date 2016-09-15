@@ -6,6 +6,7 @@ import com.springroll.orm.helpers.JobRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -33,8 +34,11 @@ public class EventCreator {
     @Autowired
     JobManager jobManager;
 
+    @Autowired
+    ApplicationEventPublisher publisher;
 
     public Long on(JobMeta jobMeta){
+        boolean comingDirectlyFromSyncSide = false;
         Class<? extends IEvent> eventClass = dtoMeta.getEventForDTO(jobMeta.getPayloads().get(0));
         AbstractEvent event;
         try {
@@ -45,6 +49,7 @@ public class EventCreator {
         }
         event.setPayloads(jobMeta.getPayloads());
         if(jobMeta.getJobId() == null) {
+            comingDirectlyFromSyncSide = true;
             Job job = new Job();
             job.setPayloads(jobMeta.getPayloads());
             job.setParentId(jobMeta.getParentJobId());
@@ -57,9 +62,12 @@ public class EventCreator {
         event.setPrincipal(jobMeta.getPrincipal());
         event.setLegId(jobMeta.getLegId());
         if(jobMeta.isAsynchronous()) {
-            asynchSideEndPoints.routeWithNewTransaction(event);
+            asynchSideEndPoints.routeToJms(event);
         }else {
-            asynchSideEndPoints.routeInSameTransaction(event);
+            if(comingDirectlyFromSyncSide){
+                publisher.publishEvent(event);
+            }
+            asynchSideEndPoints.routeToDynamicRouter(event);
         }
         return event.getJobId();
     }

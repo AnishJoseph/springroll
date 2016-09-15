@@ -35,7 +35,7 @@
         <camel:endpoint id="jmsEndPoint" pattern="InOnly" uri="jms:queue:asynchronousEndPoint"  />
         <camel:endpoint id="deadLetterQueue" pattern="InOnly" uri="jms:queue:ActiveMQ.DLQ"  />
         <camel:endpoint id="dynamicRouterEndPoint" pattern="InOnly" uri="direct:dynamicRouterEndPoint"/>
-        <camel:route>
+        <camel:route id="Synchronous Route">
             <camel:from ref="synchronousEndPoint" />
             <camel:onException>
                 <camel:exception>java.lang.Throwable</camel:exception>
@@ -46,14 +46,14 @@
             <camel:to uri="bean:eventCreator"/>
         </camel:route>
 
-        <camel:route id="JMSEndPoint">
+        <camel:route id="Asynchronous Route">
             <camel:from ref="jmsEndPoint"/>
             <camel:transacted />
-            <camel:to uri="class:com.springroll.router.JMSEntryPoint"/>
+            <camel:to uri="bean:jmsEntryPoint"/>
             <camel:to ref="dynamicRouterEndPoint" />
         </camel:route>
 
-        <camel:route>
+        <camel:route id="Dynamic Router Route">
             <camel:from ref="dynamicRouterEndPoint"/>
             <camel:onException id="AsynchSideException" useOriginalMessage="true">
                 <camel:exception>java.lang.Throwable</camel:exception>

@@ -38,6 +38,27 @@ public class Job extends AbstractEntity {
     @Type(type="com.springroll.orm.LocalDateTimeUserType")
     private LocalDateTime endTime;
 
+    @Column(name = "JOB_DONE")
+    private boolean jobDone;
+
+    private String status;
+
+    public boolean isJobDone() {
+        return jobDone;
+    }
+
+    public void setJobDone(boolean jobDone) {
+        this.jobDone = jobDone;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public LocalDateTime getStartTime() {
         return startTime;
     }

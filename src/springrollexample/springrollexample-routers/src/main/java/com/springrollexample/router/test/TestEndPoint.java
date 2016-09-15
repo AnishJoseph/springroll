@@ -192,6 +192,11 @@ public class TestEndPoint extends SpringrollEndPoint {
         AbstractTestEvent te = new TE2_3();
         te.setPayload(event.getPayload());
         route(te);
+        SynchToAsynchDTO dto = new SynchToAsynchDTO();
+        List<DTO> payloads = new ArrayList<>(1);
+        payloads.add(dto);
+        routeToSynchronousSideFromAsynchronousSide(payloads);
+
     }
     @NewTransaction(value = true)
     public void on(TE2_3 event){

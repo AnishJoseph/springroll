@@ -27,13 +27,16 @@ public class SpringrollAPI extends AbstractAPI {
     @RequestMapping(value = "/testPipelineSimple", method = RequestMethod.GET)
     public Long testPipelineSimple() {
         TestDTO testDTO = new TestDTO();
-        testDTO.setTestCase(1);
+        testDTO.setTestCase(2);
         testDTO.setTestLocation(0);
         testDTO.setTestType(TestDTO.TestType.HAPPY_FLOW);
         TestRootEvent testRootEvent = new TestRootEvent();
         testRootEvent.setPayload(testDTO);
         Customer customer = new Customer("a", "b");
         customerRepository.save(customer);
+        Customer one = customerRepository.findOne(1l);
+        one.setParentId(2L);
+
         return route(testDTO);
     }
 

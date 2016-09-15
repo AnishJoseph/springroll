@@ -2,6 +2,8 @@ package com.springroll.api.facade;
 
 import com.springroll.core.DTO;
 import com.springroll.core.Principal;
+import com.springroll.core.UserContextFactory;
+import com.springroll.router.JobMeta;
 import com.springroll.router.SynchEndPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,15 +25,23 @@ public abstract class AbstractAPI {
         return route(payloads);
     }
     public Long route(List<DTO> payloads){
-        return synchEndPoint.route(payloads, getPrincipal());
+        JobMeta jobMeta = new JobMeta(payloads, getPrincipal(), null, null, null, true, true);
+        return sendItDownTheSynchronousRoute(jobMeta);
     }
     public Long routeSynchronouslyToAsynchronousSideFromSynchronousSide(DTO payload){
         List<DTO> payloads = new ArrayList<>(1);
         payloads.add(payload);
         return routeSynchronouslyToAsynchronousSideFromSynchronousSide(payloads);
     }
-    public Long routeSynchronouslyToAsynchronousSideFromSynchronousSide(List<DTO> payloads){
-        return synchEndPoint.routeSynchronous(payloads, getPrincipal());
+    public Long routeSynchronouslyToAsynchronousSideFromSynchronousSide(List<? extends DTO> payloads){
+        JobMeta jobMeta = new JobMeta(payloads, getPrincipal(), null, null, null, true, false);
+        return sendItDownTheSynchronousRoute(jobMeta);
+    }
+
+    private Long sendItDownTheSynchronousRoute(JobMeta jobMeta){
+        /* This point, at the start of the flow, we only have the principal to store - the jobId and legId is created in EventCreator */
+        UserContextFactory.setUserContextInThreadScope(jobMeta.getPrincipal(), null, null);
+        return synchEndPoint.route(jobMeta);
     }
 
 }

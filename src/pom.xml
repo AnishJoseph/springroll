@@ -11,11 +11,11 @@
     <properties>
         <source.encoding>UTF-8</source.encoding>
         <java.version>1.8</java.version>
-		<spring.version>4.3.2.RELEASE</spring.version>
+		<spring.version>4.2.4.RELEASE</spring.version>
 		<spring.jpa.version>1.10.2.RELEASE</spring.jpa.version>
 		<springroll.version>1.0.0</springroll.version>
         <liquibase.version>3.3.0</liquibase.version>
-        <tomcat.jdbc.version>8.0.30</tomcat.jdbc.version>                  <!--No change Oct 2015 -->
+        <tomcat.jdbc.version>8.0.30</tomcat.jdbc.version>
         <hibernate.version>4.3.11.Final</hibernate.version>
         <version.javax.validation.implementation>4.3.0.Final</version.javax.validation.implementation>
         <version.javax.persistence>2.0.3</version.javax.persistence>
@@ -26,8 +26,8 @@
         <fasterxml.verison>2.8.1</fasterxml.verison>
         <apache.activemq.version>5.13.1</apache.activemq.version>
         <apache.camel.version>2.16.2</apache.camel.version>
-        <apache.activemq.version.activeio>3.1.4</apache.activemq.version.activeio>  <!--No change Oct 2015 -->
-        <aspectj.version>1.8.8</aspectj.version>                            <!--Done Oct 2015 -->
+        <apache.activemq.version.activeio>3.1.4</apache.activemq.version.activeio>
+        <aspectj.version>1.8.8</aspectj.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -245,6 +245,12 @@
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-jms</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-context</artifactId>
+                    </exclusion>
+                </exclusions>
                 <version>${apache.camel.version}</version>
             </dependency>
 
