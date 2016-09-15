@@ -26,6 +26,6 @@ public abstract class SpringrollEndPoint {
     }
 
     public Long routeToSynchronousSideFromAsynchronousSide(List<? extends DTO> payloads){
-        return synchEndPoint.routeSynchronous(payloads, UserContextFactory.getJobId(), UserContextFactory.getPrincipal());
+        return synchEndPoint.routeSynchronous(payloads);
     }
 }

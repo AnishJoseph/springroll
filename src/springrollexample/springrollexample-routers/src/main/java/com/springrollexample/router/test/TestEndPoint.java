@@ -134,6 +134,7 @@ public class TestEndPoint extends SpringrollEndPoint {
         testDO.setValueToWrite(testDO.getThread() + "--" + testLocationEventName);
         testDO.setTestCase(testCase);
         testDO.setTestLocation(testCaseIndex);
+        testDO.setTestType(event.getPayload().getTestType());
 
         switch(testCase){
             case 1:

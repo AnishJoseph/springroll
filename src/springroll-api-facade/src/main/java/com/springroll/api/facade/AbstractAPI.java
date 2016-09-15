@@ -2,7 +2,6 @@ package com.springroll.api.facade;
 
 import com.springroll.core.DTO;
 import com.springroll.core.Principal;
-import com.springroll.orm.entities.Job;
 import com.springroll.router.SynchEndPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,12 +25,12 @@ public abstract class AbstractAPI {
     public Long route(List<DTO> payloads){
         return synchEndPoint.route(payloads, getPrincipal());
     }
-    public Long routeSynchronous(DTO payload){
+    public Long routeSynchronouslyToAsynchronousSideFromSynchronousSide(DTO payload){
         List<DTO> payloads = new ArrayList<>(1);
         payloads.add(payload);
-        return routeSynchronous(payloads);
+        return routeSynchronouslyToAsynchronousSideFromSynchronousSide(payloads);
     }
-    public Long routeSynchronous(List<DTO> payloads){
+    public Long routeSynchronouslyToAsynchronousSideFromSynchronousSide(List<DTO> payloads){
         return synchEndPoint.routeSynchronous(payloads, getPrincipal());
     }
 

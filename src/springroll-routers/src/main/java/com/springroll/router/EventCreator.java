@@ -30,6 +30,9 @@ public class EventCreator {
     @PersistenceContext
     EntityManager em;
 
+    @Autowired
+    JobManager jobManager;
+
 
     public Long on(JobMeta jobMeta){
         Class<? extends IEvent> eventClass = dtoMeta.getEventForDTO(jobMeta.getPayloads().get(0));
@@ -41,17 +44,18 @@ public class EventCreator {
             return new Long(-1);
         }
         event.setPayloads(jobMeta.getPayloads());
-        Job job = null;
         if(jobMeta.getJobId() == null) {
-            job = new Job();
+            Job job = new Job();
             job.setPayloads(jobMeta.getPayloads());
             job.setParentId(jobMeta.getParentJobId());
             jobRepository.save(job);
-            event.setJobId(job.getID());
-            event.setPrincipal(jobMeta.getPrincipal());
-        } else {
-            event.setJobId(jobMeta.getJobId());
+            jobMeta.setJobId(job.getID());
+            UserContextFactory.setUserContextInThreadScope(jobMeta.getPrincipal(), jobMeta.getJobId(), jobManager.registerNewTransactionLeg(jobMeta.getJobId()));
+            jobMeta.setLegId(UserContextFactory.getLegId());
         }
+        event.setJobId(jobMeta.getJobId());
+        event.setPrincipal(jobMeta.getPrincipal());
+        event.setLegId(jobMeta.getLegId());
         if(jobMeta.isAsynchronous()) {
             asynchSideEndPoints.routeWithNewTransaction(event);
         }else {

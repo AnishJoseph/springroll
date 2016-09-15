@@ -23,17 +23,21 @@ public class SynchEndPoint {
     @EndpointInject(ref = "synchronousEndPoint")
     private ProducerTemplate synchronousEndPoint;
 
+    /* This SHOULD only be called from the synch side - eventCreator will put the Event on JMS - the resulting event will be processed asynchronously */
     public Long route(List<? extends DTO> payloads, Principal principal){
-        JobMeta jobMeta = new JobMeta(payloads, principal, null, null, true, true);
+        JobMeta jobMeta = new JobMeta(payloads, principal, null, null, null, true, true);
         UserContextFactory.setUserContextInThreadScope(principal, null, null);
         return (Long) synchronousEndPoint.sendBody(synchronousEndPoint.getDefaultEndpoint(), ExchangePattern.InOut, jobMeta);
     }
+    /* This SHOULD only be called from the synch side - eventCreator will put the Event directly to Dynamic Router JMS - the resulting event will be processed synchronously since it does not go via JMS*/
     public Long routeSynchronous(List<? extends DTO> payloads, Principal principal){
-        JobMeta jobMeta = new JobMeta(payloads, principal, null, null, true, false);
+        JobMeta jobMeta = new JobMeta(payloads, principal, null, null, null, true, false);
+        UserContextFactory.setUserContextInThreadScope(principal, null, null);
         return (Long) synchronousEndPoint.sendBody(synchronousEndPoint.getDefaultEndpoint(), ExchangePattern.InOut, jobMeta);
     }
-    public Long routeSynchronous(List<? extends DTO> payloads, Long jobId, Principal principal){
-        JobMeta jobMeta = new JobMeta(payloads, principal, jobId, null, true, false);
+    /* This SHOULD only be called from the asynch side - the routing will be done in the context of the existing jobId */
+    public Long routeSynchronous(List<? extends DTO> payloads){
+        JobMeta jobMeta = new JobMeta(payloads, UserContextFactory.getPrincipal(), UserContextFactory.getJobId(), UserContextFactory.getLegId(), null, true, false);
         return (Long) synchronousEndPoint.sendBody(synchronousEndPoint.getDefaultEndpoint(), ExchangePattern.InOut, jobMeta);
     }
 

@@ -13,17 +13,19 @@ public class JobMeta {
     private List<? extends DTO> payloads;
     private Principal principal;
     private Long jobId;
+    private Long legId;
     private Long parentJobId;
     boolean needsBusinessValidation = true;
     private boolean isAsynchronous = true;
 
-    public JobMeta(List<? extends DTO> payloads, Principal userContext, Long jobId, Long parentJobId, boolean needsBusinessValidation, boolean isAsynchronous) {
+    public JobMeta(List<? extends DTO> payloads, Principal userContext, Long jobId, Long legId, Long parentJobId, boolean needsBusinessValidation, boolean isAsynchronous) {
         this.payloads = payloads;
         this.principal = userContext;
         this.jobId = jobId;
         this.parentJobId = parentJobId;
         this.needsBusinessValidation = needsBusinessValidation;
         this.isAsynchronous = isAsynchronous;
+        this.legId = legId;
     }
 
     public List<? extends DTO> getPayloads() {
@@ -72,5 +74,13 @@ public class JobMeta {
 
     public void setPayloads(List<? extends DTO> payloads) {
         this.payloads = payloads;
+    }
+
+    public Long getLegId() {
+        return legId;
+    }
+
+    public void setLegId(Long legId) {
+        this.legId = legId;
     }
 }

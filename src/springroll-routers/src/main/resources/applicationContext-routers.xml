@@ -55,7 +55,7 @@
 
         <camel:route>
             <camel:from ref="dynamicRouterEndPoint"/>
-            <camel:onException>
+            <camel:onException id="AsynchSideException" useOriginalMessage="true">
                 <camel:exception>java.lang.Throwable</camel:exception>
                 <camel:redeliveryPolicy logRetryStackTrace="false" logStackTrace="false"/>
                 <camel:to uri="bean:asynchSideExceptionHandler"/>

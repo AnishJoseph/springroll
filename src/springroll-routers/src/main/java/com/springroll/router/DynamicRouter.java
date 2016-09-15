@@ -30,6 +30,9 @@ public class DynamicRouter {
     @Autowired
     AsynchSideEndPoints asynchEndPoint;
 
+    @Autowired
+    JobManager jobManager;
+
     @PersistenceContext
     EntityManager em;
 
@@ -40,8 +43,8 @@ public class DynamicRouter {
         if (componentsMap == null || componentsMap.isEmpty()) return;
 
         for (String componentBeanName : componentsMap.keySet()) {
-            SpringrollEndPoint hexComponent = componentsMap.get(componentBeanName);
-            Class<? extends SpringrollEndPoint> componentClass = hexComponent.getClass();
+            SpringrollEndPoint springrollEndPoint = componentsMap.get(componentBeanName);
+            Class<? extends SpringrollEndPoint> componentClass = springrollEndPoint.getClass();
 
             List<Subscription> eventSubscriptions = findSubscriberMethods(componentClass);
 
@@ -63,7 +66,10 @@ public class DynamicRouter {
 
     public String route(IEvent<DTO> event, @Properties Map<String, Object> properties) {
         /*
-            A dynamic router works on the principle that once an event is routed, the control will come back to the Router to find out if there are any more routes the event has to go to. So we make use of the properties hash map to notify that a particular event is already routed.
+            A dynamic router works on the principle that once an event is routed, the control
+            will come back to the Router to find out if there are any more routes the event
+            has to go to. So we make use of the properties hash map to notify that a particular
+            event is already routed.
          */
 
         Object invoked = properties.get(this.getClass().getSimpleName());
@@ -100,22 +106,22 @@ public class DynamicRouter {
              */
 
             if (subscription.isNewTransaction()) {
-                IEvent iEvent;
+                IEvent eventToSendToJMS;
                 try {
-                    iEvent = event.getClass().newInstance();
+                    eventToSendToJMS = event.getClass().newInstance();
                 } catch (Exception e) {
                     if (e instanceof RuntimeException) throw (RuntimeException) e;
                     throw new RuntimeException(e);
                 }
-                iEvent.setJobId(event.getJobId());
-                iEvent.setPayloads(event.getPayloads());
-//                iEvent.setUserContext(event.getUserContext());
+                eventToSendToJMS.setJobId(event.getJobId());
+                eventToSendToJMS.setPayloads(event.getPayloads());
+                eventToSendToJMS.setPrincipal(event.getPrincipal());
 
-                iEvent.setDestinationBean(subscription.getUri());
-                iEvent.setRouted(true);
-                iEvent.setLegId(new Long(-1));
+                eventToSendToJMS.setDestinationBean(subscription.getUri());
+                eventToSendToJMS.setRouted(true);
+                eventToSendToJMS.setLegId(jobManager.registerNewTransactionLeg(eventToSendToJMS.getJobId()));
                 logger.debug("JobId {} - Will route {} to {} later as it was @NewTransaction", new Object[]{event.getJobId(), event.getClass().getSimpleName(), subscription});
-                asynchEndPoint.routeWithNewTransaction(iEvent);
+                asynchEndPoint.routeWithNewTransaction(eventToSendToJMS);
                 continue;
             }
 
