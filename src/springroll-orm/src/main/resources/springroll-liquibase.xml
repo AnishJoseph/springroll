@@ -14,7 +14,7 @@
             <column name="SERIALIZED_PAYLOADS" type="longblob" />
             <column name="START_TIME" type="TIMESTAMP"/>
             <column name="END_TIME" type="TIMESTAMP"/>
-            <column name="STATUS" type="VARCHAR2(15)" />
+            <column name="STATUS" type="VARCHAR2(4000)" />
             <column name="JOB_DONE" type="bit" />
         </createTable>
         <createTable tableName="SEQUENCE_TABLE">

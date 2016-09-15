@@ -64,6 +64,7 @@ public class JobManager {
                         legMonitor.jobStatus = job.getStatus();
                     }
                     logger.debug("Job Completed: Transaction leg {} completed for job {}: Status {}", legId, jobId, job.getStatus());
+                    jobRepository.flush();
                     break;
                 case REMOVED:
                     if (legMonitor.jobStatus.length() < 3950) {
@@ -81,7 +82,7 @@ public class JobManager {
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void handleBeforeCommitEvent(IEvent event) {
-        removeTransactionLegReference(event.getJobId(), event.getLegId(), "");
+        removeTransactionLegReference(event.getJobId(), event.getLegId(), "OK");
     }
 
     private class LegMonitor {

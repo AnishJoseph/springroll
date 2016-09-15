@@ -20,14 +20,4 @@
             <column name="state" type="char(2)"/>
         </createTable>
     </changeSet>
-    <changeSet id="springroll-masterdata" author="anish">
-        <sql>
-            insert into testanish values(1, 0, 'anish', 'joseph', 'ka');
-        </sql>
-    </changeSet>
-    <changeSet id="springroll-masterdata1" author="anish">
-        <sql>
-            insert into testanish values(2, 0, 'anish', 'joseph', 'ka');
-        </sql>
-    </changeSet>
 </databaseChangeLog>
