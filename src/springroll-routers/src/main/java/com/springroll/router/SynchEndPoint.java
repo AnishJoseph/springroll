@@ -29,7 +29,7 @@ public class SynchEndPoint {
         UserContextFactory.setUserContextInThreadScope(principal, null, null);
         return (Long) synchronousEndPoint.sendBody(synchronousEndPoint.getDefaultEndpoint(), ExchangePattern.InOut, jobMeta);
     }
-    /* This SHOULD only be called from the synch side - eventCreator will put the Event directly to Dynamic Router JMS - the resulting event will be processed synchronously since it does not go via JMS*/
+    /* This SHOULD only be called from the synch side - eventCreator will put the Event directly to Dynamic Router - the resulting event will be processed synchronously since it does not go via JMS*/
     public Long routeSynchronous(List<? extends DTO> payloads, Principal principal){
         JobMeta jobMeta = new JobMeta(payloads, principal, null, null, null, true, false);
         UserContextFactory.setUserContextInThreadScope(principal, null, null);

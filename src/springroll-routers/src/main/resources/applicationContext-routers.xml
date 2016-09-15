@@ -49,7 +49,7 @@
         <camel:route id="JMSEndPoint">
             <camel:from ref="jmsEndPoint"/>
             <camel:transacted />
-            <camel:to uri="class:com.springroll.core.UserContextFactory"/>
+            <camel:to uri="class:com.springroll.router.JMSEntryPoint"/>
             <camel:to ref="dynamicRouterEndPoint" />
         </camel:route>
 
