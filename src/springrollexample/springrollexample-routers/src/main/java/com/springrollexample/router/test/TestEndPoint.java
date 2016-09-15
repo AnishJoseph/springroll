@@ -3,6 +3,7 @@ package com.springrollexample.router.test;
 import com.springroll.core.DTO;
 import com.springroll.router.NewTransaction;
 import com.springroll.router.SpringrollEndPoint;
+import com.springrollexample.orm.entities.TestTableWithLocking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,17 +27,20 @@ public class TestEndPoint extends SpringrollEndPoint {
     private void lockTest(TestDTO testDTO) {
         String tableName = "TestTableWithLocking";
 
-        ITestTable rowOne = (ITestTable) entityManager.createQuery("select o from " + tableName + " o where id = 1").getSingleResult();
-        ITestTable rowTwo = (ITestTable) entityManager.createQuery("select o from " + tableName + " o where id = 2").getSingleResult();
+        TestTableWithLocking rowOne = (TestTableWithLocking) entityManager.createQuery("select o from " + tableName + " o where id = 1").getSingleResult();
+        TestTableWithLocking rowTwo = (TestTableWithLocking) entityManager.createQuery("select o from " + tableName + " o where id = 2").getSingleResult();
 
         String thread = testDTO.getThread();
 
         if (testDTO.getTestType().equals(TestDTO.TestType.OPTIMISTIC_LOCKING_COMPETING_THREADS)) {
             waitAWhile(5);        //Wait so that the 2nd thread also has time to read in the record from the DB before we start changing it
-            if (thread.equals("Thread1"))
+            if (thread.equals("Thread1")) {
+                System.out.println("THREAD 1 woke up!!!!!!!!!!!!!!!!!");
                 rowOne.setField1(testDTO.getValueToWrite());
-            else
+            }else {
+                System.out.println("THREAD 2 woke up!!!!!!!!!!!!!!!!!");
                 rowOne.setField2(testDTO.getValueToWrite());
+            }
             return;
         }
         if (testDTO.getTestType().equals(TestDTO.TestType.OPTIMISTIC_LOCKING_DB_DEADLOCK)) {
@@ -118,6 +122,7 @@ public class TestEndPoint extends SpringrollEndPoint {
             TestDTO testDO = new TestDTO();
             testDO.setThread("Thread1");
             testDO.setValueToWrite(testDO.getThread() + "--" + testCase);
+            testDO.setTestType(event.getPayload().getTestType());
             lockTest(testDO);
             return;
 
@@ -183,19 +188,19 @@ public class TestEndPoint extends SpringrollEndPoint {
     }
     public void on(TE2_1 event){
         checkAndRunTest(event);
-        AbstractTestEvent te = new TE2_2();
-        te.setPayload(event.getPayload());
-        route(te);
+//        AbstractTestEvent te = new TE2_2();
+//        te.setPayload(event.getPayload());
+//        route(te);
     }
     public void on(TE2_2 event){
         checkAndRunTest(event);
         AbstractTestEvent te = new TE2_3();
         te.setPayload(event.getPayload());
         route(te);
-        SynchToAsynchDTO dto = new SynchToAsynchDTO();
-        List<DTO> payloads = new ArrayList<>(1);
-        payloads.add(dto);
-        routeToSynchronousSideFromAsynchronousSide(payloads);
+//        SynchToAsynchDTO dto = new SynchToAsynchDTO();
+//        List<DTO> payloads = new ArrayList<>(1);
+//        payloads.add(dto);
+//        routeToSynchronousSideFromAsynchronousSide(payloads);
 
     }
     @NewTransaction(value = true)

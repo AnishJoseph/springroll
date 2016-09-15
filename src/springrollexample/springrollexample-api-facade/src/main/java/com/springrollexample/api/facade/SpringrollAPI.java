@@ -28,8 +28,8 @@ public class SpringrollAPI extends AbstractAPI {
     public Long testPipelineSimple() {
         TestDTO testDTO = new TestDTO();
         testDTO.setTestCase(2);
-        testDTO.setTestLocation(0);
-        testDTO.setTestType(TestDTO.TestType.HAPPY_FLOW);
+        testDTO.setTestLocation(3);
+        testDTO.setTestType(TestDTO.TestType.EXCEPTION);
         TestRootEvent testRootEvent = new TestRootEvent();
         testRootEvent.setPayload(testDTO);
         Customer customer = new Customer("a", "b");
@@ -37,6 +37,23 @@ public class SpringrollAPI extends AbstractAPI {
         Customer one = customerRepository.findOne(1l);
         one.setParentId(2L);
 
+        return route(testDTO);
+    }
+    @RequestMapping(value = "/testCompetingThreads", method = RequestMethod.GET)
+    public Long testCompetingThreads() {
+        TestDTO testDTO = new TestDTO();
+        testDTO.setTestCase(1);
+        testDTO.setTestLocation(3);
+        testDTO.setTestType(TestDTO.TestType.OPTIMISTIC_LOCKING_COMPETING_THREADS);
+        TestRootEvent testRootEvent = new TestRootEvent();
+        testRootEvent.setPayload(testDTO);
+        route(testDTO);
+        testDTO = new TestDTO();
+        testDTO.setTestCase(2);
+        testDTO.setTestLocation(1);
+        testDTO.setTestType(TestDTO.TestType.OPTIMISTIC_LOCKING_COMPETING_THREADS);
+        testRootEvent = new TestRootEvent();
+        testRootEvent.setPayload(testDTO);
         return route(testDTO);
     }
 

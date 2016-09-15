@@ -1,8 +1,10 @@
 package com.springroll.router;
 
+import com.springroll.core.IEvent;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,10 +14,12 @@ import org.springframework.stereotype.Component;
 public class AsynchSideExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(AsynchSideExceptionHandler.class);
 
+    @Autowired
+    DeadLetterQueueHandler deadLetterQueueHandler;
     public void on(Exchange exchange) throws Exception {
-        logger.debug("Received Exception on Asynch Side");
         Throwable caused = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
-        caused.printStackTrace();
+        IEvent problemEvent = (IEvent) exchange.getIn().getBody();
+        deadLetterQueueHandler.setExceptionCauses(caused, problemEvent);
     }
 
 }

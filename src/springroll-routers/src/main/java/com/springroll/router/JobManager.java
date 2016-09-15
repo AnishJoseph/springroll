@@ -43,6 +43,15 @@ public class JobManager {
         }
         return newLegId;
     }
+    public void handleOptimisticLockFailure(Long jobId, Long legId ){
+        LegMonitor legMonitor = legMonitorMap.get(jobId);
+        Job job = jobRepository.findOne(jobId);
+        if (legMonitor.jobStatus.length() < 3950) {
+            job.setStatus(legMonitor.jobStatus + "Leg" + legId + "-OptLockFail::");
+            legMonitor.jobStatus = job.getStatus();
+        }
+    }
+
     public void removeTransactionLegReference(Long jobId, Long legId, String status){
         if(jobId == null || legId == null){
             logger.debug("In delete reference : Either jobId or legId is null");
