@@ -10,7 +10,7 @@ public class ContextStore {
     private static final Logger logger = LoggerFactory.getLogger(ContextStore.class);
     private static final ThreadLocal<ContextAttributes> threadScopeAttributesHolder = new InheritableThreadLocal<ContextAttributes>();
 
-    public static void setContext(Principal principal, Long jobId, Long legId){
+    public static void put(Principal principal, Long jobId, Long legId){
         ContextAttributes scopeAttributes = new ContextAttributes();
         scopeAttributes.setPrincipal(principal);
         scopeAttributes.setJobId(jobId);
@@ -18,9 +18,6 @@ public class ContextStore {
         threadScopeAttributesHolder.set(scopeAttributes);
     }
 
-    public static void resetUserContextInThreadScope(){
-        threadScopeAttributesHolder.set(null);
-    }
     public static Principal getPrincipal() {
         if(threadScopeAttributesHolder.get() != null)
             return threadScopeAttributesHolder.get().getPrincipal();
