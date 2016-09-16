@@ -9,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 /**
  * Created by anishjoseph on 09/09/16.
  */
@@ -23,13 +20,7 @@ public class EventCreator {
     AsynchSideEndPoints asynchSideEndPoints;
 
     @Autowired
-    DTOMeta dtoMeta;
-
-    @Autowired
     JobRepository jobRepository;
-
-    @PersistenceContext
-    EntityManager em;
 
     @Autowired
     JobManager jobManager;
@@ -39,13 +30,13 @@ public class EventCreator {
 
     public Long on(JobMeta jobMeta){
         boolean comingDirectlyFromSyncSide = false;
-        Class<? extends IEvent> eventClass = dtoMeta.getEventForDTO(jobMeta.getPayloads().get(0));
+        Class<? extends IEvent> eventClass = JobDefinitions.getEventForDTO(jobMeta.getPayloads().get(0));
         AbstractEvent event;
         try {
             event = (AbstractEvent) eventClass.newInstance();
         }catch (Exception e){
             logger.error("Unable to instantiate Event class '{}'", eventClass.getSimpleName());
-            return new Long(-1);
+            return -1L;
         }
         event.setPayloads(jobMeta.getPayloads());
         if(jobMeta.getJobId() == null) {

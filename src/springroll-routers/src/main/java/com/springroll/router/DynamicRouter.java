@@ -40,8 +40,6 @@ public class DynamicRouter {
     public void init() {
         Map<String, SpringrollEndPoint> componentsMap = applicationContext.getBeansOfType(SpringrollEndPoint.class);
 
-        if (componentsMap == null || componentsMap.isEmpty()) return;
-
         for (String componentBeanName : componentsMap.keySet()) {
             SpringrollEndPoint springrollEndPoint = componentsMap.get(componentBeanName);
             Class<? extends SpringrollEndPoint> componentClass = springrollEndPoint.getClass();

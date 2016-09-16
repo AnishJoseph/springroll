@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by anishjoseph on 10/09/16.
+ * Created by Anish Joseph on 10/09/16.
+ * @since 1.0
  */
 public interface IEvent<T extends DTO> extends Serializable {
 

@@ -70,6 +70,12 @@ public class DeadLetterQueueHandler {
     private String makeKey(IEvent event){
         return "" + event.getJobId() + ":" + event.getLegId();
     }
+
+    /**
+     * Give a Throwable this method attempts to determine if this was caused by optimistic locking (See JPA)
+     * @param caused
+     * @return true if caused by Optimistic Locking issues
+     */
     public boolean isLockingIssue(Throwable caused){
         return  (
                 caused instanceof ObjectOptimisticLockingFailureException ||

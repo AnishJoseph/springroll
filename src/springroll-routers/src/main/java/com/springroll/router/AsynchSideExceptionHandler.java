@@ -8,7 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by anishjoseph on 09/09/16.
+ * The on method is directly invoked by camel when an exception is encountered on the asynchronous side.
+ * Since the method is invoked in the same thread as the exception nothing is done here as the transaction
+ * that its is running has already rolled back. Instead we store the Throwable and the event that was being
+ * processed for processing later in the DeadLetterQueueHandler.
+ * <b>Note:</b> Due to the exception the transactions  is rolled back and the event that originated in JMS
+ * is pushed to the DeadLetterQueue by ActiveMQ.
  */
 @Component
 public class AsynchSideExceptionHandler {

@@ -61,7 +61,6 @@ public class TestEndPoint extends SpringrollEndPoint {
             }
 
             entityManager.flush(); //DB will try and lock the row and will run into a deadlock
-            return;
         }
     }
 
@@ -188,9 +187,9 @@ public class TestEndPoint extends SpringrollEndPoint {
     }
     public void on(TE2_1 event){
         checkAndRunTest(event);
-//        AbstractTestEvent te = new TE2_2();
-//        te.setPayload(event.getPayload());
-//        route(te);
+        AbstractTestEvent te = new TE2_2();
+        te.setPayload(event.getPayload());
+        route(te);
     }
     public void on(TE2_2 event){
         checkAndRunTest(event);
