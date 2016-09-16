@@ -2,7 +2,7 @@ package com.springroll.api.facade;
 
 import com.springroll.core.DTO;
 import com.springroll.core.Principal;
-import com.springroll.core.UserContextFactory;
+import com.springroll.core.ContextStore;
 import com.springroll.router.JobMeta;
 import com.springroll.router.SynchEndPoint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public abstract class AbstractAPI {
 
     private Long sendItDownTheSynchronousRoute(JobMeta jobMeta){
         /* This point, at the start of the flow, we only have the principal to store - the jobId and legId is created in EventCreator */
-        UserContextFactory.setUserContextInThreadScope(jobMeta.getPrincipal(), null, null);
+        ContextStore.put(jobMeta.getPrincipal(), null, null);
         return synchEndPoint.route(jobMeta);
     }
 

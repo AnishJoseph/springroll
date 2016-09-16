@@ -1,7 +1,9 @@
 package com.springroll.core;
 
 /**
- * Created by anishjoseph on 14/09/16.
+ * Holds the context for an Event - the jobId and legId in whose context the event was created and the Principal
+ * @author Anish
+ * @since 1.0
  */
 public class ContextAttributes {
     private Long jobId = null;

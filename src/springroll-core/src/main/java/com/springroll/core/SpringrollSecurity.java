@@ -5,6 +5,6 @@ package com.springroll.core;
  */
 public class SpringrollSecurity {
     public static Principal getPrincipal(){
-        return UserContextFactory.getPrincipal();
+        return ContextStore.getPrincipal();
     }
 }

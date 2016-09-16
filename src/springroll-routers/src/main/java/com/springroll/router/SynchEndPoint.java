@@ -1,16 +1,11 @@
 package com.springroll.router;
 
-import com.springroll.core.UserContextFactory;
-import com.springroll.core.DTO;
-import com.springroll.core.Principal;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.ProducerTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * Created by anishjoseph on 09/09/16.
