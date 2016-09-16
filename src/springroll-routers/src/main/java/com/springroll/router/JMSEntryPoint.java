@@ -1,7 +1,7 @@
 package com.springroll.router;
 
 import com.springroll.core.IEvent;
-import com.springroll.core.UserContextFactory;
+import com.springroll.core.ContextStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ public class JmsEntryPoint {
 
     public void on(IEvent event) {
         /* Called when the event comes from JMS - it will be in a new thread so set these attributes for the new thread */
-        UserContextFactory.setUserContextInThreadScope(event.getPrincipal(), event.getJobId(), event.getLegId());
+        ContextStore.put(event.getPrincipal(), event.getJobId(), event.getLegId());
         publisher.publishEvent(event);
 
     }
