@@ -84,9 +84,9 @@ public class DynamicRouter {
 
         /* If the event is rerouted, then the event will already know the destination bean it has to go to. So we directly return the destination bean value */
 
-        if (event.getDestinationBean() != null && event.isRouted() == true) {
+        if (event.getDestinationUri() != null && event.isRouted() == true) {
             StringBuilder uriBuilder = new StringBuilder();
-            uriBuilder.append(event.getDestinationBean());
+            uriBuilder.append(event.getDestinationUri());
             return uriBuilder.toString();
         }
 
@@ -117,7 +117,7 @@ public class DynamicRouter {
                 eventToSendToJMS.setPayloads(event.getPayloads());
                 eventToSendToJMS.setPrincipal(event.getPrincipal());
 
-                eventToSendToJMS.setDestinationBean(subscription.getUri());
+                eventToSendToJMS.setDestinationUri(subscription.getUri());
                 eventToSendToJMS.setRouted(true);
                 eventToSendToJMS.setLegId(jobManager.registerNewTransactionLeg(eventToSendToJMS.getJobId()));
                 logger.debug("JobId {} - Will route {} to {} later as it was @NewTransaction", new Object[]{event.getJobId(), event.getClass().getSimpleName(), subscription});

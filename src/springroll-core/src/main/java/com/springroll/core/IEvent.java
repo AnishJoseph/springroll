@@ -14,18 +14,12 @@ public interface IEvent<T extends DTO> extends Serializable {
     void setPayloads(List<T> payloads);
     boolean isRouted();
     void setRouted(boolean isNewTransaction);
-    String getDestinationBean();
-    void setDestinationBean(String destinationBean);
+    String getDestinationUri();
+    void setDestinationUri(String destinationBean);
     Long getJobId();
     void setJobId(Long jobId);
     Long getLegId();
     void setLegId(Long legID);
-    boolean isRestartedDueToDeadLock();
-    void setRestartedDueToDeadLock(boolean restartedDueToDeadLock);
-    boolean isFirstTransactionLeg();
-    void setFirstTransactionLeg(boolean firstTransactionLeg);
-    int getMsgId();
-    void setMsgId(int hexMsgId);
     Principal getPrincipal();
     void setPrincipal(Principal principal);
 }

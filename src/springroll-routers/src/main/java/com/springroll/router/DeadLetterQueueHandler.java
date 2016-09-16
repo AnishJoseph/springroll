@@ -36,7 +36,6 @@ public class DeadLetterQueueHandler {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            event.setRestartedDueToDeadLock(true);
             asynchSideEndPoints.routeToJms(event);
             logger.debug("Redelivering message that had deadlocked");
             return;
