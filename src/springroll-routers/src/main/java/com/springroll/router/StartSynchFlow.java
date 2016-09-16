@@ -1,7 +1,5 @@
 package com.springroll.router;
 
-import com.springroll.orm.entities.Job;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**

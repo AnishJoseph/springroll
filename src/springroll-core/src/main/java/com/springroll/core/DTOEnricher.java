@@ -1,8 +1,10 @@
 package com.springroll.core;
 
+import java.util.List;
+
 /**
  * Created by anishjoseph on 12/09/16.
  */
 public interface DTOEnricher {
-    void enrich(DTO dto, Principal principal);
+    void enrich(List<? extends DTO> dtos);
 }
