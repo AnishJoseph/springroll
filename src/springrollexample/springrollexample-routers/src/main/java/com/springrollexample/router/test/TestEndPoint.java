@@ -1,7 +1,7 @@
 package com.springrollexample.router.test;
 
 import com.springroll.core.DTO;
-import com.springroll.router.NewTransaction;
+import com.springroll.router.ReceiveInNewTransaction;
 import com.springroll.router.SpringrollEndPoint;
 import com.springrollexample.orm.entities.TestTableWithLocking;
 import org.slf4j.Logger;
@@ -203,7 +203,7 @@ public class TestEndPoint extends SpringrollEndPoint {
 //        routeToSynchronousSideFromAsynchronousSide(payloads);
 
     }
-    @NewTransaction(value = true)
+    @ReceiveInNewTransaction(value = true)
     public void on(TE2_3 event){
         checkAndRunTest(event);
         AbstractTestEvent te = new TE2_4();
@@ -234,7 +234,7 @@ public class TestEndPoint extends SpringrollEndPoint {
         te.setPayload(event.getPayload());
         route(te);
     }
-    @NewTransaction(value = true)
+    @ReceiveInNewTransaction(value = true)
     public void on(TE3_4 event){
         checkAndRunTest(event);
         AbstractTestEvent te = new TE3_9();
@@ -247,7 +247,7 @@ public class TestEndPoint extends SpringrollEndPoint {
         te.setPayload(event.getPayload());
         route(te);
     }
-    @NewTransaction(value = true)
+    @ReceiveInNewTransaction(value = true)
     public void on(TE3_5 event){
         checkAndRunTest(event);
     }
@@ -290,7 +290,7 @@ public class TestEndPoint extends SpringrollEndPoint {
         te.setPayload(event.getPayload());
         route(te);
     }
-    @NewTransaction(value = true)
+    @ReceiveInNewTransaction(value = true)
     public void on(TE4_8 event){
         checkAndRunTest(event);
     }
@@ -300,7 +300,7 @@ public class TestEndPoint extends SpringrollEndPoint {
         te.setPayload(event.getPayload());
         route(te);
     }
-    @NewTransaction(value = true)
+    @ReceiveInNewTransaction(value = true)
     public void on(TE4_6 event){
         checkAndRunTest(event);
         AbstractTestEvent te = new TE4_7();

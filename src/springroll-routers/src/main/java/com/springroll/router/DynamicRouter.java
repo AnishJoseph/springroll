@@ -194,8 +194,8 @@ public class DynamicRouter {
                         Check if the event listener has been annotated with NewTransaction.
                          */
 
-                        if (method.isAnnotationPresent(NewTransaction.class)) {
-                            NewTransaction annotation = method.getAnnotation(NewTransaction.class);
+                        if (method.isAnnotationPresent(ReceiveInNewTransaction.class)) {
+                            ReceiveInNewTransaction annotation = method.getAnnotation(ReceiveInNewTransaction.class);
                             subscription.setNewTransaction(annotation.value());
 
                         }
