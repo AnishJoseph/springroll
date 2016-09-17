@@ -16,4 +16,5 @@
 
     <import resource="classpath:applicationContext-orm.xml"/>
     <import resource="classpath:applicationContext-routers.xml"/>
+    <import resource="applicationContext-security.xml"/>
 </beans>

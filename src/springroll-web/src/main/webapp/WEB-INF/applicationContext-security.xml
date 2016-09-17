@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:sec="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
+
+    <sec:http use-expressions="true">
+        <sec:intercept-url pattern="/assets/**" access="permitAll" />
+        <sec:intercept-url pattern="/hexgen/lib.css" access="permitAll" />
+        <!--<sec:intercept-url pattern="/Err_401.jsp" access="permitAll" />-->
+        <!--<sec:intercept-url pattern="/Err_500.jsp" access="permitAll" />-->
+        <!--<sec:intercept-url pattern="/Err_Timeout.jsp" access="permitAll" />-->
+        <sec:intercept-url pattern="/monitoring*" access="permitAll" />
+        <!--<sec:intercept-url pattern="/login*" access="permitAll" requires-channel="https"/>-->
+        <sec:intercept-url pattern="/login*" access="permitAll" />
+        <sec:intercept-url pattern="/public/**" access="permitAll" />
+        <sec:intercept-url pattern="/api/public/**" access="permitAll"  />
+        <sec:intercept-url pattern="/api/hexgen/s" access="permitAll" />
+        <sec:intercept-url pattern="/api/**" access="isAuthenticated()" />
+        <sec:intercept-url pattern="/**" access="isAuthenticated()" />
+        <!--<sec:request-cache ref="requestCache"/>-->
+        <sec:form-login/>
+        <!--<sec:form-login login-page="/login.jsp" default-target-url="${application.server.home}" always-use-default-target="true"/>-->
+        <sec:logout delete-cookies="JSESSIONID" invalidate-session="true"/>
+        <sec:csrf disabled="true"/>
+        <sec:port-mappings>
+            <sec:port-mapping http="${application.server.port}" https="${application.server.port.secure}"/>
+        </sec:port-mappings>
+    </sec:http>
+
+    <bean id="userDetailsService" class="${sr.security.userDetailsServiceClass}">
+        <property name="mappedUserName" value="${ldap.mapped.username}"/>
+    </bean>
+
+    <sec:authentication-manager erase-credentials="true">
+        <sec:authentication-provider ref="authenticationProvider"/>
+    </sec:authentication-manager>
+
+    <bean id="authenticationProvider" class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">
+        <constructor-arg>
+            <bean class="org.springframework.security.ldap.authentication.BindAuthenticator">
+                <constructor-arg ref="contextSource"/>
+                <property name="userSearch" ref="userSearch"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg ref="userDetailsService"/>
+        <property name="userDetailsContextMapper" ref="userDetailsService"/>
+    </bean>
+
+    <bean id="contextSource" class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+        <constructor-arg value="${ldap.authentication.server.urls}/${ldap.authentication.basedn}"/>
+        <!--<property name="userDn" value="${ldap.admin}"/>-->
+        <!--<property name="password" value="${ldap.password}"/>-->
+    </bean>
+
+
+    <bean id="userSearch" class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+        <constructor-arg index="0" value=""/>
+        <constructor-arg index="1" value="${ldap.authentication.searchFilter}"/>
+        <constructor-arg index="2" ref="contextSource" />
+    </bean>
+
+
+</beans>

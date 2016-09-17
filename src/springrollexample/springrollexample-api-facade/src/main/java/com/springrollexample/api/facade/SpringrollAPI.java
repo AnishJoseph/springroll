@@ -57,9 +57,4 @@ public class SpringrollAPI extends AbstractAPI {
         return route(testDTO);
     }
 
-    @Override
-    public Principal getPrincipal() {
-        Principal principal = new ExamplePrincipal("anish", "DM");
-        return principal;
-    }
 }

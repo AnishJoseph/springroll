@@ -6,6 +6,7 @@ import com.springroll.core.ContextStore;
 import com.springroll.router.JobMeta;
 import com.springroll.router.SynchEndPoint;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +17,6 @@ import java.util.List;
 public abstract class AbstractAPI {
     @Autowired
     private SynchEndPoint synchEndPoint;
-
-    public abstract Principal getPrincipal();
 
     public Long route(DTO payload){
         List<DTO> payloads = new ArrayList<>(1);
@@ -42,6 +41,10 @@ public abstract class AbstractAPI {
         /* This point, at the start of the flow, we only have the principal to store - the jobId and legId is created in EventCreator */
         ContextStore.put(jobMeta.getPrincipal(), null, null);
         return synchEndPoint.route(jobMeta);
+    }
+
+    private Principal getPrincipal(){
+        return (Principal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
 }
