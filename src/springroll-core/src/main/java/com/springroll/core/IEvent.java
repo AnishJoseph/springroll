@@ -1,5 +1,7 @@
 package com.springroll.core;
 
+import org.springframework.security.core.userdetails.User;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -21,6 +23,6 @@ public interface IEvent<T extends DTO> extends Serializable {
     void setJobId(Long jobId);
     Long getLegId();
     void setLegId(Long legID);
-    Principal getPrincipal();
-    void setPrincipal(Principal principal);
+    User getUser();
+    void setUser(User user);
 }

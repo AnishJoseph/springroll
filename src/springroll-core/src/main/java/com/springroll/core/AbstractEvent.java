@@ -1,5 +1,7 @@
 package com.springroll.core;
 
+import org.springframework.security.core.userdetails.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +16,7 @@ import java.util.List;
 public class AbstractEvent<T extends DTO> implements IEvent<T> {
     private static final long serialVersionUID = 1L;
 
-    private Principal principal;
+    private User user;
     private List<T> payloads;
     private boolean routed = false;
     private String destinationUri;
@@ -33,52 +35,66 @@ public class AbstractEvent<T extends DTO> implements IEvent<T> {
         payloads.add(payload);
 	}
 
-    @Override public List<T> getPayloads() {
+    @Override
+    public List<T> getPayloads() {
         return payloads;
     }
 
-    @Override public void setPayloads(List<T> payloads) {
+    @Override
+    public void setPayloads(List<T> payloads) {
         this.payloads = payloads;
     }
 
-    @Override public boolean isRouted() {
+    @Override
+    public boolean isRouted() {
         return routed;
     }
 
-    @Override public void setRouted(boolean isNewTransaction) {
+    @Override
+    public void setRouted(boolean isNewTransaction) {
         this.routed = isNewTransaction;
     }
 
-    @Override public String getDestinationUri() {
+    @Override
+    public String getDestinationUri() {
         return destinationUri;
     }
 
-    @Override public void setDestinationUri(String destinationBean) {
+    @Override
+    public void setDestinationUri(String destinationBean) {
         this.destinationUri = destinationBean;
     }
 
-    @Override public Long getJobId()
+    @Override
+    public Long getJobId()
     {
         return jobId;
     }
 
-    @Override public void setJobId(Long jobId)
+    @Override
+    public void setJobId(Long jobId)
     {
         this.jobId = jobId;
     }
 
-    @Override public Long getLegId() {
+    @Override
+    public Long getLegId() {
         return legId;
     }
-    @Override public void setLegId(Long legId) {
+
+    @Override
+    public void setLegId(Long legId) {
         this.legId = legId;
     }
 
-    @Override public Principal getPrincipal() {
-        return principal;
+    @Override
+    public User getUser() {
+        return user;
     }
 
-    @Override public void setPrincipal(Principal principal) {
-        this.principal = principal;
+    @Override
+    public void setUser(User user) {
+        this.user = user;
     }
+
 }

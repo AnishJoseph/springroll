@@ -1,12 +1,12 @@
 package com.springroll.api.facade;
 
 import com.springroll.core.DTO;
-import com.springroll.core.Principal;
 import com.springroll.core.ContextStore;
 import com.springroll.router.JobMeta;
 import com.springroll.router.SynchEndPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public abstract class AbstractAPI {
         return route(payloads);
     }
     public Long route(List<DTO> payloads){
-        JobMeta jobMeta = new JobMeta(payloads, getPrincipal(), null, null, null, true, true);
+        JobMeta jobMeta = new JobMeta(payloads, getUser(), null, null, null, true, true);
         return sendItDownTheSynchronousRoute(jobMeta);
     }
     public Long routeSynchronouslyToAsynchronousSideFromSynchronousSide(DTO payload){
@@ -33,18 +33,18 @@ public abstract class AbstractAPI {
         return routeSynchronouslyToAsynchronousSideFromSynchronousSide(payloads);
     }
     public Long routeSynchronouslyToAsynchronousSideFromSynchronousSide(List<? extends DTO> payloads){
-        JobMeta jobMeta = new JobMeta(payloads, getPrincipal(), null, null, null, true, false);
+        JobMeta jobMeta = new JobMeta(payloads, getUser(), null, null, null, true, false);
         return sendItDownTheSynchronousRoute(jobMeta);
     }
 
     private Long sendItDownTheSynchronousRoute(JobMeta jobMeta){
         /* This point, at the start of the flow, we only have the principal to store - the jobId and legId is created in EventCreator */
-        ContextStore.put(jobMeta.getPrincipal(), null, null);
+        ContextStore.put(jobMeta.getUser(), null, null);
         return synchEndPoint.route(jobMeta);
     }
 
-    private Principal getPrincipal(){
-        return (Principal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    private User getUser(){
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
 }

@@ -20,12 +20,12 @@ public abstract class SpringrollEndPoint {
     public void route(IEvent event){
         event.setJobId(ContextStore.getJobId());
         event.setLegId(ContextStore.getLegId());
-        event.setPrincipal(ContextStore.getPrincipal());
+        event.setUser(ContextStore.getUser());
         asynchSideEndPoints.routeToDynamicRouter(event);
     }
 
     public Long routeToSynchronousSideFromAsynchronousSide(List<? extends DTO> payloads){
-        JobMeta jobMeta = new JobMeta(payloads, ContextStore.getPrincipal(), ContextStore.getJobId(), ContextStore.getLegId(), null, true, false);
+        JobMeta jobMeta = new JobMeta(payloads, ContextStore.getUser(), ContextStore.getJobId(), ContextStore.getLegId(), null, true, false);
         return synchEndPoint.route(jobMeta);
     }
 }

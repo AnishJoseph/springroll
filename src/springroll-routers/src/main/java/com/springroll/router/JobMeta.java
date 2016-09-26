@@ -2,7 +2,7 @@ package com.springroll.router;
 
 
 import com.springroll.core.DTO;
-import com.springroll.core.Principal;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.List;
 
@@ -11,16 +11,16 @@ import java.util.List;
  */
 public class JobMeta {
     private List<? extends DTO> payloads;
-    private Principal principal;
+    private User user;
     private Long jobId;
     private Long legId;
     private Long parentJobId;
     boolean needsBusinessValidation = true;
     private boolean isAsynchronous = true;
 
-    public JobMeta(List<? extends DTO> payloads, Principal userContext, Long jobId, Long legId, Long parentJobId, boolean needsBusinessValidation, boolean isAsynchronous) {
+    public JobMeta(List<? extends DTO> payloads, User user, Long jobId, Long legId, Long parentJobId, boolean needsBusinessValidation, boolean isAsynchronous) {
         this.payloads = payloads;
-        this.principal = userContext;
+        this.user = user;
         this.jobId = jobId;
         this.parentJobId = parentJobId;
         this.needsBusinessValidation = needsBusinessValidation;
@@ -64,12 +64,12 @@ public class JobMeta {
         isAsynchronous = asynchronous;
     }
 
-    public Principal getPrincipal() {
-        return principal;
+    public User getUser() {
+        return user;
     }
 
-    public void setPrincipal(Principal principal) {
-        this.principal = principal;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setPayloads(List<? extends DTO> payloads) {

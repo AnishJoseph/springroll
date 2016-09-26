@@ -113,7 +113,7 @@ public class DynamicRouter {
                 }
                 eventToSendToJMS.setJobId(event.getJobId());
                 eventToSendToJMS.setPayloads(event.getPayloads());
-                eventToSendToJMS.setPrincipal(event.getPrincipal());
+                eventToSendToJMS.setUser(event.getUser());
 
                 eventToSendToJMS.setDestinationUri(subscription.getUri());
                 eventToSendToJMS.setRouted(true);

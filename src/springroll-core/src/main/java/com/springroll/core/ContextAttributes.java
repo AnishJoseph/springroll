@@ -1,5 +1,7 @@
 package com.springroll.core;
 
+import org.springframework.security.core.userdetails.User;
+
 /**
  * Holds the context for an Event - the jobId and legId in whose context the event was created and the Principal
  * @author Anish
@@ -8,7 +10,7 @@ package com.springroll.core;
 public class ContextAttributes {
     private Long jobId = null;
     private Long legId = null;
-    private Principal principal;
+    private User user;
 
     public Long getJobId() {
         return jobId;
@@ -26,11 +28,11 @@ public class ContextAttributes {
         this.legId = legId;
     }
 
-    public Principal getPrincipal() {
-        return principal;
+    public User getUser() {
+        return user;
     }
 
-    public void setPrincipal(Principal principal) {
-        this.principal = principal;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

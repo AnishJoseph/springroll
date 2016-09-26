@@ -46,11 +46,11 @@ public class EventCreator {
             job.setParentId(jobMeta.getParentJobId());
             jobRepository.save(job);
             jobMeta.setJobId(job.getID());
-            ContextStore.put(jobMeta.getPrincipal(), jobMeta.getJobId(), jobManager.registerNewTransactionLeg(jobMeta.getJobId()));
+            ContextStore.put(jobMeta.getUser(), jobMeta.getJobId(), jobManager.registerNewTransactionLeg(jobMeta.getJobId()));
             jobMeta.setLegId(ContextStore.getLegId());
         }
         event.setJobId(jobMeta.getJobId());
-        event.setPrincipal(jobMeta.getPrincipal());
+        event.setUser(jobMeta.getUser());
         event.setLegId(jobMeta.getLegId());
         if(jobMeta.isAsynchronous()) {
             asynchSideEndPoints.routeToJms(event);

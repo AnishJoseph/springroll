@@ -1,17 +1,14 @@
 package com.springrollexample.core.security;
 
-import com.springroll.core.Principal;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by anishjoseph on 17/09/16.
  */
-public class SpringrollExampleUser extends User implements Principal{
+public class SpringrollExampleUser extends User{
     private String name;
     private Collection<String> groups;
 
