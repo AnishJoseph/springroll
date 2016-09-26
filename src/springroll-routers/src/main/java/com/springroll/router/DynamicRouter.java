@@ -117,7 +117,7 @@ public class DynamicRouter {
 
                 eventToSendToJMS.setDestinationUri(subscription.getUri());
                 eventToSendToJMS.setRouted(true);
-                eventToSendToJMS.setLegId(jobManager.registerNewTransactionLeg(eventToSendToJMS.getJobId()));
+                eventToSendToJMS.setLegId(jobManager.registerNewTransactionLeg(eventToSendToJMS.getJobId(), event.getLegId()));
                 logger.debug("JobId {} - Will route {} to {} later as it was @NewTransaction", new Object[]{event.getJobId(), event.getClass().getSimpleName(), subscription});
                 asynchEndPoint.routeToJms(eventToSendToJMS);
                 continue;

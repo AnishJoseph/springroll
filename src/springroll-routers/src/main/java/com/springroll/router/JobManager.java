@@ -11,10 +11,7 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by anishjoseph on 15/09/16.
@@ -27,7 +24,7 @@ public class JobManager {
     @Autowired
     private JobRepository jobRepository;
 
-    public Long registerNewTransactionLeg(Long jobId){
+    public Long registerNewTransactionLeg(Long jobId, Long parentLegId){
         Long newLegId = 1l;
         LegMonitor legMonitor = legMonitorMap.get(jobId);
         if(legMonitor == null){
@@ -38,7 +35,7 @@ public class JobManager {
             }
         } else {
             synchronized (legMonitorMap){
-                newLegId = legMonitor.addRef();
+                newLegId = legMonitor.addRef(parentLegId);
             }
         }
         return newLegId;
@@ -49,6 +46,14 @@ public class JobManager {
         if (legMonitor.jobStatus.length() < 3950) {
             job.setStatus(legMonitor.jobStatus + "Leg" + legId + "-OptLockFail::");
             legMonitor.jobStatus = job.getStatus();
+        }
+        for(Iterator<Map.Entry<Long, Long>> it = legMonitor.refs.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry<Long, Long> entry = it.next();
+            if(entry.getValue().equals(legId)) {
+                job.setStatus(legMonitor.jobStatus + "Leg" + entry.getKey() + "-Cancelled::");
+                legMonitor.jobStatus = job.getStatus();
+                it.remove();
+            }
         }
     }
 
@@ -95,20 +100,21 @@ public class JobManager {
     }
 
     private class LegMonitor {
-        private Set<Long> refs = new HashSet<>();
+        private Map<Long, Long> refs = new HashMap<>();
         private Long legId = 1l;
         String jobStatus = "";
         public LegMonitor(){
-            refs.add(legId);
+            refs.put(legId, 0L);
         }
 
-        public Long addRef(){
+        public Long addRef(Long parentLegId){
             legId = legId + 1;
-            refs.add(legId);
+            refs.put(legId, parentLegId);
             return legId;
         }
         public LegStatus removeRef(Long legId){
-            boolean removed = refs.remove(legId);
+            Long removedId = refs.remove(legId);
+            boolean removed = removedId != null;
             if(!removed)return LegStatus.DOES_NOT_EXIST;
             if(refs.isEmpty())return LegStatus.EMPTIED;
             return LegStatus.REMOVED;

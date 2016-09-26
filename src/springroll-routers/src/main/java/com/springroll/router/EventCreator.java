@@ -46,7 +46,7 @@ public class EventCreator {
             job.setParentId(jobMeta.getParentJobId());
             jobRepository.save(job);
             jobMeta.setJobId(job.getID());
-            ContextStore.put(jobMeta.getUser(), jobMeta.getJobId(), jobManager.registerNewTransactionLeg(jobMeta.getJobId()));
+            ContextStore.put(jobMeta.getUser(), jobMeta.getJobId(), jobManager.registerNewTransactionLeg(jobMeta.getJobId(), 0L));
             jobMeta.setLegId(ContextStore.getLegId());
         }
         event.setJobId(jobMeta.getJobId());
