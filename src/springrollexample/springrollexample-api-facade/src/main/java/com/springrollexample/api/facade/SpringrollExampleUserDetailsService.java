@@ -1,7 +1,10 @@
-package com.springrollexample.core.security;
+package com.springrollexample.api.facade;
 
+import com.springrollexample.core.security.SpringrollExampleUser;
+import com.springrollexample.orm.helpers.UsersRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,6 +25,8 @@ import java.util.List;
  */
 public class SpringrollExampleUserDetailsService implements UserDetailsService, UserDetailsContextMapper, LdapAuthoritiesPopulator {
     private static final Logger logger = LoggerFactory.getLogger(SpringrollExampleUserDetailsService.class);
+    @Autowired
+    UsersRepository usersRepository;
 
     private String mappedUserName = null;
 
@@ -33,8 +38,8 @@ public class SpringrollExampleUserDetailsService implements UserDetailsService, 
     //Expects username in CAPS
     private SpringrollExampleUser loadUser(String username, Collection<? extends GrantedAuthority> authorities) throws UsernameNotFoundException {
         SpringrollExampleUser user = new SpringrollExampleUser(username, "dummyPassword", authorities);
+        user.setGroups(usersRepository.getGroupsForUserId(username));
         user.setName(username);
-        user.setRole("ADMIN");
         return user;
 
     }
@@ -51,6 +56,7 @@ public class SpringrollExampleUserDetailsService implements UserDetailsService, 
 
     @Override  //From interface UserDetailsContextMapper
     public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {
+        System.out.println("hello");
 
     }
 
@@ -67,10 +73,12 @@ public class SpringrollExampleUserDetailsService implements UserDetailsService, 
     }
     @Override   //from interface LdapAuthoritiesPopulator
     public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations ctx, String username) {
-        username = getUsername(ctx, username);
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("ADMIN"));
-
+        username = getUsername(ctx, username);
+        List<String> authoritiesForUserId = usersRepository.getAuthoritiesForUserId(username);
+        for (String authority : authoritiesForUserId) {
+            authorities.add(new SimpleGrantedAuthority(authority));
+        }
         return authorities;
     }
 }

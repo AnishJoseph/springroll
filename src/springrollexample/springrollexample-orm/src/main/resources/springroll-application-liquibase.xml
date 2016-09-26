@@ -8,16 +8,41 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet id="springroll-test" author="anish">
-        <createTable tableName="testanish">
+        <createTable tableName="AUTHORITIES">
             <column name="id" type="bigint" autoIncrement="false">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="parent_id" type="bigint"/>
-            <column name="firstname" type="varchar(50)"/>
-            <column name="lastname" type="varchar(50)">
+            <column name="authority_name" type="varchar(20)"/>
+            <column name="description" type="varchar(256)">
                 <constraints nullable="false"/>
             </column>
-            <column name="state" type="char(2)"/>
         </createTable>
+        <createTable tableName="GROUPS">
+            <column name="id" type="bigint" autoIncrement="false">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="parent_id" type="bigint"/>
+            <column name="group" type="varchar(32)"/>
+            <column name="authorities" type="varchar(256)"/>
+            <column name="description" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="USERS">
+            <column name="id" type="bigint" autoIncrement="false">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="parent_id" type="bigint"/>
+            <column name="user_id" type="varchar(128)"/>
+            <column name="groups" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <sql>
+            INSERT INTO users VALUES (1,0, 'ANISH', 'ADMIN,MASTER_APPROVER');
+            INSERT INTO  groups values (1,0, 'ADMIN', 'AUTH1,AUTH2', 'desc1');
+            INSERT INTO  groups values (2,0, 'MASTER_APPROVER', 'AUTH3,AUTH4', 'desc1');
+        </sql>
     </changeSet>
 </databaseChangeLog>
