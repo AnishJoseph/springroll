@@ -44,13 +44,13 @@ public class JobManager {
         LegMonitor legMonitor = legMonitorMap.get(jobId);
         Job job = jobRepository.findOne(jobId);
         if (legMonitor.jobStatus.length() < 3950) {
-            job.setStatus(legMonitor.jobStatus + "Leg" + legId + "-OptLockFail::");
+            job.setStatus(legMonitor.jobStatus + "Leg" + legId + "-OptLockFail ");
             legMonitor.jobStatus = job.getStatus();
         }
         for(Iterator<Map.Entry<Long, Long>> it = legMonitor.refs.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<Long, Long> entry = it.next();
             if(entry.getValue().equals(legId)) {
-                job.setStatus(legMonitor.jobStatus + "Leg" + entry.getKey() + "-Cancelled::");
+                job.setStatus(legMonitor.jobStatus + "Leg" + entry.getKey() + "-Cancelled ");
                 legMonitor.jobStatus = job.getStatus();
                 it.remove();
             }
