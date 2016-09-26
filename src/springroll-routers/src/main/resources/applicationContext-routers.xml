@@ -42,6 +42,7 @@
                 <camel:redeliveryPolicy logRetryStackTrace="false" logStackTrace="false"/>
             </camel:onException>
             <camel:to uri="bean:startSynchFlow"/>
+            <camel:to uri="bean:propertyValidator"/>
             <camel:to uri="bean:enricher"/>
             <camel:to uri="bean:eventCreator"/>
         </camel:route>
@@ -108,5 +109,6 @@
         <property name="configuration" ref="jmsConfig" />
     </bean>
 
-    <!--<bean class="com.springroll.router.DTOTypeBuilder" init-method="init" id="dtoTypeBuilder"/>-->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+
 </beans>
