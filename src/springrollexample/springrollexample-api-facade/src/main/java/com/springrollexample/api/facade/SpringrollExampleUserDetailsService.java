@@ -29,17 +29,21 @@ public class SpringrollExampleUserDetailsService implements UserDetailsService, 
     UsersRepository usersRepository;
 
     private String mappedUserName = null;
+    private String mappedDisplayName = null;
 
 
     public void setMappedUserName(String mappedUserName) {
         this.mappedUserName = mappedUserName;
     }
 
+    public void setMappedDisplayName(String mappedDisplayName) {
+        this.mappedDisplayName = mappedDisplayName;
+    }
+
     //Expects username in CAPS
     private SpringrollExampleUser loadUser(String username, Collection<? extends GrantedAuthority> authorities) throws UsernameNotFoundException {
         SpringrollExampleUser user = new SpringrollExampleUser(username, "dummyPassword", authorities);
         user.setGroups(usersRepository.getGroupsForUserId(username));
-        user.setName(username);
         return user;
 
     }
@@ -51,7 +55,19 @@ public class SpringrollExampleUserDetailsService implements UserDetailsService, 
     @Override   //From interface UserDetailsContextMapper
     public UserDetails mapUserFromContext(DirContextOperations ctx, String username, Collection<? extends GrantedAuthority> authorities) {
         username = getUsername(ctx, username);
-        return loadUser(username.toUpperCase(), authorities);
+
+        SpringrollExampleUser user = loadUser(username.toUpperCase(), authorities);
+        if(mappedDisplayName == null){
+            user.setDisplayName(username);
+            return user;
+        }
+        try {
+            String displayName = (String) ctx.getAttributes().get(mappedDisplayName).get(0);
+            user.setDisplayName(displayName);
+        }catch (NamingException e){
+            user.setDisplayName(username);
+        }
+        return user;
     }
 
     @Override  //From interface UserDetailsContextMapper

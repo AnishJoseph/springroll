@@ -9,16 +9,10 @@ import java.util.Collection;
  * Created by anishjoseph on 17/09/16.
  */
 public class SpringrollExampleUser extends User{
-    private String name;
     private Collection<String> groups;
+    private String displayName;
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public SpringrollExampleUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
 
@@ -34,5 +28,13 @@ public class SpringrollExampleUser extends User{
 
     public void setGroups(Collection<String> groups) {
         this.groups = groups;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 }

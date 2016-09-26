@@ -32,6 +32,7 @@
 
     <bean id="userDetailsService" class="${sr.security.userDetailsServiceClass}">
         <property name="mappedUserName" value="${ldap.mapped.username}"/>
+        <property name="mappedDisplayName" value="${ldap.mapped.displayname}"/>
     </bean>
 
     <sec:authentication-manager erase-credentials="true">
