@@ -1,16 +1,15 @@
 package com.springroll.router;
 
 import com.springroll.core.DTO;
+import com.springroll.router.exceptions.PropertyValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.Path;
 import javax.validation.Validator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -48,6 +47,9 @@ public class PropertyValidator {
             }
 
             payloadIndex++;
+        }
+        if(!validationExceptions.isEmpty()){
+            throw new PropertyValidationException(validationExceptions);
         }
         return jobMeta;
     }

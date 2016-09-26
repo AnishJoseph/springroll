@@ -1,8 +1,10 @@
 package com.springroll.router;
 
+import com.springroll.router.exceptions.PropertyValidationException;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.ProducerTemplate;
+import org.apache.camel.processor.validation.PredicateValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -20,7 +22,12 @@ public class SynchEndPoint {
 
     /* Sends the payload down the Synchronous route - see router.xml route id="Synchronous Route"*/
     public Long route(JobMeta jobMeta){
-        return (Long) synchronousEndPoint.sendBody(synchronousEndPoint.getDefaultEndpoint(), ExchangePattern.InOut, jobMeta);
+        try {
+            return (Long) synchronousEndPoint.sendBody(synchronousEndPoint.getDefaultEndpoint(), ExchangePattern.InOut, jobMeta);
+        }catch (Exception e){
+            if(e.getCause() instanceof PropertyValidationException) throw (PropertyValidationException)e.getCause();
+            throw e;
+        }
     }
 
 }

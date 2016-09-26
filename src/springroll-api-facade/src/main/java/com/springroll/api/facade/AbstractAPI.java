@@ -7,9 +7,12 @@ import com.springroll.router.SynchEndPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by anishjoseph on 12/09/16.
@@ -45,6 +48,11 @@ public abstract class AbstractAPI {
 
     private User getUser(){
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    public ModelAndView propertyViolationsAsModelAndView(Map<String,Map<String,String>> violations) {
+        MappingJackson2JsonView jsonView = new MappingJackson2JsonView();
+        return new ModelAndView(jsonView, violations);
     }
 
 }
