@@ -8,7 +8,5 @@ public interface IBusinessValidationResults {
     void addBusinessViolation(String field, String messageKey, String[] args);
     void addWarningToGroup(String field, String messageKey, String[] args);
     void addReviewNeeded(String field, String messageKey, String[] args, String violatedRule);
-    void addReviewNeeded(String field, String messageKey, String[] args, String violatedRule, String userOrGroup);
-    void addReviewNeeded(String violatedRule, String userOrGroup);
     void addReviewNeeded(String violatedRule);
 }

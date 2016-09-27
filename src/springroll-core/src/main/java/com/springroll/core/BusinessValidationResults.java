@@ -35,17 +35,8 @@ public class BusinessValidationResults implements IBusinessValidationResults, Se
     }
 
     @Override
-    public void addReviewNeeded(String field, String messageKey, String[] args, String violatedRule, String userOrGroup) {
-        reviewNeededViolations.add(new BusinessValidationResult(field, messageKey, args, violatedRule, userOrGroup));
-    }
-    @Override
     public void addReviewNeeded(String violatedRule) {
         reviewNeededViolations.add(new BusinessValidationResult(violatedRule));
-    }
-
-    @Override
-    public void addReviewNeeded(String violatedRule, String userOrGroup) {
-        reviewNeededViolations.add(new BusinessValidationResult(violatedRule, userOrGroup));
     }
 
     public List<BusinessValidationResult> getBusinessViolations() {

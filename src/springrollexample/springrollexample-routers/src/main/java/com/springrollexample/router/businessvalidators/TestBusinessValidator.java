@@ -14,7 +14,7 @@ import java.util.List;
 public class TestBusinessValidator implements DTOBusinessValidator {
     @Override
     public void validate(List<? extends DTO> dtos, IBusinessValidationResults businessValidationResults, boolean businessValidationDoneEarlier) {
-        if(!businessValidationDoneEarlier) businessValidationResults.addReviewNeeded("Rule1", "Grp1");
+        if(!businessValidationDoneEarlier) businessValidationResults.addReviewNeeded("Rule1");
 
     }
 }

@@ -8,12 +8,7 @@ public class BusinessValidationResult {
     private String messageKey;
     private String[] args;
     private String violatedRule;
-    private String userOrGroup;
 
-    public BusinessValidationResult(String violatedRule, String userOrGroup) {
-        this.violatedRule = violatedRule;
-        this.userOrGroup = userOrGroup;
-    }
     public BusinessValidationResult(String violatedRule) {
         this.violatedRule = violatedRule;
     }
@@ -23,14 +18,6 @@ public class BusinessValidationResult {
         this.messageKey = messageKey;
         this.args = args;
         this.violatedRule = violatedRule;
-    }
-
-    public BusinessValidationResult(String field, String messageKey, String[] args, String violatedRule, String userOrGroup) {
-        this.field = field;
-        this.messageKey = messageKey;
-        this.args = args;
-        this.violatedRule = violatedRule;
-        this.userOrGroup = userOrGroup;
     }
 
     public BusinessValidationResult(String field, String messageKey, String[] args) {
