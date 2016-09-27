@@ -1,6 +1,7 @@
 package com.springroll.router;
 
 
+import com.springroll.core.BusinessValidationResults;
 import com.springroll.core.DTO;
 import org.springframework.security.core.userdetails.User;
 
@@ -15,15 +16,18 @@ public class JobMeta {
     private Long jobId;
     private Long legId;
     private Long parentJobId;
-    boolean needsBusinessValidation = true;
+    boolean businessValidationAlreadyDoneOnce = false;
     private boolean isAsynchronous = true;
+    private BusinessValidationResults businessValidationResults;
 
-    public JobMeta(List<? extends DTO> payloads, User user, Long jobId, Long legId, Long parentJobId, boolean needsBusinessValidation, boolean isAsynchronous) {
+
+
+    public JobMeta(List<? extends DTO> payloads, User user, Long jobId, Long legId, Long parentJobId, boolean businessValidationAlreadyDoneOnce, boolean isAsynchronous) {
         this.payloads = payloads;
         this.user = user;
         this.jobId = jobId;
         this.parentJobId = parentJobId;
-        this.needsBusinessValidation = needsBusinessValidation;
+        this.businessValidationAlreadyDoneOnce = businessValidationAlreadyDoneOnce;
         this.isAsynchronous = isAsynchronous;
         this.legId = legId;
     }
@@ -48,12 +52,12 @@ public class JobMeta {
         this.parentJobId = parentJobId;
     }
 
-    public boolean isNeedsBusinessValidation() {
-        return needsBusinessValidation;
+    public boolean isBusinessValidationAlreadyDoneOnce() {
+        return businessValidationAlreadyDoneOnce;
     }
 
-    public void setNeedsBusinessValidation(boolean needsBusinessValidation) {
-        this.needsBusinessValidation = needsBusinessValidation;
+    public void setBusinessValidationAlreadyDoneOnce(boolean businessValidationAlreadyDoneOnce) {
+        this.businessValidationAlreadyDoneOnce = businessValidationAlreadyDoneOnce;
     }
 
     public boolean isAsynchronous() {
@@ -82,5 +86,13 @@ public class JobMeta {
 
     public void setLegId(Long legId) {
         this.legId = legId;
+    }
+
+    public BusinessValidationResults getBusinessValidationResults() {
+        return businessValidationResults;
+    }
+
+    public void setBusinessValidationResults(BusinessValidationResults businessValidationResults) {
+        this.businessValidationResults = businessValidationResults;
     }
 }

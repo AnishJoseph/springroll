@@ -44,6 +44,7 @@
             <camel:to uri="bean:startSynchFlow"/>
             <camel:to uri="bean:propertyValidator"/>
             <camel:to uri="bean:enricher"/>
+            <camel:to uri="bean:businessValidator"/>
             <camel:to uri="bean:eventCreator"/>
         </camel:route>
 

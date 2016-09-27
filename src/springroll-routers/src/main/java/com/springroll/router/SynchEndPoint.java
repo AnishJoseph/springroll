@@ -1,5 +1,6 @@
 package com.springroll.router;
 
+import com.springroll.router.exceptions.BusinessValidationException;
 import com.springroll.router.exceptions.PropertyValidationException;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ExchangePattern;
@@ -25,7 +26,9 @@ public class SynchEndPoint {
         try {
             return (Long) synchronousEndPoint.sendBody(synchronousEndPoint.getDefaultEndpoint(), ExchangePattern.InOut, jobMeta);
         }catch (Exception e){
+            /* When we throw BusinessValidationException, PropertyValidationException camel encapsulates it in a camel exception - so get root cause */
             if(e.getCause() instanceof PropertyValidationException) throw (PropertyValidationException)e.getCause();
+            if(e.getCause() instanceof BusinessValidationException) throw (BusinessValidationException)e.getCause();
             throw e;
         }
     }
