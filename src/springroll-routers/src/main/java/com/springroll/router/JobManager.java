@@ -47,6 +47,10 @@ public class JobManager {
             job.setStatus(legMonitor.jobStatus + "Leg" + legId + "-OptLockFail ");
             legMonitor.jobStatus = job.getStatus();
         }
+        removeLegsWithParentId(legId, legMonitor, job);
+    }
+
+    private void removeLegsWithParentId(Long legId, LegMonitor legMonitor, Job job){
         for(Iterator<Map.Entry<Long, Long>> it = legMonitor.refs.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<Long, Long> entry = it.next();
             if(entry.getValue().equals(legId)) {
@@ -55,8 +59,18 @@ public class JobManager {
                 it.remove();
             }
         }
-    }
 
+    }
+    public void handleExceptionInTransactionLeg(Long jobId, Long legId, String status){
+        if(jobId == null || legId == null){
+            logger.debug("In delete reference : Either jobId or legId is null");
+            return;
+        }
+        LegMonitor legMonitor = legMonitorMap.get(jobId);
+        Job job = jobRepository.findOne(jobId);
+        removeLegsWithParentId(legId, legMonitor, job);
+        removeTransactionLegReference(jobId, legId, status);
+    }
     public void removeTransactionLegReference(Long jobId, Long legId, String status){
         if(jobId == null || legId == null){
             logger.debug("In delete reference : Either jobId or legId is null");

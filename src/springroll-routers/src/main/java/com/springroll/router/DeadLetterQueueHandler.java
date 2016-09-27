@@ -41,7 +41,7 @@ public class DeadLetterQueueHandler {
             return;
         }
 
-        jobManager.removeTransactionLegReference(event.getJobId(), event.getLegId(), caused.getClass().getSimpleName());
+        jobManager.handleExceptionInTransactionLeg(event.getJobId(), event.getLegId(), caused.getClass().getSimpleName());
     }
 
     public void setExceptionCauses(Throwable caused, IEvent causingEvent){
