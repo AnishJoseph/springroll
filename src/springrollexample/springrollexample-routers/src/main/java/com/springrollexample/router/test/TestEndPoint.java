@@ -177,7 +177,6 @@ public class TestEndPoint extends SpringrollEndPoint {
                 break;
             case 5:
                 te = new TE5_1();
-                testDO = new TestDTO();
                 te.setPayload(testDO);
                 route(te);
                 break;
