@@ -4,9 +4,13 @@ import com.springroll.core.DTO;
 import com.springroll.core.ContextStore;
 import com.springroll.router.JobMeta;
 import com.springroll.router.SynchEndPoint;
+import com.springroll.router.exceptions.PropertyValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
@@ -20,6 +24,12 @@ import java.util.Map;
 public abstract class AbstractAPI {
     @Autowired
     private SynchEndPoint synchEndPoint;
+
+    @ExceptionHandler(PropertyValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ModelAndView handleValidationException(PropertyValidationException ex) {
+        return propertyViolationsAsModelAndView(ex.getViolations());
+    }
 
     public Long route(DTO payload){
         List<DTO> payloads = new ArrayList<>(1);
