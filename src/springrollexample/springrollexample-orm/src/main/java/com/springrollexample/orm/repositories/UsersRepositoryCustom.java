@@ -1,4 +1,4 @@
-package com.springrollexample.orm.helpers;
+package com.springrollexample.orm.repositories;
 
 import java.util.Collection;
 import java.util.List;

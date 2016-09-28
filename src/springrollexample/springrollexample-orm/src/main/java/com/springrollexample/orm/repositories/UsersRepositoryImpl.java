@@ -1,4 +1,4 @@
-package com.springrollexample.orm.helpers;
+package com.springrollexample.orm.repositories;
 
 import com.springrollexample.orm.entities.Groups;
 import com.springrollexample.orm.entities.Users;

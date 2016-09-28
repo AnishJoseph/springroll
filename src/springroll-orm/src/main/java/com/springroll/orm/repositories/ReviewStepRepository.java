@@ -1,4 +1,4 @@
-package com.springroll.orm.helpers;
+package com.springroll.orm.repositories;
 
 import com.springroll.orm.entities.ReviewStep;
 

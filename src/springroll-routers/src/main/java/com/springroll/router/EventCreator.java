@@ -2,7 +2,7 @@ package com.springroll.router;
 
 import com.springroll.core.*;
 import com.springroll.orm.entities.Job;
-import com.springroll.orm.helpers.JobRepository;
+import com.springroll.orm.repositories.JobRepository;
 import com.springroll.router.review.ReviewNeededEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
