@@ -3,6 +3,7 @@ package com.springroll.router;
 import com.springroll.core.*;
 import com.springroll.orm.entities.Job;
 import com.springroll.orm.helpers.JobRepository;
+import com.springroll.router.review.ReviewNeededEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,15 +53,23 @@ public class EventCreator {
         event.setJobId(jobMeta.getJobId());
         event.setUser(jobMeta.getUser());
         event.setLegId(jobMeta.getLegId());
-        if(jobMeta.isAsynchronous()) {
-            asynchSideEndPoints.routeToJms(event);
-        }else {
-            if(comingDirectlyFromSyncSide){
-                publisher.publishEvent(event);
+        if(jobMeta.getBusinessValidationResults().getReviewNeededViolations().isEmpty()) {
+            if (jobMeta.isAsynchronous()) {
+                asynchSideEndPoints.routeToJms(event);
+            } else {
+                if (comingDirectlyFromSyncSide) {
+                    publisher.publishEvent(event);
+                }
+                asynchSideEndPoints.routeToDynamicRouter(event);
             }
-            asynchSideEndPoints.routeToDynamicRouter(event);
+            return event.getJobId();
         }
+        //* Mark job as under review */
+        ReviewNeededEvent reviewNeededEvent = new ReviewNeededEvent(event, jobMeta.getBusinessValidationResults().getReviewNeededViolations());
+        asynchSideEndPoints.routeToJms(reviewNeededEvent);
+
         return event.getJobId();
+
     }
 
 }

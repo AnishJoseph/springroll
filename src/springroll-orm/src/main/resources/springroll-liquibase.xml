@@ -7,10 +7,10 @@
 
     <changeSet id="springroll-job" author="anish">
         <createTable tableName="JOB">
-            <column name="id" type="bigint" autoIncrement="false">
+            <column name="ID" type="bigint" autoIncrement="false">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="parent_id" type="bigint"/>
+            <column name="PARENT_ID" type="bigint"/>
             <column name="SERIALIZED_PAYLOADS" type="longblob" />
             <column name="START_TIME" type="TIMESTAMP"/>
             <column name="END_TIME" type="TIMESTAMP"/>
@@ -20,6 +20,27 @@
         <createTable tableName="SEQUENCE_TABLE">
             <column name="SEQ_NAME" type="VARCHAR2(255)" />
             <column name="SEQ_COUNT" type="bigint" defaultValue="0"/>
+        </createTable>
+        <createTable tableName="REVIEW_RULES">
+            <column name="ID" type="bigint" autoIncrement="false">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="PARENT_ID" type="bigint"/>
+            <column name="RULE_NAME" type="VARCHAR2(48)" />
+            <column name="REVIEW_STAGE" type="int" defaultValue="1"/>
+            <column name="REVIEWER" type="VARCHAR2(48)"/>
+            <column name="NUMBER_OF_APPROVALS_NEEDED" type="int" defaultValue="1"/>
+            <column name="DESCRIPTION" type="VARCHAR2(128)"/>
+        </createTable>
+        <createTable tableName="REVIEW_STEP">
+            <column name="ID" type="bigint" autoIncrement="false">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="PARENT_ID" type="bigint"/>
+            <column name="RULE_ID" type="bigint"/>
+            <column name="REVIEW_STAGE" type="int" />
+            <column name="COMPLETED" type="bit" />
+            <column name="REVIEWED_BY" type="VARCHAR2(1024)"/>
         </createTable>
 
     </changeSet>

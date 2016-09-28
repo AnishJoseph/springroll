@@ -104,6 +104,7 @@ public class DynamicRouter {
              */
 
             if (subscription.isNewTransaction()) {
+                //FIXME - Handle ISignallingEvent properly - they should be listened to in @RecieveInNewTransaction
                 IEvent eventToSendToJMS;
                 try {
                     eventToSendToJMS = event.getClass().newInstance();

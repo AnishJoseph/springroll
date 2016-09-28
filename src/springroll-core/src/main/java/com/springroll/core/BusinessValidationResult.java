@@ -1,9 +1,11 @@
 package com.springroll.core;
 
+import java.io.Serializable;
+
 /**
  * Created by anishjoseph on 27/09/16.
  */
-public class BusinessValidationResult {
+public class BusinessValidationResult implements Serializable{
     private String field;
     private String messageKey;
     private String[] args;
