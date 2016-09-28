@@ -28,18 +28,18 @@ public class AsynchSideEndPoints {
      * Route an event (IEvent) to JMS. This endpoint is InOnly - i.e there is no return value
      * Since the event is delivered via JMS, it will be processed in another thread (and another transaction)<p></p>
      * <b>Note: </b> Delivery of the message ONLY happens IF the current transaction commits
-     * @param payload - Object of type IEvent
+     * @param event - Object of type IEvent
      */
-    public void routeToJms(IEvent payload){
-        jmsEndPoint.sendBody(jmsEndPoint.getDefaultEndpoint(), ExchangePattern.InOnly, payload);
+    public void routeToJms(IEvent event){
+        jmsEndPoint.sendBody(jmsEndPoint.getDefaultEndpoint(), ExchangePattern.InOnly, event);
     }
 
     /**
      * Route an event directly to 'DynamicRouter' - this happens synchronously and will be processed in
      * the same transaction as the caller.
-     * @param payload - Object of type IEvent
+     * @param event - Object of type IEvent
      */
-    public void routeToDynamicRouter(IEvent payload){
-        dynamicRouterEndPoint.sendBody(dynamicRouterEndPoint.getDefaultEndpoint(), ExchangePattern.InOnly, payload);
+    public void routeToDynamicRouter(IEvent event){
+        dynamicRouterEndPoint.sendBody(dynamicRouterEndPoint.getDefaultEndpoint(), ExchangePattern.InOnly, event);
     }
 }
