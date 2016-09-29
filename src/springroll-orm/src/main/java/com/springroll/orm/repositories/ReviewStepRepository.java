@@ -9,6 +9,7 @@ import java.util.List;
  */
 public interface ReviewStepRepository extends AbstractEntityRepository<ReviewStep>{
     List<ReviewStep> findByParentIdAndReviewStageIsGreaterThan(Long parentId, int reviewStage);
+    List<ReviewStep> findByCompletedIsFalseAndParentIdAndReviewStageIsLessThan(Long parentId, int reviewStage);
     List<ReviewStep> findByParentIdAndReviewStage(Long parentId, int reviewStage);
     ReviewStep findByParentIdAndSerializedEventIsNotNull(Long parentId);
 

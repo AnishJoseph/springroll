@@ -2,17 +2,20 @@ package com.springroll.router.review;
 
 import com.springroll.core.BusinessValidationResult;
 import com.springroll.core.ContextStore;
+import com.springroll.core.ReviewData;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.entities.ReviewRules;
 import com.springroll.orm.repositories.ReviewStepRepository;
 import com.springroll.orm.repositories.ReviewRulesRepository;
 import com.springroll.router.SpringrollEndPoint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +24,8 @@ import java.util.List;
  */
 @Service
 public class ReviewManager extends SpringrollEndPoint {
+    private static final Logger logger = LoggerFactory.getLogger(ReviewManager.class);
+
     @Autowired
     ApplicationEventPublisher publisher;
 
@@ -66,11 +71,23 @@ public class ReviewManager extends SpringrollEndPoint {
     }
 
     public void on(ReviewActionEvent reviewActionEvent){
-        //FIXME - handle missing review step
-        User user = SpringrollSecurity.getUser();
         ReviewActionDTO reviewActionDTO = reviewActionEvent.getPayload();
         ReviewStep reviewStep = reviewStepRepository.findOne(reviewActionDTO.getReviewStepId());
-        reviewStep.setReviewedBy(user.getUsername());
+        List<ReviewStep> earlierUncompletedSteps = reviewStepRepository.findByCompletedIsFalseAndParentIdAndReviewStageIsLessThan(reviewStep.getParentId(), reviewStep.getReviewStage());
+        if(!earlierUncompletedSteps.isEmpty()){
+            logger.error("User '{}' is trying to approve a step that is not yet ready for approval", reviewActionEvent.getUser().getUsername());
+            return;
+        }
+        if(reviewStep == null){
+            logger.error("Unable to find a review step with id {} - returning silently", reviewActionDTO.getReviewStepId());
+            return;
+        }
+        reviewStep.addReviewData(new ReviewData(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionEvent.getPayload().isApproved()));
+        ReviewRules reviewRule = reviewRulesRepository.findOne(reviewStep.getRuleId());
+        if(reviewRule.getNumberOfApprovalsNeeded() > reviewStep.getReviewData().size()){
+            /* Oh this rule requires more that one approver for this stage - nothing to do */
+            return;
+        }
         reviewStep.setCompleted(true);
         //FIXME - notify the Notificataion Manager that the step is complete
         List<ReviewStep> reviewSteps = findNextReviewStep(reviewStep.getParentId(), reviewStep.getReviewStage());

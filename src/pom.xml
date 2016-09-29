@@ -31,6 +31,7 @@
         <version.spring.security>4.0.3.RELEASE</version.spring.security>
         <version.spring.ldap>2.0.4.RELEASE</version.spring.ldap>
         <javax.validation.version>1.1.0.Final</javax.validation.version>
+        <jackson-databind.version>2.8.3</jackson-databind.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -295,7 +296,16 @@
                 <artifactId>validation-api</artifactId>
                 <version>${javax.validation.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson-databind.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson-databind.version}</version>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>
