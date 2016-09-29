@@ -18,7 +18,7 @@ public class SpringrollAPI extends AbstractAPI {
 
     @RequestMapping(value = "/approve", method = RequestMethod.GET)
     public Long approve() {
-        ReviewActionDTO reviewActionDTO = new ReviewActionDTO(1L, 1L, true);
+        ReviewActionDTO reviewActionDTO = new ReviewActionDTO(1L, 1L, false);
         return route(reviewActionDTO);
     }
     @RequestMapping(value = "/testPipelineSimple", method = RequestMethod.GET)

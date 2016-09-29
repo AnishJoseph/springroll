@@ -81,41 +81,48 @@ public class ReviewManager extends SpringrollEndPoint {
         }
         List<ReviewStep> earlierUncompletedSteps = reviewStepRepository.findByCompletedIsFalseAndParentIdAndReviewStageIsLessThan(reviewStep.getParentId(), reviewStep.getReviewStage());
         if(!earlierUncompletedSteps.isEmpty()){
-            logger.error("User '{}' is trying to approve a step that is not yet ready for approval", reviewActionEvent.getUser().getUsername());
+            logger.error("User '{}' is trying to approve/reject a step that is not yet ready for approval", reviewActionEvent.getUser().getUsername());
             return;
         }
         reviewStep.addReviewData(new ReviewData(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionEvent.getPayload().isApproved()));
         ReviewRules reviewRule = reviewRulesRepository.findOne(reviewStep.getRuleId());
-        if(reviewRule.getNumberOfApprovalsNeeded() > reviewStep.getReviewData().size()){
+        if(reviewActionDTO.isApproved() && reviewRule.getNumberOfApprovalsNeeded() > reviewStep.getReviewData().size()){
             /* Oh this rule requires more that one approver for this stage - nothing to do */
             return;
         }
         reviewStep.setCompleted(true);
         //FIXME - notify the Notificataion Manager that the step is complete
-        List<ReviewStep> reviewSteps = findNextReviewStep(reviewStep.getParentId(), reviewStep.getReviewStage());
-        if(reviewSteps.isEmpty()){
-            // All reviews are complete
-            ReviewStep step = reviewStepRepository.findByParentIdAndSerializedEventIsNotNull(reviewStep.getParentId());
 
-            IEvent reviewedEvent = step.getEvent();
+        List<ReviewStep> reviewSteps = findNextReviewStep(reviewStep.getParentId(), reviewStep.getReviewStage());
+        if(reviewSteps.isEmpty() || !reviewActionDTO.isApproved()){
+            // All reviews are complete or someone has rejected this
             List<ReviewStep> allReviewSteps = reviewStepRepository.findByParentId(reviewStep.getParentId());
             List<ReviewData> reviewData = new ArrayList<>();
             for (ReviewStep rs : allReviewSteps) {
                 reviewData.addAll(rs.getReviewData());
             }
-
-            if(reviewedEvent instanceof ReviewableEvent) {
-                ((ReviewableEvent) reviewedEvent).setReviewData(reviewData);
-                ((ReviewableEvent) reviewedEvent).setApproved(reviewActionEvent.getPayload().isApproved());
-            }
             reviewStepRepository.delete(allReviewSteps);
             Job job = jobRepository.findOne(reviewStep.getParentId());
             job.setReviewData(reviewData);
-            // The context at this point is that of the user that made the approval.  However as we push the event that was under
-            // review back into the system we need to change the context to that event
-            ContextStore.put(reviewedEvent.getUser(), reviewedEvent.getJobId(), reviewedEvent.getLegId());
-            publisher.publishEvent(step.getEvent());
-            route(step.getEvent());
+
+            if(reviewActionDTO.isApproved()) {
+                // find the step with the payload so that we can deserialize it and send it for processing
+                ReviewStep step = reviewStepRepository.findByParentIdAndSerializedEventIsNotNull(reviewStep.getParentId());
+                IEvent reviewedEvent = step.getEvent();
+                if (reviewedEvent instanceof ReviewableEvent) {
+                    ((ReviewableEvent) reviewedEvent).setReviewData(reviewData);
+                    ((ReviewableEvent) reviewedEvent).setApproved(reviewActionEvent.getPayload().isApproved());
+                }
+                // The context at this point is that of the user that made the approval.  However as we push the event that was under
+                // review back into the system we need to change the context to that event
+                ContextStore.put(reviewedEvent.getUser(), reviewedEvent.getJobId(), reviewedEvent.getLegId());
+                publisher.publishEvent(step.getEvent());
+                route(step.getEvent());
+            } else {
+                job.setEndTime(LocalDateTime.now());
+                job.setStatus(job.getStatus() + " Review Rejected by " + reviewActionEvent.getUser().getUsername());
+                job.setJobDone(true);
+            }
         }
         createReviewNotifications(reviewSteps);
     }
