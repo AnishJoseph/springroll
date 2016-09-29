@@ -50,7 +50,7 @@ public class EventCreator {
             job.setParentId(jobMeta.getParentJobId());
             jobRepository.save(job);
             jobMeta.setJobId(job.getID());
-            if(needsReview)job.setStatus("Under Review");
+            if(needsReview)job.setStatus("Under Review ");
             ContextStore.put(jobMeta.getUser(), jobMeta.getJobId(), jobManager.registerNewTransactionLeg(jobMeta.getJobId(), 0L));
             jobMeta.setLegId(ContextStore.getLegId());
         }
@@ -70,7 +70,7 @@ public class EventCreator {
         }
         if(!comingDirectlyFromSyncSide){
             job = jobRepository.findOne(event.getJobId());
-            job.setStatus(job.getStatus() + " Under Review");
+            job.setStatus(job.getStatus() + " Under Review ");
         }
         ReviewNeededEvent reviewNeededEvent = new ReviewNeededEvent(event, jobMeta.getBusinessValidationResults().getReviewNeededViolations());
         asynchSideEndPoints.routeToJms(reviewNeededEvent);
