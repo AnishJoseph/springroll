@@ -1,4 +1,4 @@
-package com.springrollexample.orm.entities;
+package com.springroll.orm.entities;
 
 
 import com.springroll.orm.entities.AbstractEntity;

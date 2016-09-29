@@ -1,7 +1,7 @@
-package com.springrollexample.orm.repositories;
+package com.springroll.orm.repositories;
 
-import com.springrollexample.orm.entities.Groups;
-import com.springrollexample.orm.entities.Users;
+import com.springroll.orm.entities.Groups;
+import com.springroll.orm.entities.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;

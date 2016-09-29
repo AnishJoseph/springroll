@@ -1,7 +1,6 @@
-package com.springrollexample.api.facade;
+package com.springroll.api.facade.security;
 
-import com.springrollexample.core.security.SpringrollExampleUser;
-import com.springrollexample.orm.repositories.UsersRepository;
+import com.springroll.orm.repositories.UsersRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
