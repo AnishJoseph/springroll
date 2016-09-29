@@ -10,6 +10,8 @@ public class ReviewActionDTO implements DTO{
     private Long reviewStepId;
     private boolean approved;
 
+    public ReviewActionDTO(){}
+
     public ReviewActionDTO(Long notificationId, Long reviewStepId, boolean approved) {
         this.notificationId = notificationId;
         this.reviewStepId = reviewStepId;

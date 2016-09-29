@@ -1,7 +1,6 @@
 package com.springrollexample.api.facade;
 
 import com.springroll.api.facade.AbstractAPI;
-import com.springroll.router.review.ReviewActionDTO;
 import com.springrollexample.router.test.TestDTO;
 import com.springrollexample.router.test.TestRootEvent;
 import org.slf4j.Logger;
@@ -13,14 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Transactional
 @RestController
-public class SpringrollAPI extends AbstractAPI {
-    private static final Logger logger = LoggerFactory.getLogger(SpringrollAPI.class);
+public class SpringrollExampleAPI extends AbstractAPI {
+    private static final Logger logger = LoggerFactory.getLogger(SpringrollExampleAPI.class);
 
-    @RequestMapping(value = "/approve", method = RequestMethod.GET)
-    public Long approve() {
-        ReviewActionDTO reviewActionDTO = new ReviewActionDTO(1L, 1L, false);
-        return route(reviewActionDTO);
-    }
     @RequestMapping(value = "/testPipelineSimple", method = RequestMethod.GET)
     public Long testPipelineSimple() {
         TestDTO testDTO = new TestDTO();

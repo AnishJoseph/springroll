@@ -25,8 +25,19 @@
             });
         });
         $("#Test3").click(function(){
-            $.get("api/approve", function(data, status){
-            });
+            data = '{"approved":true, "notificationId":1,"reviewStepId":1}';
+            $.ajax(
+                    {
+                        url: '/api/sr/reviewaction',
+                        type: 'POST',
+                        data: data,
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        success: function (msg) {
+                            alert(msg);
+                        }
+                    }
+            );
         });
     });
 </script>
