@@ -1,11 +1,18 @@
 package com.springroll.orm.entities;
 
 
+import com.springroll.core.DTO;
+import com.springroll.core.IEvent;
+import org.hibernate.internal.util.SerializationHelper;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by anishjoseph on 05/09/16.
@@ -29,10 +36,28 @@ public class ReviewStep extends AbstractEntity {
     @Column(name = "REVIEWED_BY")
     private String reviewedBy;
 
+    @Column(name = "SERIALIZED_EVENT")
+    @Lob
+    private byte[] serializedEvent;
+
+    private transient IEvent event;
+
+    public ReviewStep(){}
     public ReviewStep(Long ruleId, int reviewStage, Long parentId) {
         this.ruleId = ruleId;
         this.reviewStage = reviewStage;
         this.setParentId(parentId);
+    }
+
+    public IEvent getEvent() {
+        if (this.event == null)
+            this.event = (IEvent) SerializationHelper.deserialize(serializedEvent);
+        return event;
+    }
+
+    public void setEvent(IEvent event) {
+        this.event = event;
+        serializedEvent = SerializationHelper.serialize((Serializable) event);
     }
 
     public Long getRuleId() {

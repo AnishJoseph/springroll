@@ -5,7 +5,6 @@ import com.springroll.router.exceptions.PropertyValidationException;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.processor.validation.PredicateValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

@@ -7,13 +7,25 @@
 </head>
 <body>
         <h1>Hello World - SpringRoll Example</h1>
-        <button name="Test1">Desscription </button>
+        <button id="Test1">Exception  Test </button>
+        <button id="Test2">Competing Threads  Test </button>
+        <button id="Test3">Approve</button>
 </body>
 <script>
     $(document).ready(function(){
-        $("button").click(function(){
+        $("#Test1").click(function(){
             $.get("api/testPipelineSimple", function(data, status){
-                alert("Data: " + data + "\nStatus: " + status);
+//                alert("Data: " + data + "\nStatus: " + status);
+
+            });
+        });
+        $("#Test2").click(function(){
+            $.get("api/testCompetingThreads", function(data, status){
+//                alert("Data: " + data + "\nStatus: " + status);
+            });
+        });
+        $("#Test3").click(function(){
+            $.get("api/approve", function(data, status){
             });
         });
     });

@@ -41,6 +41,7 @@ public class EventCreator {
         }
         event.setPayloads(jobMeta.getPayloads());
         if(jobMeta.getJobId() == null) {
+            //Fixme - handle signalling events
             comingDirectlyFromSyncSide = true;
             Job job = new Job();
             job.setPayloads(jobMeta.getPayloads());
@@ -53,7 +54,7 @@ public class EventCreator {
         event.setJobId(jobMeta.getJobId());
         event.setUser(jobMeta.getUser());
         event.setLegId(jobMeta.getLegId());
-        if(jobMeta.getBusinessValidationResults().getReviewNeededViolations().isEmpty()) {
+        if(jobMeta.getBusinessValidationResults() == null || jobMeta.getBusinessValidationResults().getReviewNeededViolations() == null || jobMeta.getBusinessValidationResults().getReviewNeededViolations().isEmpty()){
             if (jobMeta.isAsynchronous()) {
                 asynchSideEndPoints.routeToJms(event);
             } else {

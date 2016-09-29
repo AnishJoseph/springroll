@@ -41,6 +41,7 @@
             <column name="REVIEW_STAGE" type="int" />
             <column name="COMPLETED" type="bit" />
             <column name="REVIEWED_BY" type="VARCHAR2(1024)"/>
+            <column name="SERIALIZED_EVENT" type="longblob" />
         </createTable>
 
     </changeSet>
