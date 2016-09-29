@@ -40,14 +40,17 @@ public class EventCreator {
             return -1L;
         }
         event.setPayloads(jobMeta.getPayloads());
+        Job job = null;
+        boolean needsReview =  jobMeta.getBusinessValidationResults() != null && jobMeta.getBusinessValidationResults().getReviewNeededViolations() != null && !jobMeta.getBusinessValidationResults().getReviewNeededViolations().isEmpty();
         if(jobMeta.getJobId() == null) {
             //Fixme - handle signalling events
             comingDirectlyFromSyncSide = true;
-            Job job = new Job();
+            job = new Job();
             job.setPayloads(jobMeta.getPayloads());
             job.setParentId(jobMeta.getParentJobId());
             jobRepository.save(job);
             jobMeta.setJobId(job.getID());
+            if(needsReview)job.setStatus("Under Review");
             ContextStore.put(jobMeta.getUser(), jobMeta.getJobId(), jobManager.registerNewTransactionLeg(jobMeta.getJobId(), 0L));
             jobMeta.setLegId(ContextStore.getLegId());
         }
@@ -65,10 +68,12 @@ public class EventCreator {
             }
             return event.getJobId();
         }
-        //* Mark job as under review */
+        if(!comingDirectlyFromSyncSide){
+            job = jobRepository.findOne(event.getJobId());
+            job.setStatus(job.getStatus() + " Under Review");
+        }
         ReviewNeededEvent reviewNeededEvent = new ReviewNeededEvent(event, jobMeta.getBusinessValidationResults().getReviewNeededViolations());
         asynchSideEndPoints.routeToJms(reviewNeededEvent);
-
         return event.getJobId();
 
     }

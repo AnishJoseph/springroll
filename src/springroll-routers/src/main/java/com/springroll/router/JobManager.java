@@ -28,7 +28,10 @@ public class JobManager {
         Long newLegId = 1l;
         LegMonitor legMonitor = legMonitorMap.get(jobId);
         if(legMonitor == null){
-            legMonitor = new LegMonitor();
+            Job job = jobRepository.findOne(jobId);
+            String status = "";
+            if(job.getStatus() != null && !job.getStatus().isEmpty())status = job.getStatus();
+            legMonitor = new LegMonitor(status);
             synchronized (legMonitorMap){
 //                cleanup();
                 legMonitorMap.put(jobId, legMonitor);
@@ -117,8 +120,9 @@ public class JobManager {
         private Map<Long, Long> refs = new HashMap<>();
         private Long legId = 1l;
         String jobStatus = "";
-        public LegMonitor(){
+        public LegMonitor(String jobStatus){
             refs.put(legId, 0L);
+            this.jobStatus = jobStatus;
         }
 
         public Long addRef(Long parentLegId){
