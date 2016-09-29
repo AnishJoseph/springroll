@@ -73,13 +73,13 @@ public class ReviewManager extends SpringrollEndPoint {
     public void on(ReviewActionEvent reviewActionEvent){
         ReviewActionDTO reviewActionDTO = reviewActionEvent.getPayload();
         ReviewStep reviewStep = reviewStepRepository.findOne(reviewActionDTO.getReviewStepId());
+        if(reviewStep == null){
+            logger.error("Unable to find a review step with id {} - returning silently", reviewActionDTO.getReviewStepId());
+            return;
+        }
         List<ReviewStep> earlierUncompletedSteps = reviewStepRepository.findByCompletedIsFalseAndParentIdAndReviewStageIsLessThan(reviewStep.getParentId(), reviewStep.getReviewStage());
         if(!earlierUncompletedSteps.isEmpty()){
             logger.error("User '{}' is trying to approve a step that is not yet ready for approval", reviewActionEvent.getUser().getUsername());
-            return;
-        }
-        if(reviewStep == null){
-            logger.error("Unable to find a review step with id {} - returning silently", reviewActionDTO.getReviewStepId());
             return;
         }
         reviewStep.addReviewData(new ReviewData(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionEvent.getPayload().isApproved()));
