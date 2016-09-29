@@ -13,7 +13,7 @@ import java.util.List;
  * anish ';kj;as '';lj qwqwkp
  * @since 1.0
  */
-public class AbstractEvent<T extends DTO> implements IEvent<T> {
+public abstract class AbstractEvent<T extends DTO> implements IEvent<T> {
     private static final long serialVersionUID = 1L;
 
     private User user;

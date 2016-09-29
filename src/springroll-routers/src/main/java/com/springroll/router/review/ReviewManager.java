@@ -1,11 +1,10 @@
 package com.springroll.router.review;
 
-import com.springroll.core.BusinessValidationResult;
-import com.springroll.core.ContextStore;
-import com.springroll.core.ReviewData;
-import com.springroll.core.SpringrollSecurity;
+import com.springroll.core.*;
+import com.springroll.orm.entities.Job;
 import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.entities.ReviewRules;
+import com.springroll.orm.repositories.JobRepository;
 import com.springroll.orm.repositories.ReviewStepRepository;
 import com.springroll.orm.repositories.ReviewRulesRepository;
 import com.springroll.router.SpringrollEndPoint;
@@ -34,6 +33,9 @@ public class ReviewManager extends SpringrollEndPoint {
 
     @Autowired
     ReviewStepRepository reviewStepRepository;
+
+    @Autowired
+    JobRepository jobRepository;
 
     public void on(ReviewNeededEvent reviewNeededEvent){
         createReviewSteps(reviewNeededEvent.getPayload().getReviewNeededViolations(), reviewNeededEvent.getPayload().getEventForReview().getJobId(), reviewNeededEvent);
@@ -94,10 +96,24 @@ public class ReviewManager extends SpringrollEndPoint {
         if(reviewSteps.isEmpty()){
             // All reviews are complete
             ReviewStep step = reviewStepRepository.findByParentIdAndSerializedEventIsNotNull(reviewStep.getParentId());
-            // The context at this point is that of the user that approved
-            // howeever as we push the event that was under review back into
-            // the system we need to change the context to that event
-            ContextStore.put(step.getEvent().getUser(), step.getEvent().getJobId(), step.getEvent().getLegId());
+
+            IEvent reviewedEvent = step.getEvent();
+            List<ReviewStep> allReviewSteps = reviewStepRepository.findByParentId(reviewStep.getParentId());
+            List<ReviewData> reviewData = new ArrayList<>();
+            for (ReviewStep rs : allReviewSteps) {
+                reviewData.addAll(rs.getReviewData());
+            }
+
+            if(reviewedEvent instanceof ReviewableEvent) {
+                ((ReviewableEvent) reviewedEvent).setReviewData(reviewData);
+                ((ReviewableEvent) reviewedEvent).setApproved(reviewActionEvent.getPayload().isApproved());
+            }
+            reviewStepRepository.delete(allReviewSteps);
+            Job job = jobRepository.findOne(reviewStep.getParentId());
+            job.setReviewData(reviewData);
+            // The context at this point is that of the user that made the approval.  However as we push the event that was under
+            // review back into the system we need to change the context to that event
+            ContextStore.put(reviewedEvent.getUser(), reviewedEvent.getJobId(), reviewedEvent.getLegId());
             publisher.publishEvent(step.getEvent());
             route(step.getEvent());
         }

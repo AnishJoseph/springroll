@@ -1,13 +1,19 @@
 package com.springroll.orm.entities;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.DTO;
+import com.springroll.core.ReviewData;
 import org.hibernate.annotations.Type;
 import org.hibernate.internal.util.SerializationHelper;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,6 +47,11 @@ public class Job extends AbstractEntity {
     private boolean jobDone;
 
     private String status;
+
+    @Column(name = "SERIALIZED_REVIEW_DATA")
+    private String serializedReviewData;
+
+    private transient List<ReviewData> reviewData;
 
     public boolean isJobDone() {
         return jobDone;
@@ -84,4 +95,27 @@ public class Job extends AbstractEntity {
         this.payloads = payloads;
         serializedPayloads = SerializationHelper.serialize((Serializable) payloads);
     }
+    public List<ReviewData> getReviewData() {
+        if (this.reviewData == null && serializedReviewData != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            try {
+                this.reviewData = mapper.readValue(serializedReviewData, new TypeReference<List<ReviewData>>(){});
+            } catch (IOException e) {
+                return null;
+            }
+        }
+        return reviewData;
+    }
+
+    public void setReviewData(List<ReviewData> reviewData) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        this.reviewData = reviewData;
+        try {
+            serializedReviewData = mapper.writeValueAsString(reviewData);
+        } catch (JsonProcessingException e) {
+        }
+    }
+
 }
