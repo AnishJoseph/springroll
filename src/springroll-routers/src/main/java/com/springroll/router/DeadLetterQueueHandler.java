@@ -27,6 +27,7 @@ public class DeadLetterQueueHandler {
 
     public void on(Exchange exchange, IEvent event){
         ExceptionCauses causedExceptionDetails = getCausedExceptionDetails(event);
+        if(causedExceptionDetails == null)return;//FIXME - what to do here?
         Throwable caused = causedExceptionDetails.caused;
         if(isLockingIssue(caused)){
             jobManager.handleOptimisticLockFailure(event.getJobId(), event.getLegId());
