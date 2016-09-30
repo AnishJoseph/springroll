@@ -5,6 +5,7 @@ import com.springroll.orm.entities.Job;
 import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.entities.ReviewRules;
 import com.springroll.orm.repositories.JobRepository;
+import com.springroll.orm.repositories.Repositories;
 import com.springroll.orm.repositories.ReviewStepRepository;
 import com.springroll.orm.repositories.ReviewRulesRepository;
 import com.springroll.router.SpringrollEndPoint;
@@ -29,13 +30,7 @@ public class ReviewManager extends SpringrollEndPoint {
     ApplicationEventPublisher publisher;
 
     @Autowired
-    ReviewRulesRepository reviewRulesRepository;
-
-    @Autowired
-    ReviewStepRepository reviewStepRepository;
-
-    @Autowired
-    JobRepository jobRepository;
+    Repositories repo;
 
     public void on(ReviewNeededEvent reviewNeededEvent){
         createReviewSteps(reviewNeededEvent.getPayload().getReviewNeededViolations(), reviewNeededEvent.getPayload().getEventForReview().getJobId(), reviewNeededEvent);
@@ -46,7 +41,7 @@ public class ReviewManager extends SpringrollEndPoint {
     private void createReviewSteps(List<BusinessValidationResult> reviewNeededViolations, Long jobId, ReviewNeededEvent reviewNeededEvent){
         List<ReviewRules> reviewRules = new ArrayList<>();
         for (BusinessValidationResult businessValidationResult : reviewNeededViolations) {
-            reviewRules.addAll(reviewRulesRepository.findByRuleName(businessValidationResult.getViolatedRule()));
+            reviewRules.addAll(repo.reviewRules.findByRuleName(businessValidationResult.getViolatedRule()));
         }
         List<ReviewStep> reviewSteps = new ArrayList<>();
         for (ReviewRules reviewRule : reviewRules) {
@@ -54,15 +49,15 @@ public class ReviewManager extends SpringrollEndPoint {
             reviewSteps.add(reviewStep);
         }
         reviewSteps.get(0).setEvent(reviewNeededEvent.getPayload().getEventForReview());
-        reviewStepRepository.save(reviewSteps);
+        repo.reviewStep.save(reviewSteps);
     }
     private List<ReviewStep> findNextReviewStep(Long jobId, int completedStepId){
-        List<ReviewStep> allFutureSteps = reviewStepRepository.findByParentIdAndReviewStageIsGreaterThan(jobId, completedStepId);
+        List<ReviewStep> allFutureSteps = repo.reviewStep.findByParentIdAndReviewStageIsGreaterThan(jobId, completedStepId);
         int minReviewStage = 10000;
         for (ReviewStep futureStep : allFutureSteps) {
             if(futureStep.getReviewStage() < minReviewStage)minReviewStage = futureStep.getReviewStage();
         }
-        List<ReviewStep> nextSteps = reviewStepRepository.findByParentIdAndReviewStage(jobId, minReviewStage);
+        List<ReviewStep> nextSteps = repo.reviewStep.findByParentIdAndReviewStage(jobId, minReviewStage);
         return nextSteps;
     }
 
@@ -74,18 +69,18 @@ public class ReviewManager extends SpringrollEndPoint {
 
     public void on(ReviewActionEvent reviewActionEvent){
         ReviewActionDTO reviewActionDTO = reviewActionEvent.getPayload();
-        ReviewStep reviewStep = reviewStepRepository.findOne(reviewActionDTO.getReviewStepId());
+        ReviewStep reviewStep = repo.reviewStep.findOne(reviewActionDTO.getReviewStepId());
         if(reviewStep == null){
             logger.error("Unable to find a review step with id {} - returning silently", reviewActionDTO.getReviewStepId());
             return;
         }
-        List<ReviewStep> earlierUncompletedSteps = reviewStepRepository.findByCompletedIsFalseAndParentIdAndReviewStageIsLessThan(reviewStep.getParentId(), reviewStep.getReviewStage());
+        List<ReviewStep> earlierUncompletedSteps = repo.reviewStep.findByCompletedIsFalseAndParentIdAndReviewStageIsLessThan(reviewStep.getParentId(), reviewStep.getReviewStage());
         if(!earlierUncompletedSteps.isEmpty()){
             logger.error("User '{}' is trying to approve/reject a step that is not yet ready for approval", reviewActionEvent.getUser().getUsername());
             return;
         }
         reviewStep.addReviewData(new ReviewData(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionEvent.getPayload().isApproved()));
-        ReviewRules reviewRule = reviewRulesRepository.findOne(reviewStep.getRuleId());
+        ReviewRules reviewRule = repo.reviewRules.findOne(reviewStep.getRuleId());
         if(reviewActionDTO.isApproved() && reviewRule.getNumberOfApprovalsNeeded() > reviewStep.getReviewData().size()){
             /* Oh this rule requires more that one approver for this stage - nothing to do */
             return;
@@ -96,18 +91,18 @@ public class ReviewManager extends SpringrollEndPoint {
         List<ReviewStep> reviewSteps = findNextReviewStep(reviewStep.getParentId(), reviewStep.getReviewStage());
         if(reviewSteps.isEmpty() || !reviewActionDTO.isApproved()){
             // All reviews are complete or someone has rejected this
-            List<ReviewStep> allReviewSteps = reviewStepRepository.findByParentId(reviewStep.getParentId());
+            List<ReviewStep> allReviewSteps = repo.reviewStep.findByParentId(reviewStep.getParentId());
             List<ReviewData> reviewData = new ArrayList<>();
             for (ReviewStep rs : allReviewSteps) {
                 reviewData.addAll(rs.getReviewData());
             }
-            reviewStepRepository.delete(allReviewSteps);
-            Job job = jobRepository.findOne(reviewStep.getParentId());
+            repo.reviewStep.delete(allReviewSteps);
+            Job job = repo.job.findOne(reviewStep.getParentId());
             job.setReviewData(reviewData);
 
             if(reviewActionDTO.isApproved()) {
                 // find the step with the payload so that we can deserialize it and send it for processing
-                ReviewStep step = reviewStepRepository.findByParentIdAndSerializedEventIsNotNull(reviewStep.getParentId());
+                ReviewStep step = repo.reviewStep.findByParentIdAndSerializedEventIsNotNull(reviewStep.getParentId());
                 IEvent reviewedEvent = step.getEvent();
                 if (reviewedEvent instanceof ReviewableEvent) {
                     ((ReviewableEvent) reviewedEvent).setReviewData(reviewData);

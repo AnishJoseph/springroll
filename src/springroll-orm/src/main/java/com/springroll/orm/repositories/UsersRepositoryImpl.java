@@ -4,7 +4,6 @@ import com.springroll.orm.entities.Groups;
 import com.springroll.orm.entities.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -13,9 +12,6 @@ import java.util.List;
  * Created by anishjoseph on 26/09/16.
  */
 public class UsersRepositoryImpl implements UsersRepositoryCustom {
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Autowired
     UsersRepository usersRepository;
 

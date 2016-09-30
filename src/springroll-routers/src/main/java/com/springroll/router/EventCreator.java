@@ -2,7 +2,7 @@ package com.springroll.router;
 
 import com.springroll.core.*;
 import com.springroll.orm.entities.Job;
-import com.springroll.orm.repositories.JobRepository;
+import com.springroll.orm.repositories.Repositories;
 import com.springroll.router.review.ReviewNeededEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ public class EventCreator {
     AsynchSideEndPoints asynchSideEndPoints;
 
     @Autowired
-    JobRepository jobRepository;
+    Repositories repo;
 
     @Autowired
     JobManager jobManager;
@@ -48,7 +48,7 @@ public class EventCreator {
             job = new Job();
             job.setPayloads(jobMeta.getPayloads());
             job.setParentId(jobMeta.getParentJobId());
-            jobRepository.save(job);
+            repo.job.save(job);
             jobMeta.setJobId(job.getID());
             if(needsReview)job.setStatus("Under Review ");
             ContextStore.put(jobMeta.getUser(), jobMeta.getJobId(), jobManager.registerNewTransactionLeg(jobMeta.getJobId(), 0L));
@@ -69,7 +69,7 @@ public class EventCreator {
             return event.getJobId();
         }
         if(!comingDirectlyFromSyncSide){
-            job = jobRepository.findOne(event.getJobId());
+            job = repo.job.findOne(event.getJobId());
             job.setStatus(job.getStatus() + " Under Review ");
         }
         ReviewNeededEvent reviewNeededEvent = new ReviewNeededEvent(event, jobMeta.getBusinessValidationResults().getReviewNeededViolations());

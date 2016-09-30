@@ -1,5 +1,6 @@
 package com.springroll.api.facade.security;
 
+import com.springroll.orm.repositories.Repositories;
 import com.springroll.orm.repositories.UsersRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ import java.util.List;
 public class SpringrollUserDetailsService implements UserDetailsService, UserDetailsContextMapper, LdapAuthoritiesPopulator {
     private static final Logger logger = LoggerFactory.getLogger(SpringrollUserDetailsService.class);
     @Autowired
-    UsersRepository usersRepository;
+    Repositories repo;
 
     private String mappedUserName = null;
     private String mappedDisplayName = null;
@@ -42,7 +43,7 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
     //Expects username in CAPS
     private SpringrollUser loadUser(String username, Collection<? extends GrantedAuthority> authorities) throws UsernameNotFoundException {
         SpringrollUser user = new SpringrollUser(username, "dummyPassword", authorities);
-        user.setGroups(usersRepository.getGroupsForUserId(username));
+        user.setGroups(repo.users.getGroupsForUserId(username));
         return user;
 
     }
@@ -90,7 +91,7 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
     public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations ctx, String username) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         username = getUsername(ctx, username);
-        List<String> authoritiesForUserId = usersRepository.getAuthoritiesForUserId(username);
+        List<String> authoritiesForUserId = repo.users.getAuthoritiesForUserId(username);
         for (String authority : authoritiesForUserId) {
             authorities.add(new SimpleGrantedAuthority(authority));
         }

@@ -2,7 +2,7 @@ package com.springroll.router;
 
 import com.springroll.core.IEvent;
 import com.springroll.orm.entities.Job;
-import com.springroll.orm.repositories.JobRepository;
+import com.springroll.orm.repositories.Repositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +22,13 @@ public class JobManager {
     private static final Logger logger = LoggerFactory.getLogger(JobManager.class);
 
     @Autowired
-    private JobRepository jobRepository;
+    Repositories repo;
 
     public Long registerNewTransactionLeg(Long jobId, Long parentLegId){
         Long newLegId = 1l;
         LegMonitor legMonitor = legMonitorMap.get(jobId);
         if(legMonitor == null){
-            Job job = jobRepository.findOne(jobId);
+            Job job = repo.job.findOne(jobId);
             String status = "";
             if(job.getStatus() != null && !job.getStatus().isEmpty())status = job.getStatus();
             legMonitor = new LegMonitor(status);
@@ -45,7 +45,7 @@ public class JobManager {
     }
     public void handleOptimisticLockFailure(Long jobId, Long legId ){
         LegMonitor legMonitor = legMonitorMap.get(jobId);
-        Job job = jobRepository.findOne(jobId);
+        Job job = repo.job.findOne(jobId);
         if (legMonitor.jobStatus.length() < 3950) {
             job.setStatus(legMonitor.jobStatus + "Leg" + legId + "-OptLockFail ");
             legMonitor.jobStatus = job.getStatus();
@@ -70,7 +70,7 @@ public class JobManager {
             return;
         }
         LegMonitor legMonitor = legMonitorMap.get(jobId);
-        Job job = jobRepository.findOne(jobId);
+        Job job = repo.job.findOne(jobId);
         removeLegsWithParentId(legId, legMonitor, job);
         removeTransactionLegReference(jobId, legId, status);
     }
@@ -84,7 +84,7 @@ public class JobManager {
             logger.debug("No monitor exists for job {} and legId {}", jobId, legId);
             return;
         }
-        Job job = jobRepository.findOne(jobId);
+        Job job = repo.job.findOne(jobId);
         synchronized (legMonitorMap) {
             switch (legMonitor.removeRef(legId)) {
                 case EMPTIED:
@@ -95,7 +95,7 @@ public class JobManager {
                         legMonitor.jobStatus = job.getStatus();
                     }
                     logger.debug("Job Completed: Transaction leg {} completed for job {}: Status {}", legId, jobId, job.getStatus());
-                    jobRepository.flush();
+                    repo.job.flush();
                     break;
                 case REMOVED:
                     if (legMonitor.jobStatus.length() < 3950) {
