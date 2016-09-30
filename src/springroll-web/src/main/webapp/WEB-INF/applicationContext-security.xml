@@ -8,7 +8,6 @@
 
     <sec:http use-expressions="true">
         <sec:intercept-url pattern="/assets/**" access="permitAll" />
-        <sec:intercept-url pattern="/hexgen/lib.css" access="permitAll" />
         <!--<sec:intercept-url pattern="/Err_401.jsp" access="permitAll" />-->
         <!--<sec:intercept-url pattern="/Err_500.jsp" access="permitAll" />-->
         <!--<sec:intercept-url pattern="/Err_Timeout.jsp" access="permitAll" />-->
@@ -17,7 +16,6 @@
         <sec:intercept-url pattern="/login*" access="permitAll" />
         <sec:intercept-url pattern="/public/**" access="permitAll" />
         <sec:intercept-url pattern="/api/public/**" access="permitAll"  />
-        <sec:intercept-url pattern="/api/hexgen/s" access="permitAll" />
         <sec:intercept-url pattern="/api/**" access="isAuthenticated()" />
         <sec:intercept-url pattern="/**" access="isAuthenticated()" />
         <!--<sec:request-cache ref="requestCache"/>-->
@@ -30,7 +28,7 @@
         </sec:port-mappings>
     </sec:http>
 
-    <bean id="userDetailsService" class="${sr.security.userDetailsServiceClass}">
+    <bean id="userDetailsService" class="com.springroll.api.facade.security.SpringrollUserDetailsService">
         <property name="mappedUserName" value="${ldap.mapped.username}"/>
         <property name="mappedDisplayName" value="${ldap.mapped.displayname}"/>
     </bean>
