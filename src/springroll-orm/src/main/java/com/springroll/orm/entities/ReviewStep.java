@@ -120,4 +120,14 @@ public class ReviewStep extends AbstractEntity {
         this.reviewData.add(reviewData);
         this.setReviewData(this.reviewData);
     }
+
+    public boolean hasThisUserAlreadyReviewedThisStep(String  userId){
+        List<ReviewData> reviewData = getReviewData();
+        if(reviewData == null)return false;
+        for (ReviewData data : reviewData) {
+            if(data.getReviewer().equals(userId))return true;
+        }
+        return false;
+
+    }
 }

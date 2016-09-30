@@ -77,6 +77,11 @@ public class ReviewManager extends SpringrollEndPoint implements IReviewManager 
             logger.error("User '{}' is trying to approve/reject a step that is not yet ready for approval", reviewActionEvent.getUser().getUsername());
             return;
         }
+        if(reviewStep.hasThisUserAlreadyReviewedThisStep(reviewActionEvent.getUser().getUsername())){
+            logger.error("User '{}' has already reviewed step '{}'",reviewActionEvent.getUser().getUsername(), reviewActionDTO.getReviewStepId());
+            return;
+        }
+
         reviewStep.addReviewData(new ReviewData(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionEvent.getPayload().isApproved()));
         ReviewRules reviewRule = repo.reviewRules.findOne(reviewStep.getRuleId());
         if(reviewActionDTO.isApproved() && reviewRule.getNumberOfApprovalsNeeded() > reviewStep.getReviewData().size()){
