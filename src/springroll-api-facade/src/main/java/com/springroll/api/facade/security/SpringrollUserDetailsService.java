@@ -22,8 +22,8 @@ import java.util.List;
 /**
  * Created by anishjoseph on 17/09/16.
  */
-public class SpringrollExampleUserDetailsService implements UserDetailsService, UserDetailsContextMapper, LdapAuthoritiesPopulator {
-    private static final Logger logger = LoggerFactory.getLogger(SpringrollExampleUserDetailsService.class);
+public class SpringrollUserDetailsService implements UserDetailsService, UserDetailsContextMapper, LdapAuthoritiesPopulator {
+    private static final Logger logger = LoggerFactory.getLogger(SpringrollUserDetailsService.class);
     @Autowired
     UsersRepository usersRepository;
 
@@ -40,8 +40,8 @@ public class SpringrollExampleUserDetailsService implements UserDetailsService, 
     }
 
     //Expects username in CAPS
-    private SpringrollExampleUser loadUser(String username, Collection<? extends GrantedAuthority> authorities) throws UsernameNotFoundException {
-        SpringrollExampleUser user = new SpringrollExampleUser(username, "dummyPassword", authorities);
+    private SpringrollUser loadUser(String username, Collection<? extends GrantedAuthority> authorities) throws UsernameNotFoundException {
+        SpringrollUser user = new SpringrollUser(username, "dummyPassword", authorities);
         user.setGroups(usersRepository.getGroupsForUserId(username));
         return user;
 
@@ -55,7 +55,7 @@ public class SpringrollExampleUserDetailsService implements UserDetailsService, 
     public UserDetails mapUserFromContext(DirContextOperations ctx, String username, Collection<? extends GrantedAuthority> authorities) {
         username = getUsername(ctx, username);
 
-        SpringrollExampleUser user = loadUser(username.toUpperCase(), authorities);
+        SpringrollUser user = loadUser(username.toUpperCase(), authorities);
         if(mappedDisplayName == null){
             user.setDisplayName(username);
             return user;

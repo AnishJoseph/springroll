@@ -8,17 +8,17 @@ import java.util.Collection;
 /**
  * Created by anishjoseph on 17/09/16.
  */
-public class SpringrollExampleUser extends User{
+public class SpringrollUser extends User{
     private Collection<String> groups;
     private String displayName;
 
 
 
-    public SpringrollExampleUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public SpringrollUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
 
         super(username, password, authorities);
     }
-    public SpringrollExampleUser(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
+    public SpringrollUser(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
 
