@@ -4,10 +4,7 @@ import com.springroll.core.*;
 import com.springroll.orm.entities.Job;
 import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.entities.ReviewRules;
-import com.springroll.orm.repositories.JobRepository;
 import com.springroll.orm.repositories.Repositories;
-import com.springroll.orm.repositories.ReviewStepRepository;
-import com.springroll.orm.repositories.ReviewRulesRepository;
 import com.springroll.router.SpringrollEndPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +79,7 @@ public class ReviewManager extends SpringrollEndPoint {
         reviewStep.addReviewData(new ReviewData(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionEvent.getPayload().isApproved()));
         ReviewRules reviewRule = repo.reviewRules.findOne(reviewStep.getRuleId());
         if(reviewActionDTO.isApproved() && reviewRule.getNumberOfApprovalsNeeded() > reviewStep.getReviewData().size()){
-            /* Oh this rule requires more that one approver for this stage - nothing to do */
+            /* Oh this rule requires more that one approval for this stage - nothing to do */
             return;
         }
         reviewStep.setCompleted(true);
@@ -96,9 +93,9 @@ public class ReviewManager extends SpringrollEndPoint {
             for (ReviewStep rs : allReviewSteps) {
                 reviewData.addAll(rs.getReviewData());
             }
-            repo.reviewStep.delete(allReviewSteps);
             Job job = repo.job.findOne(reviewStep.getParentId());
             job.setReviewData(reviewData);
+            job.setUnderReview(false);
 
             if(reviewActionDTO.isApproved()) {
                 // find the step with the payload so that we can deserialize it and send it for processing
@@ -116,8 +113,10 @@ public class ReviewManager extends SpringrollEndPoint {
             } else {
                 job.setEndTime(LocalDateTime.now());
                 job.setStatus(job.getStatus() + " Review Rejected by " + reviewActionEvent.getUser().getUsername());
-                job.setJobDone(true);
+                job.setCompleted(true);
             }
+            repo.reviewStep.delete(allReviewSteps);
+            return;
         }
         createReviewNotifications(reviewSteps);
     }

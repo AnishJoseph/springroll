@@ -43,39 +43,42 @@ public class EventCreator {
         Job job = null;
         boolean needsReview =  jobMeta.getBusinessValidationResults() != null && jobMeta.getBusinessValidationResults().getReviewNeededViolations() != null && !jobMeta.getBusinessValidationResults().getReviewNeededViolations().isEmpty();
         if(jobMeta.getJobId() == null) {
-            //Fixme - handle signalling events
             comingDirectlyFromSyncSide = true;
             job = new Job();
             job.setPayloads(jobMeta.getPayloads());
             job.setParentId(jobMeta.getParentJobId());
+            job.setUnderReview(needsReview);
+            job.setService(event.getClass().getSimpleName());
             repo.job.save(job);
             jobMeta.setJobId(job.getID());
-            if(needsReview)job.setStatus("Under Review ");
+            if(!needsReview){
+                publisher.publishEvent(event);
+            }
             ContextStore.put(jobMeta.getUser(), jobMeta.getJobId(), jobManager.registerNewTransactionLeg(jobMeta.getJobId(), 0L));
             jobMeta.setLegId(ContextStore.getLegId());
         }
         event.setJobId(jobMeta.getJobId());
         event.setUser(jobMeta.getUser());
         event.setLegId(jobMeta.getLegId());
-        if(jobMeta.getBusinessValidationResults() == null || jobMeta.getBusinessValidationResults().getReviewNeededViolations() == null || jobMeta.getBusinessValidationResults().getReviewNeededViolations().isEmpty()){
+        if(!needsReview){
             if (jobMeta.isAsynchronous()) {
                 asynchSideEndPoints.routeToJms(event);
             } else {
-                if (comingDirectlyFromSyncSide) {
-                    publisher.publishEvent(event);
-                }
                 asynchSideEndPoints.routeToDynamicRouter(event);
             }
             return event.getJobId();
         }
+
+        /* If we reach here it means that the event needs to be reviewed */
+
         if(!comingDirectlyFromSyncSide){
             job = repo.job.findOne(event.getJobId());
-            job.setStatus(job.getStatus() + " Under Review ");
+            job.setUnderReview(true);
         }
+
         ReviewNeededEvent reviewNeededEvent = new ReviewNeededEvent(event, jobMeta.getBusinessValidationResults().getReviewNeededViolations());
         asynchSideEndPoints.routeToJms(reviewNeededEvent);
         return event.getJobId();
-
     }
 
 }

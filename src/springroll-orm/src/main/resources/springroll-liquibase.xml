@@ -11,12 +11,14 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="PARENT_ID" type="bigint"/>
-            <column name="SERIALIZED_PAYLOADS" type="longblob" />
+            <column name="SERVICE" type="VARCHAR2(64)" />
+            <column name="UNDER_REVIEW" type="bit" />
+            <column name="STATUS" type="VARCHAR2(4000)" />
+            <column name="COMPLETED" type="bit" />
             <column name="START_TIME" type="TIMESTAMP"/>
             <column name="END_TIME" type="TIMESTAMP"/>
-            <column name="STATUS" type="VARCHAR2(4000)" />
-            <column name="JOB_DONE" type="bit" />
             <column name="SERIALIZED_REVIEW_DATA" type="VARCHAR2(2048)"/>
+            <column name="SERIALIZED_PAYLOADS" type="longblob" />
         </createTable>
         <createTable tableName="SEQUENCE_TABLE">
             <column name="SEQ_NAME" type="VARCHAR2(255)" />

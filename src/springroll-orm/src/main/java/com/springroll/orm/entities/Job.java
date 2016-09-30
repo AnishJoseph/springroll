@@ -26,7 +26,7 @@ import java.util.List;
 public class Job extends AbstractEntity {
 
     private transient List<? extends DTO> payloads;
-
+    private transient List<ReviewData> reviewData;
 
     public Job(){
         this.setStartTime(LocalDateTime.now());
@@ -43,22 +43,34 @@ public class Job extends AbstractEntity {
     @Type(type="com.springroll.orm.LocalDateTimeUserType")
     private LocalDateTime endTime;
 
-    @Column(name = "JOB_DONE")
-    private boolean jobDone;
+    @Column(name = "COMPLETED")
+    private boolean completed;
+
+    @Column(name = "UNDER_REVIEW")
+    private boolean underReview;
 
     private String status;
+
+    private String service;
 
     @Column(name = "SERIALIZED_REVIEW_DATA")
     private String serializedReviewData;
 
-    private transient List<ReviewData> reviewData;
 
-    public boolean isJobDone() {
-        return jobDone;
+    public boolean isUnderReview() {
+        return underReview;
     }
 
-    public void setJobDone(boolean jobDone) {
-        this.jobDone = jobDone;
+    public void setUnderReview(boolean underReview) {
+        this.underReview = underReview;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
     public String getStatus() {
@@ -83,6 +95,14 @@ public class Job extends AbstractEntity {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
     }
 
     public List<? extends DTO> getPayloads() {

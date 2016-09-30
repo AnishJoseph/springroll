@@ -28,10 +28,7 @@ public class JobManager {
         Long newLegId = 1l;
         LegMonitor legMonitor = legMonitorMap.get(jobId);
         if(legMonitor == null){
-            Job job = repo.job.findOne(jobId);
-            String status = "";
-            if(job.getStatus() != null && !job.getStatus().isEmpty())status = job.getStatus();
-            legMonitor = new LegMonitor(status);
+            legMonitor = new LegMonitor();
             synchronized (legMonitorMap){
 //                cleanup();
                 legMonitorMap.put(jobId, legMonitor);
@@ -88,7 +85,7 @@ public class JobManager {
         synchronized (legMonitorMap) {
             switch (legMonitor.removeRef(legId)) {
                 case EMPTIED:
-                    job.setJobDone(true);
+                    job.setCompleted(true);
                     job.setEndTime(LocalDateTime.now());
                     if (legMonitor.jobStatus.length() < 3950) {
                         job.setStatus(legMonitor.jobStatus + "Leg" + legId + "-" + status + "  ");
@@ -120,9 +117,8 @@ public class JobManager {
         private Map<Long, Long> refs = new HashMap<>();
         private Long legId = 1l;
         String jobStatus = "";
-        public LegMonitor(String jobStatus){
+        public LegMonitor(){
             refs.put(legId, 0L);
-            this.jobStatus = jobStatus;
         }
 
         public Long addRef(Long parentLegId){
