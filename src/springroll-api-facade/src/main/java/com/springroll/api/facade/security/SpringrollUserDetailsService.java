@@ -64,7 +64,7 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
         try {
             String displayName = (String) ctx.getAttributes().get(mappedDisplayName).get(0);
             user.setDisplayName(displayName);
-        }catch (NamingException e){
+        }catch (Exception e){
             user.setDisplayName(username);
         }
         return user;
