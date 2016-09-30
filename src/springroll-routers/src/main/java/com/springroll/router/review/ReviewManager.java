@@ -1,6 +1,7 @@
 package com.springroll.router.review;
 
 import com.springroll.core.*;
+import com.springroll.core.services.IReviewManager;
 import com.springroll.orm.entities.Job;
 import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.entities.ReviewRules;
@@ -20,7 +21,7 @@ import java.util.List;
  * Created by anishjoseph on 27/09/16.
  */
 @Service
-public class ReviewManager extends SpringrollEndPoint {
+public class ReviewManager extends SpringrollEndPoint implements IReviewManager {
     private static final Logger logger = LoggerFactory.getLogger(ReviewManager.class);
 
     @Autowired
@@ -119,5 +120,18 @@ public class ReviewManager extends SpringrollEndPoint {
             return;
         }
         createReviewNotifications(reviewSteps);
+    }
+
+    /**
+     *
+     * @param reviewStepId - id of the reviewStep
+     * @return null if the review step does not exist - else the group name of the group that is allowed to review this step
+     */
+    @Override
+    public String getApproverForReviewStep(Long reviewStepId) {
+        ReviewStep reviewStep = repo.reviewStep.findOne(reviewStepId);
+        if(reviewStep == null)return null;
+        ReviewRules reviewRule = repo.reviewRules.findOne(reviewStep.getRuleId());
+        return reviewRule.getApprover();
     }
 }
