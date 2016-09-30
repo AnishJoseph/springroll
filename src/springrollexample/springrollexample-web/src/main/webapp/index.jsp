@@ -34,7 +34,7 @@
                         contentType: 'application/json; charset=utf-8',
                         dataType: 'json',
                         success: function (msg) {
-                            alert(msg);
+//                            alert(msg);
                         }
                     }
             );

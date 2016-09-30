@@ -44,11 +44,7 @@ public class EventCreator {
         boolean needsReview =  jobMeta.getBusinessValidationResults() != null && jobMeta.getBusinessValidationResults().getReviewNeededViolations() != null && !jobMeta.getBusinessValidationResults().getReviewNeededViolations().isEmpty();
         if(jobMeta.getJobId() == null) {
             comingDirectlyFromSyncSide = true;
-            job = new Job();
-            job.setPayloads(jobMeta.getPayloads());
-            job.setParentId(jobMeta.getParentJobId());
-            job.setUnderReview(needsReview);
-            job.setService(event.getClass().getSimpleName());
+            job = new Job(jobMeta.getParentJobId(), needsReview, event.getClass().getSimpleName(), jobMeta.getUser().getUsername(), jobMeta.getPayloads());
             repo.job.save(job);
             jobMeta.setJobId(job.getID());
             if(!needsReview){

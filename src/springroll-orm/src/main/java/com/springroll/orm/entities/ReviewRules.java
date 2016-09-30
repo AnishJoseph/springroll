@@ -19,8 +19,8 @@ public class ReviewRules extends AbstractEntity {
     @Column(name = "REVIEW_STAGE")
     private int reviewStage;
 
-    @Column(name = "REVIEWER")
-    private String reviewer;
+    @Column(name = "APPROVER")
+    private String approver;
 
     @Column(name = "NUMBER_OF_APPROVALS_NEEDED")
     private int numberOfApprovalsNeeded;
@@ -44,12 +44,12 @@ public class ReviewRules extends AbstractEntity {
         this.reviewStage = reviewStage;
     }
 
-    public String getReviewer() {
-        return reviewer;
+    public String getApprover() {
+        return approver;
     }
 
-    public void setReviewer(String reviewer) {
-        this.reviewer = reviewer;
+    public void setApprover(String approver) {
+        this.approver = approver;
     }
 
     public int getNumberOfApprovalsNeeded() {

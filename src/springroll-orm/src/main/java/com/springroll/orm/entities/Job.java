@@ -35,6 +35,9 @@ public class Job extends AbstractEntity {
     @Lob
     private byte[] serializedPayloads;
 
+    @Column(name = "USER_ID")
+    private String userId;
+
     @Column(name = "Start_Time")
     @Type(type="com.springroll.orm.LocalDateTimeUserType")
     private LocalDateTime startTime;
@@ -55,6 +58,16 @@ public class Job extends AbstractEntity {
 
     @Column(name = "SERIALIZED_REVIEW_DATA")
     private String serializedReviewData;
+
+
+    public Job(Long parentId, boolean underReview, String service, String userId, List<? extends DTO> payloads) {
+        this.setParentId(parentId);
+        this.underReview = underReview;
+        this.service = service;
+        this.userId = userId;
+        this.setPayloads(payloads);
+        this.setStartTime(LocalDateTime.now());
+    }
 
 
     public boolean isUnderReview() {
@@ -95,6 +108,14 @@ public class Job extends AbstractEntity {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getService() {
