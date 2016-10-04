@@ -1,6 +1,7 @@
 package com.springroll.notification;
 
 import com.springroll.core.notification.*;
+import com.springroll.core.services.INotificationManager;
 import com.springroll.orm.entities.Notification;
 import com.springroll.orm.repositories.Repositories;
 import org.slf4j.Logger;
@@ -39,10 +40,10 @@ public class NotificationManager implements INotificationManager {
         this.addNotificationChannels(InternalNotificationChannels.class);
     }
 
-    @Override public void sendNotification(INotificationChannel notificationChannel, INotificationPayload notificationPayload, boolean persist, boolean sendPostCommit) {
+    @Override public Long sendNotification(INotificationChannel notificationChannel, INotificationPayload notificationPayload, boolean persist, boolean sendPostCommit) {
         MassagedNotificationData massagedNotificationData = notificationChannel.getDataMassager().massage(notificationPayload);
         if(massagedNotificationData == null || massagedNotificationData.getUsers().isEmpty()){
-            return;
+            return null;
         }
         if(sendPostCommit){
             /* This ensures that the notification is pushed to the user ONLY after the current transaction commits. If we dont have this then the
@@ -54,13 +55,14 @@ public class NotificationManager implements INotificationManager {
             pushNotification(new PushData(massagedNotificationData.getUsers(), massagedNotificationData.getData(), notificationChannel.getServiceUri()));
         }
 
-        if(!persist)return;
+        if(!persist)return null;
 
         Notification notification = new Notification();
         notification.setNotificationPayload(notificationPayload);
         notification.setNotificationReceivers(massagedNotificationData.getNotificationReceivers());
         notification.setNotificationChannelName(notificationChannel.getChannelName());
         repositories.notification.save(notification);
+        return notification.getID();
 
     }
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -85,6 +87,16 @@ public class NotificationManager implements INotificationManager {
     public void addNotificationChannels(Class<? extends INotificationChannel> clazz) {
         notificationChannels.add(clazz);
         fixBeans(clazz);
+    }
+
+    @Override
+    public void deleteNotification(Long notificationId) {
+        repositories.notification.delete(notificationId);
+    }
+
+    @Override
+    public void addNotificationAcknowledgement(Long notificationId) {
+
     }
 
     private INotificationChannel serviceUriToEnum(String channel) {

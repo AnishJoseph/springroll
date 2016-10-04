@@ -1,7 +1,7 @@
 package com.springroll.router.review;
 
 import com.springroll.core.*;
-import com.springroll.core.notification.INotificationManager;
+import com.springroll.core.services.INotificationManager;
 import com.springroll.core.services.IReviewManager;
 import com.springroll.notification.InternalNotificationChannels;
 import com.springroll.orm.entities.Job;
@@ -68,7 +68,7 @@ public class ReviewManager extends SpringrollEndPoint implements IReviewManager 
         for (ReviewStep reviewStep : reviewSteps) {
             ReviewNotificationPayload reviewNotification = new ReviewNotificationPayload();
             reviewNotification.setReviewStepId(reviewStep.getID());
-            notificationManager.sendNotification(InternalNotificationChannels.BUSINESS_REVIEW, reviewNotification, true, true);
+            reviewStep.setNotificationId(notificationManager.sendNotification(InternalNotificationChannels.BUSINESS_REVIEW, reviewNotification, true, true));
         }
     }
 
@@ -96,7 +96,7 @@ public class ReviewManager extends SpringrollEndPoint implements IReviewManager 
             return;
         }
         reviewStep.setCompleted(true);
-        //FIXME - notify the Notificataion Manager that the step is complete
+        notificationManager.deleteNotification(reviewStep.getNotificationId());
 
         List<ReviewStep> reviewSteps = findNextReviewStep(reviewStep.getParentId(), reviewStep.getReviewStage());
         if(reviewSteps.isEmpty() || !reviewActionDTO.isApproved()){

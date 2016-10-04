@@ -1,7 +1,7 @@
 package com.springroll.notification;
 
 import com.springroll.core.ContextStore;
-import com.springroll.core.notification.INotificationManager;
+import com.springroll.core.services.INotificationManager;
 import org.cometd.annotation.Listener;
 import org.cometd.annotation.Service;
 import org.cometd.annotation.Session;

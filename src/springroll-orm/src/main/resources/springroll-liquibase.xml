@@ -42,6 +42,7 @@
             </column>
             <column name="PARENT_ID" type="bigint"/>
             <column name="RULE_ID" type="bigint"/>
+            <column name="NOTIFICATION_ID" type="bigint"/>
             <column name="REVIEW_STAGE" type="int" />
             <column name="COMPLETED" type="bit" />
             <column name="SERIALIZED_REVIEW_DATA" type="VARCHAR2(2048)"/>

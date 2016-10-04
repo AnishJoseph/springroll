@@ -36,6 +36,9 @@ public class ReviewStep extends AbstractEntity {
     @Max(100)
     private int reviewStage;
 
+    @Column(name = "NOTIFICATION_ID")
+    private Long notificationId;
+
     @Column(name = "COMPLETED")
     private boolean completed = false;
 
@@ -129,5 +132,13 @@ public class ReviewStep extends AbstractEntity {
         }
         return false;
 
+    }
+
+    public Long getNotificationId() {
+        return notificationId;
+    }
+
+    public void setNotificationId(Long notificationId) {
+        this.notificationId = notificationId;
     }
 }
