@@ -89,9 +89,9 @@ public class ReviewManager extends SpringrollEndPoint implements IReviewManager 
             return;
         }
 
-        reviewStep.addReviewData(new ReviewData(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionEvent.getPayload().isApproved()));
+        reviewStep.addReviewData(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionEvent.getPayload().isApproved()));
         ReviewRules reviewRule = repo.reviewRules.findOne(reviewStep.getRuleId());
-        if(reviewActionDTO.isApproved() && reviewRule.getNumberOfApprovalsNeeded() > reviewStep.getReviewData().size()){
+        if(reviewActionDTO.isApproved() && reviewRule.getApprovalsNeeded() > reviewStep.getReviewLog().size()){
             /* Oh this rule requires more that one approval for this stage - nothing to do */
             return;
         }
@@ -102,12 +102,12 @@ public class ReviewManager extends SpringrollEndPoint implements IReviewManager 
         if(reviewSteps.isEmpty() || !reviewActionDTO.isApproved()){
             // All reviews are complete or someone has rejected this
             List<ReviewStep> allReviewSteps = repo.reviewStep.findByParentId(reviewStep.getParentId());
-            List<ReviewData> reviewData = new ArrayList<>();
+            List<ReviewLog> reviewLog = new ArrayList<>();
             for (ReviewStep rs : allReviewSteps) {
-                reviewData.addAll(rs.getReviewData());
+                reviewLog.addAll(rs.getReviewLog());
             }
             Job job = repo.job.findOne(reviewStep.getParentId());
-            job.setReviewData(reviewData);
+            job.setReviewLog(reviewLog);
             job.setUnderReview(false);
 
             if(reviewActionDTO.isApproved()) {
@@ -115,7 +115,7 @@ public class ReviewManager extends SpringrollEndPoint implements IReviewManager 
                 ReviewStep step = repo.reviewStep.findByParentIdAndSerializedEventIsNotNull(reviewStep.getParentId());
                 IEvent reviewedEvent = step.getEvent();
                 if (reviewedEvent instanceof ReviewableEvent) {
-                    ((ReviewableEvent) reviewedEvent).setReviewData(reviewData);
+                    ((ReviewableEvent) reviewedEvent).setReviewLog(reviewLog);
                     ((ReviewableEvent) reviewedEvent).setApproved(reviewActionEvent.getPayload().isApproved());
                 }
                 // The context at this point is that of the user that made the approval.  However as we push the event that was under

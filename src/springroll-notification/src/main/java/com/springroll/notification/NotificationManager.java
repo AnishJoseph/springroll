@@ -59,8 +59,8 @@ public class NotificationManager implements INotificationManager {
 
         Notification notification = new Notification();
         notification.setNotificationPayload(notificationPayload);
-        notification.setNotificationReceivers(massagedNotificationData.getNotificationReceivers());
-        notification.setNotificationChannelName(notificationChannel.getChannelName());
+        notification.setReceivers(massagedNotificationData.getNotificationReceivers());
+        notification.setChannelName(notificationChannel.getChannelName());
         repositories.notification.save(notification);
         return notification.getID();
 

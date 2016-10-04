@@ -17,41 +17,41 @@ public class Notification extends AbstractEntity {
 
     private transient INotificationPayload notificationPayload;
 
-    @Column(name = "NOTIFICATION_PAYLOAD_JSON")
-    private String notificationPayloadJson;
+    @Column(name = "PAYLOAD")
+    private String payloadJson;
 
-    @Column(name = "NOTIFICATION_RECEIVERS")
-    private String notificationReceivers;
+    @Column(name = "RECEIVERS")
+    private String receivers;
 
-    @Column(name = "NOTIFICATION_CHANNEL_NAME")
-    private String notificationChannelName;
+    @Column(name = "CHANNEL_NAME")
+    private String channelName;
 
     public INotificationPayload getNotificationPayload() {
         if(notificationPayload != null)return notificationPayload;
-        if(notificationPayloadJson == null) return null;
-        notificationPayload = (INotificationPayload) new JSONDeserializer().deserialize(notificationPayloadJson);
+        if(payloadJson == null) return null;
+        notificationPayload = (INotificationPayload) new JSONDeserializer().deserialize(payloadJson);
         return notificationPayload;
     }
 
     public void setNotificationPayload(INotificationPayload notification) {
         this.notificationPayload = notification;
         JSONSerializer serializer = new JSONSerializer();
-        notificationPayloadJson = serializer.deepSerialize(notification);
+        payloadJson = serializer.deepSerialize(notification);
     }
 
-    public String getNotificationReceivers() {
-        return notificationReceivers;
+    public String getReceivers() {
+        return receivers;
     }
 
-    public void setNotificationReceivers(String notificationReceivers) {
-        this.notificationReceivers = notificationReceivers;
+    public void setReceivers(String receivers) {
+        this.receivers = receivers;
     }
 
-    public String getNotificationChannelName() {
-        return notificationChannelName;
+    public String getChannelName() {
+        return channelName;
     }
 
-    public void setNotificationChannelName(String notificationChannelName) {
-        this.notificationChannelName = notificationChannelName;
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
     }
 }

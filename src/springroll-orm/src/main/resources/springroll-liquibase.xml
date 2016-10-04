@@ -18,8 +18,8 @@
             <column name="COMPLETED" type="bit" />
             <column name="START_TIME" type="TIMESTAMP"/>
             <column name="END_TIME" type="TIMESTAMP"/>
-            <column name="SERIALIZED_REVIEW_DATA" type="VARCHAR2(2048)"/>
-            <column name="SERIALIZED_PAYLOADS" type="longblob" />
+            <column name="REVIEW_LOG" type="VARCHAR2(2048)"/>
+            <column name="PAYLOADS" type="longblob" />
         </createTable>
         <createTable tableName="SEQUENCE_TABLE">
             <column name="SEQ_NAME" type="VARCHAR2(255)" />
@@ -33,7 +33,7 @@
             <column name="RULE_NAME" type="VARCHAR2(48)" />
             <column name="REVIEW_STAGE" type="int" defaultValue="1"/>
             <column name="APPROVER" type="VARCHAR2(32)"/>
-            <column name="NUMBER_OF_APPROVALS_NEEDED" type="int" defaultValue="1"/>
+            <column name="APPROVALS_NEEDED" type="int" defaultValue="1"/>
             <column name="DESCRIPTION" type="VARCHAR2(128)"/>
         </createTable>
         <createTable tableName="REVIEW_STEP">
@@ -45,8 +45,8 @@
             <column name="NOTIFICATION_ID" type="bigint"/>
             <column name="REVIEW_STAGE" type="int" />
             <column name="COMPLETED" type="bit" />
-            <column name="SERIALIZED_REVIEW_DATA" type="VARCHAR2(2048)"/>
-            <column name="SERIALIZED_EVENT" type="longblob" />
+            <column name="REVIEW_LOG" type="VARCHAR2(2048)"/>
+            <column name="EVENT" type="longblob" />
         </createTable>
         <createTable tableName="AUTHORITIES">
             <column name="ID" type="bigint" autoIncrement="false">
@@ -84,9 +84,9 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="PARENT_ID" type="bigint"/>
-            <column name="NOTIFICATION_PAYLOAD_JSON" type="varchar(3000)"/>
-            <column name="NOTIFICATION_RECEIVERS" type="varchar(32)"/>
-            <column name="NOTIFICATION_CHANNEL_NAME" type="varchar(64)"/>
+            <column name="PAYLOAD" type="varchar(3000)"/>
+            <column name="RECEIVERS" type="varchar(32)"/>
+            <column name="CHANNEL_NAME" type="varchar(64)"/>
         </createTable>
 
     </changeSet>

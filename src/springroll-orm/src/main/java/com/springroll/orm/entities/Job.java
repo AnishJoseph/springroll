@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.DTO;
-import com.springroll.core.ReviewData;
+import com.springroll.core.ReviewLog;
 import org.hibernate.annotations.Type;
 import org.hibernate.internal.util.SerializationHelper;
 
@@ -26,12 +26,13 @@ import java.util.List;
 public class Job extends AbstractEntity {
 
     private transient List<? extends DTO> payloads;
-    private transient List<ReviewData> reviewData;
+    private transient List<ReviewLog> reviewLog;
 
     public Job(){
         this.setStartTime(LocalDateTime.now());
     }
-    @Column(name = "SERIALIZED_PAYLOADS")
+
+    @Column(name = "PAYLOADS")
     @Lob
     private byte[] serializedPayloads;
 
@@ -56,8 +57,8 @@ public class Job extends AbstractEntity {
 
     private String service;
 
-    @Column(name = "SERIALIZED_REVIEW_DATA")
-    private String serializedReviewData;
+    @Column(name = "REVIEW_LOG")
+    private String reviewLogAsJson;
 
 
     public Job(Long parentId, boolean underReview, String service, String userId, List<? extends DTO> payloads) {
@@ -136,25 +137,25 @@ public class Job extends AbstractEntity {
         this.payloads = payloads;
         serializedPayloads = SerializationHelper.serialize((Serializable) payloads);
     }
-    public List<ReviewData> getReviewData() {
-        if (this.reviewData == null && serializedReviewData != null) {
+    public List<ReviewLog> getReviewLog() {
+        if (this.reviewLog == null && reviewLogAsJson != null) {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             try {
-                this.reviewData = mapper.readValue(serializedReviewData, new TypeReference<List<ReviewData>>(){});
+                this.reviewLog = mapper.readValue(reviewLogAsJson, new TypeReference<List<ReviewLog>>(){});
             } catch (IOException e) {
                 return null;
             }
         }
-        return reviewData;
+        return reviewLog;
     }
 
-    public void setReviewData(List<ReviewData> reviewData) {
+    public void setReviewLog(List<ReviewLog> reviewLog) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
-        this.reviewData = reviewData;
+        this.reviewLog = reviewLog;
         try {
-            serializedReviewData = mapper.writeValueAsString(reviewData);
+            reviewLogAsJson = mapper.writeValueAsString(reviewLog);
         } catch (JsonProcessingException e) {
         }
     }

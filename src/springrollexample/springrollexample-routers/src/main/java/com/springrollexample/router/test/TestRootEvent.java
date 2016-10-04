@@ -1,6 +1,6 @@
 package com.springrollexample.router.test;
 
-import com.springroll.core.ReviewData;
+import com.springroll.core.ReviewLog;
 import com.springroll.core.ReviewableEvent;
 
 import java.util.List;
@@ -10,20 +10,19 @@ import java.util.List;
  */
 public class TestRootEvent extends AbstractTestEvent<TestDTO> implements ReviewableEvent{
     private static final long serialVersionUID = -1;
-    private List<ReviewData> reviewData;
+    private List<ReviewLog> reviewLog;
     private boolean approved;
 
-    public List<ReviewData> getReviewData() {
-        return reviewData;
+    public List<ReviewLog> getReviewLog() {
+        return reviewLog;
     }
 
     public boolean isApproved() {
         return approved;
     }
 
-    @Override
-    public void setReviewData(List<ReviewData> reviewData) {
-        this.reviewData = reviewData;
+    public void setReviewLog(List<ReviewLog> reviewLog) {
+        this.reviewLog = reviewLog;
     }
 
     @Override

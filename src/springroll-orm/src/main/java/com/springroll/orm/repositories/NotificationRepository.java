@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface NotificationRepository extends AbstractEntityRepository<Notification>{
 
-    @Query("select notification from Notification notification where notification.notificationChannelName = ?1 and (notification.notificationReceivers = ?2 or notification.notificationReceivers in (?3))")
+    @Query("select notification from Notification notification where notification.channelName = ?1 and (notification.receivers = ?2 or notification.receivers in (?3))")
     List<Notification> findNotificationsForUser(String channelName, String userId, Collection<String> group);
 
 }

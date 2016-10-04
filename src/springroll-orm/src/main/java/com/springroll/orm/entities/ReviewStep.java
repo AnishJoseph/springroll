@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.IEvent;
-import com.springroll.core.ReviewData;
+import com.springroll.core.ReviewLog;
 import org.hibernate.internal.util.SerializationHelper;
 
 import javax.persistence.Column;
@@ -42,14 +42,14 @@ public class ReviewStep extends AbstractEntity {
     @Column(name = "COMPLETED")
     private boolean completed = false;
 
-    @Column(name = "SERIALIZED_EVENT")
+    @Column(name = "EVENT")
     @Lob
     private byte[] serializedEvent;
 
-    @Column(name = "SERIALIZED_REVIEW_DATA")
-    private String serializedReviewData;
+    @Column(name = "REVIEW_LOG")
+    private String reviewLogAsJson;
 
-    private transient List<ReviewData> reviewData;
+    private transient List<ReviewLog> reviewLog;
     private transient IEvent event;
 
     public ReviewStep(){}
@@ -70,25 +70,25 @@ public class ReviewStep extends AbstractEntity {
         serializedEvent = SerializationHelper.serialize((Serializable) event);
     }
 
-    public List<ReviewData> getReviewData() {
-        if (this.reviewData == null && serializedReviewData != null) {
+    public List<ReviewLog> getReviewLog() {
+        if (this.reviewLog == null && reviewLogAsJson != null) {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             try {
-                this.reviewData = mapper.readValue(serializedReviewData, new TypeReference<List<ReviewData>>(){});
+                this.reviewLog = mapper.readValue(reviewLogAsJson, new TypeReference<List<ReviewLog>>(){});
             } catch (IOException e) {
                 return null;
             }
         }
-        return reviewData;
+        return reviewLog;
     }
 
-    public void setReviewData(List<ReviewData> reviewData) {
+    public void setReviewLog(List<ReviewLog> reviewLog) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
-        this.reviewData = reviewData;
+        this.reviewLog = reviewLog;
         try {
-            serializedReviewData = mapper.writeValueAsString(reviewData);
+            reviewLogAsJson = mapper.writeValueAsString(reviewLog);
         } catch (JsonProcessingException e) {
         }
     }
@@ -117,17 +117,17 @@ public class ReviewStep extends AbstractEntity {
         this.reviewStage = reviewStage;
     }
 
-    public void addReviewData(ReviewData reviewData){
-        getReviewData();
-        if(this.reviewData == null) this.reviewData = new ArrayList<>();
-        this.reviewData.add(reviewData);
-        this.setReviewData(this.reviewData);
+    public void addReviewData(ReviewLog reviewLog){
+        getReviewLog();
+        if(this.reviewLog == null) this.reviewLog = new ArrayList<>();
+        this.reviewLog.add(reviewLog);
+        this.setReviewLog(this.reviewLog);
     }
 
     public boolean hasThisUserAlreadyReviewedThisStep(String  userId){
-        List<ReviewData> reviewData = getReviewData();
-        if(reviewData == null)return false;
-        for (ReviewData data : reviewData) {
+        List<ReviewLog> reviewLog = getReviewLog();
+        if(reviewLog == null)return false;
+        for (ReviewLog data : reviewLog) {
             if(data.getReviewer().equals(userId))return true;
         }
         return false;
