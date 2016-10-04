@@ -39,7 +39,7 @@ define(['Application', 'marionette', 'jquery','jquery.cometd'], function (Applic
         console.log("HANDSHAKE SUCCESS!!!!!!!!!")
         if (handshake.successful === true) {
             CometD.batch(function () {
-                CometD.subscribe('/pushservice/businessreview', function(message)
+                CometD.subscribe('/core/review', function(message)
                 {
                     console.log("Received msg on 'Helo' channel");
                 });

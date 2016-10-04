@@ -8,7 +8,7 @@ import com.springroll.core.notification.INotificationDataProvider;
  * Created by anishjoseph on 03/10/16.
  */
 public enum InternalNotificationChannels implements INotificationChannel {
-    BUSINESS_REVIEW("/pushservice/businessreview", ReviewNotificationDataProvider.class, ReviewNotificationDataMassager.class);
+    REVIEW("/core/review", ReviewNotificationDataProvider.class, ReviewNotificationDataMassager.class);
     private String serviceUri;
     private INotificationDataProvider dataProvider = null;
     private INotificationDataMassager dataMassager = null;

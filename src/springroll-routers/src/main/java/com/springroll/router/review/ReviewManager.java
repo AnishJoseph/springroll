@@ -68,7 +68,7 @@ public class ReviewManager extends SpringrollEndPoint implements IReviewManager 
         for (ReviewStep reviewStep : reviewSteps) {
             ReviewNotificationPayload reviewNotification = new ReviewNotificationPayload();
             reviewNotification.setReviewStepId(reviewStep.getID());
-            reviewStep.setNotificationId(notificationManager.sendNotification(InternalNotificationChannels.BUSINESS_REVIEW, reviewNotification, true, true));
+            reviewStep.setNotificationId(notificationManager.sendNotification(InternalNotificationChannels.REVIEW, reviewNotification, true, true));
         }
     }
 
