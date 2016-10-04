@@ -4,7 +4,7 @@ import org.cometd.annotation.ServerAnnotationProcessor;
 import org.cometd.bayeux.server.BayeuxServer;
 import org.cometd.common.JSONContext;
 import org.cometd.server.BayeuxServerImpl;
-import org.cometd.server.Jackson1JSONContextServer;
+import org.cometd.server.Jackson2JSONContextServer;
 import org.cometd.server.transport.JSONPTransport;
 import org.cometd.server.transport.JSONTransport;
 import org.cometd.websocket.server.WebSocketTransport;
@@ -18,8 +18,6 @@ import org.springframework.web.context.ServletContextAware;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.servlet.ServletContext;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by anishjoseph on 01/10/16.
@@ -35,6 +33,9 @@ public class CometDInitializer implements ServletContextAware
         BayeuxServerImpl bean = new BayeuxServerImpl();
         bean.setTransports(new WebSocketTransport(bean), new JSONTransport(bean), new JSONPTransport(bean));
         servletContext.setAttribute(BayeuxServer.ATTRIBUTE, bean);
+        JSONContext.Server jsonContext = new Jackson2JSONContextServer();
+        bean.setOption("jsonContext", jsonContext);
+
         bean.setOption(ServletContext.class.getName(), servletContext);
         bean.setOption("ws.cometdURLMapping", "/cometd/*");
 //        JSONContext.Server jsonContext = new Jackson1JSONContextServer();

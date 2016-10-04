@@ -1,7 +1,5 @@
 package com.springroll.notification;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springroll.core.ContextStore;
 import com.springroll.core.notification.INotificationManager;
 import org.cometd.annotation.Listener;
@@ -54,13 +52,6 @@ public class PushServices
 
     public void deliver(List<String> userIds, Object message, String channel){
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            String serializedReviewData = "";
-            try {
-                serializedReviewData = mapper.writeValueAsString(message);
-            } catch (JsonProcessingException e) {
-            }
-
             Map<String, Set<String>> channelSubscribers = channel2User.get(channel);
             if (channelSubscribers == null) return;
 
@@ -70,7 +61,7 @@ public class PushServices
                 for (String remoteIdOfUser : remoteIdsOfUser) {
                     ServerSession session = bayeux.getSession(remoteIdOfUser);
                     if (session == null) continue;
-                    session.deliver(serverSession, channel, serializedReviewData);
+                    session.deliver(serverSession, channel, message);
                 }
             }
         }catch (Exception e){
