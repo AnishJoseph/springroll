@@ -1,7 +1,6 @@
 package com.springroll.orm.entities;
 
 
-import com.springroll.orm.entities.AbstractEntity;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
