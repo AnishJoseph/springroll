@@ -48,35 +48,44 @@
             <column name="SERIALIZED_EVENT" type="longblob" />
         </createTable>
         <createTable tableName="AUTHORITIES">
-            <column name="id" type="bigint" autoIncrement="false">
+            <column name="ID" type="bigint" autoIncrement="false">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="parent_id" type="bigint"/>
-            <column name="authority_name" type="varchar(20)"/>
-            <column name="description" type="varchar(256)">
+            <column name="PARENT_ID" type="bigint"/>
+            <column name="AUTHORITY_NAME" type="varchar(20)"/>
+            <column name="DESCRIPTION" type="varchar(256)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
         <createTable tableName="GROUPS">
-            <column name="id" type="bigint" autoIncrement="false">
+            <column name="ID" type="bigint" autoIncrement="false">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="parent_id" type="bigint"/>
-            <column name="group" type="varchar(32)"/>
-            <column name="authorities" type="varchar(256)"/>
-            <column name="description" type="varchar(256)">
+            <column name="PARENT_ID" type="bigint"/>
+            <column name="GROUP" type="varchar(32)"/>
+            <column name="AUTHORITIES" type="varchar(256)"/>
+            <column name="DESCRIPTION" type="varchar(256)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
         <createTable tableName="USERS">
-            <column name="id" type="bigint" autoIncrement="false">
+            <column name="ID" type="bigint" autoIncrement="false">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="parent_id" type="bigint"/>
-            <column name="user_id" type="varchar(128)"/>
-            <column name="groups" type="varchar(256)">
+            <column name="PARENT_ID" type="bigint"/>
+            <column name="USER_ID" type="varchar(128)"/>
+            <column name="GROUPS" type="varchar(256)">
                 <constraints nullable="false"/>
             </column>
+        </createTable>
+        <createTable tableName="NOTIFICATION">
+            <column name="ID" type="bigint" autoIncrement="false">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="PARENT_ID" type="bigint"/>
+            <column name="NOTIFICATION_PAYLOAD_JSON" type="varchar(3000)"/>
+            <column name="NOTIFICATION_RECEIVERS" type="varchar(32)"/>
+            <column name="NOTIFICATION_CHANNEL_NAME" type="varchar(64)"/>
         </createTable>
 
     </changeSet>

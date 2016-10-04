@@ -1,7 +1,9 @@
 package com.springroll.router.review;
 
 import com.springroll.core.*;
+import com.springroll.core.notification.INotificationManager;
 import com.springroll.core.services.IReviewManager;
+import com.springroll.notification.InternalNotificationChannels;
 import com.springroll.orm.entities.Job;
 import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.entities.ReviewRules;
@@ -30,10 +32,13 @@ public class ReviewManager extends SpringrollEndPoint implements IReviewManager 
     @Autowired
     Repositories repo;
 
+    @Autowired
+    INotificationManager notificationManager;
+
     public void on(ReviewNeededEvent reviewNeededEvent){
         createReviewSteps(reviewNeededEvent.getPayload().getReviewNeededViolations(), reviewNeededEvent.getPayload().getEventForReview().getJobId(), reviewNeededEvent);
         List<ReviewStep> nextReviewSteps = findNextReviewStep(reviewNeededEvent.getPayload().getEventForReview().getJobId(), 0);
-        System.out.println(nextReviewSteps);
+        createReviewNotifications(nextReviewSteps);
     }
 
     private void createReviewSteps(List<BusinessValidationResult> reviewNeededViolations, Long jobId, ReviewNeededEvent reviewNeededEvent){
@@ -61,7 +66,9 @@ public class ReviewManager extends SpringrollEndPoint implements IReviewManager 
 
     public void createReviewNotifications(List<ReviewStep> reviewSteps){
         for (ReviewStep reviewStep : reviewSteps) {
-
+            ReviewNotificationPayload reviewNotification = new ReviewNotificationPayload();
+            reviewNotification.setReviewStepId(reviewStep.getID());
+            notificationManager.sendNotification(InternalNotificationChannels.BUSINESS_REVIEW, reviewNotification, true);
         }
     }
 

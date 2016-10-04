@@ -1,4 +1,4 @@
-package com.springroll.api.facade.security;
+package com.springroll.core;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;

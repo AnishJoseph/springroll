@@ -10,6 +10,15 @@
             WEB-INF/applicationContext-springrollexample.xml
         </param-value>
     </context-param>
+    <servlet>
+        <servlet-name>cometd</servlet-name>
+        <servlet-class>org.cometd.server.CometDServlet</servlet-class>
+        <async-supported>true</async-supported>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>cometd</servlet-name>
+        <url-pattern>/cometd/*</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>springroll</servlet-name>

@@ -1,6 +1,6 @@
 package com.springroll.api.facade;
 
-import com.springroll.api.facade.security.SpringrollUser;
+import com.springroll.core.SpringrollUser;
 import com.springroll.core.services.IReviewManager;
 import com.springroll.router.review.ReviewActionDTO;
 import org.slf4j.Logger;
