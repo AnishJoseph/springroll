@@ -7,7 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ public class NotificationManager implements INotificationManager {
     @Autowired private PushServices pushServices;
     @Autowired private Repositories repositories;
     @Autowired private ApplicationContext applicationContext;
+    @Autowired ApplicationEventPublisher publisher;
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationManager.class);
 
@@ -35,13 +39,20 @@ public class NotificationManager implements INotificationManager {
         this.addNotificationChannels(InternalNotificationChannels.class);
     }
 
-    @Override public void sendNotification(INotificationChannel notificationChannel, INotificationPayload notificationPayload, boolean persist) {
+    @Override public void sendNotification(INotificationChannel notificationChannel, INotificationPayload notificationPayload, boolean persist, boolean sendPostCommit) {
         MassagedNotificationData massagedNotificationData = notificationChannel.getDataMassager().massage(notificationPayload);
         if(massagedNotificationData == null || massagedNotificationData.getUsers().isEmpty()){
             return;
         }
-        //FIXME this should happen after commit - try hooking onto spring commit event - else we may send out a message and the commit failing
-        pushServices.deliver(massagedNotificationData.getUsers(), massagedNotificationData.getData(), notificationChannel.getServiceUri());
+        if(sendPostCommit){
+            /* This ensures that the notification is pushed to the user ONLY after the current transaction commits. If we dont have this then the
+               event is pushed to the even if the transaction rolls back
+             */
+            publisher.publishEvent(new PushData(massagedNotificationData.getUsers(), massagedNotificationData.getData(), notificationChannel.getServiceUri()));
+        } else {
+
+            pushNotification(new PushData(massagedNotificationData.getUsers(), massagedNotificationData.getData(), notificationChannel.getServiceUri()));
+        }
 
         if(!persist)return;
 
@@ -51,6 +62,10 @@ public class NotificationManager implements INotificationManager {
         notification.setNotificationChannelName(notificationChannel.getChannelName());
         repositories.notification.save(notification);
 
+    }
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void pushNotification(PushData pushData) {
+        pushServices.deliver(pushData.users, pushData.data, pushData.serviceUri);
     }
 
     @Override
@@ -62,7 +77,7 @@ public class NotificationManager implements INotificationManager {
         }
         List<? extends INotificationPayload> pendingNotifications = notificationChannel.getDataProvider().getPendingNotifications(notificationChannel);
         for (INotificationPayload pendingNotification : pendingNotifications) {
-            sendNotification(notificationChannel, pendingNotification, false);
+            sendNotification(notificationChannel, pendingNotification, false, false);
         }
     }
 
@@ -94,5 +109,18 @@ public class NotificationManager implements INotificationManager {
             enumConstant.setDataMassager(applicationContext.getBean(enumConstant.getDataMassagerClass()));
             enumConstant.setDataProvider(applicationContext.getBean(enumConstant.getDataProviderClass()));
         }
+    }
+
+    private class PushData{
+        private List<String> users;
+        private Object data;
+        private String serviceUri;
+
+        public PushData(List<String> users, Object data, String serviceUri) {
+            this.users = users;
+            this.data = data;
+            this.serviceUri = serviceUri;
+        }
+
     }
 }
