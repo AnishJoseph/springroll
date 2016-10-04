@@ -41,7 +41,7 @@ define(['Application', 'marionette', 'jquery','jquery.cometd'], function (Applic
             CometD.batch(function () {
                 CometD.subscribe('/core/review', function(message)
                 {
-                    console.log("Received msg on 'Helo' channel");
+                    console.log("Received REVIWEW msg - " + message.data.reviewStepId);
                 });
             });
         }
