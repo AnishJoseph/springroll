@@ -40,4 +40,19 @@ require(['Application', 'messenger.cometd'],function(Application){
             }
         );
     });
+    $("#Test4").click(function(){
+        data = '{"notificationId":1}';
+        $.ajax(
+            {
+                url: '/api/sr/notificationack',
+                type: 'POST',
+                data: data,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (msg) {
+//                            alert(msg);
+                }
+            }
+        );
+    });
 });

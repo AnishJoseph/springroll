@@ -18,7 +18,7 @@ public class SpringrollExampleAPI extends AbstractAPI {
     @RequestMapping(value = "/testPipelineSimple", method = RequestMethod.GET)
     public Long testPipelineSimple() {
         TestDTO testDTO = new TestDTO();
-        testDTO.setTestCase(5);
+        testDTO.setTestCase(1);
         testDTO.setTestLocation(0);
         testDTO.setTestType(TestDTO.TestType.EXCEPTION);
         TestRootEvent testRootEvent = new TestRootEvent();

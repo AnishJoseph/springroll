@@ -1,5 +1,6 @@
 package com.springroll.notification;
 
+import com.springroll.core.AckLog;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.notification.*;
 import com.springroll.core.services.INotificationManager;
@@ -15,6 +16,7 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,8 +49,8 @@ public class NotificationManager implements INotificationManager {
             return null;
         }
         if(sendPostCommit){
-            /* This ensures that the notification is pushed to the user ONLY after the current transaction commits. If we dont have this then the
-               event is pushed to the even if the transaction rolls back
+            /* This ensures that the notification is pushed to the user ONLY after the current transaction commits.
+               If we dont have this, then the event is pushed to the user even if the transaction rolls back
              */
             publisher.publishEvent(new PushData(massagedNotificationData.getUsers(), massagedNotificationData.getData(), notificationChannel.getServiceUri()));
         } else {
@@ -102,8 +104,7 @@ public class NotificationManager implements INotificationManager {
             logger.error("Acknowledgement for non-existent notification with id '{}' attempted by user {}", notificationId, SpringrollSecurity.getUser().getUsername());
             return;
         }
-
-
+        notification.addAck(new AckLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now()));
     }
 
     private INotificationChannel serviceUriToEnum(String channel) {

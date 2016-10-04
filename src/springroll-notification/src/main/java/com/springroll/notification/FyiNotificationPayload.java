@@ -11,6 +11,9 @@ public class FyiNotificationPayload extends AbstractNotificationPayload {
     private String messageKey;
     private List<String> args;
 
+    public FyiNotificationPayload() {
+    }
+
     public FyiNotificationPayload(String messageKey, List<String> args, String notificationReceivers) {
         this.messageKey = messageKey;
         this.args = args;

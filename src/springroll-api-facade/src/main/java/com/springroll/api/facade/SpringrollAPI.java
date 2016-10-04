@@ -2,6 +2,7 @@ package com.springroll.api.facade;
 
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.services.IReviewManager;
+import com.springroll.router.notification.NotificationAckDTO;
 import com.springroll.router.review.ReviewActionDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,5 +35,10 @@ public class SpringrollAPI extends AbstractAPI {
             return -1L;
         }
         return route(reviewActionDTO);
+    }
+    @RequestMapping(value = "/sr/notificationack", method = RequestMethod.POST)
+    public Long reviewaction(@RequestBody NotificationAckDTO notificationAckDTO) {
+        //FIXME - should we check here or later if this user is allowed to ack this message
+        return route(notificationAckDTO);
     }
 }
