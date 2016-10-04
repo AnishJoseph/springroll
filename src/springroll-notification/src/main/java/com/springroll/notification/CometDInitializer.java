@@ -3,6 +3,7 @@ package com.springroll.notification;
 import org.cometd.annotation.ServerAnnotationProcessor;
 import org.cometd.bayeux.server.BayeuxServer;
 import org.cometd.common.JSONContext;
+import org.cometd.server.AbstractServerTransport;
 import org.cometd.server.BayeuxServerImpl;
 import org.cometd.server.Jackson2JSONContextServer;
 import org.cometd.server.transport.JSONPTransport;
@@ -34,7 +35,7 @@ public class CometDInitializer implements ServletContextAware
         bean.setTransports(new WebSocketTransport(bean), new JSONTransport(bean), new JSONPTransport(bean));
         servletContext.setAttribute(BayeuxServer.ATTRIBUTE, bean);
         JSONContext.Server jsonContext = new Jackson2JSONContextServer();
-        bean.setOption("jsonContext", jsonContext);
+        bean.setOption(AbstractServerTransport.JSON_CONTEXT_OPTION, jsonContext);
 
         bean.setOption(ServletContext.class.getName(), servletContext);
         bean.setOption("ws.cometdURLMapping", "/cometd/*");
