@@ -1,5 +1,6 @@
 package com.springroll.notification;
 
+import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.notification.*;
 import com.springroll.core.services.INotificationManager;
 import com.springroll.orm.entities.Notification;
@@ -37,7 +38,7 @@ public class NotificationManager implements INotificationManager {
     private List<Class> notificationChannels = new ArrayList<>();
 
     @PostConstruct void init(){
-        this.addNotificationChannels(InternalNotificationChannels.class);
+        this.addNotificationChannels(CoreNotificationChannels.class);
     }
 
     @Override public Long sendNotification(INotificationChannel notificationChannel, INotificationPayload notificationPayload, boolean persist, boolean sendPostCommit) {
@@ -96,6 +97,12 @@ public class NotificationManager implements INotificationManager {
 
     @Override
     public void addNotificationAcknowledgement(Long notificationId) {
+        Notification notification = repositories.notification.findOne(notificationId);
+        if(notification == null){
+            logger.error("Acknowledgement for non-existent notification with id '{}' attempted by user {}", notificationId, SpringrollSecurity.getUser().getUsername());
+            return;
+        }
+
 
     }
 

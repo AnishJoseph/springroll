@@ -3,7 +3,7 @@ package com.springroll.router.review;
 import com.springroll.core.*;
 import com.springroll.core.services.INotificationManager;
 import com.springroll.core.services.IReviewManager;
-import com.springroll.notification.InternalNotificationChannels;
+import com.springroll.notification.CoreNotificationChannels;
 import com.springroll.orm.entities.Job;
 import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.entities.ReviewRules;
@@ -67,7 +67,7 @@ public class ReviewManager extends SpringrollEndPoint implements IReviewManager 
     public void createReviewNotifications(List<ReviewStep> reviewSteps){
         for (ReviewStep reviewStep : reviewSteps) {
             /* Create the notification payload, send it down the REVIEW channel, and store the review id returned in the step */
-            reviewStep.setNotificationId(notificationManager.sendNotification(InternalNotificationChannels.REVIEW, new ReviewNotificationPayload(reviewStep.getID()), true, true));
+            reviewStep.setNotificationId(notificationManager.sendNotification(CoreNotificationChannels.REVIEW, new ReviewNotificationPayload(reviewStep.getID()), true, true));
         }
     }
 

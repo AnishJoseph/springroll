@@ -6,32 +6,13 @@ import java.time.LocalDateTime;
  * Created by anishjoseph on 29/09/16.
  *
  */
-public class ReviewLog {
-    private String reviewer;
-    private LocalDateTime time;
+public class ReviewLog extends AckLog {
     private boolean approved;
 
     public ReviewLog(){}
     public ReviewLog(String reviewer, LocalDateTime time, boolean approved) {
-        this.reviewer = reviewer;
-        this.time = time;
+        super(reviewer, time);
         this.approved = approved;
-    }
-
-    public String getReviewer() {
-        return reviewer;
-    }
-
-    public void setReviewer(String reviewer) {
-        this.reviewer = reviewer;
-    }
-
-    public LocalDateTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalDateTime time) {
-        this.time = time;
     }
 
     public boolean isApproved() {

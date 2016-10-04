@@ -7,15 +7,17 @@ import com.springroll.core.notification.INotificationDataProvider;
 /**
  * Created by anishjoseph on 03/10/16.
  */
-public enum InternalNotificationChannels implements INotificationChannel {
-    REVIEW("/core/review", ReviewNotificationDataProvider.class, ReviewNotificationDataMassager.class);
+public enum CoreNotificationChannels implements INotificationChannel {
+    REVIEW("/core/review", ReviewNotificationDataProvider.class, ReviewNotificationDataMassager.class),
+    FYI("/core/fyi", FyiNotificationDataProvider.class, FyiNotificationDataMassager.class);
+
     private String serviceUri;
     private INotificationDataProvider dataProvider = null;
     private INotificationDataMassager dataMassager = null;
     private Class<? extends INotificationDataProvider> dataProviderClass;
     private Class<? extends INotificationDataMassager> dataMassagerClass;
 
-    InternalNotificationChannels(String topicName, Class<? extends INotificationDataProvider> dataProviderClass, Class<? extends INotificationDataMassager> dataMassagerClass) {
+    CoreNotificationChannels(String topicName, Class<? extends INotificationDataProvider> dataProviderClass, Class<? extends INotificationDataMassager> dataMassagerClass) {
         this.serviceUri = topicName;
         this.dataProviderClass = dataProviderClass;
         this.dataMassagerClass = dataMassagerClass;

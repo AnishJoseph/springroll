@@ -41,7 +41,11 @@ define(['Application', 'marionette', 'jquery','jquery.cometd'], function (Applic
             CometD.batch(function () {
                 CometD.subscribe('/core/review', function(message)
                 {
-                    console.log("Received REVIWEW msg - " + message.data.reviewStepId);
+                    console.log("Received REVIEW msg - " + message.data.reviewStepId);
+                });
+                CometD.subscribe('/core/fyi', function(message)
+                {
+                    console.log("Received FYI msg - " + message.data.messageKey);
                 });
             });
         }
