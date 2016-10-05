@@ -50,6 +50,9 @@ public class Notification extends AbstractEntity implements INotification {
     @Type(type="com.springroll.orm.LocalDateTimeUserType")
     private LocalDateTime creationTime;
 
+    @Column(name = "INITIATOR")
+    private String initiator;
+
 
     private transient List<AckLog> ackLog;
     private transient Set<String> userList;
@@ -140,5 +143,13 @@ public class Notification extends AbstractEntity implements INotification {
 
     public void setCreationTime(LocalDateTime creationTime) {
         this.creationTime = creationTime;
+    }
+
+    public String getInitiator() {
+        return initiator;
+    }
+
+    public void setInitiator(String initiator) {
+        this.initiator = initiator;
     }
 }

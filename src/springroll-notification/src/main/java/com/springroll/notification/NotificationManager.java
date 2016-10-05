@@ -57,6 +57,7 @@ public class NotificationManager implements INotificationManager {
         notification.setUsers(targetUsers);
         notification.setCreationTime(LocalDateTime.now());
         notification.setNotificationMessage(notificationMessage);
+        notification.setInitiator(SpringrollSecurity.getUser().getUsername());
 
         notificationMessage.setCreationTime(System.currentTimeMillis());
         notificationMessage.setNotificationId(notification.getID());
