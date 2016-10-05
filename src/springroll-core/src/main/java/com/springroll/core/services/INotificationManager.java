@@ -1,13 +1,13 @@
 package com.springroll.core.services;
 
 import com.springroll.core.notification.INotificationChannel;
-import com.springroll.core.notification.INotificationPayload;
+import com.springroll.core.notification.INotificationMessage;
 
 /**
  * Created by anishjoseph on 02/10/16.
  */
 public interface INotificationManager {
-    Long sendNotification(INotificationChannel notificationChannel, INotificationPayload notificationPayload, boolean persist, boolean sendPostCommit);
+    Long sendNotification(INotificationChannel notificationChannel, INotificationMessage notificationPayload, boolean persist);
 
     void pushPendingNotifications(String serviceUri);
 

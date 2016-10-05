@@ -3,9 +3,7 @@ package com.springroll.orm.entities;
 
 import org.springframework.util.StringUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Collection;
 
 /**
@@ -14,6 +12,9 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "USERS")
+//@NamedQueries(value = {
+//        @NamedQuery(name = "Users.findUsersThatBelongToGroup", query = "select user.userId from Users as user where user.grps like ?1")
+//})
 public class Users extends AbstractEntity {
 
     private transient Collection<String> groups;

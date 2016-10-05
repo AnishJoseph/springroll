@@ -1,23 +1,21 @@
 package com.springroll.notification;
 
-
-
 import java.util.List;
 
 /**
- * Created by anishjoseph on 02/10/16.
+ * Created by anishjoseph on 05/10/16.
  */
-public class FyiNotificationPayload extends AbstractNotificationPayload {
+public class FyiNotificationMessage extends AbstractNotificationMessage {
     private String messageKey;
     private List<String> args;
 
-    public FyiNotificationPayload() {
+    public FyiNotificationMessage() {
     }
 
-    public FyiNotificationPayload(String messageKey, List<String> args, String notificationReceivers) {
+    public FyiNotificationMessage(String messageKey, List<String> args, String notificationReceivers) {
         this.messageKey = messageKey;
         this.args = args;
-        super.setNotificationReceivers(notificationReceivers);
+        setNotificationReceivers(notificationReceivers);
     }
 
     public String getMessageKey() {

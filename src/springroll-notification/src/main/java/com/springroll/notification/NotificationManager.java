@@ -17,10 +17,8 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by anishjoseph on 02/10/16.
@@ -43,28 +41,25 @@ public class NotificationManager implements INotificationManager {
         this.addNotificationChannels(CoreNotificationChannels.class);
     }
 
-    @Override public Long sendNotification(INotificationChannel notificationChannel, INotificationPayload notificationPayload, boolean persist, boolean sendPostCommit) {
-        MassagedNotificationData massagedNotificationData = notificationChannel.getDataMassager().massage(notificationPayload);
-        if(massagedNotificationData == null || massagedNotificationData.getUsers().isEmpty()){
-            return null;
-        }
-        if(sendPostCommit){
-            /* This ensures that the notification is pushed to the user ONLY after the current transaction commits.
-               If we dont have this, then the event is pushed to the user even if the transaction rolls back
-             */
-            publisher.publishEvent(new PushData(massagedNotificationData.getUsers(), massagedNotificationData.getData(), notificationChannel.getServiceUri()));
-        } else {
-
-            pushNotification(new PushData(massagedNotificationData.getUsers(), massagedNotificationData.getData(), notificationChannel.getServiceUri()));
-        }
+    @Override public Long sendNotification(INotificationChannel notificationChannel, INotificationMessage notificationMessage, boolean persist) {
+        Set<String> targetUsers = notificationChannel.getMessageFactory().getTargetUsers(notificationMessage);
+        /* This ensures that the notification is pushed to the user ONLY after the current transaction commits.
+           If we dont have this, then the event is pushed to the user even if the transaction rolls back
+         */
+        publisher.publishEvent(new PushData(targetUsers, notificationMessage, notificationChannel.getServiceUri()));
 
         if(!persist)return null;
 
         Notification notification = new Notification();
-        notification.setNotificationPayload(notificationPayload);
-        notification.setReceivers(massagedNotificationData.getNotificationReceivers());
-        notification.setChannelName(notificationChannel.getChannelName());
         repositories.notification.save(notification);
+        notification.setReceivers(notificationMessage.getNotificationReceivers());
+        notification.setChannelName(notificationChannel.getChannelName());
+        notification.setUsers(targetUsers);
+        notification.setCreationTime(LocalDateTime.now());
+        notification.setNotificationMessage(notificationMessage);
+
+        notificationMessage.setCreationTime(System.currentTimeMillis());
+        notificationMessage.setNotificationId(notification.getID());
         return notification.getID();
 
     }
@@ -80,10 +75,13 @@ public class NotificationManager implements INotificationManager {
             logger.error("Unable to find NotificationChannel for channel '{}' - probably does not exist in the Enums", serviceUri);
             return;
         }
-        List<? extends INotificationPayload> pendingNotifications = notificationChannel.getDataProvider().getPendingNotifications(notificationChannel);
-        for (INotificationPayload pendingNotification : pendingNotifications) {
-            sendNotification(notificationChannel, pendingNotification, false, false);
-        }
+        List<Notification> pendingNotificationsForUser = (List<Notification>)notificationChannel.getMessageFactory().getPendingNotificationsForUser(notificationChannel);
+        if(pendingNotificationsForUser.isEmpty())return;
+
+        List<INotificationMessage> notificationMessagesForUser = pendingNotificationsForUser.stream().map(Notification::getNotificationMessage).collect(Collectors.toList());
+        Set<String> user = new HashSet<>(1);
+        user.add(SpringrollSecurity.getUser().getUsername());
+        pushNotification(new PushData(user, notificationMessagesForUser, notificationChannel.getServiceUri()));
     }
 
     @Override
@@ -126,21 +124,19 @@ public class NotificationManager implements INotificationManager {
         INotificationChannel[] enumConstants = (INotificationChannel[])notificationChannelClass.getEnumConstants();
         for (INotificationChannel enumConstant : enumConstants) {
             //FIXME - what if we cant find the bean
-            enumConstant.setDataMassager(applicationContext.getBean(enumConstant.getDataMassagerClass()));
-            enumConstant.setDataProvider(applicationContext.getBean(enumConstant.getDataProviderClass()));
+            enumConstant.setMessageFactory(applicationContext.getBean(enumConstant.getMessageFactoryClass()));
         }
     }
 
     private class PushData{
-        private List<String> users;
+        private Set<String> users;
         private Object data;
         private String serviceUri;
 
-        public PushData(List<String> users, Object data, String serviceUri) {
+        public PushData(Set<String> users, Object data, String serviceUri) {
             this.users = users;
             this.data = data;
             this.serviceUri = serviceUri;
         }
-
     }
 }

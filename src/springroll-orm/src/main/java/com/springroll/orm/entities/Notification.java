@@ -7,24 +7,29 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.AckLog;
 import com.springroll.core.ReviewLog;
-import com.springroll.core.notification.INotificationPayload;
+import com.springroll.core.notification.INotification;
+import com.springroll.core.notification.INotificationMessage;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
+import org.hibernate.annotations.Type;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by anishjoseph on 05/09/16.
  */
 
 @Entity
-public class Notification extends AbstractEntity {
+public class Notification extends AbstractEntity implements INotification {
 
-    private transient INotificationPayload notificationPayload;
+    private transient INotificationMessage notificationMessage;
 
     @Column(name = "PAYLOAD")
     private String payloadJson;
@@ -32,22 +37,43 @@ public class Notification extends AbstractEntity {
     @Column(name = "RECEIVERS")
     private String receivers;
 
+    @Column(name = "USERS")
+    private String users;
+
     @Column(name = "CHANNEL_NAME")
     private String channelName;
 
-    private transient List<AckLog> ackLog;
     @Column(name = "ACK_LOG")
     private String ackLogAsJson;
 
-    public INotificationPayload getNotificationPayload() {
-        if(notificationPayload != null)return notificationPayload;
-        if(payloadJson == null) return null;
-        notificationPayload = (INotificationPayload) new JSONDeserializer().deserialize(payloadJson);
-        return notificationPayload;
+    @Column(name = "CREATION_TIME")
+    @Type(type="com.springroll.orm.LocalDateTimeUserType")
+    private LocalDateTime creationTime;
+
+
+    private transient List<AckLog> ackLog;
+    private transient Set<String> userList;
+
+
+    public Set<String> getUsers() {
+        if(userList == null)userList = StringUtils.commaDelimitedListToSet(users);
+        return userList;
     }
 
-    public void setNotificationPayload(INotificationPayload notification) {
-        this.notificationPayload = notification;
+    public void setUsers(Set<String> users) {
+        this.users = StringUtils.collectionToCommaDelimitedString(users);
+        this.userList = users;
+    }
+
+    public INotificationMessage getNotificationMessage() {
+        if(notificationMessage != null)return notificationMessage;
+        if(payloadJson == null) return null;
+        notificationMessage = (INotificationMessage) new JSONDeserializer().deserialize(payloadJson);
+        return notificationMessage;
+    }
+
+    public void setNotificationMessage(INotificationMessage notification) {
+        this.notificationMessage = notification;
         JSONSerializer serializer = new JSONSerializer();
         payloadJson = serializer.deepSerialize(notification);
     }
@@ -108,5 +134,11 @@ public class Notification extends AbstractEntity {
 
     }
 
+    public LocalDateTime getCreationTime() {
+        return creationTime;
+    }
 
+    public void setCreationTime(LocalDateTime creationTime) {
+        this.creationTime = creationTime;
+    }
 }

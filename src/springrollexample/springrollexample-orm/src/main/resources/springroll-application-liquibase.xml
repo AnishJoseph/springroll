@@ -9,9 +9,14 @@
 
     <changeSet id="springroll-test" author="anish">
         <sql>
-            INSERT INTO users VALUES (1,0, 'ANISH', 'ADMIN,BOM');
-            INSERT INTO  groups values (1,0, 'ADMIN', 'AUTH1,AUTH2', 'desc1');
-            INSERT INTO  groups values (2,0, 'MASTER_APPROVER', 'AUTH3,AUTH4', 'desc1');
+            INSERT INTO users VALUES (1,0, 'ANISH', 'BOM,GROUP1');
+            INSERT INTO users VALUES (2,0, 'BOM1',  'BOM,GROUP1');
+            INSERT INTO users VALUES (3,0, 'BOM2',  'BOM,GROUP2');
+            INSERT INTO users VALUES (4,0, 'BOM3',  'BOM,GROUP2');
+
+            INSERT INTO  groups values (1,0, 'BOM1', 'AUTH1,AUTH2', 'desc1');
+            INSERT INTO  groups values (2,0, 'GROUP1', 'AUTH3,AUTH4', 'desc1');
+            INSERT INTO  groups values (3,0, 'GROUP2', 'AUTH3,AUTH4', 'desc1');
             INSERT INTO  review_rules values (1,0, 'Rule1', 1, 'BOM', 1, 'desc1');
             <!--INSERT INTO  review_rules values (2,0, 'Rule1', 3, 'BOM', 1, 'desc2');-->
             <!--INSERT INTO  review_rules values (3,0, 'Rule1', 3, 'FM', 1, 'desc3');-->

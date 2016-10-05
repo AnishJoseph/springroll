@@ -50,7 +50,7 @@ public class PushServices
         addSubscription((String)message.get("subscription"), user.getUsername(), remote.getId());
     }
 
-    public void deliver(List<String> userIds, Object message, String channel){
+    public void deliver(Set<String> userIds, Object message, String channel){
         try {
             Map<String, Set<String>> channelSubscribers = channel2User.get(channel);
             if (channelSubscribers == null) return;

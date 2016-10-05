@@ -3,7 +3,7 @@ package com.springrollexample.router.test;
 import com.springroll.core.DTO;
 import com.springroll.core.services.INotificationManager;
 import com.springroll.notification.CoreNotificationChannels;
-import com.springroll.notification.FyiNotificationPayload;
+import com.springroll.notification.FyiNotificationMessage;
 import com.springroll.router.ReceiveInNewTransaction;
 import com.springroll.router.SpringrollEndPoint;
 import com.springrollexample.orm.entities.TestTableWithLocking;
@@ -72,8 +72,8 @@ public class TestEndPoint extends SpringrollEndPoint {
 
     public void on(TE1_1 event){
 
-        FyiNotificationPayload payload = new FyiNotificationPayload("messageKEY", null, "BOM");
-        notificationManager.sendNotification(CoreNotificationChannels.FYI, payload, true, true);
+        FyiNotificationMessage payload = new FyiNotificationMessage("messageKEY", null, "BOM");
+        notificationManager.sendNotification(CoreNotificationChannels.FYI, payload, true);
         checkAndRunTest(event);
         TE1_2 te2 = new TE1_2();
         te2.setPayload(event.getPayload());

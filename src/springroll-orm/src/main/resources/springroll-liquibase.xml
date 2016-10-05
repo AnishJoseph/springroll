@@ -85,8 +85,10 @@
             </column>
             <column name="PARENT_ID" type="bigint"/>
             <column name="RECEIVERS" type="varchar(32)"/>
+            <column name="USERS" type="varchar(256)"/>
             <column name="CHANNEL_NAME" type="varchar(64)"/>
             <column name="ACK_LOG" type="VARCHAR2(2048)"/>
+            <column name="CREATION_TIME" type="TIMESTAMP"/>
             <column name="PAYLOAD" type="varchar(3000)"/>
         </createTable>
 

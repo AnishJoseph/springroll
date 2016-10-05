@@ -1,18 +1,16 @@
-package com.springroll.router.review;
-
-
-import com.springroll.notification.AbstractNotificationPayload;
+package com.springroll.notification;
 
 /**
  * Created by anishjoseph on 02/10/16.
  */
-public class ReviewNotificationPayload extends AbstractNotificationPayload {
+public class ReviewNotificationMessage extends AbstractNotificationMessage{
     private Long reviewStepId;
 
-    public ReviewNotificationPayload(){}
+    public ReviewNotificationMessage(){}
 
-    public ReviewNotificationPayload(Long reviewStepId) {
+    public ReviewNotificationMessage(Long reviewStepId, String approver) {
         this.reviewStepId = reviewStepId;
+        setNotificationReceivers(approver);
     }
 
     public Long getReviewStepId() {

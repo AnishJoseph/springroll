@@ -18,7 +18,7 @@ public class JmsEntryPoint {
 
     public void on(IEvent event) {
         /* Called when the event comes from JMS - it will be in a new thread so set these attributes for the new thread */
-        if(event instanceof ISignallingEvent)return;
+//        if(event instanceof ISignallingEvent)return;
         ContextStore.put(event.getUser(), event.getJobId(), event.getLegId());
         publisher.publishEvent(event);
 

@@ -1,34 +1,38 @@
 package com.springroll.notification;
 
 import com.springroll.core.notification.INotificationChannel;
-import com.springroll.core.notification.INotificationDataMassager;
-import com.springroll.core.notification.INotificationDataProvider;
+import com.springroll.core.notification.INotificationMessageFactory;
 
 /**
  * Created by anishjoseph on 03/10/16.
  */
 public enum CoreNotificationChannels implements INotificationChannel {
-    REVIEW("/core/review", ReviewNotificationDataProvider.class, ReviewNotificationDataMassager.class),
-    FYI("/core/fyi", FyiNotificationDataProvider.class, FyiNotificationDataMassager.class);
+    REVIEW("/core/review", ReviewNotificationMessageFactory.class),
+    FYI("/core/fyi", FyiNotificationMessageFactory.class);
 
     private String serviceUri;
-    private INotificationDataProvider dataProvider = null;
-    private INotificationDataMassager dataMassager = null;
-    private Class<? extends INotificationDataProvider> dataProviderClass;
-    private Class<? extends INotificationDataMassager> dataMassagerClass;
+    private INotificationMessageFactory messageFactory = null;
+    private Class<? extends INotificationMessageFactory> messageFactoryClass;
 
-    CoreNotificationChannels(String topicName, Class<? extends INotificationDataProvider> dataProviderClass, Class<? extends INotificationDataMassager> dataMassagerClass) {
+    CoreNotificationChannels(String topicName, Class<? extends INotificationMessageFactory> messageFactoryClass) {
         this.serviceUri = topicName;
-        this.dataProviderClass = dataProviderClass;
-        this.dataMassagerClass = dataMassagerClass;
+        this.messageFactoryClass = messageFactoryClass;
     }
 
-    @Override public INotificationDataProvider getDataProvider() {
-        return dataProvider;
+    @Override public INotificationMessageFactory getMessageFactory() {
+        return messageFactory;
     }
 
-    @Override public INotificationDataMassager getDataMassager() {
-        return dataMassager;
+    @Override public void setMessageFactory(INotificationMessageFactory messageFactory) {
+        this.messageFactory = messageFactory;
+    }
+
+    @Override public Class<? extends INotificationMessageFactory> getMessageFactoryClass() {
+        return messageFactoryClass;
+    }
+
+    public void setMessageFactoryClass(Class<? extends INotificationMessageFactory> messageFactoryClass) {
+        this.messageFactoryClass = messageFactoryClass;
     }
 
     @Override public String getServiceUri() {
@@ -39,19 +43,4 @@ public enum CoreNotificationChannels implements INotificationChannel {
         return this.name();
     }
 
-    @Override public void setDataProvider(INotificationDataProvider dataProvider) {
-        this.dataProvider = dataProvider;
-    }
-
-    @Override public void setDataMassager(INotificationDataMassager dataMassager) {
-        this.dataMassager = dataMassager;
-    }
-
-    @Override public Class<? extends INotificationDataProvider> getDataProviderClass() {
-        return dataProviderClass;
-    }
-
-    @Override public Class<? extends INotificationDataMassager> getDataMassagerClass() {
-        return dataMassagerClass;
-    }
 }

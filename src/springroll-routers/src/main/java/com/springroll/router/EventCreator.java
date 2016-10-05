@@ -73,6 +73,7 @@ public class EventCreator {
         }
 
         ReviewNeededEvent reviewNeededEvent = new ReviewNeededEvent(event, jobMeta.getBusinessValidationResults().getReviewNeededViolations());
+        reviewNeededEvent.setUser(jobMeta.getUser());
         asynchSideEndPoints.routeToJms(reviewNeededEvent);
         return event.getJobId();
     }

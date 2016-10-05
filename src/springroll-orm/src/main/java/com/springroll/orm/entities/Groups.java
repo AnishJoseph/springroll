@@ -18,6 +18,7 @@ public class Groups extends AbstractEntity {
 
     private transient Collection<String> auths;
 
+    @Column(name = "AUTHORITIES", length = 32)
     private String authorities;
 
     @Column(name = "GROUP", length = 32)

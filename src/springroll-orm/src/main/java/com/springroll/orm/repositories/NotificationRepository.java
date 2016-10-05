@@ -14,4 +14,7 @@ public interface NotificationRepository extends AbstractEntityRepository<Notific
     @Query("select notification from Notification notification where notification.channelName = ?1 and (notification.receivers = ?2 or notification.receivers in (?3))")
     List<Notification> findNotificationsForUser(String channelName, String userId, Collection<String> group);
 
+    @Query("select o from Notification o where o.channelName = ?1 and  (o.ackLogAsJson is null or o.ackLogAsJson not like ?4)  and (o.receivers = ?2 or o.receivers in (?3))")
+    List<Notification> findNotificationsForUserWhereUserHasNotAcked(String channelName, String userId, Collection<String> group, String quotedUserId);
+
 }
