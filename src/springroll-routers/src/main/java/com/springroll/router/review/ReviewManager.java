@@ -93,7 +93,7 @@ public class ReviewManager extends SpringrollEndPoint {
             return;
         }
 
-        reviewStep.addReviewData(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionEvent.getPayload().isApproved()));
+        reviewStep.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionEvent.getPayload().isApproved()));
         ReviewRules reviewRule = repo.reviewRules.findOne(reviewStep.getRuleId());
         notificationManager.addNotificationAcknowledgement(reviewStep.getNotificationId());
         if(reviewActionDTO.isApproved() && reviewRule.getApprovalsNeeded() > reviewStep.getReviewLog().size()){

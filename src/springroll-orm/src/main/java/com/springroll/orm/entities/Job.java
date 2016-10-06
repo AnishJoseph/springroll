@@ -16,6 +16,7 @@ import javax.persistence.Lob;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,7 +59,7 @@ public class Job extends AbstractEntity {
     private String service;
 
     @Column(name = "REVIEW_LOG")
-    private String reviewLogAsJson;
+    private String reviewLogAsJson = "";
 
 
     public Job(Long parentId, boolean underReview, String service, String userId, List<? extends DTO> payloads) {
@@ -138,7 +139,9 @@ public class Job extends AbstractEntity {
         serializedPayloads = SerializationHelper.serialize((Serializable) payloads);
     }
     public List<ReviewLog> getReviewLog() {
-        if (this.reviewLog == null && reviewLogAsJson != null) {
+        if(reviewLogAsJson.isEmpty())return new ArrayList<>();
+
+        if (this.reviewLog == null) {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             try {
@@ -157,6 +160,8 @@ public class Job extends AbstractEntity {
         try {
             reviewLogAsJson = mapper.writeValueAsString(reviewLog);
         } catch (JsonProcessingException e) {
+            //FIXME
+            throw new RuntimeException(e);
         }
     }
 

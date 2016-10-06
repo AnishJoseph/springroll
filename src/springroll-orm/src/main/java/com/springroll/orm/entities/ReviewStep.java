@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.springroll.core.AckLog;
 import com.springroll.core.IEvent;
 import com.springroll.core.ReviewLog;
 import org.hibernate.internal.util.SerializationHelper;
@@ -47,7 +48,7 @@ public class ReviewStep extends AbstractEntity {
     private byte[] serializedEvent;
 
     @Column(name = "REVIEW_LOG")
-    private String reviewLogAsJson;
+    private String reviewLogAsJson = "";
 
     private transient List<ReviewLog> reviewLog;
     private transient IEvent event;
@@ -71,25 +72,34 @@ public class ReviewStep extends AbstractEntity {
     }
 
     public List<ReviewLog> getReviewLog() {
-        if (this.reviewLog == null && reviewLogAsJson != null) {
+        if(reviewLogAsJson.isEmpty()){
+            reviewLog = new ArrayList<>();
+            return reviewLog;
+        }
+
+        if (this.reviewLog == null) {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             try {
                 this.reviewLog = mapper.readValue(reviewLogAsJson, new TypeReference<List<ReviewLog>>(){});
             } catch (IOException e) {
-                return null;
+                //FIXME
+                throw new RuntimeException(e);
             }
         }
         return reviewLog;
     }
 
-    public void setReviewLog(List<ReviewLog> reviewLog) {
+    public void addReviewLog(ReviewLog reviewLog){
+        getReviewLog();
+        this.reviewLog.add(reviewLog);
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
-        this.reviewLog = reviewLog;
         try {
-            reviewLogAsJson = mapper.writeValueAsString(reviewLog);
+            reviewLogAsJson = mapper.writeValueAsString(this.reviewLog);
         } catch (JsonProcessingException e) {
+            //FIXME
+            throw new RuntimeException(e);
         }
     }
 
@@ -117,12 +127,6 @@ public class ReviewStep extends AbstractEntity {
         this.reviewStage = reviewStage;
     }
 
-    public void addReviewData(ReviewLog reviewLog){
-        getReviewLog();
-        if(this.reviewLog == null) this.reviewLog = new ArrayList<>();
-        this.reviewLog.add(reviewLog);
-        this.setReviewLog(this.reviewLog);
-    }
 
     public boolean hasThisUserAlreadyReviewedThisStep(String  userId){
         List<ReviewLog> reviewLog = getReviewLog();
