@@ -91,6 +91,7 @@
             <column name="CHANNEL_NAME" type="varchar(64)"/>
             <column name="ACK_LOG" type="VARCHAR2(2048)"/>
             <column name="CREATION_TIME" type="TIMESTAMP"/>
+            <column name="VERSION" type="bigint"/>
             <column name="PAYLOAD" type="varchar(3000)"/>
         </createTable>
 

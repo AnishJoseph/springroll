@@ -41,7 +41,7 @@ define(['Application', 'marionette', 'jquery','jquery.cometd'], function (Applic
             CometD.batch(function () {
                 CometD.subscribe('/core/review', function(message)
                 {
-                    console.log("Received REVIEW msg - " + message.data.reviewStepId);
+                    console.log("Received REVIEW msg - " + message.data[0].reviewStepId);
                     data = {"approved":true, "reviewStepId":message.data[0].reviewStepId};
                     data = JSON.stringify(data);
                     console.log(data);
@@ -61,7 +61,7 @@ define(['Application', 'marionette', 'jquery','jquery.cometd'], function (Applic
                 });
                 CometD.subscribe('/core/fyi', function(message)
                 {
-                    console.log("Received FYI msg - " + message.data);
+                    console.log("Received FYI msg - " + message.data[0].notificationId);
                     data = {"notificationId":message.data[0].notificationId};
                     data = JSON.stringify(data);
                     $.ajax(

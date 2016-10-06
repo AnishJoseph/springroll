@@ -47,7 +47,7 @@ public class NotificationManager implements INotificationManager {
            This ensures that the notification is pushed to the user ONLY after the current transaction commits.
            If we don't have this, then the event is pushed to the user even if the transaction rolls back
          */
-        publisher.publishEvent(new PushData(targetUsers, notificationMessage, notificationChannel.getServiceUri()));
+        publisher.publishEvent(new PushData(targetUsers, new Object[]{notificationMessage}, notificationChannel.getServiceUri()));
 
         if(!notificationChannel.isPersist())return null;
 

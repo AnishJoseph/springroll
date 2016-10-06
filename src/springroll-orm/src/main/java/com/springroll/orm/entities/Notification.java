@@ -6,16 +6,18 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.AckLog;
-import com.springroll.core.ReviewLog;
 import com.springroll.core.notification.INotification;
 import com.springroll.core.notification.INotificationMessage;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
 import org.hibernate.annotations.Type;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Version;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ import java.util.Set;
 
 @Entity
 public class Notification extends AbstractEntity implements INotification {
+    private static final Logger logger = LoggerFactory.getLogger(Notification.class);
 
     private transient INotificationMessage notificationMessage;
 
@@ -55,6 +58,10 @@ public class Notification extends AbstractEntity implements INotification {
 
     @Column(name = "AUTO_CLEAN")
     private boolean autoClean;
+
+    @Version
+    @Column(name = "VERSION")
+    private Long version;
 
     private transient List<AckLog> ackLog;
     private transient Set<String> userList;
@@ -100,44 +107,34 @@ public class Notification extends AbstractEntity implements INotification {
     }
 
     public List<AckLog> getAckLog() {
-        if (this.ackLog == null && !ackLogAsJson.isEmpty()) {
+        if(ackLogAsJson.isEmpty()){
+            ackLog = new ArrayList<>();
+            return ackLog;
+        }
+
+        if (this.ackLog == null) {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             try {
-                this.ackLog = mapper.readValue(ackLogAsJson, new TypeReference<List<ReviewLog>>(){});
+                this.ackLog = mapper.readValue(ackLogAsJson, new TypeReference<List<AckLog>>(){});
             } catch (IOException e) {
-                return null;
+                logger.debug("Exception {}" + e.getMessage());
+                return new ArrayList<>();
             }
-            return ackLog;
         }
-        return new ArrayList<>();
+        return ackLog;
     }
 
-    public void setAckLog(List<AckLog> ackLog) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        this.ackLog = ackLog;
-        try {
-            ackLogAsJson = mapper.writeValueAsString(ackLog);
-        } catch (JsonProcessingException e) {
-            //FIXME
-        }
-    }
     public void addAck(AckLog ackLog){
         getAckLog();
-        if(this.ackLog == null) this.ackLog = new ArrayList<>();
         this.ackLog.add(ackLog);
-        this.setAckLog(this.ackLog);
-    }
-
-    public boolean hasThisUserAlreadyAcknowledged(String  userId){
-        List<AckLog> ackLog = getAckLog();
-        if(ackLog == null)return false;
-        for (AckLog data : ackLog) {
-            if(data.getReviewer().equals(userId))return true;
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        try {
+            ackLogAsJson = mapper.writeValueAsString(this.ackLog);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
-        return false;
-
     }
 
     public LocalDateTime getCreationTime() {
