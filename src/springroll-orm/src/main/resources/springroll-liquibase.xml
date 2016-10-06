@@ -85,6 +85,7 @@
             </column>
             <column name="PARENT_ID" type="bigint"/>
             <column name="INITIATOR" type="varchar(32)"/>
+            <column name="AUTO_CLEAN" type="bit" />
             <column name="RECEIVERS" type="varchar(32)"/>
             <column name="USERS" type="varchar(256)"/>
             <column name="CHANNEL_NAME" type="varchar(64)"/>

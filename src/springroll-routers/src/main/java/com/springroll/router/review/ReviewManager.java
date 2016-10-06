@@ -2,7 +2,6 @@ package com.springroll.router.review;
 
 import com.springroll.core.*;
 import com.springroll.core.services.INotificationManager;
-import com.springroll.core.services.IReviewManager;
 import com.springroll.notification.CoreNotificationChannels;
 import com.springroll.notification.ReviewNotificationMessage;
 import com.springroll.orm.entities.Job;
@@ -24,7 +23,7 @@ import java.util.List;
  * Created by anishjoseph on 27/09/16.
  */
 @Service
-public class ReviewManager extends SpringrollEndPoint implements IReviewManager {
+public class ReviewManager extends SpringrollEndPoint {
     private static final Logger logger = LoggerFactory.getLogger(ReviewManager.class);
 
     @Autowired
@@ -69,12 +68,16 @@ public class ReviewManager extends SpringrollEndPoint implements IReviewManager 
         for (ReviewStep reviewStep : reviewSteps) {
             String approver = repo.reviewRules.findOne(reviewStep.getRuleId()).getApprover();
             /* Create the notification payload, send it down the REVIEW channel, and store the review id returned in the step */
-            reviewStep.setNotificationId(notificationManager.sendNotification(CoreNotificationChannels.REVIEW, new ReviewNotificationMessage(reviewStep.getID(), approver), true));
+            reviewStep.setNotificationId(notificationManager.sendNotification(CoreNotificationChannels.REVIEW, new ReviewNotificationMessage(reviewStep.getID(), approver)));
         }
     }
 
     public void on(ReviewActionEvent reviewActionEvent){
         ReviewActionDTO reviewActionDTO = reviewActionEvent.getPayload();
+        if(reviewActionDTO.getReviewStepId() == null){
+            logger.error("Review Step ID is null");
+            return;
+        }
         ReviewStep reviewStep = repo.reviewStep.findOne(reviewActionDTO.getReviewStepId());
         if(reviewStep == null){
             logger.error("Unable to find a review step with id {} - returning silently", reviewActionDTO.getReviewStepId());
@@ -136,16 +139,4 @@ public class ReviewManager extends SpringrollEndPoint implements IReviewManager 
         createReviewNotifications(reviewSteps);
     }
 
-    /**
-     *
-     * @param reviewStepId - id of the reviewStep
-     * @return null if the review step does not exist - else the group name of the group that is allowed to review this step
-     */
-    @Override
-    public String getApproverForReviewStep(Long reviewStepId) {
-        ReviewStep reviewStep = repo.reviewStep.findOne(reviewStepId);
-        if(reviewStep == null)return null;
-        ReviewRules reviewRule = repo.reviewRules.findOne(reviewStep.getRuleId());
-        return reviewRule.getApprover();
-    }
 }

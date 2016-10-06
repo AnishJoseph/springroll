@@ -41,14 +41,15 @@ public class NotificationManager implements INotificationManager {
         this.addNotificationChannels(CoreNotificationChannels.class);
     }
 
-    @Override public Long sendNotification(INotificationChannel notificationChannel, INotificationMessage notificationMessage, boolean persist) {
+    @Override public Long sendNotification(INotificationChannel notificationChannel, INotificationMessage notificationMessage) {
         Set<String> targetUsers = notificationChannel.getMessageFactory().getTargetUsers(notificationMessage);
-        /* This ensures that the notification is pushed to the user ONLY after the current transaction commits.
-           If we dont have this, then the event is pushed to the user even if the transaction rolls back
+        /* Use spring to publish - spring will deliver this on a successful commit of the transaction.
+           This ensures that the notification is pushed to the user ONLY after the current transaction commits.
+           If we don't have this, then the event is pushed to the user even if the transaction rolls back
          */
         publisher.publishEvent(new PushData(targetUsers, notificationMessage, notificationChannel.getServiceUri()));
 
-        if(!persist)return null;
+        if(!notificationChannel.isPersist())return null;
 
         Notification notification = new Notification();
         repositories.notification.save(notification);
@@ -57,6 +58,7 @@ public class NotificationManager implements INotificationManager {
         notification.setUsers(targetUsers);
         notification.setCreationTime(LocalDateTime.now());
         notification.setInitiator(SpringrollSecurity.getUser().getUsername());
+        notification.setAutoClean(notificationChannel.isAutoClean());
 
         notificationMessage.setCreationTime(System.currentTimeMillis());
         notificationMessage.setNotificationId(notification.getID());
@@ -104,7 +106,17 @@ public class NotificationManager implements INotificationManager {
             logger.error("Acknowledgement for non-existent notification with id '{}' attempted by user {}", notificationId, SpringrollSecurity.getUser().getUsername());
             return;
         }
+        if(!notification.getUsers().contains(SpringrollSecurity.getUser().getUsername())){
+            logger.error("Illegal acknowledgement for notification with id '{}' - this notification is not targeted to user {}", notificationId, SpringrollSecurity.getUser().getUsername());
+            return;
+        }
         notification.addAck(new AckLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now()));
+        if(notification.isAutoClean()){
+            if(notification.getAckLog().size() == notification.getUsers().size()){
+                //Assuming here that if the sizes are the same then all users have acknowledged
+                repositories.notification.delete(notificationId);
+            }
+        }
     }
 
     private INotificationChannel serviceUriToEnum(String channel) {

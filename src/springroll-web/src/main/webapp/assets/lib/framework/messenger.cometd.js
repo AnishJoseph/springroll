@@ -41,11 +41,42 @@ define(['Application', 'marionette', 'jquery','jquery.cometd'], function (Applic
             CometD.batch(function () {
                 CometD.subscribe('/core/review', function(message)
                 {
-                    console.log("Received REVIEW msg - " + message.data);
+                    console.log("Received REVIEW msg - " + message.data.reviewStepId);
+                    data = {"approved":true, "reviewStepId":message.data[0].reviewStepId};
+                    data = JSON.stringify(data);
+                    console.log(data);
+                    $.ajax(
+                        {
+                            url: '/api/sr/reviewaction',
+                            type: 'POST',
+                            data: data,
+                            contentType: 'application/json; charset=utf-8',
+                            dataType: 'json',
+                            success: function (msg) {
+//                            alert(msg);
+                            }
+                        }
+                    );
+
                 });
                 CometD.subscribe('/core/fyi', function(message)
                 {
                     console.log("Received FYI msg - " + message.data);
+                    data = {"notificationId":message.data[0].notificationId};
+                    data = JSON.stringify(data);
+                    $.ajax(
+                        {
+                            url: '/api/sr/notificationack',
+                            type: 'POST',
+                            data: data,
+                            contentType: 'application/json; charset=utf-8',
+                            dataType: 'json',
+                            success: function (msg) {
+//                            alert(msg);
+                            }
+                        }
+                    );
+
                 });
             });
         }

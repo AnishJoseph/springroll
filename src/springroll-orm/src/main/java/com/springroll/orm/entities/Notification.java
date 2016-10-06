@@ -53,6 +53,8 @@ public class Notification extends AbstractEntity implements INotification {
     @Column(name = "INITIATOR")
     private String initiator;
 
+    @Column(name = "AUTO_CLEAN")
+    private boolean autoClean;
 
     private transient List<AckLog> ackLog;
     private transient Set<String> userList;
@@ -152,5 +154,13 @@ public class Notification extends AbstractEntity implements INotification {
 
     public void setInitiator(String initiator) {
         this.initiator = initiator;
+    }
+
+    public boolean isAutoClean() {
+        return autoClean;
+    }
+
+    public void setAutoClean(boolean autoClean) {
+        this.autoClean = autoClean;
     }
 }
