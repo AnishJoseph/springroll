@@ -1,18 +1,19 @@
 package com.springroll.notification;
 
 import com.springroll.core.SpringrollSecurity;
-import com.springroll.core.SpringrollUser;
 import com.springroll.core.notification.*;
 import com.springroll.orm.entities.Notification;
 import com.springroll.orm.entities.Users;
 import com.springroll.orm.repositories.Repositories;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by anishjoseph on 05/10/16.
@@ -39,10 +40,9 @@ import java.util.Set;
 
     @Override
     public List<? extends INotification> getPendingNotificationsForUser(INotificationChannel notificationChannel) {
-        //FIXME - to get groups we need Springroll user - which may be defined at a soln level - find another way!! - from spring security prinicipal
-        SpringrollUser springrollUser = (SpringrollUser) SpringrollSecurity.getUser();
-        Collection<String> groups = springrollUser.getGroups();
-        String userId = springrollUser.getUsername();
+        User user = SpringrollSecurity.getUser();
+        List<String> groups = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        String userId = user.getUsername();
         groups.add(userId);
         String pattern = "%\"" + userId + "\"%";
         List<Notification> notifications = repositories.notification.findByChannelNameAndInitiatorNotLikeAndAckLogAsJsonNotLikeAndReceiversIn(notificationChannel.getChannelName(), userId, pattern, groups);

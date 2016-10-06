@@ -43,7 +43,6 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
     //Expects username in CAPS
     private SpringrollUser loadUser(String username, Collection<? extends GrantedAuthority> authorities) throws UsernameNotFoundException {
         SpringrollUser user = new SpringrollUser(username, "dummyPassword", authorities);
-        user.setGroups(repo.users.getGroupsForUserId(username));
         return user;
 
     }
@@ -72,8 +71,6 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
 
     @Override  //From interface UserDetailsContextMapper
     public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {
-        System.out.println("hello");
-
     }
 
     private String getUsername(DirContextOperations ctx, String username){
@@ -91,7 +88,7 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
     public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations ctx, String username) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         username = getUsername(ctx, username);
-        List<String> authoritiesForUserId = repo.users.getAuthoritiesForUserId(username);
+        Collection<String> authoritiesForUserId = repo.users.getGroupsForUserId(username);
         for (String authority : authoritiesForUserId) {
             authorities.add(new SimpleGrantedAuthority(authority));
         }
