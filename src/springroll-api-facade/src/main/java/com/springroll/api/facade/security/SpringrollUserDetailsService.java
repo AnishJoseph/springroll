@@ -19,6 +19,7 @@ import javax.naming.NamingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by anishjoseph on 17/09/16.
@@ -88,10 +89,8 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
     public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations ctx, String username) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         username = getUsername(ctx, username);
-        Collection<String> authoritiesForUserId = repo.users.getGroupsForUserId(username);
-        for (String authority : authoritiesForUserId) {
-            authorities.add(new SimpleGrantedAuthority(authority));
-        }
+        Collection<String> authoritiesForUserId = repo.users.getRolesForUserId(username);
+        authorities.addAll(authoritiesForUserId.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
         return authorities;
     }
 }

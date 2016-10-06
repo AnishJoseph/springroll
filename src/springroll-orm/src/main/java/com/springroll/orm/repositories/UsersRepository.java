@@ -18,11 +18,12 @@ private static final String QUERY = "select b from Branch b"
  */
 
 public interface UsersRepository extends AbstractEntityRepository<Users>, UsersRepositoryCustom {
-    static final String findUsersThatBelongToGroupQuery = "select user.userId from Users as user where user.grps like ?1";
+    //FIXME - make this a named query
+    static final String findUsersThatBelongToRole = "select user.userId from Users as user where user.roles like ?1";
 
 
     Users findByUserIdIgnoreCase(String userId);
-    @Query(findUsersThatBelongToGroupQuery)
-    Set<String> findUsersThatBelongToGroup(String group);
+    @Query(findUsersThatBelongToRole)
+    Set<String> findUsersThatBelongToRole(String role);
 
 }

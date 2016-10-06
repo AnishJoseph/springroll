@@ -48,23 +48,12 @@
             <column name="REVIEW_LOG" type="VARCHAR2(2048)"/>
             <column name="EVENT" type="longblob" />
         </createTable>
-        <createTable tableName="AUTHORITIES">
+        <createTable tableName="ROLES">
             <column name="ID" type="bigint" autoIncrement="false">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="PARENT_ID" type="bigint"/>
-            <column name="AUTHORITY_NAME" type="varchar(20)"/>
-            <column name="DESCRIPTION" type="varchar(256)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-        <createTable tableName="GROUPS">
-            <column name="ID" type="bigint" autoIncrement="false">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="PARENT_ID" type="bigint"/>
-            <column name="GROUP" type="varchar(32)"/>
-            <column name="AUTHORITIES" type="varchar(256)"/>
+            <column name="ROLE_NAME" type="varchar(32)"/>
             <column name="DESCRIPTION" type="varchar(256)">
                 <constraints nullable="false"/>
             </column>
@@ -75,7 +64,7 @@
             </column>
             <column name="PARENT_ID" type="bigint"/>
             <column name="USER_ID" type="varchar(128)"/>
-            <column name="GROUPS" type="varchar(256)">
+            <column name="ROLES" type="varchar(256)">
                 <constraints nullable="false"/>
             </column>
         </createTable>

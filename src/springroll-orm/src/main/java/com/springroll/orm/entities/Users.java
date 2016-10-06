@@ -12,27 +12,24 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "USERS")
-//@NamedQueries(value = {
-//        @NamedQuery(name = "Users.findUsersThatBelongToGroup", query = "select user.userId from Users as user where user.grps like ?1")
-//})
 public class Users extends AbstractEntity {
 
-    private transient Collection<String> groups;
+    private transient Collection<String> rolesList;
 
     @Column(name = "USER_ID")
     private String userId;
 
-    @Column(name = "GROUPS")
-    private String grps;
+    @Column(name = "ROLES")
+    private String roles;
 
-    public Collection<String> getGroups() {
-        if(groups == null)groups = StringUtils.commaDelimitedListToSet(grps);
-        return groups;
+    public Collection<String> getRoles() {
+        if(rolesList == null)rolesList = StringUtils.commaDelimitedListToSet(roles);
+        return rolesList;
     }
 
-    public void setGroups(Collection<String> grpList) {
-        this.grps = StringUtils.collectionToCommaDelimitedString(grpList);
-        this.groups = grpList;
+    public void setRoles(Collection<String> rolesList) {
+        this.roles = StringUtils.collectionToCommaDelimitedString(rolesList);
+        this.rolesList = rolesList;
     }
 
     public String getUserId() {

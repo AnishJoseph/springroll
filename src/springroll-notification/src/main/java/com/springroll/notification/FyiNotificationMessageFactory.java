@@ -23,24 +23,24 @@ import java.util.stream.Collectors;
     @Override
     public Set<String> getTargetUsers(INotificationMessage notificationMessage) {
         FyiNotificationMessage message = (FyiNotificationMessage) notificationMessage;
-        // The notificationReceiver can either be a user or a group
+        // The notificationReceiver can either be a user or a role
         Users user = repositories.users.findByUserIdIgnoreCase(notificationMessage.getNotificationReceivers());
         if(user != null){
             Set<String> users = new HashSet<>();
             users.add(user.getUserId());
             return users;
         }
-        Set<String> usersThatBelongToGroup = repositories.users.findUsersThatBelongToGroup("%" + message.getNotificationReceivers() + "%");
-        return usersThatBelongToGroup;
+        Set<String> usersThatBelongToRole = repositories.users.findUsersThatBelongToRole("%" + message.getNotificationReceivers() + "%");
+        return usersThatBelongToRole;
     }
 
     @Override
     public List<? extends INotification> getPendingNotificationsForUser(INotificationChannel notificationChannel) {
         User user = SpringrollSecurity.getUser();
-        List<String> groups = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String userId = user.getUsername();
         String pattern = "%\"" + userId + "\"%";
-        List<Notification> notifications = repositories.notification.findByChannelNameAndAckLogAsJsonNotLikeAndReceiversIn(notificationChannel.getChannelName(), pattern, groups);
+        List<Notification> notifications = repositories.notification.findByChannelNameAndAckLogAsJsonNotLikeAndReceiversIn(notificationChannel.getChannelName(), pattern, roles);
         return notifications;
     }
 }
