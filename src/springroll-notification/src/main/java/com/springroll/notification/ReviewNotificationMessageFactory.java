@@ -9,6 +9,7 @@ import com.springroll.orm.repositories.Repositories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,10 +39,13 @@ import java.util.Set;
 
     @Override
     public List<? extends INotification> getPendingNotificationsForUser(INotificationChannel notificationChannel) {
+        //FIXME - to get groups we need Springroll user - which may be defined at a soln level - find another way!! - from spring security prinicipal
         SpringrollUser springrollUser = (SpringrollUser) SpringrollSecurity.getUser();
+        Collection<String> groups = springrollUser.getGroups();
         String userId = springrollUser.getUsername();
+        groups.add(userId);
         String pattern = "%\"" + userId + "\"%";
-        List<Notification> notifications = repositories.notification.findNotificationsForUserWhereUserHasNotAckedAndIsNotInitiator(notificationChannel.getChannelName(), userId, springrollUser.getGroups(), pattern);
+        List<Notification> notifications = repositories.notification.findByChannelNameAndInitiatorNotLikeAndAckLogAsJsonNotLikeAndReceiversIn(notificationChannel.getChannelName(), userId, pattern, groups);
         return notifications;
     }
 }

@@ -44,7 +44,7 @@ public class Notification extends AbstractEntity implements INotification {
     private String channelName;
 
     @Column(name = "ACK_LOG")
-    private String ackLogAsJson;
+    private String ackLogAsJson = "";
 
     @Column(name = "CREATION_TIME")
     @Type(type="com.springroll.orm.LocalDateTimeUserType")
@@ -98,7 +98,7 @@ public class Notification extends AbstractEntity implements INotification {
     }
 
     public List<AckLog> getAckLog() {
-        if (this.ackLog == null && ackLogAsJson != null) {
+        if (this.ackLog == null && !ackLogAsJson.isEmpty()) {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             try {
@@ -106,8 +106,9 @@ public class Notification extends AbstractEntity implements INotification {
             } catch (IOException e) {
                 return null;
             }
+            return ackLog;
         }
-        return ackLog;
+        return new ArrayList<>();
     }
 
     public void setAckLog(List<AckLog> ackLog) {

@@ -11,13 +11,8 @@ import java.util.List;
  */
 public interface NotificationRepository extends AbstractEntityRepository<Notification>{
 
-    @Query("select notification from Notification notification where notification.channelName = ?1 and (notification.receivers = ?2 or notification.receivers in (?3))")
-    List<Notification> findNotificationsForUser(String channelName, String userId, Collection<String> group);
+    List<Notification> findByChannelNameAndAckLogAsJsonNotLikeAndReceiversIn(String channelName, String quotedUserId, Collection<String> group);
 
-    @Query("select o from Notification o where o.channelName = ?1 and  (o.ackLogAsJson is null or o.ackLogAsJson not like ?4)  and (o.receivers = ?2 or o.receivers in (?3))")
-    List<Notification> findNotificationsForUserWhereUserHasNotAcked(String channelName, String userId, Collection<String> group, String quotedUserId);
-
-    @Query("select o from Notification o where o.channelName = ?1 and o.initiator <> ?2 and (o.ackLogAsJson is null or o.ackLogAsJson not like ?4)  and (o.receivers = ?2 or o.receivers in (?3))")
-    List<Notification> findNotificationsForUserWhereUserHasNotAckedAndIsNotInitiator(String channelName, String userId, Collection<String> group, String quotedUserId);
+    List<Notification> findByChannelNameAndInitiatorNotLikeAndAckLogAsJsonNotLikeAndReceiversIn(String channelName, String userId, String quotedUserId, Collection<String> group);
 
 }

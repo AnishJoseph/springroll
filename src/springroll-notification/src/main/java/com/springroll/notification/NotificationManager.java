@@ -56,11 +56,12 @@ public class NotificationManager implements INotificationManager {
         notification.setChannelName(notificationChannel.getChannelName());
         notification.setUsers(targetUsers);
         notification.setCreationTime(LocalDateTime.now());
-        notification.setNotificationMessage(notificationMessage);
         notification.setInitiator(SpringrollSecurity.getUser().getUsername());
 
         notificationMessage.setCreationTime(System.currentTimeMillis());
         notificationMessage.setNotificationId(notification.getID());
+        /* This MUST be last as we are setting stuff in the notification message before this */
+        notification.setNotificationMessage(notificationMessage);
         return notification.getID();
 
     }

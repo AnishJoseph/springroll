@@ -37,7 +37,7 @@ import java.util.*;
         SpringrollUser springrollUser = (SpringrollUser) SpringrollSecurity.getUser();
         String userId = springrollUser.getUsername();
         String pattern = "%\"" + userId + "\"%";
-        List<Notification> notifications = repositories.notification.findNotificationsForUserWhereUserHasNotAcked(notificationChannel.getChannelName(), userId, springrollUser.getGroups(), pattern);
+        List<Notification> notifications = repositories.notification.findByChannelNameAndAckLogAsJsonNotLikeAndReceiversIn(notificationChannel.getChannelName(), pattern, springrollUser.getGroups());
         return notifications;
     }
 }
