@@ -48,19 +48,19 @@ public enum CoreNotificationChannels implements INotificationChannel {
         return this.name();
     }
 
-    public boolean isPersist() {
+    @Override public boolean isPersist() {
         return persist;
     }
 
-    public void setPersist(boolean persist) {
+    @Override public void setPersist(boolean persist) {
         this.persist = persist;
     }
 
-    public boolean isAutoClean() {
+    @Override public boolean isAutoClean() {
         return autoClean;
     }
 
-    public void setAutoClean(boolean autoClean) {
+    @Override public void setAutoClean(boolean autoClean) {
         this.autoClean = autoClean;
     }
 }
