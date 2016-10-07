@@ -41,7 +41,11 @@ public class EventCreator {
         }
         event.setPayloads(jobMeta.getPayloads());
         Job job = null;
-        boolean needsReview =  jobMeta.getBusinessValidationResults() != null && jobMeta.getBusinessValidationResults().getReviewNeededViolations() != null && !jobMeta.getBusinessValidationResults().getReviewNeededViolations().isEmpty();
+
+        //FIXME - java optional?
+        boolean needsReview =   jobMeta.getBusinessValidationResults() != null &&
+                                !jobMeta.getBusinessValidationResults().getReviewNeededViolations().isEmpty();
+
         if(jobMeta.getJobId() == null) {
             comingDirectlyFromSyncSide = true;
             job = new Job(jobMeta.getParentJobId(), needsReview, event.getClass().getSimpleName(), jobMeta.getUser().getUsername(), jobMeta.getPayloads());

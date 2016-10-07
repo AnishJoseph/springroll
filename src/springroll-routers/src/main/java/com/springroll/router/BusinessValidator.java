@@ -41,18 +41,17 @@ public class BusinessValidator {
         }
         DTOBusinessValidator validator = cache.get(validatorClass);
         if(validator == null)  {
+            //FIXME - what if the bean does not exist
             validator = applicationContext.getBean(validatorClass);
             cache.put(validatorClass, validator);
         }
-        //FIXME - what is the bean does not exist
+
         BusinessValidationResults businessValidationResults = new BusinessValidationResults();
-        validator.validate(jobMeta.getPayloads(), businessValidationResults, jobMeta.isBusinessValidationAlreadyDoneOnce());
+        validator.validate(jobMeta.getPayloads(), businessValidationResults);
         if(!businessValidationResults.getBusinessViolations().isEmpty()){
                 throw new BusinessValidationException(businessValidationResults.getBusinessViolations());
         }
-        if(!businessValidationResults.getOverrideableViolations().isEmpty()){
-                throw new BusinessValidationException(businessValidationResults.getOverrideableViolations());
-        }
+
         jobMeta.setBusinessValidationResults(businessValidationResults);
         return jobMeta;
     }

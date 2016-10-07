@@ -28,7 +28,25 @@ public class PropertyValidator {
     @Autowired
     private Validator validator;
     /**
-     * This is invoked ONLY from camel. Invokes the JSR349 bean validation
+     * This is invoked ONLY from camel. Invokes the JSR349 bean validation. If there is a violation then a
+     * PropertyValidationException is thrown.
+     * NOTE: The method will go thru all the payloads and collect violations for each of the payloads.
+     * The PropertyValidationException will contain a Map<String,Map<String,String>> holding the violations.
+     * The Key of the outer map is the index of the payload and the values is the set of violations for that payload.
+     * The key of the inner map is the field name that had the constraint violation and the value is the error.
+     * An example json of a violations looks like
+     * <p>{
+            "0": {
+                    "fld5": "may not be null",
+                    "fld6": "may not be null",
+                    "fld7": "must be greater than or equal to 10"
+            },
+            "1": {
+                    "fld1": "may not be null",
+                    "fld2": "must be less that 20",
+                 }
+             }
+     </p>
      * @param jobMeta
      * @return             .
      */

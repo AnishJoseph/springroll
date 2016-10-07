@@ -41,6 +41,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="PARENT_ID" type="bigint"/>
+            <column name="APPROVER" type="VARCHAR2(32)"/>
             <column name="RULE_ID" type="bigint"/>
             <column name="NOTIFICATION_ID" type="bigint"/>
             <column name="REVIEW_STAGE" type="int" />

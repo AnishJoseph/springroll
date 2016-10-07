@@ -9,49 +9,30 @@ import java.util.List;
  */
 public class BusinessValidationResults implements IBusinessValidationResults, Serializable{
     private List<BusinessValidationResult> businessViolations = new ArrayList<BusinessValidationResult>();
-    private List<BusinessValidationResult> overrideableViolations = new ArrayList<>();
     private List<BusinessValidationResult> reviewNeededViolations = new ArrayList<>();
-    private List<BusinessValidationResult> groupWarningViolations = new ArrayList<>();
 
 
     @Override
-    public void addOverrideableViolation(String field, String messageKey, String[] args) {
-        overrideableViolations.add(new BusinessValidationResult(field, messageKey, args));
+    public void addBusinessViolation(int dtoIndex, String field, String messageKey, String[] args) {
+        businessViolations.add(new BusinessValidationResult(dtoIndex, field, messageKey, args, null, null));
     }
 
     @Override
-    public void addBusinessViolation(String field, String messageKey, String[] args) {
-        businessViolations.add(new BusinessValidationResult(field, messageKey, args));
+    public void addReviewNeeded(int dtoIndex, String field, String messageKey, String[] args, String violatedRule) {
+        reviewNeededViolations.add(new BusinessValidationResult(dtoIndex, field, messageKey, args, violatedRule, null));
     }
 
     @Override
-    public void addWarningToGroup(String field, String messageKey, String[] args) {
-        groupWarningViolations.add(new BusinessValidationResult(field, messageKey, args));
-    }
-
-    @Override
-    public void addReviewNeeded(String field, String messageKey, String[] args, String violatedRule) {
-        reviewNeededViolations.add(new BusinessValidationResult(field, messageKey, args, violatedRule));
-    }
-
-    @Override
-    public void addReviewNeeded(String violatedRule) {
-        reviewNeededViolations.add(new BusinessValidationResult(violatedRule));
+    public void addReviewNeeded(int dtoIndex, String field, String messageKey, String[] args, String violatedRule, String approver) {
+        reviewNeededViolations.add(new BusinessValidationResult(dtoIndex, field, messageKey, args, violatedRule, approver));
     }
 
     public List<BusinessValidationResult> getBusinessViolations() {
         return businessViolations;
     }
 
-    public List<BusinessValidationResult> getOverrideableViolations() {
-        return overrideableViolations;
-    }
-
     public List<BusinessValidationResult> getReviewNeededViolations() {
         return reviewNeededViolations;
     }
 
-    public List<BusinessValidationResult> getGroupWarningViolations() {
-        return groupWarningViolations;
-    }
 }

@@ -6,7 +6,6 @@ import com.springroll.core.ContextStore;
 import com.springroll.router.JobMeta;
 import com.springroll.router.SynchEndPoint;
 import com.springroll.router.exceptions.BusinessValidationException;
-import com.springroll.router.exceptions.OverrideableBusinessValidationException;
 import com.springroll.router.exceptions.PropertyValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,35 +39,22 @@ public abstract class AbstractAPI {
         return ex.getViolations();
     }
 
-    @ExceptionHandler(OverrideableBusinessValidationException.class)
-    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
-    public  List<BusinessValidationResult> handleBusinessValidationException(OverrideableBusinessValidationException ex) {
-        return ex.getViolations();
-    }
-
     public Long route(DTO payload){
         List<DTO> payloads = new ArrayList<>(1);
         payloads.add(payload);
         return route(payloads);
     }
-    public Long route(List<DTO> payloads){
+    public Long route(List<? extends DTO> payloads){
         JobMeta jobMeta = new JobMeta(payloads, getUser(), null, null, null, false, true);
         return sendItDownTheSynchronousRoute(jobMeta);
     }
-    public Long routeAgain(DTO payload){
-        List<DTO> payloads = new ArrayList<>(1);
-        payloads.add(payload);
-        return routeAgain(payloads);
-    }
-    public Long routeAgain(List<DTO> payloads){
-        JobMeta jobMeta = new JobMeta(payloads, getUser(), null, null, null, true, true);
-        return sendItDownTheSynchronousRoute(jobMeta);
-    }
+
     public Long routeSynchronouslyToAsynchronousSideFromSynchronousSide(DTO payload){
         List<DTO> payloads = new ArrayList<>(1);
         payloads.add(payload);
         return routeSynchronouslyToAsynchronousSideFromSynchronousSide(payloads);
     }
+
     public Long routeSynchronouslyToAsynchronousSideFromSynchronousSide(List<? extends DTO> payloads){
         JobMeta jobMeta = new JobMeta(payloads, getUser(), null, null, null, false, false);
         return sendItDownTheSynchronousRoute(jobMeta);

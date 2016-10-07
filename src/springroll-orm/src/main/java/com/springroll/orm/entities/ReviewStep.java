@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.springroll.core.AckLog;
 import com.springroll.core.IEvent;
 import com.springroll.core.ReviewLog;
 import org.hibernate.internal.util.SerializationHelper;
@@ -33,9 +32,12 @@ public class ReviewStep extends AbstractEntity {
     private Long ruleId;
 
     @Column(name = "REVIEW_STAGE")
-    @Min(1)
+    @Min(0)
     @Max(100)
     private int reviewStage;
+
+    @Column(name = "APPROVER")
+    private String approver;
 
     @Column(name = "NOTIFICATION_ID")
     private Long notificationId;
@@ -54,10 +56,11 @@ public class ReviewStep extends AbstractEntity {
     private transient IEvent event;
 
     public ReviewStep(){}
-    public ReviewStep(Long ruleId, int reviewStage, Long parentId) {
+    public ReviewStep(Long ruleId, int reviewStage, Long parentId, String approver) {
         this.ruleId = ruleId;
         this.reviewStage = reviewStage;
         this.setParentId(parentId);
+        this.approver = approver;
     }
 
     public IEvent getEvent() {
@@ -144,5 +147,13 @@ public class ReviewStep extends AbstractEntity {
 
     public void setNotificationId(Long notificationId) {
         this.notificationId = notificationId;
+    }
+
+    public String getApprover() {
+        return approver;
+    }
+
+    public void setApprover(String approver) {
+        this.approver = approver;
     }
 }

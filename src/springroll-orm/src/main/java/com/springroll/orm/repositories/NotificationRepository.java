@@ -14,5 +14,6 @@ public interface NotificationRepository extends AbstractEntityRepository<Notific
     List<Notification> findByChannelNameAndAckLogAsJsonNotLikeAndReceiversIn(String channelName, String quotedUserId, Collection<String> roles);
 
     List<Notification> findByChannelNameAndInitiatorNotLikeAndAckLogAsJsonNotLikeAndReceiversIn(String channelName, String userId, String quotedUserId, Collection<String> roles);
+    List<Notification> findByChannelNameAndReceivers(String channelName, String userId);
 
 }

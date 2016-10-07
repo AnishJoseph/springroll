@@ -16,7 +16,6 @@ public class JobMeta {
     private Long jobId;
     private Long legId;
     private Long parentJobId;
-    boolean businessValidationAlreadyDoneOnce = false;
     private boolean isAsynchronous = true;
     private BusinessValidationResults businessValidationResults;
 
@@ -27,7 +26,6 @@ public class JobMeta {
         this.user = user;
         this.jobId = jobId;
         this.parentJobId = parentJobId;
-        this.businessValidationAlreadyDoneOnce = businessValidationAlreadyDoneOnce;
         this.isAsynchronous = isAsynchronous;
         this.legId = legId;
     }
@@ -50,14 +48,6 @@ public class JobMeta {
 
     public void setParentJobId(Long parentJobId) {
         this.parentJobId = parentJobId;
-    }
-
-    public boolean isBusinessValidationAlreadyDoneOnce() {
-        return businessValidationAlreadyDoneOnce;
-    }
-
-    public void setBusinessValidationAlreadyDoneOnce(boolean businessValidationAlreadyDoneOnce) {
-        this.businessValidationAlreadyDoneOnce = businessValidationAlreadyDoneOnce;
     }
 
     public boolean isAsynchronous() {

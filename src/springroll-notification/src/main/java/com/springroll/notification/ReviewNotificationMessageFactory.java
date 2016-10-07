@@ -45,6 +45,7 @@ import java.util.stream.Collectors;
         roles.add(userId);
         String pattern = "%\"" + userId + "\"%";
         List<Notification> notifications = repositories.notification.findByChannelNameAndInitiatorNotLikeAndAckLogAsJsonNotLikeAndReceiversIn(notificationChannel.getChannelName(), userId, pattern, roles);
+        notifications.addAll(repositories.notification.findByChannelNameAndReceivers(notificationChannel.getChannelName(), userId));
         return notifications;
     }
 }

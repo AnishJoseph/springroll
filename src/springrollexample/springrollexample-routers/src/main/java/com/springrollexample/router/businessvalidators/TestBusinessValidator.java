@@ -13,9 +13,10 @@ import java.util.List;
 @Service
 public class TestBusinessValidator implements DTOBusinessValidator {
     @Override
-    public void validate(List<? extends DTO> dtos, IBusinessValidationResults businessValidationResults, boolean businessValidationDoneEarlier) {
+    public void validate(List<? extends DTO> dtos, IBusinessValidationResults businessValidationResults) {
         if(!dtos.get(0).getClass().getSimpleName().contains("TestDTO"))return;
-        if(!businessValidationDoneEarlier) businessValidationResults.addReviewNeeded("Rule1");
+        businessValidationResults.addReviewNeeded(0, "fld", "message", null, "Rule1");
+        businessValidationResults.addReviewNeeded(0, "fld", "message", null, null, "SELF");
 
     }
 }

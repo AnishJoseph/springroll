@@ -21,6 +21,11 @@ import java.util.List;
 
 /**
  * Created by anishjoseph on 27/09/16.
+ * Order of review is
+ * SELF first
+ * Based on ReviewRule order
+ * Last is any rules marked as FYI only in ReviewRule
+ *
  */
 @Service
 public class ReviewManager extends SpringrollEndPoint {
@@ -37,21 +42,27 @@ public class ReviewManager extends SpringrollEndPoint {
 
     public void on(ReviewNeededEvent reviewNeededEvent){
         createReviewSteps(reviewNeededEvent.getPayload().getReviewNeededViolations(), reviewNeededEvent.getPayload().getEventForReview().getJobId(), reviewNeededEvent);
-        List<ReviewStep> nextReviewSteps = findNextReviewStep(reviewNeededEvent.getPayload().getEventForReview().getJobId(), 0);
+        List<ReviewStep> nextReviewSteps = findNextReviewStep(reviewNeededEvent.getPayload().getEventForReview().getJobId(), -1);
         createReviewNotifications(nextReviewSteps);
     }
 
     private void createReviewSteps(List<BusinessValidationResult> reviewNeededViolations, Long jobId, ReviewNeededEvent reviewNeededEvent){
         List<ReviewRule> reviewRules = new ArrayList<>();
         for (BusinessValidationResult businessValidationResult : reviewNeededViolations) {
+            if("SELF".equals(businessValidationResult.getApprover()))continue;
             reviewRules.addAll(repo.reviewRules.findByRuleName(businessValidationResult.getViolatedRule()));
         }
         List<ReviewStep> reviewSteps = new ArrayList<>();
         for (ReviewRule reviewRule : reviewRules) {
-            ReviewStep reviewStep = new ReviewStep(reviewRule.getID(), reviewRule.getReviewStage(), jobId);
+            ReviewStep reviewStep = new ReviewStep(reviewRule.getID(), reviewRule.getReviewStage(), jobId, reviewRule.getApprover());
             reviewSteps.add(reviewStep);
         }
         reviewSteps.get(0).setEvent(reviewNeededEvent.getPayload().getEventForReview());
+        for (BusinessValidationResult businessValidationResult : reviewNeededViolations) {
+            if(!"SELF".equals(businessValidationResult.getApprover()))continue;
+            reviewSteps.add(new ReviewStep(-1l, 0, jobId, SpringrollSecurity.getUser().getUsername()));
+        }
+
         repo.reviewStep.save(reviewSteps);
     }
     private List<ReviewStep> findNextReviewStep(Long jobId, int completedStepId){
@@ -66,9 +77,9 @@ public class ReviewManager extends SpringrollEndPoint {
 
     public void createReviewNotifications(List<ReviewStep> reviewSteps){
         for (ReviewStep reviewStep : reviewSteps) {
-            String approver = repo.reviewRules.findOne(reviewStep.getRuleId()).getApprover();
+//            String approver = repo.reviewRules.findOne(reviewStep.getRuleId()).getApprover();
             /* Create the notification payload, send it down the REVIEW channel, and store the review id returned in the step */
-            reviewStep.setNotificationId(notificationManager.sendNotification(CoreNotificationChannels.REVIEW, new ReviewNotificationMessage(reviewStep.getID(), approver)));
+            reviewStep.setNotificationId(notificationManager.sendNotification(CoreNotificationChannels.REVIEW, new ReviewNotificationMessage(reviewStep.getID(), reviewStep.getApprover())));
         }
     }
 
@@ -94,11 +105,13 @@ public class ReviewManager extends SpringrollEndPoint {
         }
 
         reviewStep.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionEvent.getPayload().isApproved()));
-        ReviewRule reviewRule = repo.reviewRules.findOne(reviewStep.getRuleId());
-        notificationManager.addNotificationAcknowledgement(reviewStep.getNotificationId());
-        if(reviewActionDTO.isApproved() && reviewRule.getApprovalsNeeded() > reviewStep.getReviewLog().size()){
+        if(reviewStep.getRuleId() != -1) {
+            ReviewRule reviewRule = repo.reviewRules.findOne(reviewStep.getRuleId());
+            notificationManager.addNotificationAcknowledgement(reviewStep.getNotificationId());
+            if (reviewActionDTO.isApproved() && reviewRule.getApprovalsNeeded() > reviewStep.getReviewLog().size()) {
             /* Oh this rule requires more that one approval for this stage - nothing to do */
-            return;
+                return;
+            }
         }
         reviewStep.setCompleted(true);
         notificationManager.deleteNotification(reviewStep.getNotificationId());
