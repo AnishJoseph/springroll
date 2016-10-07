@@ -8,7 +8,8 @@ import com.springroll.core.notification.INotificationMessageFactory;
  */
 public enum CoreNotificationChannels implements INotificationChannel {
     REVIEW("/core/review", ReviewNotificationMessageFactory.class, true, false),
-    FYI("/core/fyi", FyiNotificationMessageFactory.class, true, true);
+    FYI("/core/fyi", FyiNotificationMessageFactory.class, true, true),
+    REVIEW_FYI("/core/reviewfyi", FyiReviewNotificationMessageFactory.class, true, true);
 
     private String serviceUri;
     private INotificationMessageFactory messageFactory = null;

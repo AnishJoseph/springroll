@@ -34,6 +34,7 @@
             <column name="REVIEW_STAGE" type="int" defaultValue="1"/>
             <column name="APPROVER" type="VARCHAR2(32)"/>
             <column name="APPROVALS_NEEDED" type="int" defaultValue="1"/>
+            <column name="FYI_ONLY" type="bit" />
             <column name="DESCRIPTION" type="VARCHAR2(128)"/>
         </createTable>
         <createTable tableName="REVIEW_STEP">
@@ -47,6 +48,7 @@
             <column name="REVIEW_STAGE" type="int" />
             <column name="COMPLETED" type="bit" />
             <column name="REVIEW_LOG" type="VARCHAR2(2048)"/>
+            <column name="BUSINESS_VIOLATIONS" type="VARCHAR2(4000)"/>
             <column name="EVENT" type="longblob" />
         </createTable>
         <createTable tableName="ROLE">

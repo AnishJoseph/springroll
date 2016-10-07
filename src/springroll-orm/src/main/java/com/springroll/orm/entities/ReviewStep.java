@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.springroll.core.BusinessValidationResult;
 import com.springroll.core.IEvent;
 import com.springroll.core.ReviewLog;
 import org.hibernate.internal.util.SerializationHelper;
@@ -51,6 +52,32 @@ public class ReviewStep extends AbstractEntity {
 
     @Column(name = "REVIEW_LOG")
     private String reviewLogAsJson = "";
+
+    @Column(name = "BUSINESS_VIOLATIONS")
+    private String businessViolationsAsJson = "";
+
+    public List<BusinessValidationResult>  getBusinessViolations() {
+        if (this.businessViolationsAsJson.isEmpty() )return new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        try {
+            return mapper.readValue(businessViolationsAsJson, new TypeReference<List<BusinessValidationResult>>(){});
+        } catch (IOException e) {
+            //FIXME
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setBusinessViolations(List<BusinessValidationResult> reviewNeededViolations) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        try {
+            businessViolationsAsJson = mapper.writeValueAsString(reviewNeededViolations);
+        } catch (JsonProcessingException e) {
+            //FIXME
+            throw new RuntimeException(e);
+        }
+    }
 
     private transient List<ReviewLog> reviewLog;
     private transient IEvent event;

@@ -25,6 +25,9 @@ public class ReviewRule extends AbstractEntity {
     @Column(name = "APPROVALS_NEEDED")
     private int approvalsNeeded;
 
+    @Column(name = "FYI_ONLY")
+    private boolean fyiOnly = false;
+
     @Column(name = "DESCRIPTION")
     private String description;
 
@@ -66,5 +69,13 @@ public class ReviewRule extends AbstractEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isFyiOnly() {
+        return fyiOnly;
+    }
+
+    public void setFyiOnly(boolean fyiOnly) {
+        this.fyiOnly = fyiOnly;
     }
 }

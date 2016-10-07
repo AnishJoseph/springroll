@@ -3,6 +3,7 @@ package com.springroll.router.review;
 import com.springroll.core.*;
 import com.springroll.core.services.INotificationManager;
 import com.springroll.notification.CoreNotificationChannels;
+import com.springroll.notification.FyiReviewNotificationMessage;
 import com.springroll.notification.ReviewNotificationMessage;
 import com.springroll.orm.entities.Job;
 import com.springroll.orm.entities.ReviewStep;
@@ -50,19 +51,24 @@ public class ReviewManager extends SpringrollEndPoint {
         List<ReviewRule> reviewRules = new ArrayList<>();
         for (BusinessValidationResult businessValidationResult : reviewNeededViolations) {
             if("SELF".equals(businessValidationResult.getApprover()))continue;
-            reviewRules.addAll(repo.reviewRules.findByRuleName(businessValidationResult.getViolatedRule()));
+            reviewRules.addAll(repo.reviewRules.findByRuleNameAndFyiOnly(businessValidationResult.getViolatedRule(), false));
         }
         List<ReviewStep> reviewSteps = new ArrayList<>();
         for (ReviewRule reviewRule : reviewRules) {
             ReviewStep reviewStep = new ReviewStep(reviewRule.getID(), reviewRule.getReviewStage(), jobId, reviewRule.getApprover());
             reviewSteps.add(reviewStep);
         }
-        reviewSteps.get(0).setEvent(reviewNeededEvent.getPayload().getEventForReview());
+        /* Add a step with stage set to 0 for any SELF reviews */
         for (BusinessValidationResult businessValidationResult : reviewNeededViolations) {
             if(!"SELF".equals(businessValidationResult.getApprover()))continue;
             reviewSteps.add(new ReviewStep(-1l, 0, jobId, SpringrollSecurity.getUser().getUsername()));
         }
 
+        /* Store the event under review so that we can send it out after all the reviews are done.
+           we need to store this in only one place - keep it in the 0th step
+        */
+        reviewSteps.get(0).setEvent(reviewNeededEvent.getPayload().getEventForReview());
+        reviewSteps.get(0).setBusinessViolations(reviewNeededViolations);
         repo.reviewStep.save(reviewSteps);
     }
     private List<ReviewStep> findNextReviewStep(Long jobId, int completedStepId){
@@ -141,6 +147,9 @@ public class ReviewManager extends SpringrollEndPoint {
                 ContextStore.put(reviewedEvent.getUser(), reviewedEvent.getJobId(), reviewedEvent.getLegId());
                 publisher.publishEvent(step.getEvent());
                 route(step.getEvent());
+
+                /* Now that the review is complete and approved, send out  FYI notifications, if any */
+                sendFyiNotification(reviewStep.getBusinessViolations());
             } else {
                 job.setEndTime(LocalDateTime.now());
                 job.setStatus(job.getStatus() + " Review Rejected by " + reviewActionEvent.getUser().getUsername());
@@ -150,6 +159,30 @@ public class ReviewManager extends SpringrollEndPoint {
             return;
         }
         createReviewNotifications(reviewSteps);
+    }
+
+    private void sendFyiNotification(List<BusinessValidationResult> reviewNeededViolations){
+        //FIXME - need to handle multiple FYI validations and multiple rules
+        List<Fyimeta> fyiValidations = new ArrayList<>();
+        for (BusinessValidationResult businessValidationResult : reviewNeededViolations) {
+            if("SELF".equals(businessValidationResult.getApprover()))continue;
+            List<ReviewRule> fyi = repo.reviewRules.findByRuleNameAndFyiOnly(businessValidationResult.getViolatedRule(), true);
+            if(fyi.isEmpty())continue;
+            fyiValidations.add(new Fyimeta(businessValidationResult, fyi.get(0).getApprover()));
+        }
+        for (Fyimeta fyiValidation : fyiValidations) {
+            FyiReviewNotificationMessage notification = new FyiReviewNotificationMessage(fyiValidation.businessValidationResult, fyiValidation.receivers);
+            notificationManager.sendNotification(CoreNotificationChannels.REVIEW_FYI, notification);
+        }
+
+    }
+    private class Fyimeta{
+        BusinessValidationResult businessValidationResult;
+        String receivers;
+        public Fyimeta(BusinessValidationResult businessValidationResult, String receivers){
+            this.businessValidationResult = businessValidationResult;
+            this.receivers = receivers;
+        }
     }
 
 }

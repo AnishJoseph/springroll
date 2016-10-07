@@ -13,6 +13,9 @@ public class BusinessValidationResult implements Serializable{
     private String violatedRule;
     private String approver;
 
+    public BusinessValidationResult() {
+    }
+
     public BusinessValidationResult(int dtoIndex, String field, String messageKey, String[] args, String violatedRule, String approver) {
         this.dtoIndex = dtoIndex;
         this.field = field;
