@@ -1,6 +1,8 @@
 package com.springroll.router.review;
 
 import com.springroll.core.DTO;
+import com.springroll.core.IDTOProcessors;
+import com.springroll.router.CoreDTOProcessors;
 
 /**
  * Created by anishjoseph on 28/09/16.
@@ -30,5 +32,10 @@ public class ReviewActionDTO implements DTO{
 
     public void setApproved(boolean approved) {
         this.approved = approved;
+    }
+
+    @Override
+    public IDTOProcessors getProcessor() {
+        return CoreDTOProcessors.REVIEW;
     }
 }

@@ -2,7 +2,9 @@ package com.springroll.router.review;
 
 import com.springroll.core.BusinessValidationResult;
 import com.springroll.core.DTO;
+import com.springroll.core.IDTOProcessors;
 import com.springroll.core.IEvent;
+import com.springroll.router.CoreDTOProcessors;
 
 import java.util.List;
 
@@ -33,4 +35,9 @@ public class ReviewNeededDTO implements DTO {
     public void setReviewNeededViolations(List<BusinessValidationResult> reviewNeededViolations) {
         this.reviewNeededViolations = reviewNeededViolations;
     }
+    @Override
+    public IDTOProcessors getProcessor() {
+        return CoreDTOProcessors.NULL;
+    }
+
 }

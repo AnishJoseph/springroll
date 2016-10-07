@@ -1,6 +1,8 @@
 package com.springrollexample.router.test;
 
 import com.springroll.core.DTO;
+import com.springroll.core.IDTOProcessors;
+import com.springrollexample.router.ApplicationDTOProcessors;
 
 /**
  * Created by anishjoseph on 11/09/16.
@@ -61,6 +63,11 @@ public class TestDTO implements DTO {
 
     public void setTestLocationEventName(String testLocationEventName) {
         this.testLocationEventName = testLocationEventName;
+    }
+
+    @Override
+    public IDTOProcessors getProcessor() {
+        return ApplicationDTOProcessors.TEST_ROOT;
     }
 
     public enum TestType {
