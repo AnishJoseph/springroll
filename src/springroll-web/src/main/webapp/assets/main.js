@@ -12,6 +12,8 @@ require.config({
 });
 require(['Application', 'messenger.cometd'],function(Application){
 
+    $.ajaxSetup({ cache: false });
+
     //Application.start();
 
     $("#Test1").click(function(){
