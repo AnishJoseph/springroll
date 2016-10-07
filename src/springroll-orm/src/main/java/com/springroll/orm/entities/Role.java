@@ -9,8 +9,8 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "ROLES")
-public class Roles extends AbstractEntity {
+@Table(name = "ROLE")
+public class Role extends AbstractEntity {
 
     @Column(name = "ROLE_NAME", length = 32)
     private String roleName;

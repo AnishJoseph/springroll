@@ -10,8 +10,8 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "Review_Rules")
-public class ReviewRules extends AbstractEntity {
+@Table(name = "Review_Rule")
+public class ReviewRule extends AbstractEntity {
 
     @Column(name = "RULE_NAME")
     private String ruleName;

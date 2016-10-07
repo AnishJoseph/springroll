@@ -6,7 +6,7 @@ import com.springroll.notification.CoreNotificationChannels;
 import com.springroll.notification.ReviewNotificationMessage;
 import com.springroll.orm.entities.Job;
 import com.springroll.orm.entities.ReviewStep;
-import com.springroll.orm.entities.ReviewRules;
+import com.springroll.orm.entities.ReviewRule;
 import com.springroll.orm.repositories.Repositories;
 import com.springroll.router.SpringrollEndPoint;
 import org.slf4j.Logger;
@@ -42,12 +42,12 @@ public class ReviewManager extends SpringrollEndPoint {
     }
 
     private void createReviewSteps(List<BusinessValidationResult> reviewNeededViolations, Long jobId, ReviewNeededEvent reviewNeededEvent){
-        List<ReviewRules> reviewRules = new ArrayList<>();
+        List<ReviewRule> reviewRules = new ArrayList<>();
         for (BusinessValidationResult businessValidationResult : reviewNeededViolations) {
             reviewRules.addAll(repo.reviewRules.findByRuleName(businessValidationResult.getViolatedRule()));
         }
         List<ReviewStep> reviewSteps = new ArrayList<>();
-        for (ReviewRules reviewRule : reviewRules) {
+        for (ReviewRule reviewRule : reviewRules) {
             ReviewStep reviewStep = new ReviewStep(reviewRule.getID(), reviewRule.getReviewStage(), jobId);
             reviewSteps.add(reviewStep);
         }
@@ -94,7 +94,7 @@ public class ReviewManager extends SpringrollEndPoint {
         }
 
         reviewStep.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionEvent.getPayload().isApproved()));
-        ReviewRules reviewRule = repo.reviewRules.findOne(reviewStep.getRuleId());
+        ReviewRule reviewRule = repo.reviewRules.findOne(reviewStep.getRuleId());
         notificationManager.addNotificationAcknowledgement(reviewStep.getNotificationId());
         if(reviewActionDTO.isApproved() && reviewRule.getApprovalsNeeded() > reviewStep.getReviewLog().size()){
             /* Oh this rule requires more that one approval for this stage - nothing to do */

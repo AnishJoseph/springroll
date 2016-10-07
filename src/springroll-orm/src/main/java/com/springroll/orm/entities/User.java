@@ -11,8 +11,8 @@ import java.util.Collection;
  */
 
 @Entity
-@Table(name = "USERS")
-public class Users extends AbstractEntity {
+@Table(name = "USER")
+public class User extends AbstractEntity {
 
     private transient Collection<String> rolesList;
 

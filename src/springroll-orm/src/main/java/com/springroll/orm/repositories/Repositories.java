@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
  * Created by anishjoseph on 30/09/16.
  */
 @Component public class Repositories {
-    @Autowired public UsersRepository users;
+    @Autowired public UserRepository users;
 
-    @Autowired public ReviewRulesRepository reviewRules;
+    @Autowired public ReviewRuleRepository reviewRules;
 
     @Autowired public ReviewStepRepository reviewStep;
 

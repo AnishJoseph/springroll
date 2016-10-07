@@ -25,7 +25,7 @@
             <column name="SEQ_NAME" type="VARCHAR2(255)" />
             <column name="SEQ_COUNT" type="bigint" defaultValue="0"/>
         </createTable>
-        <createTable tableName="REVIEW_RULES">
+        <createTable tableName="REVIEW_RULE">
             <column name="ID" type="bigint" autoIncrement="false">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -48,7 +48,7 @@
             <column name="REVIEW_LOG" type="VARCHAR2(2048)"/>
             <column name="EVENT" type="longblob" />
         </createTable>
-        <createTable tableName="ROLES">
+        <createTable tableName="ROLE">
             <column name="ID" type="bigint" autoIncrement="false">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -58,7 +58,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createTable tableName="USERS">
+        <createTable tableName="USER">
             <column name="ID" type="bigint" autoIncrement="false">
                 <constraints primaryKey="true" nullable="false"/>
             </column>

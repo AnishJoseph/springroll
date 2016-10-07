@@ -3,11 +3,10 @@ package com.springroll.notification;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.notification.*;
 import com.springroll.orm.entities.Notification;
-import com.springroll.orm.entities.Users;
+import com.springroll.orm.entities.User;
 import com.springroll.orm.repositories.Repositories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -24,7 +23,7 @@ import java.util.stream.Collectors;
     public Set<String> getTargetUsers(INotificationMessage notificationMessage) {
         FyiNotificationMessage message = (FyiNotificationMessage) notificationMessage;
         // The notificationReceiver can either be a user or a role
-        Users user = repositories.users.findByUserIdIgnoreCase(notificationMessage.getNotificationReceivers());
+        User user = repositories.users.findByUserIdIgnoreCase(notificationMessage.getNotificationReceivers());
         if(user != null){
             Set<String> users = new HashSet<>();
             users.add(user.getUserId());
@@ -36,7 +35,7 @@ import java.util.stream.Collectors;
 
     @Override
     public List<? extends INotification> getPendingNotificationsForUser(INotificationChannel notificationChannel) {
-        User user = SpringrollSecurity.getUser();
+        org.springframework.security.core.userdetails.User user = SpringrollSecurity.getUser();
         List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String userId = user.getUsername();
         String pattern = "%\"" + userId + "\"%";

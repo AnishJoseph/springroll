@@ -1,6 +1,6 @@
 package com.springroll.orm.repositories;
 
-import com.springroll.orm.entities.Users;
+import com.springroll.orm.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -9,16 +9,16 @@ import java.util.Collection;
 /**
  * Created by anishjoseph on 26/09/16.
  */
-public class UsersRepositoryImpl implements UsersRepositoryCustom {
+public class UserRepositoryImpl implements UserRepositoryCustom {
     @Autowired
-    UsersRepository usersRepository;
+    UserRepository usersRepository;
 
     @Autowired
-    RolesRepository rolesRepository;
+    RoleRepository rolesRepository;
 
     @Override
     public Collection<String> getRolesForUserId(String userId){
-        Users user = usersRepository.findByUserIdIgnoreCase(userId);
+        User user = usersRepository.findByUserIdIgnoreCase(userId);
         if(user == null) return new ArrayList<>();
         return user.getRoles();
     }
