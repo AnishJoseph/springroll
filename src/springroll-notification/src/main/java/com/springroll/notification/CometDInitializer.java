@@ -39,8 +39,6 @@ public class CometDInitializer implements ServletContextAware
 
         bean.setOption(ServletContext.class.getName(), servletContext);
         bean.setOption("ws.cometdURLMapping", "/cometd/*");
-//        JSONContext.Server jsonContext = new Jackson1JSONContextServer();
-//        bean.setOption("jsonContext", jsonContext);
         return bean;
     }
 
