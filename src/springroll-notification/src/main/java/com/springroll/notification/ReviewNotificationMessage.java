@@ -1,23 +1,25 @@
 package com.springroll.notification;
 
+import java.util.List;
+
 /**
  * Created by anishjoseph on 02/10/16.
  */
 public class ReviewNotificationMessage extends AbstractNotificationMessage{
-    private Long reviewStepId;
+    private List<Long> reviewStepId;
 
     public ReviewNotificationMessage(){}
 
-    public ReviewNotificationMessage(Long reviewStepId, String approver) {
+    public ReviewNotificationMessage(List<Long> reviewStepId, String approver) {
         this.reviewStepId = reviewStepId;
         setNotificationReceivers(approver);
     }
 
-    public Long getReviewStepId() {
+    public List<Long> getReviewStepId() {
         return reviewStepId;
     }
 
-    public void setReviewStepId(Long reviewStepId) {
+    public void setReviewStepId(List<Long> reviewStepId) {
         this.reviewStepId = reviewStepId;
     }
 }

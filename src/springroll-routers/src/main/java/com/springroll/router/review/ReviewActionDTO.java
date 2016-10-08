@@ -4,25 +4,22 @@ import com.springroll.core.DTO;
 import com.springroll.core.IDTOProcessors;
 import com.springroll.router.CoreDTOProcessors;
 
+import java.util.List;
+
 /**
  * Created by anishjoseph on 28/09/16.
  */
 public class ReviewActionDTO implements DTO{
-    private Long reviewStepId;
+    private List<Long> reviewStepId;
     private boolean approved;
 
     public ReviewActionDTO(){}
 
-    public ReviewActionDTO(Long reviewStepId, boolean approved) {
-        this.reviewStepId = reviewStepId;
-        this.approved = approved;
-    }
-
-    public Long getReviewStepId() {
+    public List<Long> getReviewStepId() {
         return reviewStepId;
     }
 
-    public void setReviewStepId(Long reviewStepId) {
+    public void setReviewStepId(List<Long> reviewStepId) {
         this.reviewStepId = reviewStepId;
     }
 

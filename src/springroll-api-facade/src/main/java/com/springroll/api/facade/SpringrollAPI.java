@@ -25,7 +25,10 @@ public class SpringrollAPI extends AbstractAPI {
     }
     @RequestMapping(value = "/sr/notificationack", method = RequestMethod.POST)
     public Long reviewaction(@RequestBody NotificationAckDTO notificationAckDTO) {
-        //FIXME - should we check here or later if this user is allowed to ack this message
+        if(notificationAckDTO.getNotificationId() == null){
+            logger.error("Received Notification ID as NULL");
+            return -1l;
+        }
         return route(notificationAckDTO);
     }
 }

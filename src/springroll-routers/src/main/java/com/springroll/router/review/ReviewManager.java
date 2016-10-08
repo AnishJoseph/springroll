@@ -84,40 +84,55 @@ public class ReviewManager extends SpringrollEndPoint {
     }
 
     public void createReviewNotifications(List<ReviewStep> reviewSteps){
-        //FIXME - merge notifications the destination is the same
+        Map<String, List<Long>> approverToNoti = new HashMap<>();
         for (ReviewStep reviewStep : reviewSteps) {
-//            String approver = repo.reviewRules.findOne(reviewStep.getRuleId()).getApprover();
             /* Create the notification payload, send it down the REVIEW channel, and store the review id returned in the step */
-            reviewStep.setNotificationId(notificationManager.sendNotification(CoreNotificationChannels.REVIEW, new ReviewNotificationMessage(reviewStep.getID(), reviewStep.getApprover())));
+            if(!approverToNoti.containsKey(reviewStep.getApprover()))approverToNoti.put(reviewStep.getApprover(), new ArrayList<>());
+            approverToNoti.get(reviewStep.getApprover()).add(reviewStep.getID());
+        }
+        for (String approver : approverToNoti.keySet()) {
+            Long notiId = notificationManager.sendNotification(CoreNotificationChannels.REVIEW, new ReviewNotificationMessage(approverToNoti.get(approver), approver));
+            for (Long stepId : approverToNoti.get(approver)) {
+                repo.reviewStep.findOne(stepId).setNotificationId(notiId);
+            }
         }
     }
 
-    public void on(ReviewActionEvent reviewActionEvent){
+    public void on(ReviewActionEvent reviewActionEvent) {
         ReviewActionDTO reviewActionDTO = reviewActionEvent.getPayload();
         if(reviewActionDTO.getReviewStepId() == null){
             logger.error("Review Step ID is null");
             return;
         }
-        ReviewStep reviewStep = repo.reviewStep.findOne(reviewActionDTO.getReviewStepId());
+        //FIXME - can we parallelize here
+        for (Long reviewStepId : reviewActionDTO.getReviewStepId()) {
+            actOnOneStep(reviewStepId, reviewActionDTO.isApproved());
+        }
+
+
+    }
+
+    public void actOnOneStep(Long reviewStepId, boolean isApproved){
+        ReviewStep reviewStep = repo.reviewStep.findOne(reviewStepId);
         if(reviewStep == null){
-            logger.error("Unable to find a review step with id {} - returning silently", reviewActionDTO.getReviewStepId());
+            logger.error("Unable to find a review step with id {} - returning silently", reviewStepId);
             return;
         }
         List<ReviewStep> earlierUncompletedSteps = repo.reviewStep.findByCompletedIsFalseAndParentIdAndReviewStageIsLessThan(reviewStep.getParentId(), reviewStep.getReviewStage());
         if(!earlierUncompletedSteps.isEmpty()){
-            logger.error("User '{}' is trying to approve/reject a step that is not yet ready for approval", reviewActionEvent.getUser().getUsername());
+            logger.error("User '{}' is trying to approve/reject a step that is not yet ready for approval", SpringrollSecurity.getUser().getUsername());
             return;
         }
-        if(reviewStep.hasThisUserAlreadyReviewedThisStep(reviewActionEvent.getUser().getUsername())){
-            logger.error("User '{}' has already reviewed step '{}'",reviewActionEvent.getUser().getUsername(), reviewActionDTO.getReviewStepId());
+        if(reviewStep.hasThisUserAlreadyReviewedThisStep(SpringrollSecurity.getUser().getUsername())){
+            logger.error("User '{}' has already reviewed step '{}'",SpringrollSecurity.getUser().getUsername(), reviewStepId);
             return;
         }
 
-        reviewStep.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionEvent.getPayload().isApproved()));
+        reviewStep.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), isApproved));
         if(reviewStep.getRuleId() != -1) {
             ReviewRule reviewRule = repo.reviewRules.findOne(reviewStep.getRuleId());
             notificationManager.addNotificationAcknowledgement(reviewStep.getNotificationId());
-            if (reviewActionDTO.isApproved() && reviewRule.getApprovalsNeeded() > reviewStep.getReviewLog().size()) {
+            if (isApproved && reviewRule.getApprovalsNeeded() > reviewStep.getReviewLog().size()) {
             /* Oh this rule requires more that one approval for this stage - nothing to do */
                 return;
             }
@@ -126,7 +141,7 @@ public class ReviewManager extends SpringrollEndPoint {
         notificationManager.deleteNotification(reviewStep.getNotificationId());
 
         List<ReviewStep> reviewSteps = findNextReviewStep(reviewStep.getParentId(), reviewStep.getReviewStage());
-        if(reviewSteps.isEmpty() || !reviewActionDTO.isApproved()){
+        if(reviewSteps.isEmpty() || !isApproved){
             // All reviews are complete or someone has rejected this
             List<ReviewStep> allReviewSteps = repo.reviewStep.findByParentId(reviewStep.getParentId());
             List<ReviewLog> reviewLog = new ArrayList<>();
@@ -137,13 +152,13 @@ public class ReviewManager extends SpringrollEndPoint {
             job.setReviewLog(reviewLog);
             job.setUnderReview(false);
 
-            if(reviewActionDTO.isApproved()) {
+            if(isApproved) {
                 // find the step with the payload so that we can deserialize it and send it for processing
                 ReviewStep step = repo.reviewStep.findByParentIdAndSerializedEventIsNotNull(reviewStep.getParentId());
                 IEvent reviewedEvent = step.getEvent();
                 if (reviewedEvent instanceof ReviewableEvent) {
                     ((ReviewableEvent) reviewedEvent).setReviewLog(reviewLog);
-                    ((ReviewableEvent) reviewedEvent).setApproved(reviewActionEvent.getPayload().isApproved());
+                    ((ReviewableEvent) reviewedEvent).setApproved(isApproved);
                 }
                 // The context at this point is that of the user that made the approval.  However as we push the event that was under
                 // review back into the system we need to change the context to that event
@@ -155,7 +170,7 @@ public class ReviewManager extends SpringrollEndPoint {
                 sendFyiNotification(reviewStep.getBusinessViolations());
             } else {
                 job.setEndTime(LocalDateTime.now());
-                job.setStatus(job.getStatus() + " Review Rejected by " + reviewActionEvent.getUser().getUsername());
+                job.setStatus(job.getStatus() + " Review Rejected by " + SpringrollSecurity.getUser().getUsername());
                 job.setCompleted(true);
             }
             repo.reviewStep.delete(allReviewSteps);
