@@ -1,4 +1,4 @@
-define(['Application', 'marionette', 'jquery','jquery.cometd'], function (Application, Marionette) {
+define(['Application', 'jquery','jquery.cometd'], function (Application) {
     var CometD = $.cometd;
     var cometURL = location.protocol + "//" + location.host + "/cometd";
     function _connectionEstablished() {
@@ -39,63 +39,10 @@ define(['Application', 'marionette', 'jquery','jquery.cometd'], function (Applic
         console.log("HANDSHAKE SUCCESS!!!!!!!!!")
         if (handshake.successful === true) {
             CometD.batch(function () {
-                CometD.subscribe('/core/review', function(message)
-                {
-                    console.log("Received REVIEW msg - " + message.data[0].reviewStepId);
-                    data = {"approved":true, "reviewStepId":message.data[0].reviewStepId};
-                    data = JSON.stringify(data);
-                    console.log(data);
-                    $.ajax(
-                        {
-                            url: '/api/sr/reviewaction',
-                            type: 'POST',
-                            data: data,
-                            contentType: 'application/json; charset=utf-8',
-                            dataType: 'json',
-                            success: function (msg) {
-//                            alert(msg);
-                            }
-                        }
-                    );
-
-                });
-                CometD.subscribe('/core/reviewfyi', function(message)
-                {
-                    data = {"notificationId":message.data[0].notificationId};
-                    data = JSON.stringify(data);
-                    console.log(data);
-                    $.ajax(
-                        {
-                            url: '/api/sr/notificationack',
-                            type: 'POST',
-                            data: data,
-                            contentType: 'application/json; charset=utf-8',
-                            dataType: 'json',
-                            success: function (msg) {
-//                            alert(msg);
-                            }
-                        }
-                    );
-
-                });
-                CometD.subscribe('/core/fyi', function(message)
-                {
-                    console.log("Received FYI msg - " + message.data[0].notificationId);
-                    data = {"notificationId":message.data[0].notificationId};
-                    data = JSON.stringify(data);
-                    $.ajax(
-                        {
-                            url: '/api/sr/notificationack',
-                            type: 'POST',
-                            data: data,
-                            contentType: 'application/json; charset=utf-8',
-                            dataType: 'json',
-                            success: function (msg) {
-//                            alert(msg);
-                            }
-                        }
-                    );
-
+                var listeners = Application.getListeners();
+                Object.keys(listeners).forEach(function(key,index) {
+                    for(var i = 0; i < listeners[key].length; i++)
+                        CometD.subscribe(key, listeners[key][i]);
                 });
             });
         }
@@ -117,15 +64,13 @@ define(['Application', 'marionette', 'jquery','jquery.cometd'], function (Applic
     CometD.unregisterTransport('websocket');
 
 
-    CometD.handshake();
 
     var CometDGlue = {
-        initialize: function(options){
-            console.log("Init func of MN COmen");
-        },
-        publish: function(channel, message){
-            CometD.publish(channel, message);
+
+        init : function(){
+            CometD.handshake();
         }
+
     };
     Application.CometD = CometDGlue;
 });
