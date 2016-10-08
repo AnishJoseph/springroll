@@ -58,9 +58,14 @@ public class PushServices
             for (String userId : userIds) {
                 Set<String> remoteIdsOfUser = channelSubscribers.get(userId);
                 if (remoteIdsOfUser == null) continue;
-                for (String remoteIdOfUser : remoteIdsOfUser) {
+                Iterator<String> iterator = remoteIdsOfUser.iterator();
+                while(iterator.hasNext()){
+                    String remoteIdOfUser = iterator.next();
                     ServerSession session = bayeux.getSession(remoteIdOfUser);
-                    if (session == null) continue;
+                    if (session == null) {
+                        iterator.remove();
+                        continue;
+                    }
                     session.deliver(serverSession, channel, message);
                 }
             }
