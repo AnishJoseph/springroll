@@ -43,6 +43,7 @@ public class DeadLetterQueueHandler {
         }
 
         jobManager.handleExceptionInTransactionLeg(event.getJobId(), event.getLegId(), caused.getClass().getSimpleName());
+        logger.debug("Unkown error");caused.printStackTrace();
     }
 
     public void setExceptionCauses(Throwable caused, IEvent causingEvent){
