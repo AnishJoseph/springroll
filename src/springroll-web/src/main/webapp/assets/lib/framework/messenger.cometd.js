@@ -61,13 +61,12 @@ define(['Application', 'marionette', 'jquery','jquery.cometd'], function (Applic
                 });
                 CometD.subscribe('/core/reviewfyi', function(message)
                 {
-                    console.log("Received FYI REVIEW msg - " + message.data[0].reviewStepId);
-                    data = {"approved":true, "reviewStepId":message.data[0].reviewStepId};
+                    data = {"notificationId":message.data[0].notificationId};
                     data = JSON.stringify(data);
                     console.log(data);
                     $.ajax(
                         {
-                            url: '/api/sr/reviewaction',
+                            url: '/api/sr/notificationack',
                             type: 'POST',
                             data: data,
                             contentType: 'application/json; charset=utf-8',

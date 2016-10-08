@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by anishjoseph on 27/09/16.
@@ -82,6 +84,7 @@ public class ReviewManager extends SpringrollEndPoint {
     }
 
     public void createReviewNotifications(List<ReviewStep> reviewSteps){
+        //FIXME - merge notifications the destination is the same
         for (ReviewStep reviewStep : reviewSteps) {
 //            String approver = repo.reviewRules.findOne(reviewStep.getRuleId()).getApprover();
             /* Create the notification payload, send it down the REVIEW channel, and store the review id returned in the step */
@@ -162,26 +165,19 @@ public class ReviewManager extends SpringrollEndPoint {
     }
 
     private void sendFyiNotification(List<BusinessValidationResult> reviewNeededViolations){
-        //FIXME - need to handle multiple FYI validations and multiple rules
-        List<Fyimeta> fyiValidations = new ArrayList<>();
+        /* Build a list of businessValidationResults on a per user basis */
+        Map<String, List<BusinessValidationResult>> userToNoti = new HashMap<>();
         for (BusinessValidationResult businessValidationResult : reviewNeededViolations) {
             if("SELF".equals(businessValidationResult.getApprover()))continue;
-            List<ReviewRule> fyi = repo.reviewRules.findByRuleNameAndFyiOnly(businessValidationResult.getViolatedRule(), true);
-            if(fyi.isEmpty())continue;
-            fyiValidations.add(new Fyimeta(businessValidationResult, fyi.get(0).getApprover()));
+            List<ReviewRule> reviewRules = repo.reviewRules.findByRuleNameAndFyiOnly(businessValidationResult.getViolatedRule(), true);
+            for (ReviewRule reviewRule : reviewRules) {
+                String userId = reviewRule.getApprover();
+                if(!userToNoti.containsKey(userId))userToNoti.put(userId, new ArrayList<>());
+                userToNoti.get(userId).add(businessValidationResult);
+            }
         }
-        for (Fyimeta fyiValidation : fyiValidations) {
-            FyiReviewNotificationMessage notification = new FyiReviewNotificationMessage(fyiValidation.businessValidationResult, fyiValidation.receivers);
-            notificationManager.sendNotification(CoreNotificationChannels.REVIEW_FYI, notification);
-        }
-
-    }
-    private class Fyimeta{
-        BusinessValidationResult businessValidationResult;
-        String receivers;
-        public Fyimeta(BusinessValidationResult businessValidationResult, String receivers){
-            this.businessValidationResult = businessValidationResult;
-            this.receivers = receivers;
+        for (String user : userToNoti.keySet()) {
+            notificationManager.sendNotification(CoreNotificationChannels.REVIEW_FYI, new FyiReviewNotificationMessage(userToNoti.get(user), user));
         }
     }
 
