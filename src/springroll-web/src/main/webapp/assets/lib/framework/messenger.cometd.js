@@ -39,10 +39,10 @@ define(['Application', 'jquery','jquery.cometd'], function (Application) {
         console.log("HANDSHAKE SUCCESS!!!!!!!!!")
         if (handshake.successful === true) {
             CometD.batch(function () {
-                var listeners = Application.getListeners();
-                Object.keys(listeners).forEach(function(key,index) {
-                    for(var i = 0; i < listeners[key].length; i++)
-                        CometD.subscribe(key, listeners[key][i]);
+                var subscribers = Application.getSubscribers();
+                Object.keys(subscribers).forEach(function(key,index) {
+                    for(var i = 0; i < subscribers[key].length; i++)
+                        CometD.subscribe(key, subscribers[key][i]);
                 });
             });
         }

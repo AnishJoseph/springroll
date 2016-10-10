@@ -10,9 +10,10 @@ require.config({
         "backbone.radio": "vendor/marionette/backbone.radio",
         "m1": "lib/modules/m1",
         "m2": "lib/modules/m2",
+        "menu": "lib/modules/menu",
     }
 });
-require(['Application', 'm1', 'm2', 'messenger'],function(Application, m1){
+require(['Application', 'menu', 'm1', 'm2', 'messenger'],function(Application, m1){
 
     $.ajaxSetup({ cache: false });
     Application.M1.f1();
