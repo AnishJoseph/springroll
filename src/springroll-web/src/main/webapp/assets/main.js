@@ -11,9 +11,10 @@ require.config({
         "m1": "lib/modules/m1",
         "m2": "lib/modules/m2",
         "menu": "lib/framework/menu",
+        "root.view": "lib/framework/root.view",
     }
 });
-require(['Application', 'menu', 'm1', 'm2', 'messenger'],function(Application, m1){
+require(['Application', 'menu', 'm1', 'm2', 'messenger', 'root.view'],function(Application, m1){
 
     $.ajaxSetup({ cache: false });
 

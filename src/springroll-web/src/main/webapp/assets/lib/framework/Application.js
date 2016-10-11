@@ -6,12 +6,15 @@ define(['marionette', 'backbone'], function (Marionette, Backbone) {
         region: '#root-element',
 
         onStart: function() {
-            this.showView(new Application.MenuView());
+            Application.rootView = new Application.RootView();
+            this.showView(Application.rootView);
         }
     });
 
     Marionette.TemplateCache.prototype.loadTemplate = function(templateId, options){
-        console.log("Template ID is " + templateId)
+        console.log("Template ID is " + templateId);
+        if(templateId.includes("m2"))return "<H1>M2</H1>";
+
         return "console";
     };
 

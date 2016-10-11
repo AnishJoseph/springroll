@@ -11,19 +11,23 @@ define(['Application', 'marionette'], function (Application, Marionette) {
                 template.push('<li role="presentation"><a href="#" id="' + id + '">' + menuItem.name +'</a></li>');
             });
             template.push('</ul>');
-            var  xx = template.join("");
-            return xx;
+            var  menuTemplate = template.join("");
+            return menuTemplate;
 
         },
         events : function(){
             var events = {};
+            var that = this;
             Object.keys(Application.getMenuItems()).forEach(function(key,index) {
                 var menuItem = Application.getMenuItems()[key];
                 var id = 'click #menuId' + menuItem.name;
-                events[id] = menuItem.cb;
+                events[id] = function(){
+                    Application.rootView.showBody(menuItem.view);
+                }
             });
             return events;
         },
+
     });
 });
 

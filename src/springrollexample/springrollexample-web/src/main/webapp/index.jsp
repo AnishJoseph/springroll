@@ -7,6 +7,7 @@
     <script data-main="assets/main" src="assets/vendor/requirejs/require.js"></script>
 </head>
 <body>
-        <div id="root-element" />
+
+        <div id="root-element" style="width: 300px;height: 100%"/>
 </body>
 </html>
