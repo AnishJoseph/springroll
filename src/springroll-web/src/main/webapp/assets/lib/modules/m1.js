@@ -22,7 +22,8 @@ define(['Application', 'marionette', 'backbone'], function (Application, Marione
 
     Application.addMenuItem({
         name: 'Item1',
-        controller : m1Controller
+        controller : m1Controller,
+        index : 1
     });
 
     var M1Router = new Marionette.AppRouter({

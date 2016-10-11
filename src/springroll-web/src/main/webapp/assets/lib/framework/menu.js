@@ -5,8 +5,8 @@ define(['Application', 'marionette'], function (Application, Marionette) {
         template: function(){
             var template = [];
             template.push('<ul class="nav nav-pills">');
-            Object.keys(Application.getMenuItems()).forEach(function(key,index) {
-               var menuItem = Application.getMenuItems()[key];
+            /* Sort the menuItems by index before adding the menu item */
+            _.each(_.sortBy(Application.getMenuItems(), 'index'), function(menuItem){
                 var id = 'menuId' + menuItem.name;
                 template.push('<li role="presentation"><a id="' + id + '">' + menuItem.name +'</a></li>');
             });
@@ -17,9 +17,7 @@ define(['Application', 'marionette'], function (Application, Marionette) {
         },
         events : function(){
             var events = {};
-            var that = this;
-            Object.keys(Application.getMenuItems()).forEach(function(key,index) {
-                var menuItem = Application.getMenuItems()[key];
+            _.each(Application.getMenuItems(), function(menuItem){
                 var id = 'click #menuId' + menuItem.name;
                 events[id] = function(){
                     menuItem.controller.activate();
