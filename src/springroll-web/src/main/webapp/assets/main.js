@@ -16,8 +16,6 @@ require.config({
 require(['Application', 'menu', 'm1', 'm2', 'messenger'],function(Application, m1){
 
     $.ajaxSetup({ cache: false });
-    Application.M1.f1();
-    Application.M2.f1();
 
     Application.CometD.init();
 
