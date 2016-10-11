@@ -1,6 +1,10 @@
 require.config({
+    shim : {
+        "bootstrap" : { "deps" :['jquery'] }
+    },
     paths: {
         "jquery": "vendor/jquery/jquery-3.1.1.min",
+        //"jquery": "vendor/marionette/jquery",
         "jquery.cometd": "vendor/cometd/jquery.cometd",
         "messenger": "lib/framework/messenger.cometd",
         "Application": "lib/framework/Application",
@@ -15,7 +19,7 @@ require.config({
         "bootstrap": "vendor/bootstrap/js/bootstrap.min",
     }
 });
-require(['Application', 'menu', 'm1', 'm2', 'messenger', 'root.view'],function(Application, m1){
+require(['Application', 'menu', 'm1', 'm2', 'messenger', 'root.view', 'bootstrap'],function(Application, m1){
 
     $.ajaxSetup({ cache: false });
 
