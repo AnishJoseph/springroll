@@ -1,7 +1,7 @@
 define(['Application', 'marionette', 'backbone'], function (Application, Marionette, Backbone) {
 
     Application.subscribe('/core/review', function(message){
-        console.log("Recevived message on REVIEW CHANNEL - user 1");
+        console.log("Recevived message on REVIEW CHANNEL - user 2");
     });
 
     var View = Marionette.View.extend({
@@ -25,7 +25,7 @@ define(['Application', 'marionette', 'backbone'], function (Application, Marione
         controller : m2Controller
     });
 
-    var M2Router = Marionette.AppRouter.extend({
+    var M2Router = new Marionette.AppRouter({
         controller: m2Controller,
 
         appRoutes: {

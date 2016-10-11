@@ -6,9 +6,9 @@ define(['marionette', 'backbone'], function (Marionette, Backbone) {
         region: '#root-element',
 
         onStart: function() {
-            Backbone.history.start();
             Application.rootView = new Application.RootView();
             this.showView(Application.rootView);
+            Backbone.history.start();
         }
     });
 

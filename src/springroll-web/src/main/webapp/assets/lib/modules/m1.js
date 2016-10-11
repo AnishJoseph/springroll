@@ -25,7 +25,7 @@ define(['Application', 'marionette', 'backbone'], function (Application, Marione
         controller : m1Controller
     });
 
-    var M1Router = Marionette.AppRouter.extend({
+    var M1Router = new Marionette.AppRouter({
         controller: m1Controller,
 
         appRoutes: {
