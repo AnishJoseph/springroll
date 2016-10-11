@@ -14,7 +14,7 @@ define(['Application', 'marionette', 'backbone'], function (Application, Marione
         activate: function() {
             var view = new View();
             Application.rootView.showBody(view);
-            Backbone.history.navigate('#m1');
+            Backbone.history.navigate('m1');
         }
     });
 

@@ -8,7 +8,7 @@ define(['Application', 'marionette'], function (Application, Marionette) {
             Object.keys(Application.getMenuItems()).forEach(function(key,index) {
                var menuItem = Application.getMenuItems()[key];
                 var id = 'menuId' + menuItem.name;
-                template.push('<li role="presentation"><a href="#" id="' + id + '">' + menuItem.name +'</a></li>');
+                template.push('<li role="presentation"><a id="' + id + '">' + menuItem.name +'</a></li>');
             });
             template.push('</ul>');
             var  menuTemplate = template.join("");
