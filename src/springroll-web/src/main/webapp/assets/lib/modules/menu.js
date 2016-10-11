@@ -3,7 +3,7 @@ define(['Application', 'marionette'], function (Application, Marionette) {
         tagName: 'div',
         template: function(){
             var template = [];
-            template.push('<ul class="nav nav-pills>');
+            template.push('<ul class="nav nav-pills style="border-bottom: none;>');
             Object.keys(Application.getMenuItems()).forEach(function(key,index) {
                var menuItem = Application.getMenuItems()[key];
                 var id = 'menuId' + menuItem.name;
