@@ -7,12 +7,10 @@ define(['marionette', 'backbone'], function (Marionette, Backbone) {
         region: '#root-element',
 
         onStart: function() {
-            console.log("APP STARTED!!!!");
-
             this.showView(new Application.MenuView());
-
         }
     });
+
     Marionette.TemplateCache.prototype.loadTemplate = function(templateId, options){
         // load your template here, returning the data needed for the compileTemplate
         // function. For example, you have a function that creates templates based on the
@@ -20,6 +18,7 @@ define(['marionette', 'backbone'], function (Marionette, Backbone) {
         console.log("Template ID is " + templateId)
         return "console";
     };
+
     var springrollApplication = new SpringrollApplication();
     var Application =  {
         start : function () {
