@@ -10,7 +10,7 @@ require.config({
         "backbone.radio": "vendor/marionette/backbone.radio",
         "m1": "lib/modules/m1",
         "m2": "lib/modules/m2",
-        "menu": "lib/modules/menu",
+        "menu": "lib/framework/menu",
     }
 });
 require(['Application', 'menu', 'm1', 'm2', 'messenger'],function(Application, m1){
