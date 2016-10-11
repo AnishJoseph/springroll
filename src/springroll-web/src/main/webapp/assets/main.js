@@ -12,6 +12,7 @@ require.config({
         "m2": "lib/modules/m2",
         "menu": "lib/framework/menu",
         "root.view": "lib/framework/root.view",
+        "bootstrap": "vendor/bootstrap/js/bootstrap.min",
     }
 });
 require(['Application', 'menu', 'm1', 'm2', 'messenger', 'root.view'],function(Application, m1){

@@ -10,8 +10,8 @@ define(['Application', 'marionette'], function (Application, Marionette) {
         onRender: function() {
             this.showChildView('menuRegion', new Application.MenuView());
         },
-        showBody : function(viewSpecifiedByMenu){
-            this.showChildView('bodyRegion', new viewSpecifiedByMenu());
+        showBody : function(view){
+            this.showChildView('bodyRegion', view);
         }
     });
 });
