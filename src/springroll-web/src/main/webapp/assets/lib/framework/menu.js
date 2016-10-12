@@ -6,9 +6,21 @@ define(['Application', 'marionette'], function (Application, Marionette) {
             var template = [];
             template.push('<ul class="nav nav-pills">');
             /* Sort the menuItems by index before adding the menu item */
-            _.each(_.sortBy(Application.getMenuItems(), 'index'), function(menuItem){
-                var id = 'menuId' + menuItem.name;
-                template.push('<li role="presentation"><a id="' + id + '">' + menuItem.name +'</a></li>');
+            _.each(_.sortBy(Application.getMenuItems(), 'index'), function(item){
+                if($.isArray(item.items)){
+                    template.push('<li role="presentation" class="dropdown"> ');
+                    template.push('<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Item3<span class="caret"></span></a> ');
+                    template.push('<ul class="dropdown-menu">');
+                    _.each(item.items, function(menuItem){
+                        var id = 'menuId' + menuItem.name;
+                        template.push('<li role="presentation"><a id="' + id + '">' + menuItem.name +'</a></li>');
+                    });
+                    template.push(' </ul> </li>');
+                } else {
+                    var menuItem = item.items;
+                    var id = 'menuId' + menuItem.name;
+                    template.push('<li role="presentation"><a id="' + id + '">' + menuItem.name +'</a></li>');
+                }
             });
             template.push('</ul>');
             var  menuTemplate = template.join("");
@@ -17,10 +29,20 @@ define(['Application', 'marionette'], function (Application, Marionette) {
         },
         events : function(){
             var events = {};
-            _.each(Application.getMenuItems(), function(menuItem){
-                var id = 'click #menuId' + menuItem.name;
-                events[id] = function(){
-                    menuItem.controller.activate();
+            _.each(Application.getMenuItems(), function(item){
+                if($.isArray(item.items)){
+                    _.forEach(item.items, function(menuItem){
+                        var id = 'click #menuId' + menuItem.name;
+                        events[id] = function () {
+                            menuItem.controller.activate();
+                        }
+                    });
+                } else {
+                    var menuItem = item.items;
+                    var id = 'click #menuId' + menuItem.name;
+                    events[id] = function () {
+                        menuItem.controller.activate();
+                    }
                 }
             });
             return events;

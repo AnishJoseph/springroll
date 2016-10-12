@@ -14,12 +14,14 @@ require.config({
         "backbone.radio": "vendor/marionette/backbone.radio",
         "m1": "lib/modules/m1",
         "m2": "lib/modules/m2",
+        "m3s1": "lib/modules/m3s1",
+        "m3s2": "lib/modules/m3s2",
         "menu": "lib/framework/menu",
         "root.view": "lib/framework/root.view",
         "bootstrap": "vendor/bootstrap/js/bootstrap.min",
     }
 });
-require(['Application', 'menu', 'm1', 'm2', 'messenger', 'root.view', 'bootstrap'],function(Application, m1){
+require(['Application', 'menu', 'm1', 'm2', 'm3s1', 'm3s2', 'messenger', 'root.view', 'bootstrap'],function(Application){
 
     $.ajaxSetup({ cache: false });
 
