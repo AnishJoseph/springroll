@@ -34,7 +34,6 @@ define(['Application', 'marionette', 'backbone'], function (Application, Marione
         }
     });
     Application.requiresTemplate("#m1Template");
-    Application.requiresTemplate("#junk");
 
 
 });
