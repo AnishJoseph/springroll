@@ -4,6 +4,10 @@ define(['Application', 'marionette'], function (Application, Marionette) {
         tagName: 'div',
         template: function(){
             var template = [];
+
+            template.push('<nav class="navbar navbar-default">');
+            template.push('<div class="navbar-header"> ');
+
             template.push('<ul class="nav nav-pills">');
             /* Sort the menuItems by index before adding the menu item */
             _.each(_.sortBy(Application.getMenuItems(), 'index'), function(item){
@@ -23,6 +27,7 @@ define(['Application', 'marionette'], function (Application, Marionette) {
                 }
             });
             template.push('</ul>');
+            template.push('</div></nav>');
             var  menuTemplate = template.join("");
             return menuTemplate;
 
