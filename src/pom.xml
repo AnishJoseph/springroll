@@ -36,6 +36,7 @@
         <cometd.version>3.0.10</cometd.version>
         <version.servlet.api>3.1.0</version.servlet.api>
         <flexjson.version>3.3</flexjson.version>
+        <apache.commons.io.version>2.4</apache.commons.io.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -369,6 +370,11 @@
                 <groupId>net.sf.flexjson</groupId>
                 <artifactId>flexjson</artifactId>
                 <version>${flexjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${apache.commons.io.version}</version>
             </dependency>
 
         </dependencies>

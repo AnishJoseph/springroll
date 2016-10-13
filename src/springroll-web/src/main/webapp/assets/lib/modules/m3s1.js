@@ -29,5 +29,6 @@ define(['Application', 'marionette', 'backbone'], function (Application, Marione
             'm3s1': 'activate'
         }
     });
+    Application.requiresTemplate("#m3s1Template");
 
 });

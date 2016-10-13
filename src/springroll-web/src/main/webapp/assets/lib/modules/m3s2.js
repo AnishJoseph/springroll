@@ -30,4 +30,6 @@ define(['Application', 'marionette', 'backbone'], function (Application, Marione
         }
     });
 
+    Application.requiresTemplate("#m3s2Template");
+
 });

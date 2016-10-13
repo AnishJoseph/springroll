@@ -25,8 +25,12 @@ require(['Application', 'menu', 'm1', 'm2', 'm3s1', 'm3s2', 'messenger', 'root.v
 
     $.ajaxSetup({ cache: false });
 
-    Application.CometD.init();
 
-    Application.start();
+    var promises = [];
+    promises.push(Application.loadTemplates());
+    $.when.apply($, promises).always(function () {
+        Application.CometD.init();
+        Application.start();
+    });
 
 });

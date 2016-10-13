@@ -36,7 +36,6 @@ define(['Application', 'jquery','jquery.cometd'], function (Application) {
     // Function invoked when first contacting the server and
     // when the server has lost the state of this client
     function _metaHandshake(handshake) {
-        console.log("HANDSHAKE SUCCESS!!!!!!!!!")
         if (handshake.successful === true) {
             CometD.batch(function () {
                 var subscribers = Application.getSubscribers();
