@@ -9,6 +9,6 @@
 </head>
 <body>
 
-        <div id="root-element" style="width: 300px;height: 100%"/>
+        <div id="root-element" style="margin-left: 20px"/>
 </body>
 </html>
