@@ -9,6 +9,8 @@ require.config({
         "jquery.cometd": "vendor/cometd/jquery.cometd",
         "messenger": "lib/framework/messenger.cometd",
         "Application": "lib/framework/Application",
+        "alerts": "lib/framework/alerts",
+        "fyi.alerts": "lib/framework/fyi.alerts",
         "marionette": "vendor/marionette/backbone.marionette.min",
         "underscore": "vendor/marionette/underscore",
         "backbone": "vendor/marionette/backbone",
@@ -19,11 +21,10 @@ require.config({
         "m3s2": "lib/modules/m3s2",
         "menu": "lib/framework/menu",
         "root.view": "lib/framework/root.view",
-        "alerts.view": "lib/framework/alerts.view",
         "bootstrap": "vendor/bootstrap/js/bootstrap.min",
     }
 });
-require(['Application', 'menu', 'm1', 'm2', 'm3s1', 'm3s2', 'messenger', 'root.view', 'bootstrap', 'alerts.view'],function(Application){
+require(['Application', 'menu', 'm1', 'm2', 'm3s1', 'm3s2', 'messenger', 'root.view', 'bootstrap', 'fyi.alerts'],function(Application){
 
     $.ajaxSetup({ cache: false });
 

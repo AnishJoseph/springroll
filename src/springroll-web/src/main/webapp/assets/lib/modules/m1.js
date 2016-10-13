@@ -1,9 +1,5 @@
 define(['Application', 'marionette', 'backbone'], function (Application, Marionette, Backbone) {
 
-    Application.subscribe('/core/review', function(message){
-        console.log("Recevived message on REVIEW CHANNEL - user 1");
-    });
-
     var View = Marionette.View.extend({
         tagName: 'h2',
         template: "#m1Template",
