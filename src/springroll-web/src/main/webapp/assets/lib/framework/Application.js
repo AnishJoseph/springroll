@@ -23,7 +23,7 @@ define(['marionette', 'backbone'], function (Marionette, Backbone) {
     /* Now comes all the application utility functions that are available to the modules */
     var subscribers = {};   //Holds the subscribers to the push notifications - filled in by modules calling subscribe
     var menuItems = [];     //Holds the list of menuItems - filled by modules calling addMenuItem
-    var requiredTemplates = [];     //Holds the list of menuItems - filled by modules calling addMenuItem
+    var requiredTemplates = [];     //Holds the list of templates required by the modules - filled by modules calling requiresTemplate
 
     Application.subscribe = function(service, callback){
         if(subscribers[service] == undefined){
