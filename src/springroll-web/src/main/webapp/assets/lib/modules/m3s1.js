@@ -19,7 +19,8 @@ define(['Application', 'marionette', 'backbone'], function (Application, Marione
         parent: 'Item3',
         name: 'SubItem1',
         controller : m3s1Controller,
-        index : 3
+        index : 3,
+        subIndex : 1
     });
 
     var M3S1Router = new Marionette.AppRouter({

@@ -1,7 +1,7 @@
 define(['Application', 'marionette', 'backbone'], function (Application, Marionette, Backbone) {
 
     var View = Marionette.View.extend({
-        tagName: 'h2',
+        tagName: 'div',
         template: "#m3s2Template",
     });
 
@@ -19,7 +19,8 @@ define(['Application', 'marionette', 'backbone'], function (Application, Marione
         parent: 'Item3',
         name: 'SubItem2',
         controller : m3s2Controller,
-        index : 3
+        index : 3,
+        subIndex : 2
     });
 
     var M3S2Router = new Marionette.AppRouter({

@@ -15,7 +15,7 @@ define(['Application', 'marionette'], function (Application, Marionette) {
                     template.push('<li role="presentation" class="dropdown"> ');
                     template.push('<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Item3<span class="caret"></span></a> ');
                     template.push('<ul class="dropdown-menu">');
-                    _.each(item.items, function(menuItem){
+                    _.each(_.sortBy(item.items, 'subIndex'), function(menuItem){
                         var id = 'menuId' + menuItem.name;
                         template.push('<li role="presentation"><a id="' + id + '">' + menuItem.name +'</a></li>');
                     });
