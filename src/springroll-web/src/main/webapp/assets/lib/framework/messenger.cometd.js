@@ -1,4 +1,4 @@
-define(['Application', 'jquery','jquery.cometd'], function (Application) {
+define(['Application'], function (Application) {
     var CometD = $.cometd;
     var cometURL = location.protocol + "//" + location.host + "/cometd";
     function _connectionEstablished() {
@@ -47,11 +47,10 @@ define(['Application', 'jquery','jquery.cometd'], function (Application) {
         }
     }
 
-    // Disconnect when the page unloads
-    //$(window).unload(function()
-    //{
-    //    CometD.disconnect(true);
-    //});
+    //Disconnect when the page unloads
+    $(window).bind('unload', function() {
+        CometD.disconnect(true);
+    });
 
     CometD.configure({
         url: cometURL,

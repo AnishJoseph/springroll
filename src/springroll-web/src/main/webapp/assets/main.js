@@ -1,6 +1,7 @@
 require.config({
     shim : {
-        "bootstrap" : { "deps" :['jquery'] }
+        "bootstrap" : { "deps" :['jquery'] },
+        "messenger" : { "deps" :['jquery','jquery.cometd'] }
     },
     paths: {
         "jquery": "vendor/jquery/jquery-3.1.1.min",
