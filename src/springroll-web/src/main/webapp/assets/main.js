@@ -19,12 +19,13 @@ require.config({
         "Application": "lib/framework/Application",
         "alerts": "lib/framework/alerts",
         "fyi.alerts": "lib/framework/fyi.alerts",
+        "review.alerts": "lib/framework/review.alerts",
         "marionette": "vendor/marionette/backbone.marionette.min",
         "underscore": "vendor/marionette/underscore",
         "backbone": "vendor/marionette/backbone",
         //"moment": "vendor/moment/moment-with-locales",
         "backbone.radio": "vendor/marionette/backbone.radio",
-        "m1": "lib/modules/m1",
+        "transactionTests": "lib/modules/transactionTests",
         "m2": "lib/modules/m2",
         "m3s1": "lib/modules/m3s1",
         "m3s2": "lib/modules/m3s2",
@@ -33,7 +34,7 @@ require.config({
         "bootstrap": "vendor/bootstrap/js/bootstrap.min",
     }
 });
-require(['Application', 'menu', 'm1', 'm2', 'm3s1', 'm3s2', 'messenger', 'root.view', 'bootstrap', 'fyi.alerts'],function(Application){
+require(['Application', 'menu', 'transactionTests', 'm2', 'm3s1', 'm3s2', 'messenger', 'root.view', 'bootstrap', 'fyi.alerts', 'review.alerts'],function(Application){
 
     $.ajaxSetup({ cache: false });
 

@@ -91,7 +91,7 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
         collection: alertsCollection
     });
 
-    var AlertsView = Marionette.View.extend({
+    var AlertsPanel = Marionette.View.extend({
         tagName: 'div',
         template: '#alerts.view',
         events: {
@@ -133,7 +133,7 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
         },
 
         getAlertView : function (){
-            return AlertsView;
+            return AlertsPanel;
         }
     }
 });
