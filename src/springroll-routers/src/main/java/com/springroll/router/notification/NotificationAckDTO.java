@@ -12,7 +12,7 @@ public class NotificationAckDTO implements DTO{
 
     public NotificationAckDTO(){}
 
-    public NotificationAckDTO(Long notificationId, Long reviewStepId, boolean approved) {
+    public NotificationAckDTO(Long notificationId) {
         this.notificationId = notificationId;
     }
 

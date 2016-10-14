@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 @Transactional
@@ -19,6 +18,7 @@ public class SpringrollAPI extends AbstractAPI {
     private static final Logger logger = LoggerFactory.getLogger(SpringrollAPI.class);
 
     @Autowired private ITemplateManager templateManager;
+
     @RequestMapping(value = "/sr/reviewaction", method = RequestMethod.POST)
     public Long reviewaction(@RequestBody ReviewActionDTO reviewActionDTO) {
         if(reviewActionDTO.getReviewStepId() == null){
@@ -27,14 +27,16 @@ public class SpringrollAPI extends AbstractAPI {
         }
         return route(reviewActionDTO);
     }
-    @RequestMapping(value = "/sr/notificationack", method = RequestMethod.POST)
-    public Long reviewaction(@RequestBody NotificationAckDTO notificationAckDTO) {
-        if(notificationAckDTO.getNotificationId() == null){
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/sr/notification/{id}")
+    public Long notificationDismissed(@PathVariable Long id){
+        if(id == null){
             logger.error("Received Notification ID as NULL");
-            return -1l;
+            return 1l;
         }
-        return route(notificationAckDTO);
+        return route(new NotificationAckDTO(id));
     }
+
     @RequestMapping(value = "/sr/templates", method = RequestMethod.POST)
     public Map<String,String> getTemplates(@RequestBody String[] templates) {
         return templateManager.getTemplates(Arrays.asList(templates));

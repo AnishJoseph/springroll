@@ -4,7 +4,7 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
     Application.requiresTemplate('#alert.item.template');
 
     var subscribedAlerts = {};
-    var AlertItem = Backbone.Model.extend({});
+    var AlertItem = Backbone.Model.extend({urlRoot:'/api/sr/notification'});
     var AlertCollection = Backbone.Collection.extend({
         model: AlertItem,
     });
@@ -23,6 +23,11 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
             if(_.contains(_.functions(this.model.get('view')),"dismissClicked")){
                 this.model.get('view').dismissClicked();
             } else {
+                this.model.destroy({
+                    success: function(model, response) {
+                        console.log("Notification ACKED");
+                    }
+                });
                 console.log("dismissClicked clicked");
             }
         },
