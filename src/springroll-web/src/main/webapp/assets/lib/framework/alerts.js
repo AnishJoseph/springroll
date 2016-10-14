@@ -15,6 +15,25 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
         template: '#alert.item.template',
         subscribedAlerts : subscribedAlerts,
 
+        dismissClicked : function(){
+            console.log("dismissClicked clicked");
+        },
+        acceptClicked : function(){
+            console.log("acceptClicked clicked");
+        },
+        rejectClicked : function(){
+            console.log("rejectClicked clicked");
+        },
+        infoClicked : function(){
+            console.log("info clicked");
+        },
+        events: {
+            'click #dismiss' : "dismissClicked",
+            'click #accept'  : "acceptClicked",
+            'click #reject'  : "rejectClicked",
+            'click #info'    : "infoClicked"
+        },
+
         ui: {
             dismiss:  '#dismiss',
             accept: '#accept',
@@ -28,16 +47,16 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
                 this.ui.dismiss.show();
             }
 
-            if (options.showInfo) {
-                this.ui.info.show();
-            }
-
             if (options.showAccept) {
                 this.ui.accept.show();
             }
 
             if (options.showReject) {
                 this.ui.reject.show();
+            }
+
+            if (options.showInfo) {
+                this.ui.info.show();
             }
         }
     });
@@ -92,7 +111,6 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
         getAlertView : function (){
             return AlertsView;
         }
-
     }
 });
 

@@ -3,8 +3,8 @@ define(['Application', 'marionette', 'backbone', 'alerts'], function (Applicatio
     Application.Alerts.subscribe('/core/fyi', {
         itemView: '',
         showDismiss: true,
-        showMoreInfo: false,
-        showApprove: false,
-        showReject: false,
+        showInfo: true,
+        showAccept: true,
+        showReject: true,
     });
 });
