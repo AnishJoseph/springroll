@@ -8,7 +8,7 @@ define(['Application', 'marionette', 'backbone', 'alerts'], function (Applicatio
         acceptClicked : function(){
             var reviewItem = new ReviewItem({reviewStepId: this.model.get('reviewStepId'), approved : true});
             var that = this;
-            reviewItem.save({
+            reviewItem.save({},{
                 success : function () {
                     that.model.trigger('destroy', that.model);
                 },
@@ -18,7 +18,16 @@ define(['Application', 'marionette', 'backbone', 'alerts'], function (Applicatio
             });
         },
         rejectClicked : function(){
-            console.error('rejectClicked');
+            var reviewItem = new ReviewItem({reviewStepId: this.model.get('reviewStepId'), approved : false});
+            var that = this;
+            reviewItem.save({},{
+                success : function () {
+                    that.model.trigger('destroy', that.model);
+                },
+                error : function(){
+                    //FIXME - handle sucees and failure
+                }
+            });
         },
     });
 
