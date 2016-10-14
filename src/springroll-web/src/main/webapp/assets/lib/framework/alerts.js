@@ -15,17 +15,46 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
         template: '#alert.item.template',
         subscribedAlerts : subscribedAlerts,
 
+        regions: {
+            messageRegion: '#message',
+        },
+
         dismissClicked : function(){
-            console.log("dismissClicked clicked");
+            if(_.contains(_.functions(this.model.get('view')),"dismissClicked")){
+                this.model.get('view').dismissClicked();
+            } else {
+                console.log("dismissClicked clicked");
+            }
         },
         acceptClicked : function(){
-            console.log("acceptClicked clicked");
+            if(_.contains(_.functions(this.model.get('view')),"acceptClicked")){
+                this.model.get('view').acceptClicked();
+            } else {
+                /* Some module has subscribed for this channel and has asked for the 'accept' icon to be displayed - however
+                  no method exists in the view provided to handle the click
+                 */
+                console.error('For channel ' + this.model.get('channel') + " no method specified for event acceptClicked");
+            }
         },
         rejectClicked : function(){
-            console.log("rejectClicked clicked");
+            if(_.contains(_.functions(this.model.get('view')),"rejectClicked")){
+                this.model.get('view').rejectClicked();
+            } else {
+                /* Some module has subscribed for this channel and has asked for the 'reject' icon to be displayed - however
+                 no method exists in the view provided to handle the click
+                 */
+                console.error('For channel ' + this.model.get('channel') + " no method specified for event rejectClicked");
+            }
         },
         infoClicked : function(){
-            console.log("info clicked");
+            if(_.contains(_.functions(this.model.get('view')),"infoClicked")){
+                this.model.get('view').infoClicked();
+            } else {
+                /* Some module has subscribed for this channel and has asked for the 'info' icon to be displayed - however
+                 no method exists in the view provided to handle the click
+                 */
+                console.error('For channel ' + this.model.get('channel') + " no method specified for event infoClicked");
+            }
         },
         events: {
             'click #dismiss' : "dismissClicked",
@@ -43,21 +72,12 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
 
         onRender : function(){
             var options = this.subscribedAlerts[this.model.get('channel')];
-            if (options.showDismiss) {
-                this.ui.dismiss.show();
-            }
-
-            if (options.showAccept) {
-                this.ui.accept.show();
-            }
-
-            if (options.showReject) {
-                this.ui.reject.show();
-            }
-
-            if (options.showInfo) {
-                this.ui.info.show();
-            }
+            if (options.showDismiss) this.ui.dismiss.show();
+            if (options.showAccept) this.ui.accept.show();
+            if (options.showReject) this.ui.reject.show();
+            if (options.showInfo) this.ui.info.show();
+            this.model.set('view', new (options.view)({model:this.model}));
+            this.showChildView('messageRegion', this.model.get('view'));
         }
     });
 
@@ -100,7 +120,6 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
 
                     if(_.isUndefined(alertsCollection.get(notification.id))){
                         notification['creationTimeMoment'] = moment(notification.creationTime).format("DD MMM HH:mm");
-                        //notification['creationTimeMoment'] = '10:10:10';
                         newAlerts.push(notification);
                     }
                 });
