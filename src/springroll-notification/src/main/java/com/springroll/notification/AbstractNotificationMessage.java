@@ -7,7 +7,7 @@ import com.springroll.core.notification.INotificationMessage;
  */
 public class AbstractNotificationMessage implements INotificationMessage {
     private long creationTime;
-    private Long notificationId;
+    private Long id;
     private String notificationReceivers;
 
     public String getNotificationReceivers() {
@@ -26,11 +26,11 @@ public class AbstractNotificationMessage implements INotificationMessage {
         this.creationTime = creationTime;
     }
 
-    public Long getNotificationId() {
-        return notificationId;
+    public Long getId() {
+        return id;
     }
 
-    public void setNotificationId(Long notificationId) {
-        this.notificationId = notificationId;
+    public void setId(Long id) {
+        this.id = id;
     }
 }

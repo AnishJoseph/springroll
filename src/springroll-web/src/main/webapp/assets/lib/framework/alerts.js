@@ -3,18 +3,26 @@ define(['Application', 'marionette'], function (Application, Marionette) {
     Application.requiresTemplate('#alerts.view');
     Application.requiresTemplate('#alert.item.template');
 
-
     var AlertItem = Backbone.Model.extend({});
-
     var AlertCollection = Backbone.Collection.extend({
         model: AlertItem,
     });
-
     var alertsCollection = new AlertCollection();
 
     var AlertsItemView = Marionette.View.extend({
         tagName: 'div',
-        template: '#alert.item.template'
+        template: '#alert.item.template',
+
+        ui: {
+            trash:  '#trash',
+            accept: '#accept',
+            reject: '#reject',
+            info:   '#info'
+        },
+
+        onRender : function(){
+            this.ui.trash.show();
+        }
     });
 
     var AlertCollectionView = Marionette.CollectionView.extend({
@@ -53,8 +61,12 @@ define(['Application', 'marionette'], function (Application, Marionette) {
         subscribe : function(notificationChannel, options){
             subscribedAlerts[notificationChannel] = options;
             Application.subscribe(notificationChannel, function(message){
-                console.log("Got Subscription");
-                alertsCollection.add(message.data);
+                var newAlerts = [];
+                _.each(message.data, function(notification){
+                    var isAlreadyPresentInCollection = alertsCollection.get(notification.id);
+                    if(_.isUndefined(isAlreadyPresentInCollection))newAlerts.push(notification);
+                });
+                if(newAlerts.length > 0)alertsCollection.add(newAlerts);
             });
         }
     }

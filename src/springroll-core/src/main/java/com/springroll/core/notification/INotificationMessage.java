@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
  * Created by anishjoseph on 05/10/16.
  */
 public interface INotificationMessage {
-    Long getNotificationId();
-    void setNotificationId(Long notificationId);
+    Long getId();
+    void setId(Long notificationId);
     long getCreationTime();
     void setCreationTime(long creationTime);
     String getNotificationReceivers();
