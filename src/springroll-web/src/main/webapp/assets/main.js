@@ -1,4 +1,12 @@
 require.config({
+    packages: [{
+        name: 'moment',
+        // This location is relative to baseUrl. Choose bower_components
+        // or node_modules, depending on how moment was installed.
+        location: 'vendor/moment',
+        main: 'moment'
+    }],
+
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
         "messenger" : { "deps" :['jquery','jquery.cometd'] }
@@ -14,6 +22,7 @@ require.config({
         "marionette": "vendor/marionette/backbone.marionette.min",
         "underscore": "vendor/marionette/underscore",
         "backbone": "vendor/marionette/backbone",
+        //"moment": "vendor/moment/moment-with-locales",
         "backbone.radio": "vendor/marionette/backbone.radio",
         "m1": "lib/modules/m1",
         "m2": "lib/modules/m2",

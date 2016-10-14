@@ -1,8 +1,9 @@
-define(['Application', 'marionette'], function (Application, Marionette) {
+define(['Application', 'marionette', 'moment'], function (Application, Marionette, moment) {
 
     Application.requiresTemplate('#alerts.view');
     Application.requiresTemplate('#alert.item.template');
 
+    var subscribedAlerts = {};
     var AlertItem = Backbone.Model.extend({});
     var AlertCollection = Backbone.Collection.extend({
         model: AlertItem,
@@ -12,16 +13,32 @@ define(['Application', 'marionette'], function (Application, Marionette) {
     var AlertsItemView = Marionette.View.extend({
         tagName: 'div',
         template: '#alert.item.template',
+        subscribedAlerts : subscribedAlerts,
 
         ui: {
-            trash:  '#trash',
+            dismiss:  '#dismiss',
             accept: '#accept',
             reject: '#reject',
             info:   '#info'
         },
 
         onRender : function(){
-            this.ui.trash.show();
+            var options = this.subscribedAlerts[this.model.get('channel')];
+            if (options.showDismiss) {
+                this.ui.dismiss.show();
+            }
+
+            if (options.showInfo) {
+                this.ui.info.show();
+            }
+
+            if (options.showAccept) {
+                this.ui.accept.show();
+            }
+
+            if (options.showReject) {
+                this.ui.reject.show();
+            }
         }
     });
 
@@ -30,7 +47,7 @@ define(['Application', 'marionette'], function (Application, Marionette) {
         collection: alertsCollection
     });
 
-    Application.AlertsView = Marionette.View.extend({
+    var AlertsView = Marionette.View.extend({
         tagName: 'div',
         template: '#alerts.view',
         events: {
@@ -52,23 +69,30 @@ define(['Application', 'marionette'], function (Application, Marionette) {
         onRender : function(){
             var alertCollectionView = new AlertCollectionView();
             this.showChildView('alertsContainer', new AlertCollectionView());
-            console.log("Rendered");
         }
     });
 
-    var subscribedAlerts = [];
     Application.Alerts = {
         subscribe : function(notificationChannel, options){
             subscribedAlerts[notificationChannel] = options;
             Application.subscribe(notificationChannel, function(message){
                 var newAlerts = [];
                 _.each(message.data, function(notification){
-                    var isAlreadyPresentInCollection = alertsCollection.get(notification.id);
-                    if(_.isUndefined(isAlreadyPresentInCollection))newAlerts.push(notification);
+
+                    if(_.isUndefined(alertsCollection.get(notification.id))){
+                        notification['creationTimeMoment'] = moment(notification.creationTime).format("DD MMM HH:mm");
+                        //notification['creationTimeMoment'] = '10:10:10';
+                        newAlerts.push(notification);
+                    }
                 });
                 if(newAlerts.length > 0)alertsCollection.add(newAlerts);
             });
+        },
+
+        getAlertView : function (){
+            return AlertsView;
         }
+
     }
 });
 

@@ -9,6 +9,7 @@ public class AbstractNotificationMessage implements INotificationMessage {
     private long creationTime;
     private Long id;
     private String notificationReceivers;
+    private String channel;
 
     public String getNotificationReceivers() {
         return notificationReceivers;
@@ -18,19 +19,27 @@ public class AbstractNotificationMessage implements INotificationMessage {
         this.notificationReceivers = notificationReceivers;
     }
 
-    public long getCreationTime() {
+    @Override public long getCreationTime() {
         return creationTime;
     }
 
-    public void setCreationTime(long creationTime) {
+    @Override public void setCreationTime(long creationTime) {
         this.creationTime = creationTime;
     }
 
-    public Long getId() {
+    @Override public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    @Override public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    @Override public void setChannel(String channel) {
+        this.channel = channel;
     }
 }

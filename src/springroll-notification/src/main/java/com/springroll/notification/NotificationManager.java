@@ -62,6 +62,7 @@ public class NotificationManager implements INotificationManager {
 
         notificationMessage.setCreationTime(System.currentTimeMillis());
         notificationMessage.setId(notification.getID());
+        notificationMessage.setChannel(notificationChannel.getChannelName());
         /* This MUST be last as we are setting stuff in the notification message before this */
         notification.setNotificationMessage(notificationMessage);
         return notification.getID();
