@@ -108,8 +108,6 @@ public class ReviewManager extends SpringrollEndPoint {
         for (Long reviewStepId : reviewActionDTO.getReviewStepId()) {
             actOnOneStep(reviewStepId, reviewActionDTO.isApproved());
         }
-
-
     }
 
     public void actOnOneStep(Long reviewStepId, boolean isApproved){

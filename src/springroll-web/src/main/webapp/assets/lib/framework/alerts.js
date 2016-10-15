@@ -210,6 +210,14 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
             return alertsPanel;
         }
     }
+    Application.subscribe('/core/notificationCancel', function(message){
+        var alertCollection;
+        if(message.data[0].channelType == 'ACTION') alertCollection = actionCollection;
+        if(message.data[0].channelType == 'ERROR') alertCollection = errorCollection;
+        if(message.data[0].channelType == 'INFO') alertCollection = infoCollection;
+        alertCollection.remove(message.data[0].id);
+
+    });
 });
 
 

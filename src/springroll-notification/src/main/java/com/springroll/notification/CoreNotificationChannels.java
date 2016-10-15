@@ -10,7 +10,8 @@ import com.springroll.core.notification.NotificationChannelType;
 public enum CoreNotificationChannels implements INotificationChannel {
     REVIEW("/core/review", ReviewNotificationMessageFactory.class, true, false, NotificationChannelType.ACTION),
     FYI("/core/fyi", FyiNotificationMessageFactory.class, true, true, NotificationChannelType.INFO),
-    REVIEW_FYI("/core/reviewfyi", FyiReviewNotificationMessageFactory.class, true, true, NotificationChannelType.INFO);
+    REVIEW_FYI("/core/reviewfyi", FyiReviewNotificationMessageFactory.class, true, true, NotificationChannelType.INFO),
+    NOTIFICATION_CANCEL("/core/notificationCancel", null, true, true, NotificationChannelType.INFO);
 
     private String serviceUri;
     private INotificationMessageFactory messageFactory = null;

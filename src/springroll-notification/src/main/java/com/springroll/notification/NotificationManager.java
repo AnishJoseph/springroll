@@ -98,7 +98,13 @@ public class NotificationManager implements INotificationManager {
 
     @Override
     public void deleteNotification(Long notificationId) {
+        Notification notification = repositories.notification.findOne(notificationId);
+        NotificationCancellationMessage msg = new NotificationCancellationMessage(notification.getNotificationMessage().getChannelType(), notificationId);
+        List<INotificationMessage> msgs = new ArrayList<>();
+        msgs.add(msg);
+        pushNotification(new PushData(notification.getUsers(), msgs, CoreNotificationChannels.NOTIFICATION_CANCEL.getServiceUri()));
         repositories.notification.delete(notificationId);
+        //FIXME - should this go via sendnotification so that it happens after commit
     }
 
     @Override
@@ -140,7 +146,8 @@ public class NotificationManager implements INotificationManager {
         INotificationChannel[] enumConstants = (INotificationChannel[])notificationChannelClass.getEnumConstants();
         for (INotificationChannel enumConstant : enumConstants) {
             //FIXME - what if we cant find the bean
-            enumConstant.setMessageFactory(applicationContext.getBean(enumConstant.getMessageFactoryClass()));
+            if(enumConstant.getMessageFactoryClass() != null)
+                enumConstant.setMessageFactory(applicationContext.getBean(enumConstant.getMessageFactoryClass()));
         }
     }
 
