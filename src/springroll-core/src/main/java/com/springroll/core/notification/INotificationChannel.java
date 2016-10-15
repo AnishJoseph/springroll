@@ -35,4 +35,6 @@ public interface INotificationChannel {
     boolean isAutoClean();
 
     void setAutoClean(boolean autoClean);
+
+    NotificationChannelType getChannelType();
 }

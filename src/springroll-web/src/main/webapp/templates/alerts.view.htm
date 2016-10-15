@@ -1,11 +1,20 @@
 <div style='position: absolute;top: 150px; left: 100%;'>
-    <div style="margin-left: -335px; width: 330px;height: 600px;">
-        <div id="alerts-container" style="background-color: white;border-top-left-radius: 5px; border-bottom-left-radius: 5px; width: 300px;height: 600px; border: solid thin; boborder-color: #2aabd2; float: right"/>
-        <div id="alerts-handle"    style="margin-top: 30px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;width: 30px; height: 100px; background-color: #5e5e5e; float: right">
-            <div style="border-top-left-radius: 5px;padding-bottom: 20px;"></div>
-            <div style="margin: 3px; margin-right: 3px;background-color: #d58512; padding: 3px;font-size: 10px">A(0)</div>
-            <div style="margin: 3px; margin-right: 3px;background-color: #f5e79e; padding: 3px;font-size: 10px">W(0)</div>
-            <div style="margin: 3px; margin-right: 3px;background-color: #4cae4c; padding: 3px;font-size: 10px">I(10)</div>
+    <div style="margin-left: -345px; width: 340px;height: 600px;">
+        <div id="alerts-container" style="background-color: white;border-top-left-radius: 5px; border-bottom-left-radius: 5px; width: 300px;height: 600px; border: solid thin; border-color: #2aabd2; float: right"/>
+        <div style="margin-top: 30px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;width: 40px; height: 100px; background-color: #f7f7f7; float: right;border: solid thin; border-color: #2aabd2;">
+            <span id="alerts-handle" style="padding-top:5px;padding-left:12px;padding-bottom: 10px;font-size: 13px;" class="glyphicon glyphicon-resize-small" aria-hidden="true;"></span>
+            <div id="actionHandle">
+                <span style="margin: 3px;margin-bottom:6px;font-size: 10px; float: left" class="glyphicon glyphicon-ok-sign" aria-hidden="true;"></span>
+                <div  id="action" style="margin: 3px;margin-bottom:6px;font-size: 11px; float: left">(0)</div>
+            </div>
+            <div id="errorHandle">
+                <span style="margin: 3px;margin-bottom:6px;font-size: 10px; float: left" class="glyphicon glyphicon-warning-sign" aria-hidden="true;"></span>
+                <div id="error" style="margin: 3px;margin-bottom:6px;font-size: 11px; float: left">(0)</div>
+            </div>
+            <div id="infoHandle">
+                <span style="margin: 3px;font-size: 10px; float: left" class="glyphicon glyphicon-info-sign" aria-hidden="true;"></span>
+                <div id="info" style="margin: 3px;font-size: 11px; float: left">(0)</div>
+            </div>
         </div>
     </div>
 </div>

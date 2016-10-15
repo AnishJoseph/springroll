@@ -12,5 +12,7 @@ public interface INotificationMessage {
     void setCreationTime(long creationTime);
     String getNotificationReceivers();
     void setChannel(String channel);
+    NotificationChannelType getChannelType();
+    void setChannelType(NotificationChannelType channelType);
 
 }

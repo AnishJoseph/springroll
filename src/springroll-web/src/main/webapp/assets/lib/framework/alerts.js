@@ -5,10 +5,42 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
 
     var subscribedAlerts = {};
     var AlertItem = Backbone.Model.extend({urlRoot:'/api/sr/notification'});
-    var AlertCollection = Backbone.Collection.extend({
+    var ActionCollection = Backbone.Collection.extend({
         model: AlertItem,
+        initialize: function (options) {
+            this.bind("add", function (item) {
+                Application.Alerts.getAlertPanelView().triggerMethod("action:count:changed", this.length);
+            });
+            this.bind("remove", function (item) {
+                Application.Alerts.getAlertPanelView().triggerMethod("action:count:changed", this.length);
+            });
+        }
     });
-    var alertsCollection = new AlertCollection();
+    var ErrorCollection = Backbone.Collection.extend({
+        model: AlertItem,
+        initialize: function (options) {
+            this.bind("add", function (item) {
+                Application.Alerts.getAlertPanelView().triggerMethod("error:count:changed", this.length);
+            });
+            this.bind("remove", function (item) {
+                Application.Alerts.getAlertPanelView().triggerMethod("error:count:changed", this.length);
+            });
+        }
+    });
+    var InfoCollection = Backbone.Collection.extend({
+        model: AlertItem,
+        initialize: function (options) {
+            this.bind("add", function (item) {
+                Application.Alerts.getAlertPanelView().triggerMethod("info:count:changed", this.length);
+            });
+            this.bind("remove", function (item) {
+                Application.Alerts.getAlertPanelView().triggerMethod("info:count:changed", this.length);
+            });
+        }
+    });
+    var actionCollection = new ActionCollection();
+    var errorCollection = new ErrorCollection();
+    var infoCollection = new InfoCollection();
 
     var AlertsItemView = Marionette.View.extend({
         tagName: 'div',
@@ -86,20 +118,49 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
         }
     });
 
-    var AlertCollectionView = Marionette.CollectionView.extend({
+    var ActionCollectionView = Marionette.CollectionView.extend({
         childView: AlertsItemView,
-        collection: alertsCollection
+        collection: actionCollection
     });
+
+    var ErrorCollectionView = Marionette.CollectionView.extend({
+        childView: AlertsItemView,
+        collection: errorCollection
+    });
+
+    var InfoCollectionView = Marionette.CollectionView.extend({
+        childView: AlertsItemView,
+        collection: infoCollection
+    });
+
 
     var AlertsPanel = Marionette.View.extend({
         tagName: 'div',
         template: '#alerts.view',
         events: {
             "click #alerts-handle": "toggleAlertContainer",
+            "click #actionHandle": "showAction",
+            "click #errorHandle": "showError",
+            "click #infoHandle": "showInfo",
         },
 
+        showAction : function(){
+            this.showChildView('alertsContainer', new ActionCollectionView());
+            this.ui.alertsContainer.show();
+        },
+        showError : function(){
+            this.showChildView('alertsContainer', new ErrorCollectionView());
+            this.ui.alertsContainer.show();
+        },
+        showInfo : function(){
+            this.showChildView('alertsContainer', new InfoCollectionView());
+            this.ui.alertsContainer.show();
+        },
         ui: {
-            alertsContainer: "#alerts-container"
+            alertsContainer: "#alerts-container",
+            actionCount: "#action",
+            errorCount : "#error",
+            infoCount  : "#info"
         },
 
         regions: {
@@ -111,29 +172,42 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
             this.ui.alertsContainer.toggle();
         },
         onRender : function(){
-            var alertCollectionView = new AlertCollectionView();
-            this.showChildView('alertsContainer', new AlertCollectionView());
+            this.showChildView('alertsContainer', new ActionCollectionView());
+        },
+        onActionCountChanged : function(count){
+            this.ui.actionCount.html('(' + count + ')');
+        },
+        onErrorCountChanged : function(count){
+            this.ui.errorCount.html('(' + count + ')');
+        },
+        onInfoCountChanged : function(count){
+            this.ui.infoCount.html('(' + count + ')');
         }
     });
+    var alertsPanel = new AlertsPanel();
 
     Application.Alerts = {
         subscribe : function(notificationChannel, options){
             subscribedAlerts[notificationChannel] = options;
             Application.subscribe(notificationChannel, function(message){
                 var newAlerts = [];
+                var alertCollection;
+                if(message.data[0].channelType == 'ACTION') alertCollection = actionCollection;
+                if(message.data[0].channelType == 'ERROR') alertCollection = errorCollection;
+                if(message.data[0].channelType == 'INFO') alertCollection = infoCollection;
                 _.each(message.data, function(notification){
 
-                    if(_.isUndefined(alertsCollection.get(notification.id))){
+                    if(_.isUndefined(alertCollection.get(notification.id))){
                         notification['creationTimeMoment'] = moment(notification.creationTime).format("DD MMM HH:mm");
                         newAlerts.push(notification);
                     }
                 });
-                if(newAlerts.length > 0)alertsCollection.add(newAlerts);
+                if(newAlerts.length > 0)alertCollection.add(newAlerts);
             });
         },
 
-        getAlertView : function (){
-            return AlertsPanel;
+        getAlertPanelView : function (){
+            return alertsPanel;
         }
     }
 });
