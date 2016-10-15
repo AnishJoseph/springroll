@@ -3,49 +3,27 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
     Application.requiresTemplate('#alerts.view');
     Application.requiresTemplate('#alert.item.template');
     var compare = function(model){
-        return -(model.get('creationTime'));
+        return -(model.get('creationTime'));//Latest alerts show on top
     }
 
     var subscribedAlerts = {};
+
     var AlertItem = Backbone.Model.extend({urlRoot:'/api/sr/notification'});
-    var ActionCollection = Backbone.Collection.extend({
-        model: AlertItem,
-        comparator: compare,
-        initialize: function (options) {
+
+    var AlertCollection = Backbone.Collection.extend({
+        initialize: function (models, options) {
             this.bind("add", function (item) {
-                Application.Alerts.getAlertPanelView().triggerMethod("action:count:changed", this.length);
+                Application.Alerts.getAlertPanelView().triggerMethod(options.channel + ":count:changed", this.length);
             });
             this.bind("remove", function (item) {
-                Application.Alerts.getAlertPanelView().triggerMethod("action:count:changed", this.length);
+                Application.Alerts.getAlertPanelView().triggerMethod(options.channel + ":count:changed", this.length);
             });
         },
+    });
 
-    });
-    var ErrorCollection = Backbone.Collection.extend({
-        model: AlertItem,
-        initialize: function (options) {
-            this.bind("add", function (item) {
-                Application.Alerts.getAlertPanelView().triggerMethod("error:count:changed", this.length);
-            });
-            this.bind("remove", function (item) {
-                Application.Alerts.getAlertPanelView().triggerMethod("error:count:changed", this.length);
-            });
-        }
-    });
-    var InfoCollection = Backbone.Collection.extend({
-        model: AlertItem,
-        initialize: function (options) {
-            this.bind("add", function (item) {
-                Application.Alerts.getAlertPanelView().triggerMethod("info:count:changed", this.length);
-            });
-            this.bind("remove", function (item) {
-                Application.Alerts.getAlertPanelView().triggerMethod("info:count:changed", this.length);
-            });
-        }
-    });
-    var actionCollection = new ActionCollection();
-    var errorCollection = new ErrorCollection();
-    var infoCollection = new InfoCollection();
+    var actionCollection = new AlertCollection(null, {model: AlertItem, comparator: compare, channel:'action'});
+    var errorCollection = new AlertCollection(null, {model: AlertItem, comparator: compare, channel:'error'});
+    var infoCollection = new AlertCollection(null, {model: AlertItem, comparator: compare, channel:'info'});
 
     var AlertsItemView = Marionette.View.extend({
         tagName: 'div',
@@ -163,6 +141,7 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
         },
         toggleAlertContainer : function(evt, show){
             if(show == undefined) {
+                //Called when the toggle is clicked (i.e not called when a specific collection is requested
                 if ($(this.ui.alertsContainer).is(':visible')) {
                     $(this.ui.alertsHandle).removeClass('glyphicon-eye-close');
                     $(this.ui.alertsHandle).addClass('glyphicon-eye-open');
@@ -206,6 +185,7 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
     });
     var alertsPanel = new AlertsPanel();
 
+    /* This is the functionality that we export */
     Application.Alerts = {
         subscribe : function(notificationChannel, options){
             subscribedAlerts[notificationChannel] = options;
