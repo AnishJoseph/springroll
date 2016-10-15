@@ -2,11 +2,15 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
 
     Application.requiresTemplate('#alerts.view');
     Application.requiresTemplate('#alert.item.template');
+    var compare = function(model){
+        return -(model.get('creationTime'));
+    }
 
     var subscribedAlerts = {};
     var AlertItem = Backbone.Model.extend({urlRoot:'/api/sr/notification'});
     var ActionCollection = Backbone.Collection.extend({
         model: AlertItem,
+        comparator: compare,
         initialize: function (options) {
             this.bind("add", function (item) {
                 Application.Alerts.getAlertPanelView().triggerMethod("action:count:changed", this.length);
@@ -14,7 +18,8 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
             this.bind("remove", function (item) {
                 Application.Alerts.getAlertPanelView().triggerMethod("action:count:changed", this.length);
             });
-        }
+        },
+
     });
     var ErrorCollection = Backbone.Collection.extend({
         model: AlertItem,
