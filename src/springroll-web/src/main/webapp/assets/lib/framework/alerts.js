@@ -144,20 +144,39 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
             "click #infoHandle": "showInfo",
         },
 
-        showAction : function(){
+        showAction : function(evt){
             this.showChildView('alertsContainer', new ActionCollectionView());
-            this.ui.alertsContainer.show();
+            this.toggleAlertContainer(evt, true);
         },
-        showError : function(){
+        showError : function(evt){
             this.showChildView('alertsContainer', new ErrorCollectionView());
-            this.ui.alertsContainer.show();
+            this.toggleAlertContainer(evt, true);
         },
-        showInfo : function(){
+        showInfo : function(evt){
             this.showChildView('alertsContainer', new InfoCollectionView());
-            this.ui.alertsContainer.show();
+            this.toggleAlertContainer(evt, true);
         },
+        toggleAlertContainer : function(evt, show){
+            if(show == undefined) {
+                if ($(this.ui.alertsContainer).is(':visible')) {
+                    $(this.ui.alertsHandle).removeClass('glyphicon-eye-close');
+                    $(this.ui.alertsHandle).addClass('glyphicon-eye-open');
+                } else {
+                    $(this.ui.alertsHandle).removeClass('glyphicon-eye-open');
+                    $(this.ui.alertsHandle).addClass('glyphicon-eye-close');
+                }
+                this.ui.alertsContainer.toggle();
+                return;
+            }
+            if ($(this.ui.alertsContainer).is(':visible')) return;
+            $(this.ui.alertsHandle).removeClass('glyphicon-eye-open');
+            $(this.ui.alertsHandle).addClass('glyphicon-eye-close');
+            this.ui.alertsContainer.toggle();
+        },
+
         ui: {
             alertsContainer: "#alerts-container",
+            alertsHandle: "#alerts-handle",
             actionCount: "#action",
             errorCount : "#error",
             infoCount  : "#info"
@@ -167,21 +186,17 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
             alertsContainer: '#alerts-container',
         },
 
-        toggleAlertContainer : function(){
-            console.log("toggleAlertContainer");
-            this.ui.alertsContainer.toggle();
-        },
         onRender : function(){
             this.showChildView('alertsContainer', new ActionCollectionView());
         },
         onActionCountChanged : function(count){
-            this.ui.actionCount.html('(' + count + ')');
+            this.ui.actionCount.html(count);
         },
         onErrorCountChanged : function(count){
-            this.ui.errorCount.html('(' + count + ')');
+            this.ui.errorCount.html(count);
         },
         onInfoCountChanged : function(count){
-            this.ui.infoCount.html('(' + count + ')');
+            this.ui.infoCount.html(count);
         }
     });
     var alertsPanel = new AlertsPanel();

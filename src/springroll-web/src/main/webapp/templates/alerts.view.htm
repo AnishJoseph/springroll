@@ -1,20 +1,28 @@
 <div style='position: absolute;top: 150px; left: 100%;'>
     <div style="margin-left: -345px; width: 340px;height: 600px;">
-        <div id="alerts-container" style="overflow: auto;background-color: white;border-top-left-radius: 5px; border-bottom-left-radius: 5px; width: 300px;height: 600px; border: solid thin; border-color: #2aabd2; float: right"/>
+        <div id="alerts-container" style="display: none; overflow: auto;background-color: white;border-top-left-radius: 5px; border-bottom-left-radius: 5px; width: 300px;height: 600px; border: solid thin; border-color: #2aabd2; float: right"/>
         <div style="margin-top: 30px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;width: 40px; height: 100px; background-color: #f7f7f7; float: right;border: solid thin; border-color: #2aabd2;">
-            <span id="alerts-handle" style="padding-top:5px;padding-left:12px;padding-bottom: 10px;font-size: 13px;" class="glyphicon glyphicon-eye-open" aria-hidden="true;"></span>
-            <div id="actionHandle">
-                <span style="margin: 3px;margin-bottom:6px;font-size: 10px; float: left" class="glyphicon glyphicon-ok-sign" aria-hidden="true;"></span>
-                <div  id="action" style="margin: 3px;margin-bottom:6px;font-size: 11px; float: left">(0)</div>
+            <div align="center">
+                <span id="alerts-handle" style="padding:5px;font-size: 13px;" class="glyphicon glyphicon-eye-open" aria-hidden="true;"></span>
             </div>
-            <div id="errorHandle">
-                <span style="margin: 3px;margin-bottom:6px;font-size: 10px; float: left" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true;"></span>
-                <div id="error" style="margin: 3px;margin-bottom:6px;font-size: 11px; float: left">(0)</div>
+            <div style="border-bottom: 1px solid #ccc;"/>
+
+            <div id="actionHandle" style="padding-top:5px; clear:both;">
+                <span style="padding:3px;font-size: 11px; float: left" class="glyphicon glyphicon-ok-sign" aria-hidden="true;"></span>
+                <span  id="action" style="padding:3px;font-size: 11px; float: left">0</span>
             </div>
-            <div id="infoHandle">
-                <span style="margin: 3px;font-size: 10px; float: left" class="glyphicon glyphicon-info-sign" aria-hidden="true;"></span>
-                <div id="info" style="margin: 3px;font-size: 11px; float: left">(0)</div>
+
+            <div id="errorHandle" style="clear:both;">
+                <span style="padding:3px;font-size: 11px; float: left" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true;"></span>
+                <span id="error" style="padding:3px;font-size: 11px; float: left">0</span>
             </div>
+
+            <div id="infoHandle" style="clear:both;">
+                <span style="padding:3px;font-size: 11px; float: left" class="glyphicon glyphicon-info-sign" aria-hidden="true;"></span>
+                <span id="info" style="padding:3px;font-size: 11px; float: left">0</span>
+            </div>
+
+
         </div>
     </div>
 </div>
