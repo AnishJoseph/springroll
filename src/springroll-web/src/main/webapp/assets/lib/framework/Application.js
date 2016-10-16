@@ -81,5 +81,23 @@ define(['marionette', 'backbone'], function (Marionette, Backbone) {
         });
         return deferred.promise();
     }
+    Application.loadUser = function() {
+        var deferred = $.Deferred();
+        $.ajax({
+            url: '/api/sr/user',
+            type: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (user) {
+                Application.user = user;
+                deferred.resolve();
+            },
+            error : function (jqXHR, textStatus, errorThrown ){
+                console.error("Unable to load User - textStatus is " + textStatus + ' :: errorThrown is ' + errorThrown);
+                deferred.resolve();
+            }
+        });
+        return deferred.promise();
+    }
     return Application;
 });

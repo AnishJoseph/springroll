@@ -6,9 +6,10 @@ define(['Application', 'marionette'], function (Application, Marionette) {
             var template = [];
 
             template.push('<nav class="navbar navbar-default">');
-            template.push('<div class="navbar-header"> ');
+            template.push('<div class="container-fluid">');
+            template.push('<div id="navbar" class="navbar-collapse collapse"> ');
 
-            template.push('<ul class="nav nav-pills">');
+            template.push('<ul class="nav navbar-nav nav-pills">');
             /* Sort the menuItems by index before adding the menu item */
             _.each(_.sortBy(Application.getMenuItems(), 'index'), function(item){
                 if($.isArray(item.items)){
@@ -27,7 +28,12 @@ define(['Application', 'marionette'], function (Application, Marionette) {
                 }
             });
             template.push('</ul>');
-            template.push('</div></nav>');
+            //template.push('<div class="navbar-text navbar-right ">');
+            template.push('<p class="navbar-text navbar-right glyphicon glyphicon-eject" aria-hidden="true" id="logout"/>');
+            //template.push('<p class="navbar-text navbar-right " id="logout">Logout</p>');
+            template.push('<p class="navbar-text navbar-right ">' + Application.user.displayName + '</p>');
+            //template.push('</div>');
+            template.push('</div></div></nav>');
             var  menuTemplate = template.join("");
             return menuTemplate;
 
@@ -48,6 +54,9 @@ define(['Application', 'marionette'], function (Application, Marionette) {
                     events[id] = function () {
                         menuItem.controller.activate();
                     }
+                }
+                events['click #logout'] = function(){
+                    window.location.href = 'logout';
                 }
             });
             return events;

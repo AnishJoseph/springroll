@@ -6,6 +6,7 @@ import com.springroll.router.review.ReviewActionDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,4 +42,10 @@ public class SpringrollAPI extends AbstractAPI {
     public Map<String,String> getTemplates(@RequestBody String[] templates) {
         return templateManager.getTemplates(Arrays.asList(templates));
     }
+    @RequestMapping(value = "/sr/user", method = RequestMethod.GET)
+    public Object getUser() {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+
 }

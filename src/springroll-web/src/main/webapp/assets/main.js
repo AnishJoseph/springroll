@@ -41,6 +41,7 @@ require(['Application', 'menu', 'transactionTests', 'm2', 'm3s1', 'm3s2', 'messe
 
     var promises = [];
     promises.push(Application.loadTemplates());
+    promises.push(Application.loadUser());
     $.when.apply($, promises).always(function () {
         Application.CometD.init();
         Application.start();

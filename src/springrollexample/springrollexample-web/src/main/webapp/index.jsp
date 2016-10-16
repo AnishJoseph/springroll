@@ -12,6 +12,6 @@
 </head>
 <body>
 
-        <div id="root-element" style="margin-left: 20px"/>
+        <div id="root-element"/>
 </body>
 </html>
