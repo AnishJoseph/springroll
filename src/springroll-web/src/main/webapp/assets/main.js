@@ -9,14 +9,12 @@ require.config({
 
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
-        //"messenger" : { "deps" :['jquery','jquery.cometd'] },
         // Put all the vendor javascript files here
-        "Application" : {"deps": ['bootstrap', 'jquery', 'jquery.cometd', 'marionette', 'underscore', 'backbone', 'backbone.radio']}
+        "Application" : {"deps": ['bootstrap', 'jquery', 'jquery.cometd', 'marionette', 'underscore', 'backbone', 'backbone.radio', 'moment']}
     },
     paths: {
         "jquery": "vendor/jquery/jquery-3.1.1.min",
         "jquery.cometd": "vendor/cometd/jquery.cometd",
-        "messenger": "lib/framework/messenger.cometd",
         "marionette": "vendor/marionette/backbone.marionette.min",
         "underscore": "vendor/marionette/underscore",
         "backbone": "vendor/marionette/backbone",
@@ -26,30 +24,47 @@ require.config({
 
         "Application": "lib/framework/Application",
         "alerts": "lib/framework/alerts",
-        "fyi.alerts": "lib/framework/fyi.alerts",
-        "review.alerts": "lib/framework/review.alerts",
 
-        "transactionTests": "lib/modules/transactionTests",
-        "m2": "lib/modules/m2",
-        "m3s1": "lib/modules/m3s1",
-        "m3s2": "lib/modules/m3s2",
-        "menu": "lib/framework/menu",
-        "indicator": "lib/framework/indicator",
-        "root.view": "lib/framework/root.view",
     }
 });
-require(['Application', 'menu', 'transactionTests', 'm2', 'm3s1', 'm3s2', 'messenger', 'root.view', 'fyi.alerts', 'review.alerts', 'indicator'],function(Application){
+require(['Application'],function(Application){
 
-    $.ajaxSetup({ cache: false });
+    var frameworkModules = [
+        'lib/framework/menu',
+        'lib/framework/fyi.alerts',
+        'lib/framework/review.alerts',
+        'lib/framework/indicator',
+        'lib/framework/root.view',
+        'lib/framework/messenger.cometd',
+        //'lib/framework/alerts',
+    ];
 
+    var solutionModules = [
+        'lib/modules/transactionTests',
+        'lib/modules/m2',
+        'lib/modules/m3s1',
+        'lib/modules/m3s2',
+    ];
+    /*
+       Step 1 - Load all the framework modules
+       Step 2 - Load the solution modules
+       Step 3 - Load data from the server - templates, user, i18n bundles, masters etc
+       Step 4 - Start up cometd and and then start the application
+    */
+    require(frameworkModules, function() {
+        require(solutionModules, function() {
 
-    var promises = [];
-    promises.push(Application.loadTemplates());
-    promises.push(Application.loadUser());
-    promises.push(Application.loadLocaleMessages());
-    $.when.apply($, promises).always(function () {
-        Application.CometD.init();
-        Application.start();
+            $.ajaxSetup({ cache: false });
+
+            var promises = [];
+            promises.push(Application.loadTemplates());
+            promises.push(Application.loadUser());
+            promises.push(Application.loadLocaleMessages());
+
+            $.when.apply($, promises).always(function () {
+                Application.CometD.init();
+                Application.start();
+            });
+        });
     });
-
 });
