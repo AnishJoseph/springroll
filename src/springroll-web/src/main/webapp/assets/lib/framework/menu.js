@@ -29,7 +29,7 @@ define(['Application', 'marionette'], function (Application, Marionette) {
             });
             template.push('</ul>');
             //template.push('<div class="navbar-text navbar-right ">');
-            template.push('<p class="navbar-text navbar-right glyphicon glyphicon-eject" aria-hidden="true" id="logout"/>');
+            template.push('<p data-toggle="tooltip" title="' + Localize('logout') + '" class="navbar-text navbar-right glyphicon glyphicon-eject" aria-hidden="true" id="logout"/>');
             //template.push('<p class="navbar-text navbar-right " id="logout">Logout</p>');
             template.push('<p class="navbar-text navbar-right ">' + Application.user.displayName + '</p>');
             //template.push('</div>');
