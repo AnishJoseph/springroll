@@ -86,6 +86,17 @@
             <column name="VERSION" type="bigint"/>
             <column name="PAYLOAD" type="varchar(3000)"/>
         </createTable>
+        <createTable tableName="USER_DELEGATION">
+            <column name="ID" type="bigint" autoIncrement="false">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="PARENT_ID" type="bigint"/>
+            <column name="USER_ID" type="varchar(128)"/>
+            <column name="DELEGATE" type="varchar(128)"/>
+            <column name="START_DATE" type="TIMESTAMP"/>
+            <column name="END_DATE" type="TIMESTAMP"/>
+            <column name="IS_ACTIVE" type="bit" />
+        </createTable>
 
     </changeSet>
     <include relativeToChangelogFile="false" file="springroll-application-liquibase.xml"/>

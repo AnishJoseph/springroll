@@ -18,6 +18,7 @@
         <sec:intercept-url pattern="/api/public/**" access="permitAll"  />
         <sec:intercept-url pattern="/api/**" access="isAuthenticated()" />
         <sec:intercept-url pattern="/**" access="isAuthenticated()" />
+        <sec:custom-filter ref="switchUserFilter" position="SWITCH_USER_FILTER"/>
         <!--<sec:request-cache ref="requestCache"/>-->
         <sec:form-login/>
         <!--<sec:form-login login-page="/login.jsp" default-target-url="${application.server.home}" always-use-default-target="true"/>-->
@@ -31,6 +32,11 @@
     <bean id="userDetailsService" class="com.springroll.api.facade.security.SpringrollUserDetailsService">
         <property name="mappedUserName" value="${ldap.mapped.username}"/>
         <property name="mappedDisplayName" value="${ldap.mapped.displayname}"/>
+    </bean>
+    <bean id="switchUserFilter" class="com.springroll.api.facade.security.SwitchUserFilter">
+        <property name="userDetailsService" ref="userDetailsService"/>
+        <!--<property name="targetUrl" value="/"/>-->
+        <property name="successHandler" ref="userDetailsService"/>
     </bean>
 
     <sec:authentication-manager erase-credentials="true">

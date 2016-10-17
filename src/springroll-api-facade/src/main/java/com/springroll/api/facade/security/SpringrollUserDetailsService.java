@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,8 +15,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority;
 
 import javax.naming.NamingException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +31,7 @@ import java.util.stream.Collectors;
 /**
  * Created by anishjoseph on 17/09/16.
  */
-public class SpringrollUserDetailsService implements UserDetailsService, UserDetailsContextMapper, LdapAuthoritiesPopulator {
+public class SpringrollUserDetailsService implements UserDetailsService, UserDetailsContextMapper, LdapAuthoritiesPopulator, AuthenticationSuccessHandler {
     private static final Logger logger = LoggerFactory.getLogger(SpringrollUserDetailsService.class);
     @Autowired
     Repositories repo;
@@ -44,12 +51,16 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
     //Expects username in CAPS
     private SpringrollUser loadUser(String username, Collection<? extends GrantedAuthority> authorities) throws UsernameNotFoundException {
         SpringrollUser user = new SpringrollUser(username, "dummyPassword", authorities);
+        user.getDelegators().add("BOM1");
+        user.getDelegators().add("BOM2");
         return user;
 
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return loadUser(username.toUpperCase(), getGrantedAuthorities(null, username.toUpperCase()));
+        SpringrollUser springrollUser = loadUser(username.toUpperCase(), getGrantedAuthorities(null, username.toUpperCase()));
+        springrollUser.setDisplayName(username);
+        return springrollUser;
     }
 
     @Override   //From interface UserDetailsContextMapper
@@ -92,5 +103,27 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
         Collection<String> authoritiesForUserId = repo.users.getRolesForUserId(username);
         authorities.addAll(authoritiesForUserId.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
         return authorities;
+    }
+
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+
+        response.sendRedirect("/");
+        SpringrollUser user = (SpringrollUser)authentication.getPrincipal();
+        for (GrantedAuthority authority : authentication.getAuthorities()) {
+
+            String authorityAsString = authority.getAuthority();
+
+            if ("ROLE_PREVIOUS_ADMINISTRATOR".equals(authorityAsString)) {
+                user.setRunningAsDelegate(true);
+                SpringrollUser oldUser = (SpringrollUser) ((SwitchUserGrantedAuthority) authority).getSource().getPrincipal();
+                user.setDelegator(oldUser.getUsername());
+                List<String> switchToPossibilities = new ArrayList<>();
+                switchToPossibilities.addAll(oldUser.getDelegators());
+                switchToPossibilities.remove(user.getUsername());
+                switchToPossibilities.add(oldUser.getUsername());
+                user.setDelegators(switchToPossibilities);
+            }
+        }
     }
 }
