@@ -49,7 +49,7 @@ define(['Application'], function (Application) {
 
     //Disconnect when the page unloads
     $(window).bind('unload', function() {
-        CometD.disconnect(true);
+        CometD.reload();//FIXME - should this be disconnect(true)
     });
 
     CometD.configure({
