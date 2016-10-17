@@ -23,7 +23,7 @@ require.config({
         "bootstrap": "vendor/bootstrap/js/bootstrap.min",
 
         "Application": "lib/framework/Application",
-        "alerts": "lib/framework/alerts",
+        //"alerts": "lib/framework/alerts",
 
     }
 });
@@ -36,7 +36,7 @@ require(['Application'],function(Application){
         'lib/framework/indicator',
         'lib/framework/root.view',
         'lib/framework/messenger.cometd',
-        //'lib/framework/alerts',
+        'lib/framework/alerts',
     ];
 
     var solutionModules = [
@@ -62,6 +62,7 @@ require(['Application'],function(Application){
             promises.push(Application.loadLocaleMessages());
 
             $.when.apply($, promises).always(function () {
+                Application.Alerts.registerAlertSubscriptions();
                 Application.CometD.init();
                 Application.start();
             });

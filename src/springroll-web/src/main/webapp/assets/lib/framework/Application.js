@@ -118,6 +118,15 @@ define(['marionette', 'backbone'], function (Marionette, Backbone) {
         return deferred.promise();
     }
 
+    var subscribersForAlerts = [];
+    Application.subscribeForAlert = function (channel, options){
+        subscribersForAlerts.push({channel : channel, options : options});
+    }
+
+    Application.getSubscribersForAlerts = function (){
+        return subscribersForAlerts;
+    }
+
     var localeMessages = {};
 
     /* Call this with arguments to replace {n} parameters */

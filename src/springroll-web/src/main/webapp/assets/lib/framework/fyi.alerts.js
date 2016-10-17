@@ -1,11 +1,11 @@
-define(['Application', 'marionette', 'alerts'], function (Application, Marionette) {
+define(['Application', 'marionette'], function (Application, Marionette) {
 
     var AlertsView = Marionette.View.extend({
         tagName: 'div',
         template: _.template('<%-messageKey%>'),
     });
 
-    Application.Alerts.subscribe('/core/fyi', {
+    Application.subscribeForAlert('/core/fyi', {
         view: AlertsView,
         showDismiss: true,
         showInfo: false,

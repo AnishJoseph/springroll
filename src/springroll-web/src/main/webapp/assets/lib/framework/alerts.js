@@ -40,10 +40,8 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
             } else {
                 this.model.destroy({
                     success: function(model, response) {
-                        console.log("Notification ACKED");
                     }
                 });
-                console.log("dismissClicked clicked");
             }
         },
         acceptClicked : function(){
@@ -187,23 +185,29 @@ define(['Application', 'marionette', 'moment'], function (Application, Marionett
 
     /* This is the functionality that we export */
     Application.Alerts = {
-        subscribe : function(notificationChannel, options){
-            subscribedAlerts[notificationChannel] = options;
-            Application.subscribe(notificationChannel, function(message){
-                var newAlerts = [];
-                var alertCollection;
-                if(message.data[0].channelType == 'ACTION') alertCollection = actionCollection;
-                if(message.data[0].channelType == 'ERROR') alertCollection = errorCollection;
-                if(message.data[0].channelType == 'INFO') alertCollection = infoCollection;
-                _.each(message.data, function(notification){
+        registerAlertSubscriptions : function(){
+            _.each(Application.getSubscribersForAlerts(), function(subscription){
+                var notificationChannel = subscription.channel;
+                var options = subscription.options;
 
-                    if(_.isUndefined(alertCollection.get(notification.id))){
-                        notification['creationTimeMoment'] = moment(notification.creationTime).format("DD MMM HH:mm");
-                        newAlerts.push(notification);
-                    }
+                subscribedAlerts[notificationChannel] = options;
+                Application.subscribe(notificationChannel, function(message){
+                    var newAlerts = [];
+                    var alertCollection;
+                    if(message.data[0].channelType == 'ACTION') alertCollection = actionCollection;
+                    if(message.data[0].channelType == 'ERROR') alertCollection = errorCollection;
+                    if(message.data[0].channelType == 'INFO') alertCollection = infoCollection;
+                    _.each(message.data, function(notification){
+
+                        if(_.isUndefined(alertCollection.get(notification.id))){
+                            notification['creationTimeMoment'] = moment(notification.creationTime).format("DD MMM HH:mm");
+                            newAlerts.push(notification);
+                        }
+                    });
+                    if(newAlerts.length > 0)alertCollection.add(newAlerts);
                 });
-                if(newAlerts.length > 0)alertCollection.add(newAlerts);
             });
+
         },
 
         getAlertPanelView : function (){
