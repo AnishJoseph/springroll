@@ -30,11 +30,12 @@ require.config({
         "m3s1": "lib/modules/m3s1",
         "m3s2": "lib/modules/m3s2",
         "menu": "lib/framework/menu",
+        "indicator": "lib/framework/indicator",
         "root.view": "lib/framework/root.view",
         "bootstrap": "vendor/bootstrap/js/bootstrap.min",
     }
 });
-require(['Application', 'menu', 'transactionTests', 'm2', 'm3s1', 'm3s2', 'messenger', 'root.view', 'bootstrap', 'fyi.alerts', 'review.alerts'],function(Application){
+require(['Application', 'menu', 'transactionTests', 'm2', 'm3s1', 'm3s2', 'messenger', 'root.view', 'bootstrap', 'fyi.alerts', 'review.alerts', 'indicator'],function(Application){
 
     $.ajaxSetup({ cache: false });
 
@@ -42,6 +43,7 @@ require(['Application', 'menu', 'transactionTests', 'm2', 'm3s1', 'm3s2', 'messe
     var promises = [];
     promises.push(Application.loadTemplates());
     promises.push(Application.loadUser());
+    promises.push(Application.loadLocaleMessages());
     $.when.apply($, promises).always(function () {
         Application.CometD.init();
         Application.start();

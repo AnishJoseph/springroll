@@ -99,5 +99,36 @@ define(['marionette', 'backbone'], function (Marionette, Backbone) {
         });
         return deferred.promise();
     }
+    Application.loadLocaleMessages = function() {
+        var deferred = $.Deferred();
+        $.ajax({
+            url: '/api/sr/localeMessages',
+            type: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (messages) {
+                localeMessages = messages;
+                deferred.resolve();
+            },
+            error : function (jqXHR, textStatus, errorThrown ){
+                console.error("Unable to load Locale Messages - textStatus is " + textStatus + ' :: errorThrown is ' + errorThrown);
+                deferred.resolve();
+            }
+        });
+        return deferred.promise();
+    }
+
+    var localeMessages = {};
+
+    /* Call this with arguments to replace {n} parameters */
+    Application.getLocaleMessage = function(messageKey){
+        return (localeMessages[messageKey] || messageKey).replace(/\{(\d+)\}/g, (function(args){
+            return function (pattern, index){
+                return args[parseInt(index)+1] || pattern;
+            }
+        })(arguments));
+    };
+    window.Application = Application;
+    window.Localize = Application.getLocaleMessage;
     return Application;
 });
