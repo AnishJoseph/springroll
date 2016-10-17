@@ -23,6 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -33,8 +34,7 @@ import java.util.stream.Collectors;
  */
 public class SpringrollUserDetailsService implements UserDetailsService, UserDetailsContextMapper, LdapAuthoritiesPopulator, AuthenticationSuccessHandler {
     private static final Logger logger = LoggerFactory.getLogger(SpringrollUserDetailsService.class);
-    @Autowired
-    Repositories repo;
+    @Autowired Repositories repo;
 
     private String mappedUserName = null;
     private String mappedDisplayName = null;
@@ -51,8 +51,6 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
     //Expects username in CAPS
     private SpringrollUser loadUser(String username, Collection<? extends GrantedAuthority> authorities) throws UsernameNotFoundException {
         SpringrollUser user = new SpringrollUser(username, "dummyPassword", authorities);
-        user.getDelegators().add("BOM1");
-        user.getDelegators().add("BOM2");
         return user;
 
     }
@@ -68,6 +66,9 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
         username = getUsername(ctx, username);
 
         SpringrollUser user = loadUser(username.toUpperCase(), authorities);
+        LocalDateTime now = (LocalDateTime.now()).minusDays(1);
+        List<String> delegators = repo.delegation.findDelegators(user.getUsername(), now);
+        user.setDelegators(delegators);
         if(mappedDisplayName == null){
             user.setDisplayName(username);
             return user;

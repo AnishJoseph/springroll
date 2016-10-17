@@ -2,16 +2,19 @@ package com.springroll.orm.entities;
 
 import org.hibernate.annotations.Type;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
  * Created by anishjoseph on 17/10/16.
  */
+
+@NamedQueries({
+        @NamedQuery(name="UserDelegation.findDelegators", query = "SELECT o.userId FROM UserDelegation o WHERE o.delegate = ?1 and ?2 BETWEEN o.startDate AND o.endDate"),
+        @NamedQuery(name="UserDelegation.isValidDelegate", query = "SELECT o.userId FROM UserDelegation o WHERE o.delegate = ?1 and ?2 = o.userId and ?3 BETWEEN o.startDate AND o.endDate"),
+})
 @Configurable
 @Entity
 @Table(name = "USER_DELEGATION", uniqueConstraints = { @UniqueConstraint(name = "I_USER_DELEGATION", columnNames = {"USER_ID", "START_DATE" }) })
@@ -28,13 +31,14 @@ public class UserDelegation extends AbstractEntity {
     @NotNull
     private String delegate;
 
+    //FIXME - make this a date - conver to hiberate 5
     @Column(name = "START_DATE")
     @Type(type="com.springroll.orm.LocalDateTimeUserType")
-    private LocalDate offStartDate;
+    private LocalDate startDate;
 
     @Column(name = "END_DATE")
     @Type(type="com.springroll.orm.LocalDateTimeUserType")
-    private LocalDate offEndDate;
+    private LocalDate endDate;
 
     @Column(name = "IS_ACTIVE", length = 1)
     @NotNull
@@ -48,20 +52,36 @@ public class UserDelegation extends AbstractEntity {
         this.userId = userId;
     }
 
-    public LocalDate getOffStartDate() {
-        return offStartDate;
+    public String getDelegate() {
+        return delegate;
     }
 
-    public void setOffStartDate(LocalDate offStartDate) {
-        this.offStartDate = offStartDate;
+    public void setDelegate(String delegate) {
+        this.delegate = delegate;
     }
 
-    public LocalDate getOffEndDate() {
-        return offEndDate;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setOffEndDate(LocalDate offEndDate) {
-        this.offEndDate = offEndDate;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     public boolean getIsActive() {
