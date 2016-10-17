@@ -1,4 +1,4 @@
-define(['Application', 'marionette', 'backbone', 'alerts'], function (Application, Marionette){
+define(['Application', 'marionette', 'alerts'], function (Application, Marionette){
     var ReviewItem = Backbone.Model.extend({urlRoot:'/api/sr/reviewaction'});
 
     var AlertsView = Marionette.View.extend({

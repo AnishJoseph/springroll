@@ -1,4 +1,4 @@
-define(['Application', 'marionette', 'backbone', 'alerts'], function (Application, Marionette) {
+define(['Application', 'marionette', 'alerts'], function (Application, Marionette) {
 
     var AlertsView = Marionette.View.extend({
         tagName: 'div',
