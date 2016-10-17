@@ -14,17 +14,17 @@ define(['Application', 'marionette'], function (Application, Marionette) {
             _.each(_.sortBy(Application.getMenuItems(), 'index'), function(item){
                 if($.isArray(item.items)){
                     template.push('<li role="presentation" class="dropdown"> ');
-                    template.push('<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Item3<span class="caret"></span></a> ');
+                    template.push('<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">' + Localize(item.items[0].parent) + '<span class="caret"></span></a> ');
                     template.push('<ul class="dropdown-menu">');
                     _.each(_.sortBy(item.items, 'subIndex'), function(menuItem){
                         var id = 'menuId' + menuItem.name;
-                        template.push('<li role="presentation"><a id="' + id + '">' + menuItem.name +'</a></li>');
+                        template.push('<li role="presentation"><a id="' + id + '">' + Localize(menuItem.name) +'</a></li>');
                     });
                     template.push(' </ul> </li>');
                 } else {
                     var menuItem = item.items;
                     var id = 'menuId' + menuItem.name;
-                    template.push('<li role="presentation"><a id="' + id + '">' + menuItem.name +'</a></li>');
+                    template.push('<li role="presentation"><a id="' + id + '">' + Localize(menuItem.name) +'</a></li>');
                 }
             });
             template.push('</ul>');
