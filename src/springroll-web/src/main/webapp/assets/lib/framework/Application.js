@@ -1,4 +1,4 @@
-define(['marionette', 'backbone'], function (Marionette, Backbone) {
+define(['marionette'], function (Marionette) {
     var cachedTemplates;
     var SpringrollApplication = Marionette.Application.extend({
         region: '#root-element',

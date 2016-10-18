@@ -23,8 +23,6 @@ require.config({
         "bootstrap": "vendor/bootstrap/js/bootstrap.min",
 
         "Application": "lib/framework/Application",
-        //"alerts": "lib/framework/alerts",
-
     }
 });
 require(['Application'],function(Application){

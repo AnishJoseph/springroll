@@ -1,4 +1,4 @@
-define(['Application', 'marionette', 'backbone'], function (Application, Marionette, Backbone) {
+define(['Application', 'marionette'], function (Application, Marionette) {
 
     Application.requiresTemplate("#transactionTestsTemplate");
 

@@ -1,4 +1,4 @@
-define(['Application', 'marionette', 'backbone'], function (Application, Marionette, Backbone) {
+define(['Application', 'marionette'], function (Application, Marionette) {
 
     var View = Marionette.View.extend({
         tagName: 'div',
