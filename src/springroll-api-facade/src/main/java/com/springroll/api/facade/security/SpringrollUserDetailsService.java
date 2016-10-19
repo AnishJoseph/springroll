@@ -23,7 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -66,7 +66,7 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
         username = getUsername(ctx, username);
 
         SpringrollUser user = loadUser(username.toUpperCase(), authorities);
-        LocalDateTime now = (LocalDateTime.now()).minusDays(1);
+        LocalDate now = (LocalDate.now()).minusDays(1);
         List<String> delegators = repo.delegation.findDelegators(user.getUsername(), now);
         user.setDelegators(delegators);
         if(mappedDisplayName == null){

@@ -15,6 +15,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class SwitchUserFilter extends org.springframework.security.web.authentic
             SpringrollUser user = (SpringrollUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String realUser = user.isRunningAsDelegate()?user.getDelegator():user.getUsername();
             String userId = req.getParameter(org.springframework.security.web.authentication.switchuser.SwitchUserFilter.SPRING_SECURITY_SWITCH_USERNAME_KEY);
-            LocalDateTime now = (LocalDateTime.now()).minusDays(1);
+            LocalDate now = (LocalDate.now()).minusDays(1);
             if(userId != null){
                 List<String> officiatedByUser = repositories.delegation.isValidDelegate(realUser, userId, now);
                 if(officiatedByUser.isEmpty()){

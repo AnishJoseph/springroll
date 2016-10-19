@@ -33,11 +33,9 @@ public class UserDelegation extends AbstractEntity {
 
     //FIXME - make this a date - conver to hiberate 5
     @Column(name = "START_DATE")
-    @Type(type="com.springroll.orm.LocalDateTimeUserType")
     private LocalDate startDate;
 
     @Column(name = "END_DATE")
-    @Type(type="com.springroll.orm.LocalDateTimeUserType")
     private LocalDate endDate;
 
     @Column(name = "IS_ACTIVE", length = 1)

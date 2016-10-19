@@ -16,8 +16,8 @@
             <column name="UNDER_REVIEW" type="bit" />
             <column name="STATUS" type="VARCHAR2(4000)" />
             <column name="COMPLETED" type="bit" />
-            <column name="START_TIME" type="TIMESTAMP"/>
-            <column name="END_TIME" type="TIMESTAMP"/>
+            <column name="START_TIME" type="datetime"/>
+            <column name="END_TIME" type="datetime"/>
             <column name="REVIEW_LOG" type="VARCHAR2(2048)"/>
             <column name="PAYLOADS" type="longblob" />
         </createTable>
@@ -82,7 +82,7 @@
             <column name="USERS" type="varchar(256)"/>
             <column name="CHANNEL_NAME" type="varchar(64)"/>
             <column name="ACK_LOG" type="VARCHAR2(2048)"/>
-            <column name="CREATION_TIME" type="TIMESTAMP"/>
+            <column name="CREATION_TIME" type="datetime"/>
             <column name="VERSION" type="bigint"/>
             <column name="PAYLOAD" type="varchar(3000)"/>
         </createTable>
@@ -93,8 +93,8 @@
             <column name="PARENT_ID" type="bigint"/>
             <column name="USER_ID" type="varchar(128)"/>
             <column name="DELEGATE" type="varchar(128)"/>
-            <column name="START_DATE" type="TIMESTAMP"/>
-            <column name="END_DATE" type="TIMESTAMP"/>
+            <column name="START_DATE" type="date"/>
+            <column name="END_DATE" type="date"/>
             <column name="IS_ACTIVE" type="bit" />
         </createTable>
 
