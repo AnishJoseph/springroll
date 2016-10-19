@@ -1,8 +1,17 @@
 define(['Application', 'marionette'], function (Application, Marionette) {
 
+    var GridData = Backbone.Model.extend({
+        url: function () {
+            var gridName = this.get('gridName');
+            this.unset('gridName');
+            return "/api/sr/getGridData/" + gridName;
+        }
+    });
     var ReportParams = Backbone.Model.extend({
         url: function () {
-            return "/api/sr/gridParams/TestGrid1";
+            var gridName = this.get('gridName');
+            this.unset('gridName');
+            return "/api/sr/gridParams/" + gridName;
         }
     });
 
@@ -26,7 +35,9 @@ define(['Application', 'marionette'], function (Application, Marionette) {
         makeLovList : function(template, parameter){
             template.push('<div class="col-md-3">');
             template.push('<div>' + parameter.displayName + '</div>');
-            template.push('<select id="' + parameter.name + '" class="selectpicker" multiple>');
+            template.push('<select id="' + parameter.name + '" class="selectpicker"');
+            if(parameter.multiSelect) template.push('multiple');
+            template.push(">");
             _.each(parameter.lovList, function(lov){
                 template.push('<option title="' + lov.name + '">' + lov.value + '</option>');
             });
@@ -65,32 +76,36 @@ define(['Application', 'marionette'], function (Application, Marionette) {
         onRender: function() {
             this.ui.selectpicker.selectpicker();
             this.ui.datepicker.datepicker();
+        },
 
-        },
-        events : {
-            'click #submit' : 'submit',
-            'change #date' : 'changeHandler',
-            'change #select' : 'changeHandler',
-        },
         ui: {
             selectpicker:  '.selectpicker',
             datepicker:  '.datepicker',
-            date:  '#date',
         },
+
         initialize: function(options) {
             this.data = options.data;
+            this.gridName = options.gridName;
+            this.myparent = options.myparent;
+            this.params = {};
+            var events = {};
+            events['click #submit'] =  'submit';
+            _.each(this.data, function(parameter){
+                events['change #' + parameter.name] = 'changeHandler';
+            });
+            this.delegateEvents(events);
         },
         submit : function(){
-            console.log("sub");
+            this.params["gridName"] = this.gridName;
+            this.myparent.triggerMethod("grid:data:changed", this.params);
         },
         changeHandler : function(evt){
-            console.log("sub");
-            this.model.set(evt.currentTarget.id, evt.currentTarget.value);
+            this.params[evt.currentTarget.id] = $(evt.target).val();
         }
     });
 
     var GridView  = Marionette.View.extend({
-        template: _.template("<div id='params'>world</div>"),
+        template: _.template("<div id='params'>world</div>")
     });
 
     Application.ReportView = Marionette.View.extend({
@@ -105,17 +120,23 @@ define(['Application', 'marionette'], function (Application, Marionette) {
             this.parameters = options.parameters;
         },
         onRender: function() {
-            var reportParams  = new ReportParams();
+            var reportParams  = new ReportParams({gridName: this.gridName});
             var that = this;
             reportParams.save(null, {
                success: function(model, data){
-                   that.showChildView('paramsRegion', new ParamsView({model:new Backbone.Model(), "data":data}));
+                   that.showChildView('paramsRegion', new ParamsView({"data":data, "gridName":that.gridName, "myparent":that}));
                }
             });
 
         },
-        showBody : function(data){
-            this.showChildView('reportRegion', new GridView());
-        }
+        onGridDataChanged : function(userChosenParameters){
+            var gridData = new GridData(userChosenParameters);
+            var that = this;
+            gridData.save(null, {
+                success : function(model, data){
+                    that.showChildView('gridRegion', new GridView());
+                }
+            });
+        },
     });
 });
