@@ -43,7 +43,8 @@ define(['Application', 'marionette'], function (Application, Marionette) {
         controller: m1Controller,
 
         appRoutes: {
-            'transactionTests': 'activate'
+            'transactionTests': 'activate',
+            '': 'activate'
         }
     });
 
