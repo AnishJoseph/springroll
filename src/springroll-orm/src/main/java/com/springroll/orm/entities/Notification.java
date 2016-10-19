@@ -50,7 +50,6 @@ public class Notification extends AbstractEntity implements INotification {
     private String ackLogAsJson = "";
 
     @Column(name = "CREATION_TIME")
-    @Type(type="com.springroll.orm.LocalDateTimeUserType")
     private LocalDateTime creationTime;
 
     @Column(name = "INITIATOR")
