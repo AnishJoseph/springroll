@@ -60,7 +60,7 @@ require(['Application'],function(Application){
         require(solutionModules, function() {
 
             $.ajaxSetup({ cache: false });
-            $.fn.datepicker.defaults.format = "dd/mm/yyyy";
+            $.fn.datepicker.defaults.format = UIProperties.uiDateFormatJs;
             //FIXME - get the config for date format
 
             var promises = [];

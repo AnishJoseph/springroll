@@ -1,3 +1,5 @@
+<%@ page import="java.util.Properties" %>
+<%@ page import="java.io.InputStream" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +15,18 @@
     <script data-main="assets/main" src="assets/vendor/requirejs/require.js"></script>
 </head>
 <body>
-
         <div id="root-element"/>
+<%
+    InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("springroll.properties");
+    Properties props = new Properties();
+    props.load(stream);
+    String uiDateFormatJs = props.getProperty("ui.date.format.js");
+    if(uiDateFormatJs == null)uiDateFormatJs = "dd/mm/yyyy";
+
+%>
+        <script>
+            window.UIProperties = {};
+            window.UIProperties.uiDateFormatJs = '<%=uiDateFormatJs%>';
+        </script>
 </body>
 </html>
