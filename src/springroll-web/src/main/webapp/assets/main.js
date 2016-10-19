@@ -9,8 +9,12 @@ require.config({
 
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
+        "bootstrap.select" : { "deps" :['jquery'] },
+        "bootstrap.datetimepicker" : { "deps" :['jquery', 'moment', 'bootstrap'] },
         // Put all the vendor javascript files here
-        "Application" : {"deps": ['bootstrap', 'jquery', 'jquery.cometd', 'marionette', 'underscore', 'backbone', 'backbone.radio', 'moment']}
+        "Application" : {"deps": ['bootstrap', 'jquery', 'jquery.cometd', 'marionette', 'underscore',
+            'backbone', 'backbone.radio', 'moment', 'bootstrap.select', 'bootstrap.datetimepicker'
+        ]}
     },
     paths: {
         "jquery": "vendor/jquery/jquery-3.1.1.min",
@@ -21,6 +25,8 @@ require.config({
         //"moment": "vendor/moment/moment-with-locales",
         "backbone.radio": "vendor/marionette/backbone.radio",
         "bootstrap": "vendor/bootstrap/js/bootstrap.min",
+        "bootstrap.select": "vendor/bootstrap-plugins/js/bootstrap-select.min",
+        "bootstrap.datetimepicker": "vendor/bootstrap-plugins/js/bootstrap-datetimepicker.min",
 
         "Application": "lib/framework/Application",
     }
@@ -35,6 +41,7 @@ require(['Application'],function(Application){
         'lib/framework/root.view',
         'lib/framework/messenger.cometd',
         'lib/framework/alerts',
+        'lib/framework/report.view',
     ];
 
     var solutionModules = [

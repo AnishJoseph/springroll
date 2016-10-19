@@ -15,7 +15,6 @@ define(['Application', 'marionette'], function (Application, Marionette) {
         },
 
         simplePipeLine : function(){
-            console.log("simplePipeLine clicked");
             var simpleTransaction = new SimpleTransaction();
             simpleTransaction.set('testCase', 1);
             simpleTransaction.set('testLocation', 0);

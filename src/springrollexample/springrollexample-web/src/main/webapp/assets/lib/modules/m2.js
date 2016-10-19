@@ -1,14 +1,8 @@
 define(['Application', 'marionette'], function (Application, Marionette) {
 
-    var View = Marionette.View.extend({
-        tagName: 'h2',
-        template: "#m2Template",
-
-    });
-
     var M2Controller = Marionette.Object.extend({
         activate: function() {
-            var view = new View();
+            var view = new Application.ReportView({"gridName":"TestGrid1" });
             Application.rootView.showBody(view);
             Backbone.history.navigate('m2');
         }
@@ -29,6 +23,5 @@ define(['Application', 'marionette'], function (Application, Marionette) {
             'm2': 'activate'
         }
     });
-    Application.requiresTemplate("#m2Template");
 
 });

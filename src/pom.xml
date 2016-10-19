@@ -50,6 +50,7 @@
         <module>springroll-orm</module>
         <module>springroll-routers</module>
         <module>springroll-notification</module>
+        <module>springroll-reporting</module>
         <module>springrollexample</module>
     </modules>
 
@@ -63,6 +64,11 @@
             <dependency>
                 <groupId>com.springroll</groupId>
                 <artifactId>springroll-api-facade</artifactId>
+                <version>${springroll.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.springroll</groupId>
+                <artifactId>springroll-reporting</artifactId>
                 <version>${springroll.version}</version>
             </dependency>
             <dependency>

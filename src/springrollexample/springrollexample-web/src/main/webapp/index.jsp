@@ -8,6 +8,8 @@
     <title>SpringRoll</title>
     <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap/css/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap-plugins/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap-plugins/css/bootstrap-select.min.css">
     <script data-main="assets/main" src="assets/vendor/requirejs/require.js"></script>
 </head>
 <body>

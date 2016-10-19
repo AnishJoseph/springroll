@@ -67,6 +67,7 @@
                 <property name="database" value="${sr.datasource.vendor}"/>
             </bean>
         </property>
+        <property name="mappingResources" value="${named.query.files}"/>
         <property name="jpaProperties">
             <props>
                 <prop key="javax.persistence.transactionType">JTA</prop>

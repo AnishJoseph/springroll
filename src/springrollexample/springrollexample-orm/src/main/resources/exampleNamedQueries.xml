@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="1.0" xmlns="http://java.sun.com/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd " >
+    <named-query name="noParam">
+        <query>SELECT o FROM Job o WHERE o.userId = :userId </query>
+    </named-query>
+    <named-query name="singleStringParam">
+        <query>SELECT o.id, o.userId, o.service FROM Job o WHERE o.userId = :userId </query>
+    </named-query>
+    <named-query name="StringListParam">
+        <query>SELECT o.id, o.userId, o.service FROM Job o WHERE o.userId in (:nq__allUsers__userIds__in) </query>
+    </named-query>
+    <named-query name="StringListBooleanParam">
+        <query>SELECT o.id, o.userId, o.service FROM Job o WHERE o.completed = :completeStatus and o.userId in (:nq__allUsers__userIds__in) </query>
+    </named-query>
+    <named-query name="StringListBooleanDateParam">
+        <query>SELECT o.id, o.userId, o.service FROM Job o WHERE o.completed = :completeStatus and o.userId in (:nq__allUsers__userIds__in) and :date > o.startTime  </query>
+    </named-query>
+    <named-query name="allUsers">
+        <query>SELECT o.userId  FROM User o </query>
+    </named-query>
+
+</entity-mappings>

@@ -2,6 +2,8 @@ package com.springroll.api.facade;
 
 import com.springroll.core.LocaleFactory;
 import com.springroll.core.services.ITemplateManager;
+import com.springroll.reporting.ReportParameter;
+import com.springroll.reporting.grid.GridReporter;
 import com.springroll.router.notification.NotificationAckDTO;
 import com.springroll.router.review.ReviewActionDTO;
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -23,6 +26,7 @@ public class SpringrollAPI extends AbstractAPI {
 
     @Autowired private ITemplateManager templateManager;
     @Autowired private LocaleFactory localeFactory;
+    @Autowired private GridReporter gridReporter;
 
     @RequestMapping(value = "/sr/reviewaction", method = RequestMethod.POST)
     public Long reviewAction(@RequestBody ReviewActionDTO reviewActionDTO) {
@@ -58,6 +62,12 @@ public class SpringrollAPI extends AbstractAPI {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        return localeFactory.getUIMessagesAsMap(userSpecificLocaleMaker.getLocaleForUser(user.getUsername()));
         return localeFactory.getUIMessagesAsMap(_locale);
+    }
+
+    @RequestMapping(value = "/sr/gridParams/{gridName}", method = RequestMethod.POST)
+    public List<ReportParameter> getGridParams(@PathVariable String gridName, @RequestBody Map<String, Object> parameters) {
+        List<ReportParameter> parameters1 = gridReporter.getParameters(gridName, parameters);
+        return parameters1;
     }
 
 
