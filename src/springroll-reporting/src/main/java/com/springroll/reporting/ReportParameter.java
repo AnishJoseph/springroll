@@ -17,7 +17,7 @@ public class ReportParameter {
     private boolean visible = true;
 
     public ReportParameter(){}
-    public ReportParameter(String name, String javaType, boolean isConstrained, boolean mandatory, boolean multiSelect, boolean visible, List<Lov> lovs) {
+    public ReportParameter(String name, String displayName, String javaType, boolean isConstrained, boolean mandatory, boolean multiSelect, boolean visible, List<Lov> lovs) {
         this.name = name;
         this.javaType = javaType;
         this.isConstrained = isConstrained;
@@ -25,6 +25,7 @@ public class ReportParameter {
         this.multiSelect = multiSelect;
         this.visible = visible;
         this.lovList = lovs;
+        this.displayName = displayName;
     }
 
     public String getName() {

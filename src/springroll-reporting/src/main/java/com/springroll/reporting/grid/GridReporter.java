@@ -16,9 +16,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,27 +48,29 @@ import java.util.Map;
         }
         Query query = em.createNamedQuery(grid.getNamedQuery());
         for (Parameter<?> parameter : query.getParameters()) {
-            /* parameter naming convention
-                if the parameter is used in an in condition - i.e. multiselect is true -  param name should end with '__list'
-                if the lov for the param comes from a named sql the param name should start with nq__<name of named query>__
-                examples
-                1 - for a param whose lovs' come from a named query (called nq1) and the user is allowed to multiselect then
-                    the name of the parameter will be nq__nq1__paramname.list
-                2 - for a param whose lovs' come from a named query (called nq1) and the user is NOT allowed to multiselect then
-                    the name of the parameter will be nq__nq1__paramname
-                3 - for a param whose lovs' come from a enum and the user is NOT allowed to multiselect then the name of the parameter can be anything
-                4 - for a param whose lovs' come from a enum and the user is allowed to multiselect then the name of the parameter paramname__list
-              */
-            boolean multiSelect = parameter.getName().endsWith("__in");
+            GridParameter gridParameter = gridConfiguration.findParameterByName(parameter.getName());
+            boolean multiSelect = gridParameter == null ? false: gridParameter.isMultiSelect();
+            String displayName = gridParameter == null || gridParameter.getDisplayName() == null? parameter.getName(): gridParameter.getDisplayName();
             List<Lov> lovs;
-            if(parameter.getName().startsWith("nq__")){
-                lovs = getLovsFromNamedQuery(parameter.getName(), parameters);
+            if(gridParameter != null && gridParameter.getNamedQuery() != null) {
+                lovs = getLovsFromNamedQuery(gridParameter.getNamedQuery(), parameters);
+            } else if(gridParameter != null && gridParameter.getList() != null){
+                lovs = getLovsFromList(gridParameter.getList());
             } else {
                 lovs = getLovsFromEnum(parameter.getParameterType());
             }
-            reportParameters.add(new ReportParameter(parameter.getName(), parameter.getParameterType().getName(), true, true, multiSelect, true, lovs ));
+            reportParameters.add(new ReportParameter(parameter.getName(), displayName, parameter.getParameterType().getName(), true, true, multiSelect, true, lovs ));
         }
         return reportParameters;
+    }
+
+    private List<Lov> getLovsFromList(String list) {
+        List<Lov> lovs = new ArrayList<>();
+        String[] split = list.split(":");
+        for (String s : split) {
+            lovs.add(new Lov(s));
+        }
+        return lovs;
     }
 //    public ReportParameter(String name, String javaType, boolean isConstrained, boolean mandatory, boolean multiSelect, boolean visible) {
 
@@ -84,10 +84,9 @@ import java.util.Map;
         return lovs;
     }
 
-    private List<Lov> getLovsFromNamedQuery(String parameterName, Map<String, Object> parameters){
+    private List<Lov> getLovsFromNamedQuery(String queryName, Map<String, Object> parameters){
         List<Lov> lovs = new ArrayList<>();
-        String[] split = parameterName.split("__");
-        List list = executeQuery(split[1], parameters);
+        List list = executeQuery(queryName, parameters);
         for (Object o : list) {
             lovs.add(new Lov(o.toString()));
         }
@@ -105,42 +104,5 @@ import java.util.Map;
             query.setParameter(parameter.getName(), paramValue);
         }
         return query.getResultList();
-    }
-
-
-    public void test(){
-        try {
-
-            Map<String, Object> params = new HashMap<>();
-            List<ReportParameter> p = getParameters("TestGrid1", params);
-            System.out.println(p.size());
-            boolean b = true;
-            if(b)return;
-
-
-            params.put("userId", "ANISH");
-            List data = executeQuery("singleStringParam", params);
-            System.out.println(data.size());
-
-            params.clear();
-            List<String> users = new ArrayList<>();
-            users.add("ANISH");
-            users.add("BOM1");
-            params.put("userIds", users);
-            data = executeQuery("StringListParam", params);
-            System.out.println(data.size());
-
-            params.put("completeStatus", new Boolean(true));
-            data = executeQuery("StringListBooleanParam", params);
-            System.out.println(data.size());
-
-            params.put("date", LocalDateTime.now());
-            data = executeQuery("StringListBooleanDateParam", params);
-            System.out.println(data.size());
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-
     }
 }

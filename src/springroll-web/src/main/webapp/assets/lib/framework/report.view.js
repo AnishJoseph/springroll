@@ -13,7 +13,7 @@ define(['Application', 'marionette'], function (Application, Marionette) {
 
         makeDate : function(template, parameter){
             template.push('<div class="col-md-3">');
-            template.push('<div>' + parameter.name + '</div>');
+            template.push('<div>' + parameter.displayName + '</div>');
             template.push('<div class="input-group date datepicker" data-provide="datepicker">');
             template.push('<input id="' + parameter.name + '" type="text" class="form-control">');
             template.push('<div class="input-group-addon">');
@@ -25,7 +25,7 @@ define(['Application', 'marionette'], function (Application, Marionette) {
 
         makeLovList : function(template, parameter){
             template.push('<div class="col-md-3">');
-            template.push('<div>' + parameter.name + '</div>');
+            template.push('<div>' + parameter.displayName + '</div>');
             template.push('<select id="' + parameter.name + '" class="selectpicker" multiple>');
             _.each(parameter.lovList, function(lov){
                 template.push('<option title="' + lov.name + '">' + lov.value + '</option>');
@@ -50,8 +50,6 @@ define(['Application', 'marionette'], function (Application, Marionette) {
                     template.push(data.view.makeLovList(template, parameter));
                 }
             });
-
-
 
             template.push('<div class="clearfix " style="clear: both; margin-top: 10px">');
             template.push('<div style="margin:20px">');
