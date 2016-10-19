@@ -16,6 +16,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +39,16 @@ import java.util.Map;
         }catch (Exception e){
             throw new RuntimeException(e);
         }
+    }
+    public List<ReportParameter> getGrid(String gridName, Map<String, Object> parameters) {
+        Grid grid = gridConfiguration.findGridByName(gridName);
+        if(grid == null){
+            logger.error("Unable to find grid by name '{}", gridName);
+            throw new RuntimeException("Unable to find grid by name " + gridName); //FIXME - handle correctly
+        }
+
+        List data = executeQuery(grid.getNamedQuery(), parameters);
+        return null;
     }
 
     public List<ReportParameter> getParameters(String gridName, Map<String, Object> parameters){
@@ -101,8 +113,27 @@ import java.util.Map;
                 logger.error("The named query '{}' is missing a parameter called '{}'", namedQuery, parameter.getName());
                 throw new RuntimeException("Missing parameter " + parameter.getName() + " in named query " + namedQuery);
             }
-            query.setParameter(parameter.getName(), paramValue);
+            try {
+                Object o = convert(paramValue, parameter);
+                query.setParameter(parameter.getName(), o);
+            }catch (Exception e){
+                e.printStackTrace();
+                throw new RuntimeException("xx");//FIXME
+            }
         }
         return query.getResultList();
+    }
+
+    private Object convert(Object paramValue, Parameter parameter){
+        if(parameter.getParameterType().equals(LocalDateTime.class)){
+            String x = (String) paramValue;
+            x = x + " 00:00";
+            //FIXME - handle this correctly
+            return LocalDateTime.parse(x, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        }
+        if(parameter.getParameterType().equals(Boolean.class)){
+            return "true".equalsIgnoreCase((String)paramValue);
+        }
+        return paramValue;
     }
 }

@@ -72,7 +72,7 @@ public class SpringrollAPI extends AbstractAPI {
 
     @RequestMapping(value = "/sr/getGridData/{gridName}", method = RequestMethod.POST)
     public List<ReportParameter> getGridData(@PathVariable String gridName, @RequestBody Map<String, Object> parameters) {
-        List<ReportParameter> data = gridReporter.getParameters(gridName, parameters);
+        List<ReportParameter> data = gridReporter.getGrid(gridName, parameters);
         return data;
     }
 
