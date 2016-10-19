@@ -41,11 +41,9 @@ public class Job extends AbstractEntity {
     private String userId;
 
     @Column(name = "Start_Time")
-    @Type(type="com.springroll.orm.LocalDateTimeUserType")
     private LocalDateTime startTime;
 
     @Column(name = "End_Time")
-    @Type(type="com.springroll.orm.LocalDateTimeUserType")
     private LocalDateTime endTime;
 
     @Column(name = "COMPLETED")
