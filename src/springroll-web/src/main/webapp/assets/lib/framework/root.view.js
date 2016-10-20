@@ -2,7 +2,7 @@ define(['Application', 'marionette'], function (Application, Marionette) {
 
     Application.RootView = Marionette.View.extend({
         tagName: 'div',
-        template: _.template("<div id='main-menu'/><div id='main-body' style='overflow: auto;height: 100vh'/><div id='alerts'/><div id='indicator' style='position: absolute; top:0px; align-content: center; width: 100%'/> "),
+        template: _.template("<div id='main-menu'/><div id='main-body' style='overflow: auto;height: 100vh; margin-top: 55px'/><div id='alerts'/><div id='indicator' style='position: absolute; top:0px; align-content: center; width: 100%'/> "),
         regions: {
             menuRegion: '#main-menu',
             bodyRegion: '#main-body',
