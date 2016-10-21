@@ -8,7 +8,7 @@ define(['Application', 'marionette'], function (Application, Marionette) {
                 "<div id='content' style='overflow-y: auto; width: 100%;height: 100%' ></div>" +
             "</div>" +
             "<div id='alerts'    style='position: fixed; top:100px; right: 0px;z-index: 50'/>" +
-            "<div id='indicator' style='position: absolute; top:0px; align-content: center; width: 100%'/> "
+            "<div id='indicator' style='position: fixed; top:0px; align-content: center; width: 100%;z-index: 900'/> "
         ),
         regions: {
             menuRegion: '#main-menu',

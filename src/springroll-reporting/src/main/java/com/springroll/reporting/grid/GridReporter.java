@@ -1,5 +1,6 @@
 package com.springroll.reporting.grid;
 
+import com.springroll.core.exceptions.FixableException;
 import com.springroll.reporting.Lov;
 import com.springroll.reporting.ReportParameter;
 import flexjson.JSONDeserializer;
@@ -40,7 +41,7 @@ import java.util.Map;
             throw new RuntimeException(e);
         }
     }
-    public List<ReportParameter> getGrid(String gridName, Map<String, Object> parameters) {
+    public GridReport getGrid(String gridName, Map<String, Object> parameters) {
         Grid grid = gridConfiguration.findGridByName(gridName);
         if(grid == null){
             logger.error("Unable to find grid by name '{}", gridName);
@@ -48,7 +49,10 @@ import java.util.Map;
         }
 
         List data = executeQuery(grid.getNamedQuery(), parameters);
-        return null;
+        GridReport gridReport = new GridReport();
+        gridReport.setColumns(grid.getColumns());
+        gridReport.setData(data);
+        return gridReport;
     }
 
     public List<ReportParameter> getParameters(String gridName, Map<String, Object> parameters){
@@ -111,7 +115,7 @@ import java.util.Map;
             Object paramValue = parameters.get(parameter.getName());
             if(paramValue == null){
                 logger.error("The named query '{}' is missing a parameter called '{}'", namedQuery, parameter.getName());
-                throw new RuntimeException("Missing parameter " + parameter.getName() + " in named query " + namedQuery);
+                throw new FixableException("Missing parameter " + parameter.getName() + " in named query " + namedQuery, "missing.namedquery.parameter", parameter.getName());
             }
             try {
                 Object o = convert(paramValue, parameter);

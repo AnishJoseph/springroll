@@ -59,21 +59,21 @@ define(['Application', 'marionette'], function (Application, Marionette) {
         ui : {
             griddiv : '#gridtable'
         },
+
+        initialize : function(options){
+            this.gridata = options.data;
+            this.columnDefinitions = options.columns;
+
+        },
+
         onRender : function(){
             this.ui.griddiv.DataTable( {
-                data: dataSet,
+                data: this.gridata,
                 paging:   false,
                 //scrollY:        '45vh',
                 //scrollCollapse: true,
                 search : true,
-                columns: [
-                    { title: "Name" },
-                    { title: "Position" },
-                    { title: "Office" },
-                    { title: "Extn." },
-                    { title: "Start date" },
-                    { title: "Salary" }
-                ]
+                columns: this.columnDefinitions
             } );
         }
     });
@@ -103,7 +103,7 @@ define(['Application', 'marionette'], function (Application, Marionette) {
             var that = this;
             gridData.save(null, {
                 success : function(model, data){
-                    that.showChildView('gridRegion', new GridView());
+                    that.showChildView('gridRegion', new GridView(data));
                 }
             });
         },

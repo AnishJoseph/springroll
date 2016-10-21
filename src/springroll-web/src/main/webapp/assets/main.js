@@ -65,7 +65,15 @@ require(['Application'],function(Application){
     require(frameworkModules, function() {
         require(solutionModules, function() {
 
-            $.ajaxSetup({ cache: false });
+            $.ajaxSetup({
+                cache: false,
+                statusCode : {
+                    406:function(message){   //NOT_ACCEPTABLE
+                        console.log("Main.js got - 406" );
+                        Application.Indicator.showErrorMessage({message:message.responseText});
+                    },
+                }
+            });
             $.fn.datepicker.defaults.format = UIProperties.uiDateFormatJs;
             //FIXME - get the config for date format
 

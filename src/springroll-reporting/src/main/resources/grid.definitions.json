@@ -2,9 +2,9 @@
   "Grids" : [
     {"name" : "TestGrid1", "fixedColumns": 2, "namedQuery": "StringListBooleanDateParam",
       "columns":[
-          {"title": "C1", "type":"num-fmt", "numberType":"amount"},
-          {"title": "C2"},
-          {"title": "C2", "type":"date"}
+          {"title": "ID", "type":"num"},
+          {"title": "User"},
+          {"title": "ServiceName", "type":"string"}
         ]
     }
   ],

@@ -3,6 +3,8 @@ package com.springroll.api.facade;
 import com.springroll.core.BusinessValidationResult;
 import com.springroll.core.DTO;
 import com.springroll.core.ContextStore;
+import com.springroll.core.LocaleFactory;
+import com.springroll.core.exceptions.FixableException;
 import com.springroll.router.JobMeta;
 import com.springroll.router.SynchEndPoint;
 import com.springroll.router.exceptions.BusinessValidationException;
@@ -18,14 +20,17 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
  * Created by anishjoseph on 12/09/16.
  */
 public abstract class AbstractAPI {
-    @Autowired
-    private SynchEndPoint synchEndPoint;
+    @Autowired private SynchEndPoint synchEndPoint;
+    @Autowired protected LocaleFactory localeFactory;
+    protected static Locale _locale = Locale.getDefault();
+
 
     @ExceptionHandler(PropertyValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -37,6 +42,11 @@ public abstract class AbstractAPI {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public  List<BusinessValidationResult> handleBusinessValidationException(BusinessValidationException ex) {
         return ex.getViolations();
+    }
+    @ExceptionHandler(FixableException.class)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    public  String handleFixableException(FixableException ex) {
+        return LocaleFactory.getLocalizedServerMessage(_locale, ex.getMessageKey(), ex.getMessageArguments());
     }
 
     public Long route(DTO payload){

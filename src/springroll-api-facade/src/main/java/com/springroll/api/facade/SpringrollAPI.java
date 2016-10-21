@@ -3,6 +3,7 @@ package com.springroll.api.facade;
 import com.springroll.core.LocaleFactory;
 import com.springroll.core.services.ITemplateManager;
 import com.springroll.reporting.ReportParameter;
+import com.springroll.reporting.grid.GridReport;
 import com.springroll.reporting.grid.GridReporter;
 import com.springroll.router.notification.NotificationAckDTO;
 import com.springroll.router.review.ReviewActionDTO;
@@ -14,10 +15,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @Transactional
 @RestController
@@ -25,7 +23,6 @@ public class SpringrollAPI extends AbstractAPI {
     private static final Logger logger = LoggerFactory.getLogger(SpringrollAPI.class);
 
     @Autowired private ITemplateManager templateManager;
-    @Autowired private LocaleFactory localeFactory;
     @Autowired private GridReporter gridReporter;
 
     @RequestMapping(value = "/sr/reviewaction", method = RequestMethod.POST)
@@ -55,8 +52,6 @@ public class SpringrollAPI extends AbstractAPI {
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    private static Locale _locale = Locale.getDefault();
-
     @RequestMapping(value = "/sr/localeMessages", method = RequestMethod.GET)
     public Object getLocaleMessages() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -71,9 +66,9 @@ public class SpringrollAPI extends AbstractAPI {
     }
 
     @RequestMapping(value = "/sr/getGridData/{gridName}", method = RequestMethod.POST)
-    public List<ReportParameter> getGridData(@PathVariable String gridName, @RequestBody Map<String, Object> parameters) {
-        List<ReportParameter> data = gridReporter.getGrid(gridName, parameters);
-        return data;
+    public GridReport getGridData(@PathVariable String gridName, @RequestBody Map<String, Object> parameters) {
+        GridReport grid = gridReporter.getGrid(gridName, parameters);
+        return grid;
     }
 
 
