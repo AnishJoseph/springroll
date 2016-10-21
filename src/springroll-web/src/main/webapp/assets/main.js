@@ -30,7 +30,7 @@ require.config({
         "bootstrap": "vendor/bootstrap/js/bootstrap.min",
         "bootstrap.select": "vendor/bootstrap-plugins/js/bootstrap-select.min",
         "bootstrap.datetimepicker": "vendor/bootstrap-plugins/js/bootstrap-datetimepicker.min",
-        "datatables": "vendor/dt/js/datatables",
+        "datatables": "vendor/dt/js/datatables.min",
 
 
         "Application": "lib/framework/Application",
