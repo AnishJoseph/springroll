@@ -10,14 +10,17 @@ require.config({
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
         "bootstrap.select" : { "deps" :['jquery'] },
+        "datatables" : { "deps" :['jquery'] },
         "bootstrap.datetimepicker" : { "deps" :['jquery', 'moment', 'bootstrap'] },
         // Put all the vendor javascript files here
         "Application" : {"deps": ['bootstrap', 'jquery', 'jquery.cometd', 'marionette', 'underscore',
-            'backbone', 'backbone.radio', 'moment', 'bootstrap.select', 'bootstrap.datetimepicker'
+            'backbone', 'backbone.radio', 'moment', 'bootstrap.select', 'bootstrap.datetimepicker',
+            'datatables'
         ]}
     },
     paths: {
-        "jquery": "vendor/jquery/jquery-3.1.1.min",
+        //"jquery": "vendor/jquery/jquery-3.1.1.min",
+        "jquery": "vendor/marionette/jquery",
         "jquery.cometd": "vendor/cometd/jquery.cometd",
         "marionette": "vendor/marionette/backbone.marionette.min",
         "underscore": "vendor/marionette/underscore",
@@ -27,6 +30,8 @@ require.config({
         "bootstrap": "vendor/bootstrap/js/bootstrap.min",
         "bootstrap.select": "vendor/bootstrap-plugins/js/bootstrap-select.min",
         "bootstrap.datetimepicker": "vendor/bootstrap-plugins/js/bootstrap-datetimepicker.min",
+        "datatables": "vendor/dt/js/datatables",
+
 
         "Application": "lib/framework/Application",
     }
@@ -41,7 +46,8 @@ require(['Application'],function(Application){
         'lib/framework/root.view',
         'lib/framework/messenger.cometd',
         'lib/framework/alerts',
-        'lib/framework/report.view',
+        'lib/framework/grid.report.view',
+        'lib/framework/report.parameter.view',
     ];
 
     var solutionModules = [

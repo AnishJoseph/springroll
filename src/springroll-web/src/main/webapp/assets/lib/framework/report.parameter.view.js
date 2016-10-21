@@ -1,21 +1,6 @@
 define(['Application', 'marionette'], function (Application, Marionette) {
 
-    var GridData = Backbone.Model.extend({
-        url: function () {
-            var gridName = this.get('gridName');
-            this.unset('gridName');
-            return "/api/sr/getGridData/" + gridName;
-        }
-    });
-    var ReportParams = Backbone.Model.extend({
-        url: function () {
-            var gridName = this.get('gridName');
-            this.unset('gridName');
-            return "/api/sr/gridParams/" + gridName;
-        }
-    });
-
-    var ParamsView  = Marionette.View.extend({
+    Application.ReportParamsView  = Marionette.View.extend({
         serializeData: function(){
             return {data: this.data, view : this};
         },
@@ -102,41 +87,5 @@ define(['Application', 'marionette'], function (Application, Marionette) {
         changeHandler : function(evt){
             this.params[evt.currentTarget.id] = $(evt.target).val();
         }
-    });
-
-    var GridView  = Marionette.View.extend({
-        template: _.template("<div id='params'>world</div>")
-    });
-
-    Application.ReportView = Marionette.View.extend({
-        tagName: 'div',
-        template: _.template("<div id='params'/><div id='grid'/> "),
-        regions: {
-            paramsRegion: '#params',
-            gridRegion: '#grid',
-        },
-        initialize: function(options) {
-            this.gridName = options.gridName;
-            this.parameters = options.parameters;
-        },
-        onRender: function() {
-            var reportParams  = new ReportParams({gridName: this.gridName});
-            var that = this;
-            reportParams.save(null, {
-               success: function(model, data){
-                   that.showChildView('paramsRegion', new ParamsView({"data":data, "gridName":that.gridName, "myparent":that}));
-               }
-            });
-
-        },
-        onGridDataChanged : function(userChosenParameters){
-            var gridData = new GridData(userChosenParameters);
-            var that = this;
-            gridData.save(null, {
-                success : function(model, data){
-                    that.showChildView('gridRegion', new GridView());
-                }
-            });
-        },
     });
 });
