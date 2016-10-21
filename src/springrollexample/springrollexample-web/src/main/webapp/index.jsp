@@ -12,10 +12,11 @@
     <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap/css/bootstrap-theme.css">
     <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap-plugins/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap-plugins/css/bootstrap-select.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/vendor/dt/datatables.css">
     <script data-main="assets/main" src="assets/vendor/requirejs/require.js"></script>
 </head>
 <body>
-        <div id="root-element"/>
+        <div id="root-element" style="width: 100%; height: 100vh;"/>
 <%
     InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("springroll.properties");
     Properties props = new Properties();

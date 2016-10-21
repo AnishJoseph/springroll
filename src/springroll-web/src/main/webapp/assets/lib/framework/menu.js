@@ -5,7 +5,7 @@ define(['Application', 'marionette'], function (Application, Marionette) {
         template: function() {
             var template = [];
 
-            template.push('<nav class="navbar navbar-default navbar-fixed-top ">');
+            template.push('<nav class="navbar navbar-default">');
             template.push('<div class="container-fluid">');
             template.push('<div id="navbar" class="navbar-collapse collapse"> ');
 
