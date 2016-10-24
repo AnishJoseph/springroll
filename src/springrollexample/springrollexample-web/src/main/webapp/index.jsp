@@ -13,7 +13,8 @@
     <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap-plugins/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap-plugins/css/bootstrap-select.min.css">
     <link rel="stylesheet" type="text/css" href="assets/vendor/dt/css/datatables.min.css">
-    <script data-main="assets/main" src="assets/vendor/requirejs/require.js"></script>
+    <%--<script data-main="assets/main" src="assets/vendor/requirejs/require.js"></script>--%>
+    <script src="springroll.js"></script>
 </head>
 <body>
         <div id="root-element" style="width: 100%; height: 100vh;"/>

@@ -1,16 +1,14 @@
-define(['Application', 'marionette'], function (Application, Marionette) {
+var Marionette = require('backbone.marionette');
 
-    var AlertsView = Marionette.View.extend({
-        tagName: 'div',
-        template: _.template('<%-messageKey%>'),
-    });
+var AlertsView = Marionette.View.extend({
+    tagName: 'div',
+    template: _.template('<%-messageKey%>'),
+});
 
-    Application.subscribeForAlert('/core/fyi', {
-        view: AlertsView,
-        showDismiss: true,
-        showInfo: false,
-        showAccept: false,
-        showReject: false,
-    });
-
+Application.subscribeForAlert('/core/fyi', {
+    view: AlertsView,
+    showDismiss: true,
+    showInfo: false,
+    showAccept: false,
+    showReject: false,
 });
