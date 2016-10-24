@@ -1,4 +1,3 @@
-//import './styles/application.css';
 var Application =require('./assets/lib/framework/Application.js');
 require('./assets/lib/framework/root.view.js');
 require('./assets/lib/framework/menu.js');
