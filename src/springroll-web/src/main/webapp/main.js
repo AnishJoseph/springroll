@@ -5,6 +5,8 @@ require('./assets/lib/framework/indicator.js');
 require('./assets/lib/framework/alerts.js');
 require('./assets/lib/framework/fyi.alerts.js');
 require('./assets/lib/framework/review.alerts.js');
+require('./assets/lib/framework/grid.report.view.js');
+require('./assets/lib/framework/report.parameter.view.js');
 //require('./assets/lib/framework/messenger.cometd.js');
 
 document.addEventListener('DOMContentLoaded', () => {

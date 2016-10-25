@@ -1,4 +1,4 @@
-define(['Application', 'marionette'], function (Application, Marionette) {
+define([], function () {
 
     var M2Controller = Marionette.Object.extend({
         activate: function() {

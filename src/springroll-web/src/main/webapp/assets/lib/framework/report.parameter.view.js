@@ -1,4 +1,3 @@
-define(['Application', 'marionette'], function (Application, Marionette) {
 
     Application.ReportParamsView  = Marionette.View.extend({
         serializeData: function(){
@@ -88,4 +87,3 @@ define(['Application', 'marionette'], function (Application, Marionette) {
             this.params[evt.currentTarget.id] = $(evt.target).val();
         }
     });
-});

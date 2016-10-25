@@ -1,4 +1,4 @@
-define(['Application', 'marionette'], function (Application, Marionette) {
+define([], function () {
 
     Application.requiresTemplate("#transactionTestsTemplate");
 
