@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $.when.apply($, promises).always(function () {
         Application.Alerts.registerAlertSubscriptions();
-        //Application.CometD.init();
+//        Application.CometD.init();
         Application.start();
     });
 });

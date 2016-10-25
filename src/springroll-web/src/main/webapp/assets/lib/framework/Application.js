@@ -1,4 +1,5 @@
-var Marionette = require('backbone.marionette');
+window.Marionette = require('backbone.marionette');
+window.$ = $;
 var cachedTemplates;
 var SpringrollApplication = Marionette.Application.extend({
     region: '#root-element',

@@ -1,4 +1,4 @@
-define(['Application', 'marionette'], function (Application, Marionette) {
+define([], function () {
 
     var View = Marionette.View.extend({
         tagName: 'h2',
