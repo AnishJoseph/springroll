@@ -1,5 +1,6 @@
 //var dt      = require( 'datatables.net');
 //var buttons = require( 'datatables.net-buttons' )( window, window.$ );
+require('datatables');
 require('bootstrap-select');
 require('./../../vendor/bootstrap-plugins/js/bootstrap-datetimepicker.min.js');
 
@@ -70,14 +71,14 @@ var GridView  = Marionette.View.extend({
     },
 
     onRender : function(){
-        //this.ui.griddiv.DataTable( {
-        //    data: this.gridata,
-        //    paging:   false,
+        this.ui.griddiv.DataTable( {
+            data: this.gridata,
+            paging:   false,
         //    scrollY:        '45vh',
         //    scrollCollapse: true,
-            //search : true,
-            //columns: this.columnDefinitions
-        //} );
+            search : true,
+            columns: this.columnDefinitions
+        } );
     }
 });
 

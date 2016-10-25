@@ -12,6 +12,7 @@
     "bootstrap-loader": "^2.0.0-beta.12",
     "bootstrap-select": "^1.11.2",
     "css-loader": "^0.25.0",
+    "datatables": "^1.10.12",
     "datatables.net": "^1.10.12",
     "datatables.net-dt": "^1.10.12",
     "file-loader": "^0.9.0",
