@@ -14,7 +14,7 @@ require('./lib/framework/grid.report.view.js');
 require('./lib/framework/report.parameter.view.js');
 //require('./lib/framework/messenger.cometd.js');
 
-document.addEventListener('DOMContentLoaded', () => { //FIXME make this jquery $.reaady??
+$(function() {
     $.fn.datepicker.defaults.format = UIProperties.uiDateFormatJs;
     var promises = [];
     promises.push(Application.loadTemplates());
