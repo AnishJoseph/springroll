@@ -60,7 +60,7 @@ var dataSet = [
 ];
 var GridView  = Marionette.View.extend({
 
-    template: _.template("<table id='gridtable' style='margin: 15px; width: 100%'/>"),
+    template: _.template("<table class='table-striped table-bordered table-hover ' id='gridtable' style='margin: 15px; width: 100%'/>"),
     ui : {
         griddiv : '#gridtable'
     },
@@ -73,7 +73,7 @@ var GridView  = Marionette.View.extend({
 
     onRender : function(){
         this.ui.griddiv.DataTable( {
-            "dom": 'Blrtip',
+            "dom": 'Bflrtip',
             data: this.gridata,
             paging:   false,
         //    scrollY:        '45vh',
