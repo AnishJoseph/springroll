@@ -3,6 +3,7 @@ var Application =require('./lib/framework/Application.js');
 
 require("!style!css!bootstrap-select/dist/css/bootstrap-select.min.css");
 require("!style!css!datatables.net-bs/css/dataTables.bootstrap.css");
+require("!style!css!datatables.net-buttons-bs/css/buttons.bootstrap.css");
 
 /* JS files */
 require('AllSolutionModules');

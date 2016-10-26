@@ -73,12 +73,21 @@ var GridView  = Marionette.View.extend({
 
     onRender : function(){
         this.ui.griddiv.DataTable( {
+            "dom": 'Blrtip',
             data: this.gridata,
             paging:   false,
         //    scrollY:        '45vh',
         //    scrollCollapse: true,
             search : true,
-            columns: this.columnDefinitions
+            columns: this.columnDefinitions,
+            buttons: [
+                {
+                    text: 'Custom',
+                    action: function ( e, dt, node, config ) {
+                        console.log("CUSTOM BUTTOM PRESSED");
+                    }
+                }
+            ]
         } );
     }
 });
