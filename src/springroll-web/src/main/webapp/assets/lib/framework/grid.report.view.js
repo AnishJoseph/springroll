@@ -1,6 +1,5 @@
-//var dt      = require( 'datatables.net');
-//var buttons = require( 'datatables.net-buttons' )( window, window.$ );
-require('datatables');
+require( 'datatables.net' );
+require( 'datatables.net-buttons' );
 require('bootstrap-select');
 require('./../../vendor/bootstrap-plugins/js/bootstrap-datetimepicker.min.js');
 var Marionette = require('backbone.marionette');
