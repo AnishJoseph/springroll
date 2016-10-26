@@ -3,7 +3,7 @@ var Application =require('Application');
 
 var M2Controller = Marionette.Object.extend({
     activate: function() {
-        var view = new Application.ReportView({"gridName":"TestGrid1" });
+        var view = new Application.GridView({"gridName":"TestGrid1" });
         Application.rootView.showBody(view);
         Backbone.history.navigate('m2');
     }

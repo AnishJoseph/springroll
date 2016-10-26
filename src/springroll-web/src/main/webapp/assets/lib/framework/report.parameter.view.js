@@ -72,7 +72,7 @@ Application.ReportParamsView  = Marionette.View.extend({
     initialize: function(options) {
         this.data = options.data;
         this.gridName = options.gridName;
-        this.myparent = options.myparent;
+        this.myParent = options.myParent;
         this.params = {};
         var events = {};
         events['click #submit'] =  'submit';
@@ -83,7 +83,7 @@ Application.ReportParamsView  = Marionette.View.extend({
     },
     submit : function(){
         this.params["gridName"] = this.gridName;
-        this.myparent.triggerMethod("grid:data:changed", this.params);
+        this.myParent.triggerMethod("grid:data:changed", this.params);
     },
     changeHandler : function(evt){
         this.params[evt.currentTarget.id] = $(evt.target).val();
