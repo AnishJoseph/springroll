@@ -18,13 +18,22 @@ require('./lib/framework/grid.report.view.js');
 require('./lib/framework/report.parameter.view.js');
 require('./lib/framework/messenger.cometd.js');
 
+
 $(function() {
+    $.ajaxSetup({
+        cache: false,
+        statusCode : {
+            406:function(message){   //NOT_ACCEPTABLE
+                Application.Indicator.showErrorMessage({message:message.responseText});
+            },
+        }
+    });
+
     $.fn.datepicker.defaults.format = UIProperties.uiDateFormatJs;
     var promises = [];
     promises.push(Application.loadTemplates());
     promises.push(Application.loadUser());
     promises.push(Application.loadLocaleMessages());
-
     $.when.apply($, promises).always(function () {
         Application.Alerts.registerAlertSubscriptions();
         Application.CometD.init();
