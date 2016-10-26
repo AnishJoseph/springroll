@@ -1,9 +1,5 @@
-require( 'datatables.net' );
-require( 'datatables.net-buttons' );
-require('bootstrap-select');
-require('./../../vendor/bootstrap-plugins/js/bootstrap-datetimepicker.min.js');
 var Marionette = require('backbone.marionette');
-var Application =require('./Application.js');
+var Application =require('Application');
 
 var GridData = Backbone.Model.extend({
     url: function () {

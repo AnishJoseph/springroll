@@ -1,5 +1,5 @@
 var Marionette = require('backbone.marionette');
-var Application =require('./Application.js');
+var Application =require('Application');
 
 Application.ReportParamsView  = Marionette.View.extend({
     serializeData: function(){
@@ -61,7 +61,10 @@ Application.ReportParamsView  = Marionette.View.extend({
     },
     onRender: function() {
         this.ui.selectpicker.selectpicker();
-        this.ui.datepicker.datepicker();
+        this.ui.datepicker.datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
     },
 
     ui: {

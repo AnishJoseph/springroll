@@ -1,11 +1,19 @@
-var Application =require('./lib/framework/Application.js');
+var Application =require('Application');
 /* CSS files */
 
 require("!style!css!bootstrap-select/dist/css/bootstrap-select.min.css");
 require("!style!css!datatables.net-bs/css/dataTables.bootstrap.css");
 require("!style!css!datatables.net-buttons-bs/css/buttons.bootstrap.css");
+require("!style!css!bootstrap-datepicker/dist/css/bootstrap-datepicker3.css");
 
 /* JS files */
+require( 'datatables.net' );
+require( 'datatables.net-buttons' );
+require('bootstrap-select');
+require('bootstrap-datepicker');
+
+
+
 require('AllSolutionModules');
 require('./vendor/cometd/jquery.cometd.js');
 require('./lib/framework/root.view.js');

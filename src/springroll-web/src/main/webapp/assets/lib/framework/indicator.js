@@ -1,5 +1,5 @@
 var Marionette = require('backbone.marionette');
-var Application =require('./Application.js');
+var Application =require('Application');
 var Backbone = require('backbone');
 
 Application.requiresTemplate('#indicator.item.template');

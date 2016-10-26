@@ -1,5 +1,5 @@
 var Marionette = require('backbone.marionette');
-var Application =require('./Application.js');
+var Application =require('Application');
 
 Application.RootView = Marionette.View.extend({
     tagName: 'div',
