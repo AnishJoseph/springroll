@@ -10,6 +10,7 @@ module.exports = {
     },
     module: {
         loaders: [
+            { test: /org\/cometd\.js$/, loader: 'imports?org=>{}'},
             { test: /\.css$/, loader: 'style-loader!css-loader' },
             { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file" },
             { test: /\.(woff|woff2)$/, loader:"url?prefix=font/&limit=5000" },
@@ -35,7 +36,8 @@ module.exports = {
         root: path.resolve(__dirname),
         alias: {
             Application$: 'target/assets/lib/framework/Application.js',
-            AllSolutionModules: 'src/main/webapp/assets/lib/modules/AllSolutionModules.js'
+            AllSolutionModules: 'src/main/webapp/assets/lib/modules/AllSolutionModules.js',
+            "org/cometd" : 'target/assets/org/cometd.js'
         },
         extensions: ['', '.js', '.jsx']
     },
