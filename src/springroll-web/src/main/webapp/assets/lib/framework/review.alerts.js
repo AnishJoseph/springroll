@@ -1,4 +1,7 @@
 var Marionette = require('backbone.marionette');
+var Application =require('./Application.js');
+
+
 var ReviewItem = Backbone.Model.extend({urlRoot:'/api/sr/reviewaction'});
 
 var AlertsView = Marionette.View.extend({

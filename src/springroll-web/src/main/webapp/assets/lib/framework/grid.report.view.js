@@ -3,6 +3,8 @@
 require('datatables');
 require('bootstrap-select');
 require('./../../vendor/bootstrap-plugins/js/bootstrap-datetimepicker.min.js');
+var Marionette = require('backbone.marionette');
+var Application =require('./Application.js');
 
 var GridData = Backbone.Model.extend({
     url: function () {

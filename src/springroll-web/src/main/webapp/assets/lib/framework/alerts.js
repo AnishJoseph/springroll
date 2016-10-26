@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
 var Backbone = require('backbone');
+var Application =require('./Application.js');
 var moment = require('moment');
 
 Application.requiresTemplate('#alerts.view');

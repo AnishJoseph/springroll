@@ -1,6 +1,7 @@
-
-var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
+var Application =require('./Application.js');
+var Backbone = require('backbone');
+
 Application.requiresTemplate('#indicator.item.template');
 
 var collection = new Backbone.Collection();

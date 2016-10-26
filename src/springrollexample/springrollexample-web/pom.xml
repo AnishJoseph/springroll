@@ -1,68 +1,144 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<artifactId>springrollexample</artifactId>
-		<groupId>com.springrollexample</groupId>
-		<version>1.0.0-SNAPSHOT</version>
-	</parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>springrollexample</artifactId>
+        <groupId>com.springrollexample</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
 
-	<artifactId>springrollexample-web</artifactId>
-	<name>springrollexample-web</name>
-	<packaging>war</packaging>
+    <artifactId>springrollexample-web</artifactId>
+    <name>springrollexample-web</name>
+    <packaging>war</packaging>
 
-	<dependencies>
+    <dependencies>
         <dependency>
             <groupId>com.springroll</groupId>
             <artifactId>springroll-web</artifactId>
             <version>${springroll.version}</version>
             <type>war</type>
         </dependency>
-		<dependency>
-			<groupId>com.springrollexample</groupId>
-			<artifactId>springrollexample-api-facade</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.springrollexample</groupId>
-			<artifactId>springrollexample-orm</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>com.springrollexample</groupId>
+            <artifactId>springrollexample-api-facade</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.springrollexample</groupId>
+            <artifactId>springrollexample-orm</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.springrollexample</groupId>
             <artifactId>springrollexample-routers</artifactId>
         </dependency>
     </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<warName>springrollexample</warName>
-					<overlays>
-						<overlay>
-							<groupId>com.springroll</groupId>
-							<artifactId>springroll-web</artifactId>
-							<excludes>
-								<exclude>WEB-INF/logback.xml</exclude>
-							</excludes>
-						</overlay>
-					</overlays>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-				</configuration>
-			</plugin>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>Extract-Assets</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.springroll</groupId>
+                                    <artifactId>springroll-web</artifactId>
+                                    <type>war</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>target/</outputDirectory>
+                                    <includes>assets/**</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <warName>springrollexample</warName>
+                    <overlays>
+                        <overlay>
+                            <groupId>com.springroll</groupId>
+                            <artifactId>springroll-web</artifactId>
+                            <excludes>
+                                <exclude>WEB-INF/logback.xml</exclude>
+                            </excludes>
+                        </overlay>
+                    </overlays>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v6.8.1</nodeVersion>
+                            <npmVersion>3.10.8</npmVersion>
+                        </configuration>
+                    </execution>
 
-		</plugins>
-		<finalName>springrollexample</finalName>
-	</build>
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>npm run build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+                    <!--<execution>-->
+                    <!--<id>webpack build</id>-->
+                    <!--<goals>-->
+                    <!--<goal>webpack</goal>-->
+                    <!--</goals>-->
+                    <!---->
+                    <!--<configuration>-->
+                    <!--&lt;!&ndash; optional: if not specified, it will run webpack's default-->
+                    <!--build (and you can remove this whole <configuration> section.) &ndash;&gt;-->
+                    <!--<arguments>-p</arguments>-->
+                    <!--</configuration>-->
+                    <!--</execution>-->
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+
+        </plugins>
+        <finalName>springrollexample</finalName>
+    </build>
 
 </project>
 

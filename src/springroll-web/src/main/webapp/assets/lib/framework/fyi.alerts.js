@@ -1,4 +1,5 @@
 var Marionette = require('backbone.marionette');
+var Application =require('./Application.js');
 
 var AlertsView = Marionette.View.extend({
     tagName: 'div',

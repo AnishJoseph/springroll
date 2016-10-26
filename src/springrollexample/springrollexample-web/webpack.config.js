@@ -3,7 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-    entry: "./src/main/webapp/main.js",
+    entry: "./target/assets/main.js",
     output: {
 		path: path.join(__dirname, 'src/main/webapp/'),
         filename: "springroll.js"
@@ -23,5 +23,13 @@ module.exports = {
             _: 'underscore',
             jQuery:"jquery",
         })
-    ]
+    ],
+    resolve: {
+        root: path.resolve(__dirname),
+        alias: {
+            Application$: 'target/assets/lib/framework/Application.js',
+            AllSolutionModules: 'src/main/webapp/assets/lib/modules/AllSolutionModules.js'
+        },
+        extensions: ['', '.js', '.jsx']
+    },
 };

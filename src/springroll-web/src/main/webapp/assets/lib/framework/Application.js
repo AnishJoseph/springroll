@@ -1,5 +1,4 @@
-window.Marionette = require('backbone.marionette');
-window.$ = $;
+var Marionette = require('backbone.marionette');
 var cachedTemplates;
 var SpringrollApplication = Marionette.Application.extend({
     region: '#root-element',
@@ -138,6 +137,5 @@ Application.getLocaleMessage = function(messageKey){
         }
     })(arguments));
 };
-window.Application = Application;
 window.Localize = Application.getLocaleMessage;
 module.exports = Application;
