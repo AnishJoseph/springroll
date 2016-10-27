@@ -8,6 +8,9 @@ var AlertsView = Marionette.View.extend({
     tagName: 'div',
     template: _.template('<%-channel%>'),
 
+    infoClicked : function(){
+      Application.showModal("Approval Required");
+    },
     acceptClicked : function(){
         var reviewItem = new ReviewItem({reviewStepId: this.model.get('reviewStepId'), approved : true});
         var that = this;
@@ -16,7 +19,7 @@ var AlertsView = Marionette.View.extend({
                 that.model.trigger('destroy', that.model);
             },
             error : function(){
-                //FIXME - handle sucees and failure
+                //FIXME - handle success and failure
             }
         });
     },
@@ -37,7 +40,7 @@ var AlertsView = Marionette.View.extend({
 Application.subscribeForAlert('/core/review', {
     view: AlertsView,
     showDismiss: false,
-    showInfo: false,
+    showInfo: true,
     showAccept: true,
     showReject: true,
 });

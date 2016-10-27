@@ -25,6 +25,7 @@ require('./lib/framework/review.alerts.js');
 require('./lib/framework/grid.report.view.js');
 require('./lib/framework/report.parameter.view.js');
 require('./lib/framework/messenger.cometd.js');
+require('./lib/framework/modal.js');
 
 
 $(function() {

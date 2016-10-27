@@ -137,5 +137,10 @@ Application.getLocaleMessage = function(messageKey){
         }
     })(arguments));
 };
+
+Application.showModal = function(title, view){
+    Application.rootView.triggerMethod("show:modal", title, view);
+} ;
+
 window.Localize = Application.getLocaleMessage;
 module.exports = Application;

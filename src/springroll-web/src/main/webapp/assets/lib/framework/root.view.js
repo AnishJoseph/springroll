@@ -8,14 +8,16 @@ Application.RootView = Marionette.View.extend({
         "<div id='main-body' style='width: 100%; position: fixed; top: 50px;left:0;bottom: 0;z-index: 1'>" +
             "<div id='content' style='overflow-y: auto; width: 100%;height: 100%' ></div>" +
         "</div>" +
-        "<div id='alerts'    style='position: fixed; top:100px; right: 0px;z-index: 50'/>" +
-        "<div id='indicator' style='position: fixed; top:0px; align-content: center; width: 100%;z-index: 900'/> "
+        "<div id='alerts'    style='position: fixed; top:100px; right: 0;z-index: 50'/>" +
+        "<div id='indicator' style='position: fixed; top:0; align-content: center; width: 100%;z-index: 900'/> " +
+        "<div id='modal'/> "
     ),
     regions: {
         menuRegion: '#main-menu',
         bodyRegion: '#content',
         alertsRegion: '#alerts',
-        indicatorRegion: '#indicator'
+        indicatorRegion: '#indicator',
+        modalRegion: '#modal'
     },
     onRender: function() {
         this.showChildView('menuRegion', new Application.MenuView());
@@ -24,5 +26,8 @@ Application.RootView = Marionette.View.extend({
     },
     showBody : function(view){
         this.showChildView('bodyRegion', view);
+    },
+    onShowModal : function(title, view){
+        this.showChildView('modalRegion', new Application.ModalView({model: new Backbone.Model({title:title}), view : view}));
     }
 });
