@@ -39,7 +39,7 @@ public abstract class AbstractAPI {
     }
 
     @ExceptionHandler(BusinessValidationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public  List<BusinessValidationResult> handleBusinessValidationException(BusinessValidationException ex) {
         return ex.getViolations();
     }
