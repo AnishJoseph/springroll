@@ -32,6 +32,9 @@ public class ReviewStep extends AbstractEntity {
     @Column(name = "RULE_ID")
     private Long ruleId;
 
+    @Column(name = "CHANNEL")
+    private String channel;
+
     @Column(name = "REVIEW_STAGE")
     @Min(0)
     @Max(100)
@@ -55,6 +58,37 @@ public class ReviewStep extends AbstractEntity {
 
     @Column(name = "BUSINESS_VIOLATIONS")
     private String businessViolationsAsJson = "";
+
+    @Column(name = "VIOLATION_FOR_THIS_STEP")
+    private String violationForThisStepJson = "";
+
+    private transient BusinessValidationResult violationForThisStep;
+
+
+    public BusinessValidationResult getViolationForThisStep() {
+        if (this.violationForThisStepJson.isEmpty() )return null;
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        try {
+            violationForThisStep = mapper.readValue(violationForThisStepJson, BusinessValidationResult.class);
+            return violationForThisStep;
+        } catch (IOException e) {
+            //FIXME
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setViolationForThisStep(BusinessValidationResult violationForThisStep) {
+        this.violationForThisStep = violationForThisStep;
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        try {
+            violationForThisStepJson = mapper.writeValueAsString(violationForThisStep);
+        } catch (JsonProcessingException e) {
+            //FIXME
+            throw new RuntimeException(e);
+        }
+    }
 
     public List<BusinessValidationResult>  getBusinessViolations() {
         if (this.businessViolationsAsJson.isEmpty() )return new ArrayList<>();
@@ -83,11 +117,13 @@ public class ReviewStep extends AbstractEntity {
     private transient IEvent event;
 
     public ReviewStep(){}
-    public ReviewStep(Long ruleId, int reviewStage, Long parentId, String approver) {
+    public ReviewStep(Long ruleId, String channel, int reviewStage, Long parentId, String approver, BusinessValidationResult violationForThisStep) {
         this.ruleId = ruleId;
         this.reviewStage = reviewStage;
         this.setParentId(parentId);
         this.approver = approver;
+        this.channel = channel;
+        this.setViolationForThisStep(violationForThisStep);
     }
 
     public IEvent getEvent() {
@@ -182,5 +218,13 @@ public class ReviewStep extends AbstractEntity {
 
     public void setApprover(String approver) {
         this.approver = approver;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 }

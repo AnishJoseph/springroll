@@ -9,7 +9,10 @@ var AlertsView = Marionette.View.extend({
     template: _.template('<%-channel%>'),
 
     infoClicked : function(){
-      Application.showModal("Approval Required");
+        //FIXME - i18n for this
+        var violations = new Backbone.Collection(this.model.get('businessValidationResult'));
+        var view = new Application.ReviewMoreInfoTableView({ collection: violations});
+        Application.showModal("Approval Required", view);
     },
     acceptClicked : function(){
         var reviewItem = new ReviewItem({reviewStepId: this.model.get('reviewStepId'), approved : true});

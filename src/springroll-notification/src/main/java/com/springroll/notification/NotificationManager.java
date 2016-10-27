@@ -127,6 +127,17 @@ public class NotificationManager implements INotificationManager {
         }
     }
 
+    @Override
+    public INotificationChannel nameToEnum(String enumValue){
+        for (Class notificationChannelClass : notificationChannels) {
+            INotificationChannel[] enumConstants = (INotificationChannel[])notificationChannelClass.getEnumConstants();
+            for (INotificationChannel enumConstant : enumConstants) {
+                if(((Enum)enumConstant).name().equals(enumValue))return enumConstant;
+            }
+        }
+        //FIXME - throw exception!!
+        return null;
+    }
     private INotificationChannel serviceUriToEnum(String channel) {
         INotificationChannel notificationChannel = serviceNameToNotificationChannel.get(channel);
         if(notificationChannel != null)return notificationChannel;

@@ -50,20 +50,20 @@ public class ReviewManager extends SpringrollEndPoint {
     }
 
     private void createReviewSteps(List<BusinessValidationResult> reviewNeededViolations, Long jobId, ReviewNeededEvent reviewNeededEvent){
-        List<ReviewRule> reviewRules = new ArrayList<>();
+        List<ReviewStep> reviewSteps = new ArrayList<>();
         for (BusinessValidationResult businessValidationResult : reviewNeededViolations) {
             if("SELF".equals(businessValidationResult.getApprover()))continue;
-            reviewRules.addAll(repo.reviewRules.findByRuleNameAndFyiOnly(businessValidationResult.getViolatedRule(), false));
-        }
-        List<ReviewStep> reviewSteps = new ArrayList<>();
-        for (ReviewRule reviewRule : reviewRules) {
-            ReviewStep reviewStep = new ReviewStep(reviewRule.getID(), reviewRule.getReviewStage(), jobId, reviewRule.getApprover());
-            reviewSteps.add(reviewStep);
+            List<ReviewRule> reviewRules = repo.reviewRules.findByRuleNameAndFyiOnly(businessValidationResult.getViolatedRule(), false);
+            for (ReviewRule reviewRule : reviewRules) {
+                ReviewStep reviewStep = new ReviewStep(reviewRule.getID(), reviewRule.getChannel(), reviewRule.getReviewStage(), jobId, reviewRule.getApprover(), businessValidationResult);
+                reviewSteps.add(reviewStep);
+            }
         }
         /* Add a step with stage set to 0 for any SELF reviews */
         for (BusinessValidationResult businessValidationResult : reviewNeededViolations) {
             if(!"SELF".equals(businessValidationResult.getApprover()))continue;
-            reviewSteps.add(new ReviewStep(-1l, 0, jobId, SpringrollSecurity.getUser().getUsername()));
+            //FIXME - right now channel for self review is hard-coded to 'REVIEW' - figure where this should come from
+            reviewSteps.add(new ReviewStep(-1l, "REVIEW", 0, jobId, SpringrollSecurity.getUser().getUsername(), businessValidationResult));
         }
 
         /* Store the event under review so that we can send it out after all the reviews are done.
@@ -91,7 +91,14 @@ public class ReviewManager extends SpringrollEndPoint {
             approverToNoti.get(reviewStep.getApprover()).add(reviewStep.getID());
         }
         for (String approver : approverToNoti.keySet()) {
-            Long notiId = notificationManager.sendNotification(CoreNotificationChannels.REVIEW, new ReviewNotificationMessage(approverToNoti.get(approver), approver));
+            //FIXME - we are assuming here that all reviews for a given approver goes to the same channel - this may not be true.
+            // Do we need to handle the fact that multiple review steps to the same user can have different notfication channels.
+            ReviewStep step = repo.reviewStep.findOne(approverToNoti.get(approver).get(0));
+            List<BusinessValidationResult> businessValidationResults = new ArrayList<>();
+            for (Long stepId : approverToNoti.get(approver)) {
+                businessValidationResults.add(repo.reviewStep.findOne(stepId).getViolationForThisStep());
+            }
+            Long notiId = notificationManager.sendNotification(notificationManager.nameToEnum(step.getChannel()), new ReviewNotificationMessage(approverToNoti.get(approver), approver, businessValidationResults));
             for (Long stepId : approverToNoti.get(approver)) {
                 repo.reviewStep.findOne(stepId).setNotificationId(notiId);
             }

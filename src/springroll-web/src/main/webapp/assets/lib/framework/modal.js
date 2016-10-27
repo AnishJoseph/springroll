@@ -10,11 +10,15 @@ Application.ModalView = Marionette.View.extend({
         this.bodyView = options.view;
     },
 
+    regions : {
+        modalBody : '#modal-body'
+    },
     ui : {
         mymodal : '#mymodal'
     },
 
     onRender : function(){
         $(this.ui.mymodal).modal();
+        this.showChildView('modalBody', this.bodyView);
     }
 });

@@ -17,5 +17,6 @@ public interface INotificationManager {
 
     void addNotificationAcknowledgement(Long notificationId);
 
+    INotificationChannel nameToEnum(String enumValue);
 
 }

@@ -16,6 +16,9 @@ public class ReviewRule extends AbstractEntity {
     @Column(name = "RULE_NAME")
     private String ruleName;
 
+    @Column(name = "CHANNEL")
+    private String channel;
+
     @Column(name = "REVIEW_STAGE")
     private int reviewStage;
 
@@ -77,5 +80,13 @@ public class ReviewRule extends AbstractEntity {
 
     public void setFyiOnly(boolean fyiOnly) {
         this.fyiOnly = fyiOnly;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 }

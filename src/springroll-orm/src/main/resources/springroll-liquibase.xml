@@ -31,6 +31,7 @@
             </column>
             <column name="PARENT_ID" type="bigint"/>
             <column name="RULE_NAME" type="VARCHAR2(48)" />
+            <column name="CHANNEL" type="VARCHAR2(48)" />
             <column name="REVIEW_STAGE" type="int" defaultValue="1"/>
             <column name="APPROVER" type="VARCHAR2(32)"/>
             <column name="APPROVALS_NEEDED" type="int" defaultValue="1"/>
@@ -42,12 +43,14 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="PARENT_ID" type="bigint"/>
+            <column name="CHANNEL" type="VARCHAR2(48)" />
             <column name="APPROVER" type="VARCHAR2(32)"/>
             <column name="RULE_ID" type="bigint"/>
             <column name="NOTIFICATION_ID" type="bigint"/>
             <column name="REVIEW_STAGE" type="int" />
             <column name="COMPLETED" type="bit" />
             <column name="REVIEW_LOG" type="VARCHAR2(2048)"/>
+            <column name="VIOLATION_FOR_THIS_STEP" type="VARCHAR2(256)"/>
             <column name="BUSINESS_VIOLATIONS" type="VARCHAR2(4000)"/>
             <column name="EVENT" type="longblob" />
         </createTable>
