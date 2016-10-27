@@ -27,13 +27,19 @@ require('./lib/framework/report.parameter.view.js');
 require('./lib/framework/messenger.cometd.js');
 require('./lib/framework/modal.js');
 
-
 $(function() {
     $.ajaxSetup({
         cache: false,
         statusCode : {
             406:function(message){   //NOT_ACCEPTABLE
                 Application.Indicator.showErrorMessage({message:message.responseText});
+            },
+            400:function(message){   //BAD_REQUEST BUSINESS VIOLATIONS
+                _.each(message.responseJSON, function(violation){
+                    /* Add the localized version of the field name at position 0 or the args (if the field exists) */
+                    if(violation.field != undefined && violation.field != null) violation.args.unshift(Localize(violation.field));
+                    Application.Indicator.showErrorMessage({message: Localize(violation.messageKey, violation.args)});
+                });
             },
         }
     });

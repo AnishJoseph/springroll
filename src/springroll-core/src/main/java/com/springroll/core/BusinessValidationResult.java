@@ -9,7 +9,7 @@ public class BusinessValidationResult implements Serializable{
     private int dtoIndex;
     private String field;
     private String messageKey;
-    private String[] args;
+    private String[] args = new String[]{};
     private String violatedRule;
     private String approver;
 
@@ -22,7 +22,8 @@ public class BusinessValidationResult implements Serializable{
         this.messageKey = messageKey;
         this.violatedRule = violatedRule;
         this.approver = approver;
-        this.args = args;
+        if(args != null) this.args = args;
+
     }
 
     public String getField() {
