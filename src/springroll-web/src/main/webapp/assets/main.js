@@ -44,6 +44,25 @@ $(function() {
                     });
                 }
             },
+            400:function(message){   //BAD_MESSAGE CONSTRAINT VIOLATIONS
+                // Check if this is already handled in the business logic
+                if(message.errorHandled == undefined) {
+                    _.each(message.responseJSON, function (violation) {
+                        _.each(Object.keys(violation), function(field) {
+                            /* First localize the field name */
+                            var localizedFieldName = Localize(field);
+                            if (violation[field].includes('{0}')){
+                                /* if the error message is a custom message which includes  the field name  i.e message string contains '{0}'
+                                   then dont show the field name separately - just create the message as per the template
+                                 */
+                                Application.Indicator.showErrorMessage({message: Localize(violation[field], [localizedFieldName])});
+                            } else {
+                                Application.Indicator.showErrorMessage({message: localizedFieldName +  " : " + Localize(violation[field])});
+                            }
+                        });
+                    });
+                }
+            },
         }
     });
 
