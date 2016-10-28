@@ -7,9 +7,11 @@ var AlertsView = Marionette.View.extend({
     template: _.template('<%-message%>'),
 
     infoClicked : function(){
-        //FIXME - i18n for this
-        var violations = new Backbone.Collection(this.model.get('businessValidationResult'));
-        var view = new Application.ReviewMoreInfoTableView({ collection: violations});
+        var violations = [];
+        _.each(this.model.get('businessValidationResult'), function(violation){
+            violations.push({violatedRule: Localize(violation.violatedRule), message : Localize(violation.messageKey, violation.args)});
+        });
+        var view = new Application.ReviewMoreInfoTableView({ collection: new Backbone.Collection(violations)});
         Application.showModal("For your information", view);
     },
 });

@@ -4,7 +4,7 @@ var Application = require('Application');
 
 var RowView = Marionette.View.extend({
     tagName: 'tr',
-    template: _.template('<td><%- field %></td> <td><%- messageKey %></td>')
+    template: _.template('<td><%- violatedRule %></td> <td><%- message %></td>')
 });
 
 var TableBody = Marionette.CollectionView.extend({
