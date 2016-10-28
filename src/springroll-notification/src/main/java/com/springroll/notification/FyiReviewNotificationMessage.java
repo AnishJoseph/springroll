@@ -1,27 +1,59 @@
 package com.springroll.notification;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.BusinessValidationResult;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by anishjoseph on 02/10/16.
  */
 public class FyiReviewNotificationMessage extends AbstractNotificationMessage{
-    private List<BusinessValidationResult> businessValidationResult;
+    transient private List<BusinessValidationResult> businessValidationResult;
+    private String  businessValidationResultJson = "";
 
     public FyiReviewNotificationMessage(){}
 
-    public FyiReviewNotificationMessage(List<BusinessValidationResult> businessValidationResult, String approver) {
-        this.businessValidationResult = businessValidationResult;
+    public FyiReviewNotificationMessage(String approver, List<BusinessValidationResult> businessValidationResult) {
         setNotificationReceivers(approver);
+        setBusinessValidationResult(businessValidationResult);
     }
 
     public List<BusinessValidationResult> getBusinessValidationResult() {
-        return businessValidationResult;
+        if (this.businessValidationResultJson.isEmpty() )return new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        try {
+            businessValidationResult = mapper.readValue(businessValidationResultJson,  new TypeReference<List<BusinessValidationResult>>(){});
+            return businessValidationResult;
+        } catch (IOException e) {
+            //FIXME
+            throw new RuntimeException(e);
+        }
     }
 
     public void setBusinessValidationResult(List<BusinessValidationResult> businessValidationResult) {
         this.businessValidationResult = businessValidationResult;
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        try {
+            businessValidationResultJson = mapper.writeValueAsString(businessValidationResult);
+        } catch (JsonProcessingException e) {
+            //FIXME
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String getBusinessValidationResultJson() {
+        return businessValidationResultJson;
+    }
+
+    public void setBusinessValidationResultJson(String businessValidationResultJson) {
+        this.businessValidationResultJson = businessValidationResultJson;
     }
 }

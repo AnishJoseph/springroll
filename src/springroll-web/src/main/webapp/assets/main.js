@@ -22,6 +22,7 @@ require('./lib/framework/indicator.js');
 require('./lib/framework/alerts.js');
 require('./lib/framework/fyi.alerts.js');
 require('./lib/framework/review.alerts.js');
+require('./lib/framework/reviewfyi.alerts.js');
 require('./lib/framework/grid.report.view.js');
 require('./lib/framework/report.parameter.view.js');
 require('./lib/framework/messenger.cometd.js');

@@ -81,6 +81,7 @@ public class NotificationManager implements INotificationManager {
             logger.error("Unable to find NotificationChannel for channel '{}' - probably does not exist in the Enums", serviceUri);
             return;
         }
+        if(notificationChannel.getMessageFactory() == null)return;
         List<Notification> pendingNotificationsForUser = (List<Notification>)notificationChannel.getMessageFactory().getPendingNotificationsForUser(notificationChannel);
         if(pendingNotificationsForUser.isEmpty())return;
 

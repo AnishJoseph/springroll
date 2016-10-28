@@ -36,8 +36,6 @@ public class ReviewStep extends AbstractEntity {
     private String channel;
 
     @Column(name = "REVIEW_STAGE")
-    @Min(0)
-    @Max(100)
     private int reviewStage;
 
     @Column(name = "APPROVER")
@@ -55,9 +53,6 @@ public class ReviewStep extends AbstractEntity {
 
     @Column(name = "REVIEW_LOG")
     private String reviewLogAsJson = "";
-
-    @Column(name = "BUSINESS_VIOLATIONS")
-    private String businessViolationsAsJson = "";
 
     @Column(name = "VIOLATION_FOR_THIS_STEP")
     private String violationForThisStepJson = "";
@@ -84,29 +79,6 @@ public class ReviewStep extends AbstractEntity {
         mapper.registerModule(new JavaTimeModule());
         try {
             violationForThisStepJson = mapper.writeValueAsString(violationForThisStep);
-        } catch (JsonProcessingException e) {
-            //FIXME
-            throw new RuntimeException(e);
-        }
-    }
-
-    public List<BusinessValidationResult>  getBusinessViolations() {
-        if (this.businessViolationsAsJson.isEmpty() )return new ArrayList<>();
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        try {
-            return mapper.readValue(businessViolationsAsJson, new TypeReference<List<BusinessValidationResult>>(){});
-        } catch (IOException e) {
-            //FIXME
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void setBusinessViolations(List<BusinessValidationResult> reviewNeededViolations) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        try {
-            businessViolationsAsJson = mapper.writeValueAsString(reviewNeededViolations);
         } catch (JsonProcessingException e) {
             //FIXME
             throw new RuntimeException(e);

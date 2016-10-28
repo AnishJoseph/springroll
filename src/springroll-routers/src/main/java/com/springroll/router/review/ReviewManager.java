@@ -33,7 +33,7 @@ import java.util.Map;
 @Service
 public class ReviewManager extends SpringrollEndPoint {
     private static final Logger logger = LoggerFactory.getLogger(ReviewManager.class);
-
+    private static int REVIEW_STAGE_FOR_FYI = 1000;
     @Autowired
     ApplicationEventPublisher publisher;
 
@@ -52,38 +52,40 @@ public class ReviewManager extends SpringrollEndPoint {
     private void createReviewSteps(List<BusinessValidationResult> reviewNeededViolations, Long jobId, ReviewNeededEvent reviewNeededEvent){
         List<ReviewStep> reviewSteps = new ArrayList<>();
         for (BusinessValidationResult businessValidationResult : reviewNeededViolations) {
-            if("SELF".equals(businessValidationResult.getApprover()))continue;
-            List<ReviewRule> reviewRules = repo.reviewRules.findByRuleNameAndFyiOnly(businessValidationResult.getViolatedRule(), false);
+            String approver = businessValidationResult.getApprover();
+            List<ReviewRule> reviewRules = repo.reviewRules.findByRuleName(businessValidationResult.getViolatedRule());
             for (ReviewRule reviewRule : reviewRules) {
-                ReviewStep reviewStep = new ReviewStep(reviewRule.getID(), reviewRule.getChannel(), reviewRule.getReviewStage(), jobId, reviewRule.getApprover(), businessValidationResult);
+                if(approver == null) approver = reviewRule.getApprover(); //Dont override the approver if the approver is set by the business rule
+                int reviewStage = reviewRule.isFyiOnly() ? REVIEW_STAGE_FOR_FYI : reviewRule.getReviewStage(); //Move all FYI ONLY to the end
+                if("SELF".equals(approver) && !reviewRule.isFyiOnly()) reviewStage = 0; /* Ensure that all the self reviews happen first */
+                if("SELF".equals(approver)) approver = SpringrollSecurity.getUser().getUsername();
+                ReviewStep reviewStep = new ReviewStep(reviewRule.getID(), reviewRule.getChannel(), reviewStage, jobId, approver, businessValidationResult);
                 reviewSteps.add(reviewStep);
             }
-        }
-        /* Add a step with stage set to 0 for any SELF reviews */
-        for (BusinessValidationResult businessValidationResult : reviewNeededViolations) {
-            if(!"SELF".equals(businessValidationResult.getApprover()))continue;
-            //FIXME - right now channel for self review is hard-coded to 'REVIEW' - figure where this should come from
-            reviewSteps.add(new ReviewStep(-1l, "REVIEW", 0, jobId, SpringrollSecurity.getUser().getUsername(), businessValidationResult));
         }
 
         /* Store the event under review so that we can send it out after all the reviews are done.
            we need to store this in only one place - keep it in the 0th step
         */
         reviewSteps.get(0).setEvent(reviewNeededEvent.getPayload().getEventForReview());
-        reviewSteps.get(0).setBusinessViolations(reviewNeededViolations);
         repo.reviewStep.save(reviewSteps);
     }
     private List<ReviewStep> findNextReviewStep(Long jobId, int completedStepId){
-        List<ReviewStep> allFutureSteps = repo.reviewStep.findByParentIdAndReviewStageIsGreaterThan(jobId, completedStepId);
-        int minReviewStage = 10000;
-        for (ReviewStep futureStep : allFutureSteps) {
-            if(futureStep.getReviewStage() < minReviewStage)minReviewStage = futureStep.getReviewStage();
+        try {
+            List<ReviewStep> allFutureSteps = repo.reviewStep.findByParentIdAndReviewStageIsGreaterThan(jobId, completedStepId);
+            int minReviewStage = 10000;
+            for (ReviewStep futureStep : allFutureSteps) {
+                if (futureStep.getReviewStage() < minReviewStage) minReviewStage = futureStep.getReviewStage();
+            }
+            List<ReviewStep> nextSteps = repo.reviewStep.findByParentIdAndReviewStage(jobId, minReviewStage);
+            return nextSteps;
+        }catch (Exception e){
+            e.printStackTrace();
+            throw  new RuntimeException(e);
         }
-        List<ReviewStep> nextSteps = repo.reviewStep.findByParentIdAndReviewStage(jobId, minReviewStage);
-        return nextSteps;
     }
 
-    public void createReviewNotifications(List<ReviewStep> reviewSteps){
+    private void createReviewNotifications(List<ReviewStep> reviewSteps){
         Map<String, List<Long>> approverToNoti = new HashMap<>();
         for (ReviewStep reviewStep : reviewSteps) {
             /* Create the notification payload, send it down the REVIEW channel, and store the review id returned in the step */
@@ -117,7 +119,7 @@ public class ReviewManager extends SpringrollEndPoint {
         }
     }
 
-    public void actOnOneStep(Long reviewStepId, boolean isApproved){
+    private void actOnOneStep(Long reviewStepId, boolean isApproved){
         ReviewStep reviewStep = repo.reviewStep.findOne(reviewStepId);
         if(reviewStep == null){
             logger.error("Unable to find a review step with id {} - returning silently", reviewStepId);
@@ -146,8 +148,8 @@ public class ReviewManager extends SpringrollEndPoint {
         notificationManager.deleteNotification(reviewStep.getNotificationId());
 
         List<ReviewStep> reviewSteps = findNextReviewStep(reviewStep.getParentId(), reviewStep.getReviewStage());
-        if(reviewSteps.isEmpty() || !isApproved){
-            // All reviews are complete or someone has rejected this
+        if(reviewSteps.isEmpty() || !isApproved || reviewSteps.get(0).getReviewStage() == REVIEW_STAGE_FOR_FYI){
+            // All reviews are complete or someone has rejected this or the remaining steps are just FYI
             List<ReviewStep> allReviewSteps = repo.reviewStep.findByParentId(reviewStep.getParentId());
             List<ReviewLog> reviewLog = new ArrayList<>();
             for (ReviewStep rs : allReviewSteps) {
@@ -172,7 +174,7 @@ public class ReviewManager extends SpringrollEndPoint {
                 route(step.getEvent());
 
                 /* Now that the review is complete and approved, send out  FYI notifications, if any */
-                sendFyiNotification(reviewStep.getBusinessViolations());
+                if(!reviewSteps.isEmpty())sendFyiNotification(reviewSteps);
             } else {
                 job.setEndTime(LocalDateTime.now());
                 job.setStatus(job.getStatus() + " Review Rejected by " + SpringrollSecurity.getUser().getUsername());
@@ -184,20 +186,20 @@ public class ReviewManager extends SpringrollEndPoint {
         createReviewNotifications(reviewSteps);
     }
 
-    private void sendFyiNotification(List<BusinessValidationResult> reviewNeededViolations){
-        /* Build a list of businessValidationResults on a per user basis */
-        Map<String, List<BusinessValidationResult>> userToNoti = new HashMap<>();
-        for (BusinessValidationResult businessValidationResult : reviewNeededViolations) {
-            if("SELF".equals(businessValidationResult.getApprover()))continue;
-            List<ReviewRule> reviewRules = repo.reviewRules.findByRuleNameAndFyiOnly(businessValidationResult.getViolatedRule(), true);
-            for (ReviewRule reviewRule : reviewRules) {
-                String userId = reviewRule.getApprover();
-                if(!userToNoti.containsKey(userId))userToNoti.put(userId, new ArrayList<>());
-                userToNoti.get(userId).add(businessValidationResult);
-            }
+    private void sendFyiNotification(List<ReviewStep> reviewSteps){
+        Map<String, List<Long>> approverToNoti = new HashMap<>();
+        for (ReviewStep reviewStep : reviewSteps) {
+            /* Create the notification payload, send it down the REVIEW channel, and store the review id returned in the step */
+            if(!approverToNoti.containsKey(reviewStep.getApprover()))approverToNoti.put(reviewStep.getApprover(), new ArrayList<>());
+            approverToNoti.get(reviewStep.getApprover()).add(reviewStep.getID());
         }
-        for (String user : userToNoti.keySet()) {
-            notificationManager.sendNotification(CoreNotificationChannels.REVIEW_FYI, new FyiReviewNotificationMessage(userToNoti.get(user), user));
+        for (String approver : approverToNoti.keySet()) {
+            ReviewStep step = repo.reviewStep.findOne(approverToNoti.get(approver).get(0));
+            List<BusinessValidationResult> businessValidationResults = new ArrayList<>();
+            for (Long stepId : approverToNoti.get(approver)) {
+                businessValidationResults.add(repo.reviewStep.findOne(stepId).getViolationForThisStep());
+            }
+            notificationManager.sendNotification(notificationManager.nameToEnum(step.getChannel()), new FyiReviewNotificationMessage( approver, businessValidationResults));
         }
     }
 

@@ -15,6 +15,6 @@ public class TestBusinessValidator implements DTOBusinessValidator {
     @Override
     public void validate(List<? extends DTO> dtos, IBusinessValidationResults businessValidationResults) {
         businessValidationResults.addReviewNeeded(0, "fld", "message", null, "Rule1");
-        businessValidationResults.addReviewNeeded(0, "fld", "message", null, null, "SELF");
+        businessValidationResults.addReviewNeeded(0, "fld", "messagewithparam", new String[]{"Hello", "World"}, "Rule2", "SELF");
     }
 }

@@ -9,5 +9,6 @@ import java.util.List;
  */
 public interface ReviewRuleRepository extends AbstractEntityRepository<ReviewRule>{
    List<ReviewRule> findByRuleNameAndFyiOnly(String ruleName, boolean fyiOnly);
+   List<ReviewRule> findByRuleName(String ruleName);
 
 }

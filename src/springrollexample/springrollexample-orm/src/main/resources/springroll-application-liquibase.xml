@@ -17,7 +17,10 @@
             INSERT INTO  role values (1,0, 'BOM1', 'desc1');
             INSERT INTO  role values (2,0, 'GROUP1',  'desc1');
             INSERT INTO  role values (3,0, 'GROUP2',  'desc1');
+            <!--id, parentid, rulename, review stage, approver, approvals needed, fyionly, desc-->
             INSERT INTO  review_rule values (1,0, 'Rule1', "REVIEW", 1, 'BOM', 1, 0, 'desc1');
+            INSERT INTO  review_rule values (2,0, 'Rule2', "REVIEW", 1, 'BOM', 1, 0, 'desc2');
+            INSERT INTO  review_rule values (3,0, 'Rule1', "REVIEW_FYI", 1, 'BOM', 1, 1, 'desc2');
             <!--INSERT INTO  review_rules values (2,0, 'Rule1', 3, 'BOM', 1, 'desc2');-->
             <!--INSERT INTO  review_rules values (3,0, 'Rule1', 3, 'FM', 1, 'desc3');-->
             <!--INSERT INTO  review_rules values (4,0, 'Rule1', 5, 'BOM', 1, 'desc4');-->

@@ -51,7 +51,6 @@
             <column name="COMPLETED" type="bit" />
             <column name="REVIEW_LOG" type="VARCHAR2(2048)"/>
             <column name="VIOLATION_FOR_THIS_STEP" type="VARCHAR2(256)"/>
-            <column name="BUSINESS_VIOLATIONS" type="VARCHAR2(4000)"/>
             <column name="EVENT" type="longblob" />
         </createTable>
         <createTable tableName="ROLE">
