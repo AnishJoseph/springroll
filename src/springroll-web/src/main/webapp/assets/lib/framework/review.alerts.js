@@ -11,9 +11,7 @@ var AlertsView = Marionette.View.extend({
     infoClicked : function(){
         var violations = [];
         _.each(this.model.get('businessValidationResult'), function(violation){
-            var args = violation.args;
-            var messageKey = violation.messageKey;
-            violations.push({violatedRule: Localize(violation.violatedRule), message : Localize(messageKey, args)});
+            violations.push({violatedRule: Localize(violation.violatedRule), message : Localize(violation.messageKey, violation.args)});
         });
         var view = new Application.ReviewMoreInfoTableView({ collection: new Backbone.Collection(violations)});
         Application.showModal("Approval Required", view);

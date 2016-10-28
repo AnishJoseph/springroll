@@ -130,7 +130,7 @@ Application.getSubscribersForAlerts = function (){
 var localeMessages = {};
 
 /* Call this with arguments to replace {n} parameters */
-Application.getLocaleMessage = function(messageKey){
+var getLocaleMessage = function(messageKey){
     return (localeMessages[messageKey] || messageKey).replace(/\{(\d+)\}/g, (function(args){
         return function (pattern, index){
             return args[parseInt(index)+1] || pattern;
@@ -138,9 +138,19 @@ Application.getLocaleMessage = function(messageKey){
     })(arguments));
 };
 
+Application.Localize = function(messageKey, args){
+    if(args == undefined)return getLocaleMessage(messageKey);
+    if(args instanceof Array && arguments.length == 2) {
+        var argsToUse = args;
+        argsToUse.unshift(messageKey);
+        return getLocaleMessage.apply(this, argsToUse);
+    }
+    return getLocaleMessage.apply(this, arguments);
+};
+
 Application.showModal = function(title, view){
     Application.rootView.triggerMethod("show:modal", title, view);
 } ;
 
-window.Localize = Application.getLocaleMessage;
+window.Localize = Application.Localize;
 module.exports = Application;
