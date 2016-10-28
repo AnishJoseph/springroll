@@ -7,12 +7,12 @@ import java.util.List;
  */
 public class FyiNotificationMessage extends AbstractNotificationMessage {
     private String messageKey;
-    private List<String> args;
+    private String[] args = new String[]{};
 
     public FyiNotificationMessage() {
     }
 
-    public FyiNotificationMessage(String messageKey, List<String> args, String notificationReceivers) {
+    public FyiNotificationMessage(String messageKey, String[] args, String notificationReceivers) {
         this.messageKey = messageKey;
         this.args = args;
         setNotificationReceivers(notificationReceivers);
@@ -26,11 +26,11 @@ public class FyiNotificationMessage extends AbstractNotificationMessage {
         this.messageKey = messageKey;
     }
 
-    public List<String> getArgs() {
+    public String[] getArgs() {
         return args;
     }
 
-    public void setArgs(List<String> args) {
+    public void setArgs(String[] args) {
         this.args = args;
     }
 }
