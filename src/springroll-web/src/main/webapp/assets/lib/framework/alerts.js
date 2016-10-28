@@ -25,8 +25,8 @@ var AlertCollection = Backbone.Collection.extend({
 });
 
 var actionCollection = new AlertCollection(null, {model: AlertItem, comparator: compare, channel:'action'});
-var errorCollection = new AlertCollection(null, {model: AlertItem, comparator: compare, channel:'error'});
-var infoCollection = new AlertCollection(null, {model: AlertItem, comparator: compare, channel:'info'});
+var errorCollection  = new AlertCollection(null, {model: AlertItem, comparator: compare, channel:'error'});
+var infoCollection   = new AlertCollection(null, {model: AlertItem, comparator: compare, channel:'info'});
 
 var AlertsItemView = Marionette.View.extend({
     tagName: 'div',
@@ -102,21 +102,28 @@ var AlertsItemView = Marionette.View.extend({
     }
 });
 
-var ActionCollectionView = Marionette.CollectionView.extend({
-    childView: AlertsItemView,
-    collection: actionCollection
+var AlertsView = Marionette.View.extend({
+    initialize : function(options){
+        this.collectionView = options.collectionView;
+        this.alerts = options.alerts;
+        this.model = new Backbone.Model();
+        this.model.set("title", options.title);
+    },
+    template : _.template('<div style="margin: 10px"> <%-title%></div><div style="border-bottom: 1px solid #ccc;"/><div id ="col"></div> '),
+
+    regions : {
+        col : '#col'
+    },
+
+    onRender : function (){
+        this.showChildView('col', new (this.collectionView)({collection : this.alerts}));
+    }
+
 });
 
-var ErrorCollectionView = Marionette.CollectionView.extend({
+var AlertCollectionView = Marionette.CollectionView.extend({
     childView: AlertsItemView,
-    collection: errorCollection
 });
-
-var InfoCollectionView = Marionette.CollectionView.extend({
-    childView: AlertsItemView,
-    collection: infoCollection
-});
-
 
 var AlertsPanel = Marionette.View.extend({
     tagName: 'div',
@@ -129,15 +136,15 @@ var AlertsPanel = Marionette.View.extend({
     },
 
     showAction : function(evt){
-        this.showChildView('alertsContainer', new ActionCollectionView());
+        this.showChildView('alertsContainer', new AlertsView({alerts: actionCollection, title:"Alerts", collectionView : AlertCollectionView}));
         this.toggleAlertContainer(evt, true);
     },
     showError : function(evt){
-        this.showChildView('alertsContainer', new ErrorCollectionView());
+        this.showChildView('alertsContainer', new AlertsView({alerts: errorCollection, title:"Errors", collectionView : AlertCollectionView}));
         this.toggleAlertContainer(evt, true);
     },
     showInfo : function(evt){
-        this.showChildView('alertsContainer', new InfoCollectionView());
+        this.showChildView('alertsContainer', new AlertsView({alerts: infoCollection, title:"Informational Alerts", collectionView : AlertCollectionView}));
         this.toggleAlertContainer(evt, true);
     },
     toggleAlertContainer : function(evt, show){
@@ -172,7 +179,7 @@ var AlertsPanel = Marionette.View.extend({
     },
 
     onRender : function(){
-        this.showChildView('alertsContainer', new ActionCollectionView());
+        this.showChildView('alertsContainer', new AlertsView({alerts: actionCollection, title:"Alerts", collectionView : AlertCollectionView}));
     },
     onActionCountChanged : function(count){
         this.ui.actionCount.html(count);
