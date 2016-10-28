@@ -4,7 +4,7 @@ var Application =require('Application');
 
 var AlertsView = Marionette.View.extend({
     tagName: 'div',
-    template: _.template('<%-channel%>'),
+    template: _.template('<%-message%>'),
 
     infoClicked : function(){
         //FIXME - i18n for this

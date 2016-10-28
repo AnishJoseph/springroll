@@ -6,7 +6,7 @@ var ReviewItem = Backbone.Model.extend({urlRoot:'/api/sr/reviewaction'});
 
 var AlertsView = Marionette.View.extend({
     tagName: 'div',
-    template: _.template('<%-channel%>'),
+    template: _.template('<%-message%>'),
 
     infoClicked : function(){
         //FIXME - i18n for this

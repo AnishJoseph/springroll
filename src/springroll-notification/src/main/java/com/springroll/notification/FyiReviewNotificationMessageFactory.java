@@ -1,5 +1,6 @@
 package com.springroll.notification;
 
+import com.springroll.core.BusinessValidationResult;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.notification.INotification;
 import com.springroll.core.notification.INotificationChannel;
@@ -46,8 +47,14 @@ import java.util.stream.Collectors;
         String userId = user.getUsername();
         roles.add(userId);
         String pattern = "%\"" + userId + "\"%";
+        /* Find all review directed at the roles that i belong to but exclude any for which I was the initiator */
         List<Notification> notifications = repositories.notification.findByChannelNameAndAckLogAsJsonNotLikeAndReceiversIn(notificationChannel.getChannelName(), pattern, roles);
+        /* Find all self reviews - reviews where I (not my group/role) is the target for the review */
         notifications.addAll(repositories.notification.findByChannelNameAndReceivers(notificationChannel.getChannelName(), userId));
         return notifications;
+    }
+    @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, org.springframework.security.core.userdetails.User initiator){
+        String msg = "FYI - service XX - initiated by " + initiator.getUsername();
+        return new FyiReviewNotificationMessage(approver, businessValidationResults, msg);
     }
 }

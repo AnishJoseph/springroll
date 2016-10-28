@@ -73,7 +73,7 @@ public class TestEndPoint extends SpringrollEndPoint {
     public void on(TE1_1 event){
 
         FyiNotificationMessage payload = new FyiNotificationMessage("messageKEY", null, "BOM");
-//        notificationManager.sendNotification(CoreNotificationChannels.FYI, payload);
+        notificationManager.sendNotification(CoreNotificationChannels.FYI, payload);
         checkAndRunTest(event);
         TE1_2 te2 = new TE1_2();
         te2.setPayload(event.getPayload());

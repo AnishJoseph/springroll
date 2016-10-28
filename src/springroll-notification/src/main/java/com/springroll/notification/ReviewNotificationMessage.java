@@ -17,13 +17,15 @@ public class ReviewNotificationMessage extends AbstractNotificationMessage{
     private List<Long> reviewStepId;
     transient private List<BusinessValidationResult> businessValidationResult;
     private String  businessValidationResultJson = "";
+    private String message;
 
     public ReviewNotificationMessage(){}
 
-    public ReviewNotificationMessage(List<Long> reviewStepId, String approver, List<BusinessValidationResult> businessValidationResult) {
+    public ReviewNotificationMessage(List<Long> reviewStepId, String approver, List<BusinessValidationResult> businessValidationResult, String message) {
         this.reviewStepId = reviewStepId;
         setNotificationReceivers(approver);
         setBusinessValidationResult(businessValidationResult);
+        this.message = message;
     }
 
     public List<Long> getReviewStepId() {
@@ -65,5 +67,13 @@ public class ReviewNotificationMessage extends AbstractNotificationMessage{
 
     public void setBusinessValidationResultJson(String businessValidationResultJson) {
         this.businessValidationResultJson = businessValidationResultJson;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

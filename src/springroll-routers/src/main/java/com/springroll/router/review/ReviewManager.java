@@ -1,6 +1,8 @@
 package com.springroll.router.review;
 
 import com.springroll.core.*;
+import com.springroll.core.notification.INotificationChannel;
+import com.springroll.core.notification.INotificationMessage;
 import com.springroll.core.services.INotificationManager;
 import com.springroll.notification.CoreNotificationChannels;
 import com.springroll.notification.FyiReviewNotificationMessage;
@@ -86,21 +88,30 @@ public class ReviewManager extends SpringrollEndPoint {
     }
 
     private void createReviewNotifications(List<ReviewStep> reviewSteps){
+        ReviewStep step0 = repo.reviewStep.findByParentIdAndSerializedEventIsNotNull(reviewSteps.get(0).getParentId());
         Map<String, List<Long>> approverToNoti = new HashMap<>();
         for (ReviewStep reviewStep : reviewSteps) {
-            /* Create the notification payload, send it down the REVIEW channel, and store the review id returned in the step */
+            /*  If there are multiple reviews steps dont blindly send one notification per review step.
+                Try and do a bit of optimization - if multiple steps are targeted at the same approver
+                we need to send only one notification (the notification will have the IDs of all the
+                review steps that were bunched together.
+             */
             if(!approverToNoti.containsKey(reviewStep.getApprover()))approverToNoti.put(reviewStep.getApprover(), new ArrayList<>());
             approverToNoti.get(reviewStep.getApprover()).add(reviewStep.getID());
         }
+
         for (String approver : approverToNoti.keySet()) {
-            //FIXME - we are assuming here that all reviews for a given approver goes to the same channel - this may not be true.
-            // Do we need to handle the fact that multiple review steps to the same user can have different notfication channels.
+            //FIXME - BIG ASSUMPTION HERE - we are assuming here that all reviews for a given approver goes to the same channel - this may not be true.
             ReviewStep step = repo.reviewStep.findOne(approverToNoti.get(approver).get(0));
             List<BusinessValidationResult> businessValidationResults = new ArrayList<>();
             for (Long stepId : approverToNoti.get(approver)) {
                 businessValidationResults.add(repo.reviewStep.findOne(stepId).getViolationForThisStep());
             }
-            Long notiId = notificationManager.sendNotification(notificationManager.nameToEnum(step.getChannel()), new ReviewNotificationMessage(approverToNoti.get(approver), approver, businessValidationResults));
+            /* Create the notification payload, send it down the REVIEW channel, and store the review id returned in the step */
+            INotificationChannel notificationChannel = notificationManager.nameToEnum(step.getChannel());
+
+            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(approverToNoti.get(approver), approver, businessValidationResults, step0.getEvent().getUser());
+            Long notiId = notificationManager.sendNotification(notificationChannel, message);
             for (Long stepId : approverToNoti.get(approver)) {
                 repo.reviewStep.findOne(stepId).setNotificationId(notiId);
             }
@@ -187,6 +198,7 @@ public class ReviewManager extends SpringrollEndPoint {
     }
 
     private void sendFyiNotification(List<ReviewStep> reviewSteps){
+        ReviewStep step0 = repo.reviewStep.findByParentIdAndSerializedEventIsNotNull(reviewSteps.get(0).getParentId());
         Map<String, List<Long>> approverToNoti = new HashMap<>();
         for (ReviewStep reviewStep : reviewSteps) {
             /* Create the notification payload, send it down the REVIEW channel, and store the review id returned in the step */
@@ -199,7 +211,11 @@ public class ReviewManager extends SpringrollEndPoint {
             for (Long stepId : approverToNoti.get(approver)) {
                 businessValidationResults.add(repo.reviewStep.findOne(stepId).getViolationForThisStep());
             }
-            notificationManager.sendNotification(notificationManager.nameToEnum(step.getChannel()), new FyiReviewNotificationMessage( approver, businessValidationResults));
+            INotificationChannel notificationChannel = notificationManager.nameToEnum(step.getChannel());
+
+            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(approverToNoti.get(approver), approver, businessValidationResults, step0.getEvent().getUser());
+
+            notificationManager.sendNotification(notificationChannel, message);
         }
     }
 

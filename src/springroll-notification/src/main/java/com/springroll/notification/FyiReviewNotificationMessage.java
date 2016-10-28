@@ -16,12 +16,14 @@ import java.util.List;
 public class FyiReviewNotificationMessage extends AbstractNotificationMessage{
     transient private List<BusinessValidationResult> businessValidationResult;
     private String  businessValidationResultJson = "";
+    private String message;
 
     public FyiReviewNotificationMessage(){}
 
-    public FyiReviewNotificationMessage(String approver, List<BusinessValidationResult> businessValidationResult) {
+    public FyiReviewNotificationMessage(String approver, List<BusinessValidationResult> businessValidationResult, String message) {
         setNotificationReceivers(approver);
         setBusinessValidationResult(businessValidationResult);
+        this.message = message;
     }
 
     public List<BusinessValidationResult> getBusinessValidationResult() {
@@ -55,5 +57,13 @@ public class FyiReviewNotificationMessage extends AbstractNotificationMessage{
 
     public void setBusinessValidationResultJson(String businessValidationResultJson) {
         this.businessValidationResultJson = businessValidationResultJson;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

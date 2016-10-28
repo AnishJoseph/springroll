@@ -1,5 +1,6 @@
 package com.springroll.notification;
 
+import com.springroll.core.BusinessValidationResult;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.notification.*;
 import com.springroll.orm.entities.Notification;
@@ -41,5 +42,10 @@ import java.util.stream.Collectors;
         String pattern = "%\"" + userId + "\"%";
         List<Notification> notifications = repositories.notification.findByChannelNameAndAckLogAsJsonNotLikeAndReceiversIn(notificationChannel.getChannelName(), pattern, roles);
         return notifications;
+    }
+
+    @Override
+    public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, org.springframework.security.core.userdetails.User initiator) {
+        return null;
     }
 }
