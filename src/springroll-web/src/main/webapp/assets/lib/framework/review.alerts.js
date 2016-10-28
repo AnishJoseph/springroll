@@ -14,7 +14,7 @@ var AlertsView = Marionette.View.extend({
             violations.push({violatedRule: Localize(violation.violatedRule), message : Localize(violation.messageKey, violation.args)});
         });
         var view = new Application.ReviewMoreInfoTableView({ collection: new Backbone.Collection(violations)});
-        Application.showModal("Approval Required", view);
+        Application.showModal("Approval Required", view, this);
     },
     acceptClicked : function(){
         var reviewItem = new ReviewItem({reviewStepId: this.model.get('reviewStepId'), approved : true});

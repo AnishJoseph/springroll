@@ -148,8 +148,8 @@ Application.Localize = function(messageKey, args){
     return getLocaleMessage.apply(this, arguments);
 };
 
-Application.showModal = function(title, view){
-    Application.rootView.triggerMethod("show:modal", title, view);
+Application.showModal = function(title, viewToShow, viewOfCaller ){
+    Application.rootView.triggerMethod("show:modal", title, viewToShow, viewOfCaller);
 } ;
 
 window.Localize = Application.Localize;

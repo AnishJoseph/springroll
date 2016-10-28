@@ -37,8 +37,8 @@ var AlertsItemView = Marionette.View.extend({
         messageRegion: '#message',
     },
 
-    dismissClicked : function(){
-        if(_.contains(_.functions(this.model.get('view')),"dismissClicked")){
+    dismissClicked : function(destroyModel){
+        if(destroyModel !== true && _.contains(_.functions(this.model.get('view')),"dismissClicked")){
             this.model.get('view').dismissClicked();
         } else {
             this.model.destroy({
@@ -97,7 +97,7 @@ var AlertsItemView = Marionette.View.extend({
         if (options.showAccept) this.ui.accept.show();
         if (options.showReject) this.ui.reject.show();
         if (options.showInfo) this.ui.info.show();
-        this.model.set('view', new (options.view)({model:this.model}));
+        this.model.set('view', new (options.view)({model:this.model, parentView : this}));
         this.showChildView('messageRegion', this.model.get('view'));
     }
 });

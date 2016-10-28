@@ -27,7 +27,7 @@ Application.RootView = Marionette.View.extend({
     showBody : function(view){
         this.showChildView('bodyRegion', view);
     },
-    onShowModal : function(title, view){
-        this.showChildView('modalRegion', new Application.ModalView({model: new Backbone.Model({title:title}), view : view}));
+    onShowModal : function(title, viewToShow, viewOfCaller ){
+        this.showChildView('modalRegion', new Application.ModalView({model: new Backbone.Model({title:title}), viewToShow : viewToShow, viewOfCaller : viewOfCaller}));
     }
 });
