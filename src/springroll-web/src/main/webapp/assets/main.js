@@ -31,6 +31,7 @@ require('./lib/framework/review.moreinfo.js');
 
 $(function() {
     $.ajaxSetup({
+        headers: { 'X-CSRF-TOKEN': acsrfToken},    //FIXME - this seems very inelegant
         cache: false,
         statusCode : {
             406:function(message){   //NOT_ACCEPTABLE

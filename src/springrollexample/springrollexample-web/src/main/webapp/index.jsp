@@ -23,6 +23,7 @@
         <script>
             window.UIProperties = {};
             window.UIProperties.uiDateFormatJs = '<%=uiDateFormatJs%>';
+            window.acsrfToken = "${_csrf.token}";
         </script>
 </body>
 </html>
