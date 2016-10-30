@@ -13,19 +13,14 @@ import java.util.List;
 /**
  * Created by anishjoseph on 02/10/16.
  */
-public class ReviewNotificationMessage extends AbstractNotificationMessage{
+public class ReviewNotificationMessage extends FyiReviewNotificationMessage{
     private List<Long> reviewStepId;
-    transient private List<BusinessValidationResult> businessValidationResult;
-    private String  businessValidationResultJson = "";
-    private String message;
 
     public ReviewNotificationMessage(){}
 
-    public ReviewNotificationMessage(List<Long> reviewStepId, String approver, List<BusinessValidationResult> businessValidationResult, String message) {
+    public ReviewNotificationMessage(List<Long> reviewStepId, String approver, List<BusinessValidationResult> businessValidationResult, String messageKey, String[] args) {
+        super(approver, businessValidationResult, messageKey, args);
         this.reviewStepId = reviewStepId;
-        setNotificationReceivers(approver);
-        setBusinessValidationResult(businessValidationResult);
-        this.message = message;
     }
 
     public List<Long> getReviewStepId() {
@@ -34,46 +29,5 @@ public class ReviewNotificationMessage extends AbstractNotificationMessage{
 
     public void setReviewStepId(List<Long> reviewStepId) {
         this.reviewStepId = reviewStepId;
-    }
-
-    public List<BusinessValidationResult> getBusinessValidationResult() {
-        if (this.businessValidationResultJson.isEmpty() )return new ArrayList<>();
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        try {
-            businessValidationResult = mapper.readValue(businessValidationResultJson,  new TypeReference<List<BusinessValidationResult>>(){});
-            return businessValidationResult;
-        } catch (IOException e) {
-            //FIXME
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void setBusinessValidationResult(List<BusinessValidationResult> businessValidationResult) {
-        this.businessValidationResult = businessValidationResult;
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        try {
-            businessValidationResultJson = mapper.writeValueAsString(businessValidationResult);
-        } catch (JsonProcessingException e) {
-            //FIXME
-            throw new RuntimeException(e);
-        }
-    }
-
-    public String getBusinessValidationResultJson() {
-        return businessValidationResultJson;
-    }
-
-    public void setBusinessValidationResultJson(String businessValidationResultJson) {
-        this.businessValidationResultJson = businessValidationResultJson;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }

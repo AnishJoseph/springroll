@@ -6,8 +6,11 @@ var ReviewItem = Backbone.Model.extend({urlRoot:'/api/sr/reviewaction'});
 
 var AlertsView = Marionette.View.extend({
     tagName: 'div',
-    template: _.template('<%-message%>'),
+    template: _.template('<%-localMessage%>'),
 
+    initialize : function(){
+        this.model.set('localMessage', Localize(this.model.get("messageKey"), this.model.get("args")));
+    },
     infoClicked : function(){
         var violations = [];
         _.each(this.model.get('businessValidationResult'), function(violation){

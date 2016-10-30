@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
     }
 
     @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, org.springframework.security.core.userdetails.User initiator){
-        String msg = "Approval needed for service XX. Transaction initiated by " + initiator.getUsername();
-        return new ReviewNotificationMessage(reviewStepIds, approver, businessValidationResults, msg);
+        String serviceName = "xx";
+        return new ReviewNotificationMessage(reviewStepIds, approver, businessValidationResults, "ui.review.noti.msg", new String[]{serviceName, initiator.getUsername()});
     }
 }

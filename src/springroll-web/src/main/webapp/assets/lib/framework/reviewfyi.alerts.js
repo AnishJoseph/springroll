@@ -4,10 +4,11 @@ var Application =require('Application');
 
 var AlertsView = Marionette.View.extend({
     tagName: 'div',
-    template: _.template('<%-message%>'),
+    template: _.template('<%-localMessage%>'),
 
     initialize : function(options){
         this.parentView = options.parentView;
+        this.model.set('localMessage', Localize(this.model.get("messageKey"), this.model.get("args")));
     },
 
     dismissClicked : function() {

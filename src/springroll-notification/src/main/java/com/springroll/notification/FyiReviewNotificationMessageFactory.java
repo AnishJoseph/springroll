@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
         return notifications;
     }
     @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, org.springframework.security.core.userdetails.User initiator){
-        String msg = "FYI - service XX - initiated by " + initiator.getUsername();
-        return new FyiReviewNotificationMessage(approver, businessValidationResults, msg);
+        String serviceName = "xx";
+        return new FyiReviewNotificationMessage(approver, businessValidationResults, "ui.fyi.review.noti.msg", new String[]{serviceName, initiator.getUsername()});
     }
 }

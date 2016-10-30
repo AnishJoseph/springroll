@@ -16,14 +16,16 @@ import java.util.List;
 public class FyiReviewNotificationMessage extends AbstractNotificationMessage{
     transient private List<BusinessValidationResult> businessValidationResult;
     private String  businessValidationResultJson = "";
-    private String message;
+    private String messageKey;
+    private String[] args = new String[]{};
 
     public FyiReviewNotificationMessage(){}
 
-    public FyiReviewNotificationMessage(String approver, List<BusinessValidationResult> businessValidationResult, String message) {
+    public FyiReviewNotificationMessage(String approver, List<BusinessValidationResult> businessValidationResult, String messageKey, String[] args) {
         setNotificationReceivers(approver);
         setBusinessValidationResult(businessValidationResult);
-        this.message = message;
+        this.messageKey = messageKey;
+        if(args != null)this.args = args;
     }
 
     public List<BusinessValidationResult> getBusinessValidationResult() {
@@ -59,11 +61,19 @@ public class FyiReviewNotificationMessage extends AbstractNotificationMessage{
         this.businessValidationResultJson = businessValidationResultJson;
     }
 
-    public String getMessage() {
-        return message;
+    public String getMessageKey() {
+        return messageKey;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMessageKey(String messageKey) {
+        this.messageKey = messageKey;
+    }
+
+    public String[] getArgs() {
+        return args;
+    }
+
+    public void setArgs(String[] args) {
+        this.args = args;
     }
 }
