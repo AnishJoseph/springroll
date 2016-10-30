@@ -141,7 +141,7 @@ var getLocaleMessage = function(messageKey){
 Application.Localize = function(messageKey, args){
     if(args == undefined)return getLocaleMessage(messageKey);
     if(args instanceof Array && arguments.length == 2) {
-        var argsToUse = args;
+        var argsToUse = args.slice(); //Make a copy of the array
         argsToUse.unshift(messageKey);
         return getLocaleMessage.apply(this, argsToUse);
     }

@@ -45,7 +45,8 @@ import java.util.stream.Collectors;
     }
 
     @Override
-    public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, org.springframework.security.core.userdetails.User initiator) {
+    public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, org.springframework.security.core.userdetails.User initiator, String serviceName) {
+        //FIXME
         return null;
     }
 }

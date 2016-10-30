@@ -1,6 +1,7 @@
 package com.springrollexample.router.test;
 
 import com.springroll.core.DTO;
+import com.springroll.core.ServiceDTO;
 import com.springroll.core.services.INotificationManager;
 import com.springroll.notification.CoreNotificationChannels;
 import com.springroll.notification.FyiNotificationMessage;
@@ -114,7 +115,7 @@ public class TestEndPoint extends SpringrollEndPoint {
     public void on(TE1_7 event){
         checkAndRunTest(event);
         SynchToAsynchDTO dto = new SynchToAsynchDTO();
-        List<DTO> payloads = new ArrayList<>(1);
+        List<ServiceDTO> payloads = new ArrayList<>(1);
         payloads.add(dto);
         routeToSynchronousSideFromAsynchronousSide(payloads);
         System.out.println("Othrside odne");

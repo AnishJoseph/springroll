@@ -3,6 +3,7 @@ package com.springrollexample.api.facade;
 import com.springroll.api.facade.AbstractAPI;
 import com.springrollexample.router.test.TestDTO;
 import com.springrollexample.router.test.TestRootEvent;
+import com.springrollexample.router.test.TestServiceDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,7 @@ public class SpringrollExampleAPI extends AbstractAPI {
     private static final Logger logger = LoggerFactory.getLogger(SpringrollExampleAPI.class);
 
     @RequestMapping(value = "/testPipelineSimple", method = RequestMethod.POST)
-    public Long testPipelineSimple(@RequestBody TestDTO testDTO ) {
+    public Long testPipelineSimple(@RequestBody TestServiceDTO testDTO ) {
         testDTO.setTestType(TestDTO.TestType.EXCEPTION);
         TestRootEvent testRootEvent = new TestRootEvent();
         testRootEvent.setPayload(testDTO);
@@ -26,14 +27,14 @@ public class SpringrollExampleAPI extends AbstractAPI {
     }
     @RequestMapping(value = "/testCompetingThreads", method = RequestMethod.GET)
     public Long testCompetingThreads() {
-        TestDTO testDTO = new TestDTO();
+        TestServiceDTO testDTO = new TestServiceDTO();
         testDTO.setTestCase(1);
         testDTO.setTestLocation(3);
         testDTO.setTestType(TestDTO.TestType.OPTIMISTIC_LOCKING_COMPETING_THREADS);
         TestRootEvent testRootEvent = new TestRootEvent();
         testRootEvent.setPayload(testDTO);
         route(testDTO);
-        testDTO = new TestDTO();
+        testDTO = new TestServiceDTO();
         testDTO.setTestCase(2);
         testDTO.setTestLocation(1);
         testDTO.setTestType(TestDTO.TestType.OPTIMISTIC_LOCKING_COMPETING_THREADS);

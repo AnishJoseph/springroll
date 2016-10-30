@@ -1,7 +1,7 @@
 package com.springroll.router.review;
 
-import com.springroll.core.DTO;
 import com.springroll.core.IDTOProcessors;
+import com.springroll.core.ServiceDTO;
 import com.springroll.router.CoreDTOProcessors;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by anishjoseph on 28/09/16.
  */
-public class ReviewActionDTO implements DTO{
+public class ReviewActionDTO implements ServiceDTO {
     private List<Long> reviewStepId;
     private boolean approved;
 

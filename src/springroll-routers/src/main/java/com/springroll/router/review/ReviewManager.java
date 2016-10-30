@@ -110,7 +110,8 @@ public class ReviewManager extends SpringrollEndPoint {
             /* Create the notification payload, send it down the REVIEW channel, and store the review id returned in the step */
             INotificationChannel notificationChannel = notificationManager.nameToEnum(step.getChannel());
 
-            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(approverToNoti.get(approver), approver, businessValidationResults, step0.getEvent().getUser());
+            String serviceName = ((ServiceDTO)step0.getEvent().getPayload()).getProcessor().name();
+            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(approverToNoti.get(approver), approver, businessValidationResults, step0.getEvent().getUser(), serviceName);
             Long notiId = notificationManager.sendNotification(notificationChannel, message);
             for (Long stepId : approverToNoti.get(approver)) {
                 repo.reviewStep.findOne(stepId).setNotificationId(notiId);
@@ -212,8 +213,8 @@ public class ReviewManager extends SpringrollEndPoint {
                 businessValidationResults.add(repo.reviewStep.findOne(stepId).getViolationForThisStep());
             }
             INotificationChannel notificationChannel = notificationManager.nameToEnum(step.getChannel());
-
-            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(approverToNoti.get(approver), approver, businessValidationResults, step0.getEvent().getUser());
+            String serviceName = ((ServiceDTO)step0.getEvent().getPayload()).getProcessor().name();
+            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(approverToNoti.get(approver), approver, businessValidationResults, step0.getEvent().getUser(), serviceName);
 
             notificationManager.sendNotification(notificationChannel, message);
         }

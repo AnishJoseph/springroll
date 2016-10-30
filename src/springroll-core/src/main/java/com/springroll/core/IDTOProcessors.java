@@ -7,4 +7,5 @@ public interface IDTOProcessors {
     Class<? extends DTOEnricher> getEnricherClass();
     Class<? extends DTOBusinessValidator> getBusinessValidatorClass();
     Class<? extends IEvent> getEventClass();
+    String name();
 }

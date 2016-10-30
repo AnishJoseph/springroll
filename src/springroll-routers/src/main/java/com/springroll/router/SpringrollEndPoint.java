@@ -1,8 +1,8 @@
 package com.springroll.router;
 
-import com.springroll.core.DTO;
 import com.springroll.core.IEvent;
 import com.springroll.core.ContextStore;
+import com.springroll.core.ServiceDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -24,11 +24,11 @@ public abstract class SpringrollEndPoint {
         asynchSideEndPoints.routeToDynamicRouter(event);
     }
 
-    public Long routeToSynchronousSideFromAsynchronousSide(List<? extends DTO> payloads){
+    public Long routeToSynchronousSideFromAsynchronousSide(List<? extends ServiceDTO> payloads){
         JobMeta jobMeta = new JobMeta(payloads, ContextStore.getUser(), ContextStore.getJobId(), ContextStore.getLegId(), null, false, false);
         return synchEndPoint.route(jobMeta);
     }
-    public Long routeAgainToSynchronousSideFromAsynchronousSide(List<? extends DTO> payloads){
+    public Long routeAgainToSynchronousSideFromAsynchronousSide(List<? extends ServiceDTO> payloads){
         JobMeta jobMeta = new JobMeta(payloads, ContextStore.getUser(), ContextStore.getJobId(), ContextStore.getLegId(), null, true, false);
         return synchEndPoint.route(jobMeta);
     }

@@ -53,8 +53,7 @@ import java.util.stream.Collectors;
         notifications.addAll(repositories.notification.findByChannelNameAndReceivers(notificationChannel.getChannelName(), userId));
         return notifications;
     }
-    @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, org.springframework.security.core.userdetails.User initiator){
-        String serviceName = "xx";
+    @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, org.springframework.security.core.userdetails.User initiator, String serviceName){
         return new FyiReviewNotificationMessage(approver, businessValidationResults, "ui.fyi.review.noti.msg", new String[]{serviceName, initiator.getUsername()});
     }
 }

@@ -65,10 +65,6 @@ public class TestDTO implements DTO {
         this.testLocationEventName = testLocationEventName;
     }
 
-    @Override
-    public IDTOProcessors getProcessor() {
-        return ApplicationDTOProcessors.TEST_ROOT;
-    }
 
     public enum TestType {
         OPTIMISTIC_LOCKING_DB_DEADLOCK,

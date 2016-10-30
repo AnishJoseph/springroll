@@ -35,9 +35,4 @@ public class ReviewNeededDTO implements DTO {
     public void setReviewNeededViolations(List<BusinessValidationResult> reviewNeededViolations) {
         this.reviewNeededViolations = reviewNeededViolations;
     }
-    @Override
-    public IDTOProcessors getProcessor() {
-        return CoreDTOProcessors.NULL;
-    }
-
 }

@@ -2,7 +2,7 @@ package com.springroll.router;
 
 
 import com.springroll.core.BusinessValidationResults;
-import com.springroll.core.DTO;
+import com.springroll.core.ServiceDTO;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  * Created by anishjoseph on 14/09/16.
  */
 public class JobMeta {
-    private List<? extends DTO> payloads;
+    private List<? extends ServiceDTO> payloads;
     private User user;
     private Long jobId;
     private Long legId;
@@ -21,7 +21,7 @@ public class JobMeta {
 
 
 
-    public JobMeta(List<? extends DTO> payloads, User user, Long jobId, Long legId, Long parentJobId, boolean businessValidationAlreadyDoneOnce, boolean isAsynchronous) {
+    public JobMeta(List<? extends ServiceDTO> payloads, User user, Long jobId, Long legId, Long parentJobId, boolean businessValidationAlreadyDoneOnce, boolean isAsynchronous) {
         this.payloads = payloads;
         this.user = user;
         this.jobId = jobId;
@@ -30,7 +30,7 @@ public class JobMeta {
         this.legId = legId;
     }
 
-    public List<? extends DTO> getPayloads() {
+    public List<? extends ServiceDTO> getPayloads() {
         return payloads;
     }
 
@@ -66,7 +66,7 @@ public class JobMeta {
         this.user = user;
     }
 
-    public void setPayloads(List<? extends DTO> payloads) {
+    public void setPayloads(List<? extends ServiceDTO> payloads) {
         this.payloads = payloads;
     }
 

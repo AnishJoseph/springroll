@@ -1,9 +1,6 @@
 package com.springroll.api.facade;
 
-import com.springroll.core.BusinessValidationResult;
-import com.springroll.core.DTO;
-import com.springroll.core.ContextStore;
-import com.springroll.core.LocaleFactory;
+import com.springroll.core.*;
 import com.springroll.core.exceptions.FixableException;
 import com.springroll.router.JobMeta;
 import com.springroll.router.SynchEndPoint;
@@ -49,23 +46,23 @@ public abstract class AbstractAPI {
         return LocaleFactory.getLocalizedServerMessage(_locale, ex.getMessageKey(), ex.getMessageArguments());
     }
 
-    public Long route(DTO payload){
-        List<DTO> payloads = new ArrayList<>(1);
+    public Long route(ServiceDTO payload){
+        List<ServiceDTO> payloads = new ArrayList<>(1);
         payloads.add(payload);
         return route(payloads);
     }
-    public Long route(List<? extends DTO> payloads){
+    public Long route(List<? extends ServiceDTO> payloads){
         JobMeta jobMeta = new JobMeta(payloads, getUser(), null, null, null, false, true);
         return sendItDownTheSynchronousRoute(jobMeta);
     }
 
-    public Long routeSynchronouslyToAsynchronousSideFromSynchronousSide(DTO payload){
-        List<DTO> payloads = new ArrayList<>(1);
+    public Long routeSynchronouslyToAsynchronousSideFromSynchronousSide(ServiceDTO payload){
+        List<ServiceDTO> payloads = new ArrayList<>(1);
         payloads.add(payload);
         return routeSynchronouslyToAsynchronousSideFromSynchronousSide(payloads);
     }
 
-    public Long routeSynchronouslyToAsynchronousSideFromSynchronousSide(List<? extends DTO> payloads){
+    public Long routeSynchronouslyToAsynchronousSideFromSynchronousSide(List<? extends ServiceDTO> payloads){
         JobMeta jobMeta = new JobMeta(payloads, getUser(), null, null, null, false, false);
         return sendItDownTheSynchronousRoute(jobMeta);
     }

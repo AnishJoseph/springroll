@@ -1,13 +1,13 @@
 package com.springroll.router.notification;
 
-import com.springroll.core.DTO;
 import com.springroll.core.IDTOProcessors;
+import com.springroll.core.ServiceDTO;
 import com.springroll.router.CoreDTOProcessors;
 
 /**
  * Created by anishjoseph on 28/09/16.
  */
-public class NotificationAckDTO implements DTO{
+public class NotificationAckDTO implements ServiceDTO {
     private Long notificationId;
 
     public NotificationAckDTO(){}

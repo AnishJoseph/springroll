@@ -12,5 +12,6 @@ import java.util.Set;
 public interface INotificationMessageFactory {
     Set<String> getTargetUsers(INotificationMessage notificationMessage);
     List<? extends INotification> getPendingNotificationsForUser(INotificationChannel notificationChannel);
-    INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, User initiator);
+    //FIXME - no reason why we should have a make message - its required only for alerts??
+    INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, User initiator, String service);
 }

@@ -48,7 +48,7 @@ public class EventCreator {
 
         if(jobMeta.getJobId() == null) {
             comingDirectlyFromSyncSide = true;
-            job = new Job(jobMeta.getParentJobId(), needsReview, event.getClass().getSimpleName(), jobMeta.getUser().getUsername(), jobMeta.getPayloads());
+            job = new Job(jobMeta.getParentJobId(), needsReview, ((ServiceDTO)event.getPayload()).getProcessor().name(), jobMeta.getUser().getUsername(), jobMeta.getPayloads());
             repo.job.save(job);
             jobMeta.setJobId(job.getID());
             if(!needsReview){
