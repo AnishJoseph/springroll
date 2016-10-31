@@ -73,7 +73,11 @@ Application.MenuView = Marionette.View.extend({
 
         });
         events['click #logout'] = function(){
-            window.location.href = 'logout';
+            $.ajax({
+                type: "POST",
+                url: "/logout",
+            });
+            window.location.href = '/';
         }
         _.each(Application.user.delegators, function(delegator){
             var id = 'click #delegator' + delegator;
