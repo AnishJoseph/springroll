@@ -56,7 +56,7 @@ public class Notification extends AbstractEntity implements INotification {
     private String initiator;
 
     @Column(name = "AUTO_CLEAN")
-    private boolean autoClean;
+    private Boolean autoClean;
 
     @Version
     @Column(name = "VERSION")
@@ -152,11 +152,11 @@ public class Notification extends AbstractEntity implements INotification {
         this.initiator = initiator;
     }
 
-    public boolean isAutoClean() {
+    public Boolean isAutoClean() {
         return autoClean;
     }
 
-    public void setAutoClean(boolean autoClean) {
+    public void setAutoClean(Boolean autoClean) {
         this.autoClean = autoClean;
     }
 }

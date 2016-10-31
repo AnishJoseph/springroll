@@ -9,7 +9,8 @@ import java.util.List;
  */
 public interface ReviewStepRepository extends AbstractEntityRepository<ReviewStep>{
     List<ReviewStep> findByParentIdAndReviewStageIsGreaterThan(Long parentId, int reviewStage);
-    List<ReviewStep> findByCompletedIsFalseAndParentIdAndReviewStageIsLessThan(Long parentId, int reviewStage);
+    //FIXME - when col is 't' or 'f this does not work findByCompletedIsFalseAndParentIdAndReviewStageIsLessThan
+    List<ReviewStep> findByCompletedAndParentIdAndReviewStageIsLessThan(boolean completed, Long parentId, int reviewStage);
     List<ReviewStep> findByParentIdAndReviewStage(Long parentId, int reviewStage);
     List<ReviewStep> findByParentId(Long parentId);
     ReviewStep findByParentIdAndSerializedEventIsNotNull(Long parentId);

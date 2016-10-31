@@ -40,7 +40,7 @@ public class UserDelegation extends AbstractEntity {
 
     @Column(name = "IS_ACTIVE", length = 1)
     @NotNull
-    private boolean isActive;
+    private Boolean isActive;
 
     public String getUserId() {
         return userId;
@@ -74,19 +74,19 @@ public class UserDelegation extends AbstractEntity {
         this.endDate = endDate;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         isActive = active;
     }
 
-    public boolean getIsActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setIsActive(boolean isActive) {
+    public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
 

@@ -137,7 +137,7 @@ public class ReviewManager extends SpringrollEndPoint {
             logger.error("Unable to find a review step with id {} - returning silently", reviewStepId);
             return;
         }
-        List<ReviewStep> earlierUncompletedSteps = repo.reviewStep.findByCompletedIsFalseAndParentIdAndReviewStageIsLessThan(reviewStep.getParentId(), reviewStep.getReviewStage());
+        List<ReviewStep> earlierUncompletedSteps = repo.reviewStep.findByCompletedAndParentIdAndReviewStageIsLessThan(false, reviewStep.getParentId(), reviewStep.getReviewStage());
         if(!earlierUncompletedSteps.isEmpty()){
             logger.error("User '{}' is trying to approve/reject a step that is not yet ready for approval", SpringrollSecurity.getUser().getUsername());
             return;

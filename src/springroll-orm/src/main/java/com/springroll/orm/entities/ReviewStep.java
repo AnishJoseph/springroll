@@ -45,7 +45,7 @@ public class ReviewStep extends AbstractEntity {
     private Long notificationId;
 
     @Column(name = "COMPLETED")
-    private boolean completed = false;
+    private Boolean completed = false;
 
     @Column(name = "EVENT")
     @Lob
@@ -149,11 +149,11 @@ public class ReviewStep extends AbstractEntity {
         this.ruleId = ruleId;
     }
 
-    public boolean isCompleted() {
+    public Boolean isCompleted() {
         return completed;
     }
 
-    public void setCompleted(boolean completed) {
+    public void setCompleted(Boolean completed) {
         this.completed = completed;
     }
 
@@ -166,7 +166,7 @@ public class ReviewStep extends AbstractEntity {
     }
 
 
-    public boolean hasThisUserAlreadyReviewedThisStep(String  userId){
+    public Boolean hasThisUserAlreadyReviewedThisStep(String  userId){
         List<ReviewLog> reviewLog = getReviewLog();
         if(reviewLog == null)return false;
         for (ReviewLog data : reviewLog) {

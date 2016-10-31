@@ -13,9 +13,9 @@
             <column name="PARENT_ID" type="bigint"/>
             <column name="USER_ID" type="varchar(128)"/>
             <column name="SERVICE" type="VARCHAR2(64)" />
-            <column name="UNDER_REVIEW" type="bit" />
+            <column name="UNDER_REVIEW" type="varchar(1)" />
             <column name="STATUS" type="VARCHAR2(4000)" />
-            <column name="COMPLETED" type="bit" />
+            <column name="COMPLETED" type="varchar(1)" />
             <column name="START_TIME" type="datetime"/>
             <column name="END_TIME" type="datetime"/>
             <column name="REVIEW_LOG" type="VARCHAR2(2048)"/>
@@ -35,7 +35,7 @@
             <column name="REVIEW_STAGE" type="int" defaultValue="1"/>
             <column name="APPROVER" type="VARCHAR2(32)"/>
             <column name="APPROVALS_NEEDED" type="int" defaultValue="1"/>
-            <column name="FYI_ONLY" type="bit" />
+            <column name="FYI_ONLY" type="varchar(1)" />
             <column name="DESCRIPTION" type="VARCHAR2(128)"/>
         </createTable>
         <createTable tableName="REVIEW_STEP">
@@ -48,7 +48,7 @@
             <column name="RULE_ID" type="bigint"/>
             <column name="NOTIFICATION_ID" type="bigint"/>
             <column name="REVIEW_STAGE" type="int" />
-            <column name="COMPLETED" type="bit" />
+            <column name="COMPLETED" type="varchar(1)" />
             <column name="REVIEW_LOG" type="VARCHAR2(2048)"/>
             <column name="VIOLATION_FOR_THIS_STEP" type="VARCHAR2(256)"/>
             <column name="EVENT" type="longblob" />
@@ -82,7 +82,7 @@
             </column>
             <column name="PARENT_ID" type="bigint"/>
             <column name="INITIATOR" type="varchar(32)"/>
-            <column name="AUTO_CLEAN" type="bit" />
+            <column name="AUTO_CLEAN" type="varchar(1)" />
             <column name="RECEIVERS" type="varchar(32)"/>
             <column name="USERS" type="varchar(256)"/>
             <column name="CHANNEL_NAME" type="varchar(64)"/>
@@ -100,7 +100,7 @@
             <column name="DELEGATE" type="varchar(128)"/>
             <column name="START_DATE" type="date"/>
             <column name="END_DATE" type="date"/>
-            <column name="IS_ACTIVE" type="bit" />
+            <column name="IS_ACTIVE" type="varchar(1)" />
         </createTable>
 
     </changeSet>

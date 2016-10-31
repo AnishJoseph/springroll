@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.DTO;
 import com.springroll.core.ReviewLog;
-import org.hibernate.annotations.Type;
 import org.hibernate.internal.util.SerializationHelper;
 
 import javax.persistence.Column;
@@ -47,10 +46,10 @@ public class Job extends AbstractEntity {
     private LocalDateTime endTime;
 
     @Column(name = "COMPLETED")
-    private boolean completed;
+    private Boolean completed;
 
     @Column(name = "UNDER_REVIEW")
-    private boolean underReview;
+    private Boolean underReview;
 
     private String status;
 
@@ -60,7 +59,7 @@ public class Job extends AbstractEntity {
     private String reviewLogAsJson = "";
 
 
-    public Job(Long parentId, boolean underReview, String service, String userId, List<? extends DTO> payloads) {
+    public Job(Long parentId, Boolean underReview, String service, String userId, List<? extends DTO> payloads) {
         this.setParentId(parentId);
         this.underReview = underReview;
         this.service = service;
@@ -70,19 +69,19 @@ public class Job extends AbstractEntity {
     }
 
 
-    public boolean isUnderReview() {
+    public Boolean isUnderReview() {
         return underReview;
     }
 
-    public void setUnderReview(boolean underReview) {
+    public void setUnderReview(Boolean underReview) {
         this.underReview = underReview;
     }
 
-    public boolean isCompleted() {
+    public Boolean isCompleted() {
         return completed;
     }
 
-    public void setCompleted(boolean completed) {
+    public void setCompleted(Boolean completed) {
         this.completed = completed;
     }
 
