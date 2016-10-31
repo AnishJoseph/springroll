@@ -58,10 +58,10 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="PARENT_ID" type="bigint"/>
-            <column name="ROLE_NAME" type="varchar(32)"/>
-            <column name="DESCRIPTION" type="varchar(256)">
-                <constraints nullable="false"/>
+            <column name="ROLE_NAME" type="varchar(32)">
+                <constraints nullable="false" />
             </column>
+            <column name="DESCRIPTION" type="varchar(256)"/>
         </createTable>
         <createTable tableName="USER">
             <column name="ID" type="bigint" autoIncrement="false">
