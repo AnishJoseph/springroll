@@ -1,6 +1,7 @@
 package com.springroll.notification;
 
 import com.springroll.core.ContextStore;
+import com.springroll.core.SpringrollUser;
 import com.springroll.core.services.INotificationManager;
 import org.cometd.annotation.Listener;
 import org.cometd.annotation.Service;
@@ -10,7 +11,6 @@ import org.cometd.bayeux.server.BayeuxServer;
 import org.cometd.bayeux.server.ServerSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -44,7 +44,7 @@ public class PushServices
 //    }
     @Listener("/meta/subscribe")
     public void handleSubscribeRequest(ServerSession remote, Message message) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SpringrollUser user = (SpringrollUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ContextStore.put(user, null, null);
 
         addSubscription((String)message.get("subscription"), user.getUsername(), remote.getId());

@@ -2,6 +2,7 @@ package com.springroll.notification;
 
 import com.springroll.core.BusinessValidationResult;
 import com.springroll.core.SpringrollSecurity;
+import com.springroll.core.SpringrollUser;
 import com.springroll.core.notification.INotification;
 import com.springroll.core.notification.INotificationChannel;
 import com.springroll.core.notification.INotificationMessage;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
 
     @Override
     public List<? extends INotification> getPendingNotificationsForUser(INotificationChannel notificationChannel) {
-        org.springframework.security.core.userdetails.User user = SpringrollSecurity.getUser();
+        SpringrollUser user = SpringrollSecurity.getUser();
         List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String userId = user.getUsername();
         roles.add(userId);
@@ -53,7 +54,7 @@ import java.util.stream.Collectors;
         notifications.addAll(repositories.notification.findByChannelNameAndReceivers(notificationChannel.getChannelName(), userId));
         return notifications;
     }
-    @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, org.springframework.security.core.userdetails.User initiator, String serviceName){
+    @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String serviceName){
         return new FyiReviewNotificationMessage(approver, businessValidationResults, "ui.fyi.review.noti.msg", new String[]{serviceName, initiator.getUsername()});
     }
 }

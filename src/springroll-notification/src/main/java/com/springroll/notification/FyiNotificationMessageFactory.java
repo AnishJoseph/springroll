@@ -2,6 +2,7 @@ package com.springroll.notification;
 
 import com.springroll.core.BusinessValidationResult;
 import com.springroll.core.SpringrollSecurity;
+import com.springroll.core.SpringrollUser;
 import com.springroll.core.notification.*;
 import com.springroll.orm.entities.Notification;
 import com.springroll.orm.entities.User;
@@ -36,7 +37,7 @@ import java.util.stream.Collectors;
 
     @Override
     public List<? extends INotification> getPendingNotificationsForUser(INotificationChannel notificationChannel) {
-        org.springframework.security.core.userdetails.User user = SpringrollSecurity.getUser();
+        SpringrollUser user = SpringrollSecurity.getUser();
         List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String userId = user.getUsername();
         String pattern = "%\"" + userId + "\"%";
@@ -45,7 +46,7 @@ import java.util.stream.Collectors;
     }
 
     @Override
-    public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, org.springframework.security.core.userdetails.User initiator, String serviceName) {
+    public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String serviceName) {
         //FIXME
         return null;
     }

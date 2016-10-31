@@ -1,6 +1,7 @@
 package com.springroll.api.facade;
 
 import com.springroll.core.LocaleFactory;
+import com.springroll.core.SpringrollUser;
 import com.springroll.core.services.ITemplateManager;
 import com.springroll.reporting.ReportParameter;
 import com.springroll.reporting.grid.GridReport;
@@ -11,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,9 +54,8 @@ public class SpringrollAPI extends AbstractAPI {
 
     @RequestMapping(value = "/sr/localeMessages", method = RequestMethod.GET)
     public Object getLocaleMessages() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        return localeFactory.getUIMessagesAsMap(userSpecificLocaleMaker.getLocaleForUser(user.getUsername()));
-        return localeFactory.getUIMessagesAsMap(_locale);
+        SpringrollUser user = (SpringrollUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return localeFactory.getUIMessagesAsMap(user.getLocale());
     }
 
     @RequestMapping(value = "/sr/gridParams/{gridName}", method = RequestMethod.POST)

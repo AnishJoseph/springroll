@@ -1,6 +1,5 @@
 package com.springroll.core;
 
-import org.springframework.security.core.userdetails.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
 public abstract class AbstractEvent<T extends DTO> implements IEvent<T> {
     private static final long serialVersionUID = 1L;
 
-    private User user;
+    private SpringrollUser user;
     private List<T> payloads;
     private boolean routed = false;
     private String destinationUri;
@@ -88,12 +87,12 @@ public abstract class AbstractEvent<T extends DTO> implements IEvent<T> {
     }
 
     @Override
-    public User getUser() {
+    public SpringrollUser getUser() {
         return user;
     }
 
     @Override
-    public void setUser(User user) {
+    public void setUser(SpringrollUser user) {
         this.user = user;
     }
 

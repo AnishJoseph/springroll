@@ -9,7 +9,6 @@ import com.springroll.router.exceptions.PropertyValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -73,8 +72,8 @@ public abstract class AbstractAPI {
         return synchEndPoint.route(jobMeta);
     }
 
-    private User getUser(){
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    private SpringrollUser getUser(){
+        return (SpringrollUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     public ModelAndView propertyViolationsAsModelAndView(Map<String,Map<String,String>> violations) {
