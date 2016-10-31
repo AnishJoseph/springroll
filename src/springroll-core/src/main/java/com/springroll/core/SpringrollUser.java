@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.User;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by anishjoseph on 17/09/16.
@@ -15,6 +16,7 @@ public class SpringrollUser extends User{
     private List<String> delegators = new ArrayList<>();    //User for whom i can be a delegate
     private String delegator = null;
     private boolean runningAsDelegate = false;
+    private Locale locale;
 
     public SpringrollUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
 
@@ -54,5 +56,13 @@ public class SpringrollUser extends User{
 
     public void setRunningAsDelegate(boolean runningAsDelegate) {
         this.runningAsDelegate = runningAsDelegate;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
     }
 }

@@ -22,6 +22,15 @@ public class User extends AbstractEntity {
     @Column(name = "ROLES")
     private String roles;
 
+    @Column(name = "COUNTRY")
+    private String country;
+
+    @Column(name = "LANGAUGE")
+    private String langauge;
+
+    @Column(name = "VARIANT")
+    private String variant;
+
     public Collection<String> getRoles() {
         if(rolesList == null)rolesList = StringUtils.commaDelimitedListToSet(roles);
         return rolesList;
@@ -38,5 +47,29 @@ public class User extends AbstractEntity {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getLangauge() {
+        return langauge;
+    }
+
+    public void setLangauge(String langauge) {
+        this.langauge = langauge;
+    }
+
+    public String getVariant() {
+        return variant;
+    }
+
+    public void setVariant(String variant) {
+        this.variant = variant;
     }
 }

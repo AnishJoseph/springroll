@@ -72,6 +72,9 @@
             <column name="ROLES" type="varchar(256)">
                 <constraints nullable="false"/>
             </column>
+            <column name="COUNTRY" type="varchar(8)"/>
+            <column name="LANGAUGE" type="varchar(8)"/>
+            <column name="VARIANT" type="varchar(8)"/>
         </createTable>
         <createTable tableName="NOTIFICATION">
             <column name="ID" type="bigint" autoIncrement="false">

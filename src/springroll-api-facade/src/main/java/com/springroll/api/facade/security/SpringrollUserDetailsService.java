@@ -1,6 +1,7 @@
 package com.springroll.api.facade.security;
 
 import com.springroll.core.SpringrollUser;
+import com.springroll.orm.entities.User;
 import com.springroll.orm.repositories.Repositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -50,12 +52,23 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
 
     //Expects username in CAPS
     private SpringrollUser loadUser(String username, Collection<? extends GrantedAuthority> authorities) throws UsernameNotFoundException {
+        /* Comes here on both login and on switch user */
         SpringrollUser user = new SpringrollUser(username, "dummyPassword", authorities);
+        User userInDb = repo.users.findByUserIdIgnoreCase(username);
+        Locale locale;
+        String country = userInDb.getCountry() == null ? "": userInDb.getCountry();
+        String variant = userInDb.getVariant() == null ? "": userInDb.getVariant();
+        if(userInDb.getLangauge() == null){
+            locale = Locale.getDefault();
+        } else {
+            locale = new Locale(userInDb.getLangauge(), country, variant);
+        }
+        user.setLocale(locale);
         return user;
-
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        //Comes here when a user is switched
         SpringrollUser springrollUser = loadUser(username.toUpperCase(), getGrantedAuthorities(null, username.toUpperCase()));
         springrollUser.setDisplayName(username);
         return springrollUser;
@@ -63,8 +76,8 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
 
     @Override   //From interface UserDetailsContextMapper
     public UserDetails mapUserFromContext(DirContextOperations ctx, String username, Collection<? extends GrantedAuthority> authorities) {
+        //Comes here only on login NOT when a user is switched
         username = getUsername(ctx, username);
-
         SpringrollUser user = loadUser(username.toUpperCase(), authorities);
         LocalDate now = (LocalDate.now()).minusDays(1);
         List<String> delegators = repo.delegation.findDelegators(user.getUsername(), now);
@@ -108,7 +121,7 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
+        /* Only comes here on switching a user - not when a user just logs in */
         response.sendRedirect("/");
         SpringrollUser user = (SpringrollUser)authentication.getPrincipal();
         for (GrantedAuthority authority : authentication.getAuthorities()) {
