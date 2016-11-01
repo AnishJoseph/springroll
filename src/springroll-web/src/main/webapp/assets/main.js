@@ -2,7 +2,8 @@ var Application =require('Application');
 /* CSS files */
 
 require("!style!css!bootstrap-select/dist/css/bootstrap-select.min.css");
-require("!style!css!datatables.net-bs/css/dataTables.bootstrap.css");
+//require("!style!css!datatables.net-bs/css/dataTables.bootstrap.css");
+require("!style!css!datatables.net-dt/css/jquery.dataTables.css");
 require("!style!css!datatables.net-buttons-bs/css/buttons.bootstrap.css");
 require("!style!css!bootstrap-datepicker/dist/css/bootstrap-datepicker3.css");
 
@@ -28,6 +29,7 @@ require('./lib/framework/report.parameter.view.js');
 require('./lib/framework/messenger.cometd.js');
 require('./lib/framework/modal.js');
 require('./lib/framework/review.moreinfo.js');
+require('./lib/modules/master.role.js');
 
 $(function() {
     $.ajaxSetup({
