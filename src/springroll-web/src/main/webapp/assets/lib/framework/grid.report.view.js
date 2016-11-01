@@ -18,7 +18,7 @@ var ReportParams = Backbone.Model.extend({
 
 var GridView  = Marionette.View.extend({
 
-    template: _.template("<table class='table-striped table-bordered table-hover ' id='gridtable' style='margin: 15px; width: 100%'/>"),
+    template: _.template("<table class='table-striped table-bordered table-hover' id='gridtable' style='min-width: 50%;margin: auto'/>"),
     ui : {
         griddiv : '#gridtable'
     },
@@ -53,7 +53,7 @@ var GridView  = Marionette.View.extend({
 
 Application.GridView = Marionette.View.extend({
     tagName: 'div',
-    template: _.template("<div id='params'/><div id='grid' style='width: 100%; margin-left: 20px; margin-right: 20px'/> "),
+    template: _.template("<div id='params'/><div id='grid'/> "),
     regions: {
         paramsRegion: '#params',
         gridRegion: '#grid',
