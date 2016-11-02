@@ -25,7 +25,7 @@ Application.ReportParamsView  = Marionette.View.extend({
         if(parameter.multiSelect) template.push('multiple');
         template.push(">");
         _.each(parameter.lovList, function(lov){
-            template.push('<option title="' + lov.name + '">' + lov.value + '</option>');
+            template.push('<option value="' + lov.value + '">' + lov.name + '</option>');
         });
         template.push('</select>');
         template.push('</div>');
