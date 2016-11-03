@@ -33,10 +33,13 @@ module.exports = {
         })
     ],
     resolve: {
-        root: path.resolve(__dirname),
+        root: [
+            path.resolve(__dirname),
+            path.resolve('target/assets/lib/framework/'),
+            path.resolve('target/assets/lib/modules/'),
+            path.resolve('src/main/webapp/assets/lib/modules/'),
+        ],
         alias: {
-            Application$: 'target/assets/lib/framework/Application.js',
-            AllSolutionModules: 'src/main/webapp/assets/lib/modules/AllSolutionModules.js',
             "org/cometd" : 'target/assets/org/cometd.js'
         },
         extensions: ['', '.js', '.jsx']

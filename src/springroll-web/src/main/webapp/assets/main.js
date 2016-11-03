@@ -17,20 +17,20 @@ require('bootstrap-datepicker');
 
 require('AllSolutionModules');
 require('./vendor/cometd/jquery.cometd.js');
-require('./lib/framework/root.view.js');
-require('./lib/framework/menu.js');
-require('./lib/framework/indicator.js');
-require('./lib/framework/alerts.js');
-require('./lib/framework/fyi.alerts.js');
-require('./lib/framework/review.alerts.js');
-require('./lib/framework/reviewfyi.alerts.js');
-require('./lib/framework/grid.report.view.js');
-require('./lib/framework/report.parameter.view.js');
-require('./lib/framework/messenger.cometd.js');
-require('./lib/framework/modal.js');
-require('./lib/framework/review.moreinfo.js');
-require('./lib/modules/master.role.js');
-require('./lib/modules/master.edit.js');
+require('root.view.js');
+require('menu.js');
+require('indicator.js');
+require('alerts.js');
+require('fyi.alerts.js');
+require('review.alerts.js');
+require('reviewfyi.alerts.js');
+require('grid.report.view.js');
+require('report.parameter.view.js');
+require('messenger.cometd.js');
+require('modal.js');
+require('review.moreinfo.js');
+require('master.role.js');
+require('master.edit.js');
 
 $(function() {
     $.ajaxSetup({
