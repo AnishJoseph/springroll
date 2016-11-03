@@ -2,6 +2,7 @@ package com.springroll.api.facade;
 
 import com.springroll.core.*;
 import com.springroll.core.exceptions.FixableException;
+import com.springroll.orm.repositories.Repositories;
 import com.springroll.router.JobMeta;
 import com.springroll.router.SynchEndPoint;
 import com.springroll.router.exceptions.BusinessValidationException;
@@ -26,6 +27,7 @@ public abstract class AbstractAPI {
     @Autowired private SynchEndPoint synchEndPoint;
     @Autowired protected LocaleFactory localeFactory;
     protected static Locale _locale = Locale.getDefault();
+    @Autowired Repositories repositories;
 
 
     @ExceptionHandler(PropertyValidationException.class)
