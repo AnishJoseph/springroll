@@ -16,7 +16,7 @@ require('bootstrap-datepicker');
 
 
 require('AllSolutionModules');
-require('./vendor/cometd/jquery.cometd.js');
+require('jquery.cometd.js');
 require('root.view.js');
 require('menu.js');
 require('indicator.js');
@@ -59,7 +59,7 @@ $(function() {
                             var localizedFieldName = Localize(field);
                             if (violation[field].includes('{0}')){
                                 /* if the error message is a custom message which includes  the field name  i.e message string contains '{0}'
-                                   then dont show the field name separately - just create the message as per the template
+                                 then dont show the field name separately - just create the message as per the template
                                  */
                                 Application.Indicator.showErrorMessage({message: Localize(violation[field], [localizedFieldName])});
                             } else {
