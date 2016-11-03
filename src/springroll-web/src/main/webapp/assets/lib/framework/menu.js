@@ -59,14 +59,14 @@ Application.MenuView = Marionette.View.extend({
                 _.forEach(item.items, function(menuItem){
                     var id = 'click #menuId' + menuItem.name;
                     events[id] = function () {
-                        menuItem.controller.activate();
+                        menuItem.controller.activate(menuItem.name);
                     }
                 });
             } else {
                 var menuItem = item.items;
                 var id = 'click #menuId' + menuItem.name;
                 events[id] = function () {
-                    menuItem.controller.activate();
+                    menuItem.controller.activate(menuItem.name);
                 }
             }
 

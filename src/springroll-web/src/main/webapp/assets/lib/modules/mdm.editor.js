@@ -137,17 +137,21 @@ var MasterTable = Marionette.View.extend({
     }
 });
 var Control = Marionette.View.extend({
-    template : function(){
+    template : function(data){
         var template = [];
-        template.push('<span id="addRow" class="glyphicon glyphicon-plus" aria-hidden="true"></span> <button class="btn btn-default btn-warning" type="submit">');
+        template.push('<h3 style="float: left; margin-right: 50px">Master for ' + Localize(data.master) + '</h3><span id="addRow" class="glyphicon glyphicon-plus" aria-hidden="true"></span> <button class="btn btn-default btn-warning" type="submit">');
         template.push(Localize('Save'));
         template.push('</button>');
         return template.join("");
+    },
+    serializeData: function(){
+        return {master: this.master};
     },
     initialize : function(options){
         this.masterGridData = options.masterGridData;
         this.url = options.url;
         this.collections = options.collections;
+        this.master = options.master;
 
     },
     events : {
@@ -192,6 +196,7 @@ Application.MasterView = Marionette.View.extend({
     initialize : function(options){
         this.masterGridData = options.masterGridData;
         this.url = options.url;
+        this.master = options.master;
 
     },
     onRender : function(){
@@ -209,7 +214,7 @@ Application.MasterView = Marionette.View.extend({
         });
         var collections = new Backbone.Collection(data);
         this.showChildView('tableRegion', new MasterTable({masterGridData : this.masterGridData, collections : collections}));
-        this.showChildView('controlRegion', new Control({masterGridData : this.masterGridData, url: this.url, collections: collections}));
+        this.showChildView('controlRegion', new Control({masterGridData : this.masterGridData, url: this.url, collections: collections, master : this.master}));
     }
 
 });

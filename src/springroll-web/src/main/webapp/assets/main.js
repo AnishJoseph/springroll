@@ -29,8 +29,8 @@ require('report.parameter.view.js');
 require('messenger.cometd.js');
 require('modal.js');
 require('review.moreinfo.js');
-require('master.role.js');
-require('master.edit.js');
+require('mdm.js');
+require('mdm.editor.js');
 
 $(function() {
     $.ajaxSetup({
