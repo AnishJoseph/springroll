@@ -75,7 +75,6 @@ var MasterRowView = Marionette.View.extend({
             return;
         }
         this.model.set(attrName, evt.target.value );
-        console.log("Attr " + attrName + " changed to " + evt.target.value + " HASCHANGED = " + this.model.hasChanged());
     }
 });
 
@@ -156,8 +155,11 @@ var Control = Marionette.View.extend({
         'click #addRow' : 'addRow'
     },
     addRow : function(){
-        this.collections.add({id : undefined, 'TextCol' : undefined, 'DropDownColW' : undefined, 'DropDownCol' : undefined, 'DateCol' : undefined, 'NumberCol' : undefined, 'BooleanCol' : true});
-        console.log("Row added");
+        var newRecord = {};
+        _.each(this.masterGridData.colDefs, function(colDef){
+            newRecord[colDef.name] = colDef.default;
+        });
+        this.collections.add(newRecord);
     },
 
     saveClicked : function(){
