@@ -15,13 +15,13 @@ var MasterRoleController = Marionette.Object.extend({
                 {'name' : 'DropDownColW', "writeable": true, "type" : "text", "lovList" : [{"name": "name1", "value": "val1"},{"name": "name2", "value": "val2"}] },
                 {'name' : 'DropDownCol', "writeable": false, "type" : "text", "lovList" : [{"name": "name1", "value": "val1"},{"name": "name2", "value": "val2"}] },
                 {'name' : 'DateCol', "writeable": true, "type" : "date"},
-                {'name' : 'NumberCol', "writeable": true, "type" : "num"},
-                {'name' : 'BooleanCol', "writeable": true, "type" : "boolean", "lovList" : [{"name": "Yes", "value": true},{"name": "No", "value": false}] },
+                {'name' : 'NumberCol', "writeable": true, "type" : "num", default: 1},
+                {'name' : 'BooleanCol', "writeable": true, "type" : "boolean", "lovList" : [{"name": "Yes", "value": true},{"name": "No", "value": false}], default:true },
 
             ],
             data : [
-                [1, "r1c2", "val2","val2","r1c5",100, true],
-                [2, "r1c2", "val2","val2","r2c5",200, false],
+                [1, "r1c2", "val2","val2","25/12/1985",100, true],
+                [2, "r1c2", "val2","val2","15/12/1985",200, false],
                 //[3, "r1c2", "val2","val2","r2c5","r2c6", false],
                 //[4, "r1c2", "val2","val2","r2c5","r2c6", false],
                 //[5, "r1c2", "val2","val2","r2c5","r2c6", false],

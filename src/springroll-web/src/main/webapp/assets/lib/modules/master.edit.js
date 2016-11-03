@@ -12,9 +12,11 @@ var makeLovList = function(template, colDef, selectedValue){
     });
     template.push('</select></td>');
 }
-var makeDate = function(template, parameter){
+var makeDate = function(template, parameter, value){
     template.push('<td><div class="input-group date datepicker" data-provide="datepicker">');
-    template.push('<input type="text" class="form-control modelattr" data-attrname="' + parameter.name + '">');
+    template.push('<input type="text" class="form-control modelattr" data-attrname="' + parameter.name + '"');
+    if(value !== undefined)template.push(' value="' + value + ' "');
+    template.push('>');
     template.push('<div class="input-group-addon">');
     template.push('<span class="glyphicon glyphicon-th"></span>');
     template.push('</div></td>');
@@ -38,7 +40,7 @@ var MasterRowView = Marionette.View.extend({
                 if (colDefs[index].lovList !== undefined) {
                     makeLovList(template, colDefs[index], data.model.get(val));
                 } else if (colDefs[index].type === 'date') {
-                    makeDate(template, colDefs[index]);
+                    makeDate(template, colDefs[index], data.model.get(val));
                 } else if (colDefs[index].type === 'text') {
                     template.push('<td class="modelattr"><input type="text" data-attrname="' + colDefs[index].name + '" ');
                     if(data.model.get(val) !== undefined && data.model.get(val) !== null) template.push(' value="' + data.model.get(val) + '"');
