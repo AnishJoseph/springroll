@@ -18,4 +18,6 @@ import org.springframework.stereotype.Component;
     @Autowired public NotificationRepository notification;
 
     @Autowired public UserDelegationRepository delegation;
+
+    @Autowired public RoleRepository role;
 }
