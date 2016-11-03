@@ -39,11 +39,11 @@ var MasterRowView = Marionette.View.extend({
                 } else if (colDefs[index].type === 'date') {
                     makeDate(template, colDefs[index]);
                 } else if (colDefs[index].type === 'text') {
-                    template.push('<td class="modelattr"><input type="text"');
+                    template.push('<td class="modelattr"><input type="text" data-attrname="' + colDefs[index].name + '" ');
                     if(data.model.get(val) !== undefined && data.model.get(val) !== null) template.push(' value="' + data.model.get(val) + '"');
                     template.push('></td>');
                 } else if (colDefs[index].type === 'num') {
-                    template.push('<td class="modelattr"><input type="number"');
+                    template.push('<td class="modelattr"><input type="number" data-attrname="' + colDefs[index].name + '" ');
                     if(data.model.get(val) !== undefined && data.model.get(val) !== null) template.push(' value="' + data.model.get(val) + '"');
                     template.push('></td>');
                 } else {
@@ -169,12 +169,7 @@ var Control = Marionette.View.extend({
                 changedModels.push(ca);
             }
         });
-        var that = this;
-        var Collection =  Backbone.Model({
-            url : function(){
-                return  that.url;
-            }
-        });
+        var Collection =  Backbone.Model.extend({ url: this.url});
         var collection = new Collection(changedModels);
         collection.save(null, {
             success: function(){
