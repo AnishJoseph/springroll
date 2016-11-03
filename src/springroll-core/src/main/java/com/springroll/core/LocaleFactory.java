@@ -12,7 +12,7 @@ import java.util.Properties;
  */
 @Service
 public class LocaleFactory {
-    private static boolean cache = true;
+    private static boolean cache = false;
     private static SpringrollResourceMessageBundleSource uiMessages;
     private static SpringrollResourceMessageBundleSource serverMessages;
 
