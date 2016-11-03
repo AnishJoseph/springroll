@@ -30,6 +30,7 @@ require('./lib/framework/messenger.cometd.js');
 require('./lib/framework/modal.js');
 require('./lib/framework/review.moreinfo.js');
 require('./lib/modules/master.role.js');
+require('./lib/modules/master.edit.js');
 
 $(function() {
     $.ajaxSetup({
