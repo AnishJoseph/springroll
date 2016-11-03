@@ -10,7 +10,8 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /org\/cometd\.js$/, loader: 'imports?org=>{}'},
+            //FIXME - we changed comet.js
+            //{ test: /org\/cometd\.js$/, loader: 'imports?org=>{}'},
             { test: /\.css$/, loader: 'style-loader!css-loader' },
             { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file" },
             { test: /\.(woff|woff2)$/, loader:"url?prefix=font/&limit=5000" },

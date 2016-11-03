@@ -17,7 +17,8 @@
 /* CometD Version 3.0.9 */
 
 // Namespaces for the cometd implementation
-this.org = this.org || {};
+//this.org = this.org || {}; //FIXME - ORIGINAL CODE - related to fixme in webpack.config.js
+var org = this.org = this.org || {};
 org.cometd = {};
 
 org.cometd.JSON = {};
