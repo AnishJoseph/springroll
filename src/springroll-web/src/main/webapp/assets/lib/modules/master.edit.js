@@ -23,6 +23,7 @@ var makeDate = function(template, parameter){
 var getDisplayValue = function(colDef, value){
     if(colDef.lovList === undefined)return value;
     var selectedLov  = _.findWhere(colDef.lovList, {value: value});
+    if(selectedLov == undefined)return "";
     return Localize(selectedLov.name);
 }
 
@@ -32,8 +33,8 @@ var MasterRowView = Marionette.View.extend({
         var colDefs = data.colDefs;
         var template = [];
         _.each(Object.keys(data.model.attributes), function (val, index){
-            if(index == 0)return; //index 0 ALWAYS points to ID - just ignore
-            if(colDefs[index].writeable == true) {
+            if(val === 'id')return; //FIXME - assumtion that each model will have all the cols defined - it should ateast be undefined
+            if(colDefs[index].writeable == true || data.model.get('id') == undefined) {
                 if (colDefs[index].lovList !== undefined) {
                     makeLovList(template, colDefs[index], data.model.get(val));
                 } else if (colDefs[index].type === 'date') {
@@ -88,10 +89,16 @@ var MasterTableBody = Marionette.CollectionView.extend({
             childIndex: index
         }
     },
+
     onRender : function(){
         this.$(".selectpicker").selectpicker();
+        this.$(".datepicker").datepicker({ autoclose: true, todayHighlight: true});
     },
 
+    onAddChild : function(){
+        this.$(".selectpicker").selectpicker();
+        this.$(".datepicker").datepicker({ autoclose: true, todayHighlight: true});
+    }
 });
 
 var MasterTable = Marionette.View.extend({
@@ -114,6 +121,7 @@ var MasterTable = Marionette.View.extend({
 
     initialize : function(options){
         this.masterGridData = options.masterGridData;
+        this.collections = options.collections;
 
     },
     regions: {
@@ -122,51 +130,43 @@ var MasterTable = Marionette.View.extend({
             replaceElement: true
         }
     },
-    getCollection : function(){
-      return this.masterTableBody.collection;
-    },
     onRender: function() {
-        var data = [];
-        var that = this;
-        _.each(this.masterGridData.data, function(row){
-            var rowData = {};
-            _.each(row, function(col, index){
-                if(index == 0)
-                    rowData['id'] = col;
-                else
-                    rowData[that.masterGridData.colDefs[index].name] = col;
-            });
-            data.push(rowData);
-        });
-        this.masterTableBody = new MasterTableBody({ collection: new Backbone.Collection(data) , colDefs :  this.masterGridData.colDefs})
+        this.masterTableBody = new MasterTableBody({ collection: this.collections , colDefs :  this.masterGridData.colDefs})
         this.showChildView('body', this.masterTableBody);
     }
 });
 var Control = Marionette.View.extend({
     template : function(){
         var template = [];
-        template.push('<button class="btn btn-default btn-warning" type="submit">');
+        template.push('<span id="addRow" class="glyphicon glyphicon-plus" aria-hidden="true"></span> <button class="btn btn-default btn-warning" type="submit">');
         template.push(Localize('Save'));
         template.push('</button>');
         return template.join("");
     },
     initialize : function(options){
         this.masterGridData = options.masterGridData;
-        this.masterTable = options.masterTable;
         this.url = options.url;
+        this.collections = options.collections;
 
     },
     events : {
-        'click .btn' : 'saveClicked'
+        'click .btn' : 'saveClicked',
+        'click #addRow' : 'addRow'
+    },
+    addRow : function(){
+        this.collections.add({id : undefined, 'TextCol' : undefined, 'DropDownColW' : undefined, 'DropDownCol' : undefined, 'DateCol' : undefined, 'NumberCol' : undefined, 'BooleanCol' : true});
+        console.log("Row added");
     },
 
     saveClicked : function(){
         var changedModels = [];
-        _.each(this.masterTable.getCollection().models, function(model){
+        _.each(this.collections.models, function(model){
             if(model.hasChanged()){
                 var ca = model.changedAttributes();
                 ca['id'] = model.get('id');
                 changedModels.push(ca);
+            } else if (model.isNew()){
+                changedModels.push(model.attributes);
             }
         });
         var Collection =  Backbone.Model.extend({ url: this.url});
@@ -191,9 +191,21 @@ Application.MasterView = Marionette.View.extend({
 
     },
     onRender : function(){
-        var masterTable =  new MasterTable({masterGridData : this.masterGridData})
-        this.showChildView('tableRegion', masterTable);
-        this.showChildView('controlRegion', new Control({masterGridData : this.masterGridData, masterTable : masterTable, url: this.url}));
+        var data = [];
+        var that = this;
+        _.each(this.masterGridData.data, function(row){
+            var rowData = {};
+            _.each(row, function(col, index){
+                if(index == 0)
+                    rowData['id'] = col;
+                else
+                    rowData[that.masterGridData.colDefs[index].name] = col;
+            });
+            data.push(rowData);
+        });
+        var collections = new Backbone.Collection(data);
+        this.showChildView('tableRegion', new MasterTable({masterGridData : this.masterGridData, collections : collections}));
+        this.showChildView('controlRegion', new Control({masterGridData : this.masterGridData, url: this.url, collections: collections}));
     }
 
 });
