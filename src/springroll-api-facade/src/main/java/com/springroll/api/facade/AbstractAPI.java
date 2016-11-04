@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -28,6 +30,7 @@ public abstract class AbstractAPI {
     @Autowired protected LocaleFactory localeFactory;
     protected static Locale _locale = Locale.getDefault();
     @Autowired Repositories repositories;
+    @PersistenceContext EntityManager em;
 
 
     @ExceptionHandler(PropertyValidationException.class)
