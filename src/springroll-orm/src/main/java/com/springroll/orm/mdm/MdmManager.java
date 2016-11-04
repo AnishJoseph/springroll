@@ -102,6 +102,32 @@ import java.util.stream.Collectors;
                 logger.error("Unable to find Spring Bean  with name {}. This was configured as a LOV source in {}", lovSource.getSource(), lovSource.getName());
                 throw new FixableException("", "lov.source.missingbean", lovSource.getSource(), lovSource.getName());
             }
+        } else if("namedQuery".equals(lovSource.getType())){
+            try {
+                List<Lov> lovs = new ArrayList<>();
+                Query query = em.createNamedQuery(lovSource.getSource());
+                List resultList = query.getResultList();
+                //FIXME - handle case where both name and value are returned??
+                for (Object o : resultList) {
+                    lovs.add(new Lov(o));
+                }
+                return lovs;
+            }catch (Exception e ){
+                logger.error("Exception while running named query {} to get the LOVs for LOV source {}. Exception is - {}", lovSource.getSource(), lovSource.getName(), e.getMessage());
+                throw new FixableException("", "lov.source.namedQuery", lovSource.getSource(), lovSource.getName(), e.getMessage());
+            }
+        } else if("enum".equals(lovSource.getType())){
+            try {
+                Class clazz = Class.forName(lovSource.getSource());
+                List<Lov> lovs = new ArrayList<>();
+                for (Object o : clazz.getEnumConstants()) {
+                    lovs.add(new Lov(o));
+                }
+                return lovs;
+            }catch (Exception e ){
+                logger.error("Exception while getting Enum Values from class '{}' to get the LOVs. LOV source {}. Exception is - {}", lovSource.getSource(), lovSource.getName(), e.getMessage());
+                throw new FixableException("", "lov.source.missingenum", lovSource.getSource(), lovSource.getName(), e.getMessage());
+            }
         }
         return null;
     }

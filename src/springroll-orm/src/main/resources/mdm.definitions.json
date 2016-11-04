@@ -13,9 +13,9 @@
         "dataQuery" : "ReviewRule.getRecordsForMdm",
         "colDefs" : [
             { "name": "Rule Name", "writeable": true, "type": "text"},
-            { "name": "Channel", "writeable": true, "type": "text", "lovSource" : "notificationChannels"},
+            { "name": "Channel", "writeable": true, "type": "text", "lovSource" : "NotificationChannels"},
             { "name": "Review Stage", "writeable": true, "type": "num"},
-            { "name": "Approver", "writeable": true, "type": "text"},
+            { "name": "Approver", "writeable": true, "type": "text", "lovSource" : "Roles"},
             { "name": "Approvals Needed", "writeable": true, "type": "num", "defVal": "1"},
             { "name": "FYI Only", "writeable": true, "type": "boolean", "defVal": "false"},
             { "name": "Description", "writeable": true, "type": "text"}
@@ -24,6 +24,8 @@
   ],
 
   "lovSources" : [
-    {"name" : "notificationChannels", "type": "java", "source" : "notificationManager"}
+    {"name" : "NotificationChannels", "type": "java", "source" : "notificationManager"},
+    {"name" : "Roles", "type": "namedQuery", "source" : "Role.getAllRoles"},
+    {"name" : "Enum", "type": "enum", "source" : "com.springroll.notification.CoreNotificationChannels"}
   ]
 }
