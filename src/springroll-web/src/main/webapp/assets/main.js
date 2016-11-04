@@ -73,11 +73,10 @@ $(function() {
     });
 
     $.fn.datepicker.defaults.format = UIProperties.uiDateFormatJs;
-    var promises = [];
-    promises.push(Application.loadTemplates());
-    promises.push(Application.loadUser());
-    promises.push(Application.loadLocaleMessages());
-    $.when.apply($, promises).always(function () {
+    Application.loadTemplates();
+    Application.loadUser();
+    Application.loadLocaleMessages();
+    $.when.apply($, Application.getPromises()).then(function () {
         Application.Alerts.registerAlertSubscriptions();
         Application.CometD.init();
         Application.start();

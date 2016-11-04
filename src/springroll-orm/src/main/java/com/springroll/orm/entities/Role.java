@@ -1,13 +1,13 @@
 package com.springroll.orm.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by anishjoseph on 05/09/16.
  */
-
+@NamedQueries({
+        @NamedQuery(name="Role.getRecordsForMdm", query = "SELECT o.id, o.roleName, o.description FROM Role o")
+})
 @Entity
 @Table(name = "ROLE")
 public class Role extends AbstractEntity {

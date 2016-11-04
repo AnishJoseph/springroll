@@ -4,6 +4,7 @@ import com.springroll.core.SpringrollUser;
 import com.springroll.core.services.ITemplateManager;
 import com.springroll.orm.mdm.ColDef;
 import com.springroll.orm.mdm.MdmData;
+import com.springroll.orm.mdm.MdmManager;
 import com.springroll.reporting.ReportParameter;
 import com.springroll.reporting.grid.GridReport;
 import com.springroll.reporting.grid.GridReporter;
@@ -26,6 +27,7 @@ public class SpringrollAPI extends AbstractAPI {
 
     @Autowired private ITemplateManager templateManager;
     @Autowired private GridReporter gridReporter;
+    @Autowired private MdmManager mdmManager;
 
     @RequestMapping(value = "/sr/reviewaction", method = RequestMethod.POST)
     public Long reviewAction(@RequestBody ReviewActionDTO reviewActionDTO) {
@@ -71,29 +73,14 @@ public class SpringrollAPI extends AbstractAPI {
         GridReport grid = gridReporter.getGrid(gridName, parameters);
         return grid;
     }
+    @RequestMapping(value = "/sr/mdm/masters", method = RequestMethod.GET)
+    public List<String> getMdmMasterNames() {
+        return mdmManager.getMdmMasterNames();
+    }
 
-    @RequestMapping(value = "/sr/mdm/{master}", method = RequestMethod.POST)
+    @RequestMapping(value = "/sr/mdm/data/{master}", method = RequestMethod.POST)
     public MdmData getMDMData(@PathVariable String master) {
-        MdmData mdmData = new MdmData();
-        String query = "select o.id, o.roleName, o.description from Role o";
-        Query query1 = em.createQuery(query);
-        List resultList = query1.getResultList();
-        mdmData.setData(resultList);
-        List<ColDef> colDefs = new ArrayList<>();
-        ColDef colDef = new ColDef();
-        colDef.setName("id");
-        colDefs.add(colDef);
-        colDef = new ColDef();
-        colDef.setName("Role Name");
-        colDef.setWriteable(true);
-        colDef.setType("text");
-        colDefs.add(colDef);
-        colDef = new ColDef();
-        colDef.setName("Description");
-        colDef.setWriteable(true);
-        colDef.setType("text");
-        colDefs.add(colDef);
-        mdmData.setColDefs(colDefs);
-        return mdmData;
+        mdmManager.init();
+        return mdmManager.getData(master);
     }
 }

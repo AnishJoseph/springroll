@@ -1,0 +1,29 @@
+{
+  "masters" : [
+      {
+        "master" : "role",
+        "dataQuery" : "Role.getRecordsForMdm",
+        "colDefs" : [
+            { "name": "RoleName", "writeable": true, "type": "text"},
+            { "name": "Description", "writeable": false, "type": "text"}
+        ]
+      },
+      {
+        "master" : "reviewrule",
+        "dataQuery" : "ReviewRule.getRecordsForMdm",
+        "colDefs" : [
+            { "name": "Rule Name", "writeable": true, "type": "text"},
+            { "name": "Channel", "writeable": true, "type": "text", "lovSource" : "notificationChannels"},
+            { "name": "Review Stage", "writeable": true, "type": "num"},
+            { "name": "Approver", "writeable": true, "type": "text"},
+            { "name": "Approvals Needed", "writeable": true, "type": "num", "defVal": "1"},
+            { "name": "FYI Only", "writeable": true, "type": "boolean", "defVal": "false"},
+            { "name": "Description", "writeable": true, "type": "text"}
+        ]
+      }
+  ],
+
+  "lovSources" : [
+    {"name" : "notificationChannels", "type": "java", "source" : "notificationManager"}
+  ]
+}

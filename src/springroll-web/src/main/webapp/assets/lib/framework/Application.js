@@ -79,7 +79,7 @@ Application.loadTemplates = function() {
             deferred.resolve();
         }
     });
-    return deferred.promise();
+    Application.addPromise(deferred.promise());
 }
 Application.loadUser = function() {
     var deferred = $.Deferred();
@@ -97,7 +97,7 @@ Application.loadUser = function() {
             deferred.resolve();
         }
     });
-    return deferred.promise();
+    Application.addPromise(deferred.promise());
 }
 Application.loadLocaleMessages = function() {
     var deferred = $.Deferred();
@@ -115,7 +115,7 @@ Application.loadLocaleMessages = function() {
             deferred.resolve();
         }
     });
-    return deferred.promise();
+    Application.addPromise(deferred.promise());
 }
 
 var subscribersForAlerts = [];
@@ -151,6 +151,15 @@ Application.Localize = function(messageKey, args){
 Application.showModal = function(title, viewToShow, viewOfCaller ){
     Application.rootView.triggerMethod("show:modal", title, viewToShow, viewOfCaller);
 } ;
+
+var promises = [];
+
+Application.addPromise = function(promise){
+    promises.push(promise);
+};
+Application.getPromises = function(){
+    return promises;
+};
 
 window.Localize = Application.Localize;
 module.exports = Application;

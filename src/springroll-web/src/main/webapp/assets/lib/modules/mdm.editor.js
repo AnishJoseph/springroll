@@ -23,7 +23,7 @@ var makeDate = function(template, parameter, value){
 }
 
 var getDisplayValue = function(colDef, value){
-    if(colDef.lovList === undefined)return value;
+    if(colDef.lovList === null)return value;
     var selectedLov  = _.findWhere(colDef.lovList, {value: value});
     if(selectedLov == undefined)return "";
     return Localize(selectedLov.name);

@@ -1,11 +1,14 @@
 var Marionette = require('backbone.marionette');
 var Application =require('Application');
 
+var MDMMasters = Backbone.Model.extend({
+    url : "api/sr/mdm/masters"
+});
 var MDMData = Backbone.Model.extend({
     url : function(){
         var master = this.get('master');
         this.unset('master');
-        return "/api/sr/mdm/" + master;
+        return "/api/sr/mdm/data/" + master;
 
     }
 });
@@ -41,7 +44,7 @@ var MdmController = Marionette.Object.extend({
             success: function(model, masterGridData){
                 var view = new Application.MasterView({masterGridData : masterGridData, url : '/api/sr/masters/roles/update', master : master});
                 Application.rootView.showBody(view);
-                Backbone.history.navigate('master/role');
+                Backbone.history.navigate('master/' + master);
             }
         });
     }
@@ -50,24 +53,31 @@ var MdmController = Marionette.Object.extend({
 
 var mdmController = new MdmController();
 
-var masters = ['role', 'reviewrules'];
-var routes = {};
-_.each(masters, function(masterName, index){
-    Application.addMenuItem({
-        parent: 'Masters',
-        name: masterName,
-        controller : mdmController,
-        index : 4,
-        subIndex : index
-    });
-    routes['master/' + masterName] = 'activate';
+var mdmMasters = new MDMMasters();
+var masterRoleRouter = new Marionette.AppRouter();
 
+var deferred = $.Deferred();
+
+$.ajax({
+    url: 'api/sr/mdm/masters',
+    type: 'GET',
+    contentType: 'application/json; charset=utf-8',
+    dataType: 'json',
+    success: function (masters) {
+        var routes = {};
+        _.each(masters, function(masterName, index){
+            Application.addMenuItem({
+                parent: 'Masters',
+                name: masterName,
+                controller : mdmController,
+                index : 4,
+                subIndex : index
+            });
+            routes['master/' + masterName] = 'activate';
+
+        });
+        masterRoleRouter.processAppRoutes(mdmController, routes);
+        deferred.resolve();
+    },
 });
-
-var MasterRoleRouter = new Marionette.AppRouter({
-    controller: mdmController,
-
-    appRoutes: routes
-});
-
-
+Application.addPromise(deferred.promise());

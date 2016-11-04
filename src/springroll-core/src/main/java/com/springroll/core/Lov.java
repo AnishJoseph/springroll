@@ -4,23 +4,23 @@ package com.springroll.core;
  * Created by anishjoseph on 18/10/16.
  */
 public class Lov {
-    private String value;
+    private Object value;
     private String name;
 
-    public Lov(String value) {
+    public Lov(Object value) {
         this.value = value;
-        this.name = value;
+        this.name = value.toString();
     }
-    public Lov(String value, String name) {
+    public Lov(Object value, String name) {
         this.value = value;
         this.name = name;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 

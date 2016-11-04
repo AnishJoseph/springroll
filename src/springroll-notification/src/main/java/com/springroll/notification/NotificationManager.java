@@ -1,6 +1,8 @@
 package com.springroll.notification;
 
 import com.springroll.core.AckLog;
+import com.springroll.core.ILovProvider;
+import com.springroll.core.Lov;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.notification.*;
 import com.springroll.core.services.INotificationManager;
@@ -24,7 +26,7 @@ import java.util.stream.Collectors;
  * Created by anishjoseph on 02/10/16.
  */
 @Service
-public class NotificationManager implements INotificationManager {
+public class NotificationManager implements INotificationManager, ILovProvider {
     @Autowired private PushServices pushServices;
     @Autowired private Repositories repositories;
     @Autowired private ApplicationContext applicationContext;
@@ -161,6 +163,17 @@ public class NotificationManager implements INotificationManager {
             if(enumConstant.getMessageFactoryClass() != null)
                 enumConstant.setMessageFactory(applicationContext.getBean(enumConstant.getMessageFactoryClass()));
         }
+    }
+
+    @Override
+    public List<Lov> getLovs() {
+        List<Lov> lovs = new ArrayList<>();
+        for (Class notificationChannel : notificationChannels) {
+            for (Object val : notificationChannel.getEnumConstants()) {
+                lovs.add(new Lov(val));
+            }
+        }
+        return lovs;
     }
 
     private class PushData{

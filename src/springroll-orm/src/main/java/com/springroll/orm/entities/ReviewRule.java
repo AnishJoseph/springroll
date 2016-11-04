@@ -1,13 +1,14 @@
 package com.springroll.orm.entities;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by anishjoseph on 05/09/16.
  */
+@NamedQueries({
+        @NamedQuery(name="ReviewRule.getRecordsForMdm", query = "SELECT o.id, o.ruleName, o.channel, o.reviewStage, o.approver, o.approvalsNeeded, o.fyiOnly, o.description FROM ReviewRule o")
+})
 
 @Entity
 @Table(name = "Review_Rule")
