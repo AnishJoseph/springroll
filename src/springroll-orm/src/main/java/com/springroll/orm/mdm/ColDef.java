@@ -27,10 +27,6 @@ public class ColDef {
     public ColDef() {
     }
 
-    public ColDef(String name) {
-        this.name = name;
-    }
-
     public String getName() {
         return name;
     }
