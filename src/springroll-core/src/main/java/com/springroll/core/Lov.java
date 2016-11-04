@@ -1,4 +1,4 @@
-package com.springroll.reporting;
+package com.springroll.core;
 
 /**
  * Created by anishjoseph on 18/10/16.

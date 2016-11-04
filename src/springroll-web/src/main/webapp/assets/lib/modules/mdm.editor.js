@@ -37,7 +37,7 @@ var MasterRowView = Marionette.View.extend({
         _.each(Object.keys(data.model.attributes), function (val, index){
             if(val === 'id')return; //FIXME - assumtion that each model will have all the cols defined - it should ateast be undefined
             if(colDefs[index].writeable == true || data.model.get('id') == undefined) {
-                if (colDefs[index].lovList !== undefined) {
+                if (colDefs[index].lovList !== null) {
                     makeLovList(template, colDefs[index], data.model.get(val));
                 } else if (colDefs[index].type === 'date') {
                     makeDate(template, colDefs[index], data.model.get(val));
@@ -161,7 +161,7 @@ var Control = Marionette.View.extend({
     addRow : function(){
         var newRecord = {};
         _.each(this.masterGridData.colDefs, function(colDef){
-            newRecord[colDef.name] = colDef.default;
+            newRecord[colDef.name] = colDef.defaultValue;
         });
         this.collections.add(newRecord);
     },

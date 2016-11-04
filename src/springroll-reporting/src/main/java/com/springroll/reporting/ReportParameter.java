@@ -1,5 +1,7 @@
 package com.springroll.reporting;
 
+import com.springroll.core.Lov;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.springroll.reporting.grid;
 
 import com.springroll.core.exceptions.FixableException;
-import com.springroll.reporting.Lov;
+import com.springroll.core.Lov;
 import com.springroll.reporting.ReportParameter;
 import flexjson.JSONDeserializer;
 import org.slf4j.Logger;
