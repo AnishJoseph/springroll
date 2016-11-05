@@ -59,10 +59,10 @@ var MasterRowView = Marionette.View.extend({
         return template.join("");
     },
     serializeData: function(){
-        return {model: this.model, colDefs : this.colDefs};
+        return {model: this.model, colDefs : this.masterGridData.colDefs};
     },
     initialize : function(options){
-        this.colDefs = options.colDefs;
+        this.masterGridData = options.masterGridData;
     },
 
     events: {
@@ -82,11 +82,11 @@ var MasterTableBody = Marionette.CollectionView.extend({
     tagName: 'tbody',
     childView: MasterRowView,
     initialize : function(options){
-      this.colDefs = options.colDefs;
+      this.masterGridData = options.masterGridData;
     },
     childViewOptions: function(model, index) {
         return {
-            colDefs: this.colDefs,
+            masterGridData: this.masterGridData,
             childIndex: index
         }
     },
@@ -132,7 +132,7 @@ var MasterTable = Marionette.View.extend({
         }
     },
     onRender: function() {
-        this.masterTableBody = new MasterTableBody({ collection: this.collections , colDefs :  this.masterGridData.colDefs})
+        this.masterTableBody = new MasterTableBody({ collection: this.collections , masterGridData :  this.masterGridData})
         this.showChildView('body', this.masterTableBody);
     }
 });
