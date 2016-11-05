@@ -16,7 +16,7 @@
             { "name": "Channel", "writeable": true, "type": "text", "lovSource" : "NotificationChannels"},
             { "name": "Review Stage", "writeable": true, "type": "num"},
             { "name": "Approver", "writeable": true, "type": "text", "lovSource" : "Roles"},
-            { "name": "Approvals Needed", "writeable": true, "type": "num", "defVal": "1"},
+            { "name": "Approvals Needed", "writeable": true, "type": "num", "defVal": "10"},
             { "name": "FYI Only", "writeable": true, "type": "boolean", "defVal": "false"},
             { "name": "Description", "writeable": true, "type": "text"}
         ]

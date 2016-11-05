@@ -43,6 +43,10 @@ import java.util.stream.Collectors;
                     if("boolean".equals(colDef.getType())){
                         colDef.setLovList(makeBooleanLov());
                         colDef.setDefaultValue(colDef.getDefVal() == null || colDef.getDefVal().equals("false")? false : true);
+                    } else if("int".equals(colDef.getType())){
+                        colDef.setDefaultValue(colDef.getDefVal() == null ? null : Integer.parseInt(colDef.getDefVal()));
+                    } else if("num".equals(colDef.getType())){
+                        colDef.setDefaultValue(colDef.getDefVal() == null ? null : Float.parseFloat(colDef.getDefVal()));
                     }
                 }
             }

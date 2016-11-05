@@ -152,6 +152,12 @@ var Control = Marionette.View.extend({
         this.url = options.url;
         this.collections = options.collections;
         this.master = options.master;
+        this.collections.on('add', function(a,b,c){
+            console.log("Hello World");
+        });
+        this.collections.on('change', function(a,b,c){
+            console.log("Hello World");
+        });
 
     },
     events : {
@@ -162,6 +168,9 @@ var Control = Marionette.View.extend({
         var newRecord = {};
         _.each(this.masterGridData.colDefs, function(colDef){
             newRecord[colDef.name] = colDef.defaultValue;
+            if(colDef.defaultValue == null && colDef.lovList != null){
+                newRecord[colDef.name] = colDef.lovList[0].value;
+            }
         });
         this.collections.add(newRecord);
     },
