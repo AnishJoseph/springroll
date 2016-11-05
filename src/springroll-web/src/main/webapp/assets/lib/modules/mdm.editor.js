@@ -152,11 +152,27 @@ var Control = Marionette.View.extend({
         this.url = options.url;
         this.collections = options.collections;
         this.master = options.master;
-        this.collections.on('add', function(a,b,c){
-            console.log("Hello World");
+        this.changes = {};
+        this.newrecords = {};
+        var that = this;
+        this.collections.on('add', function(model){
+            that.newrecords[model.cid] = model.attributes;
         });
-        this.collections.on('change', function(a,b,c){
-            console.log("Hello World");
+        this.collections.on('change', function(model){
+            if(model.id == null){
+                return;
+            }
+            var attrThatChanged = Object.keys(model.changed)[0];
+            var newValue = model.changed[Object.keys(model.changed)[0]];
+
+            var changesForThisId = that.changes[model.id] || {};
+            that.changes[model.id] = changesForThisId;
+
+            var objectHoldingAttrValuesOldAndNew = changesForThisId[attrThatChanged] || {};
+            changesForThisId[attrThatChanged] = objectHoldingAttrValuesOldAndNew;
+            var prevVal = objectHoldingAttrValuesOldAndNew['prevVal'] || model.previousAttributes()[Object.keys(model.changed)[0]];
+            objectHoldingAttrValuesOldAndNew['val'] = newValue;
+            objectHoldingAttrValuesOldAndNew['prevVal'] = prevVal;
         });
 
     },
@@ -176,23 +192,13 @@ var Control = Marionette.View.extend({
     },
 
     saveClicked : function(){
-        var changedModels = [];
-        _.each(this.collections.models, function(model){
-            if(model.hasChanged()){
-                var ca = model.changedAttributes();
-                ca['id'] = model.get('id');
-                changedModels.push(ca);
-            } else if (model.isNew()){
-                changedModels.push(model.attributes);
-            }
-        });
         var Collection =  Backbone.Model.extend({ url: this.url});
-        var collection = new Collection(changedModels);
+        var collection = new Collection({changes:this.changes, 'newrecords' : this.newrecords});
         collection.save(null, {
             success: function(){
                 console.log("e");
             }
-        })
+        });
     }
 
 });

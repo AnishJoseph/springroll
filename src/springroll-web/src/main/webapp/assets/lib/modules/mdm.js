@@ -21,28 +21,10 @@ var MdmController = Marionette.Object.extend({
          */
         if(master == null || master == undefined) master = Backbone.history.getFragment();
         master = master.substring(master.lastIndexOf('/')+1);
-/*
-        var masterGridData = {
-            colDefs : [
-                {'name' : 'id'},
-                {'name' : 'TextCol', "writeable": true, "type" : "text"},
-                {'name' : 'DropDownColW', "writeable": true, "type" : "text", "lovList" : [{"name": "name1", "value": "val1"},{"name": "name2", "value": "val2"}] },
-                {'name' : 'DropDownCol', "writeable": false, "type" : "text", "lovList" : [{"name": "name1", "value": "val1"},{"name": "name2", "value": "val2"}] },
-                {'name' : 'DateCol', "writeable": true, "type" : "date"},
-                {'name' : 'NumberCol', "writeable": true, "type" : "num", defaultValue: 1},
-                {'name' : 'BooleanCol', "writeable": true, "type" : "boolean", "lovList" : [{"name": "Yes", "value": true},{"name": "No", "value": false}], defaultValue:true },
-
-            ],
-            data : [
-                [1, "r1c2", "val2","val2","25/12/1985",100, true],
-                [2, "r1c2", "val2","val2","15/12/1985",200, false],
-            ]
-        };
-*/
         var  roles = new MDMData({master:master});
         roles.save(null,{
             success: function(model, masterGridData){
-                var view = new Application.MasterView({masterGridData : masterGridData, url : '/api/sr/masters/roles/update', master : master});
+                var view = new Application.MasterView({masterGridData : masterGridData, url : '/api/sr/mdm/update', master : master});
                 Application.rootView.showBody(view);
                 Backbone.history.navigate('master/' + master);
             }

@@ -3,6 +3,7 @@ package com.springroll.api.facade;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.services.ITemplateManager;
 import com.springroll.orm.mdm.ColDef;
+import com.springroll.orm.mdm.MdmDTO;
 import com.springroll.orm.mdm.MdmData;
 import com.springroll.orm.mdm.MdmManager;
 import com.springroll.reporting.ReportParameter;
@@ -82,5 +83,10 @@ public class SpringrollAPI extends AbstractAPI {
     public MdmData getMDMData(@PathVariable String master) {
         mdmManager.init();
         return mdmManager.getData(master);
+    }
+    @RequestMapping(value = "/sr/mdm/update", method = RequestMethod.POST)
+    public String updateMDMData(@RequestBody MdmDTO mdmDTO) {
+        System.out.println("helo world");
+        return "";
     }
 }
