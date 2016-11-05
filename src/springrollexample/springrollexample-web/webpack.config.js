@@ -3,7 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-    entry: "./target/assets/main.js",
+    entry: "./app.main.js",
     output: {
 		path: path.join(__dirname, 'src/main/webapp/'),
         filename: "springroll.js"
@@ -36,6 +36,7 @@ module.exports = {
     resolve: {
         root: [
             path.resolve(__dirname),
+            path.resolve('target/assets/'),
             path.resolve('target/assets/lib/framework/'),
             path.resolve('target/assets/lib/modules/'),
             path.resolve('target/assets/vendor/cometd/'),

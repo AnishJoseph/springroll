@@ -1,11 +1,6 @@
 var Application =require('Application');
-/* CSS files */
 
-require("!style!css!bootstrap-select/dist/css/bootstrap-select.min.css");
-//require("!style!css!datatables.net-bs/css/dataTables.bootstrap.css");
-require("!style!css!datatables.net-dt/css/jquery.dataTables.css");
-require("!style!css!datatables.net-buttons-bs/css/buttons.bootstrap.css");
-require("!style!css!bootstrap-datepicker/dist/css/bootstrap-datepicker3.css");
+/* Put CSS requires in app.main.js in the application - for some reason it does not when placed here */
 
 /* JS files */
 require( 'datatables.net' );
