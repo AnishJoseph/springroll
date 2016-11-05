@@ -153,10 +153,10 @@ var Control = Marionette.View.extend({
         this.collections = options.collections;
         this.master = options.master;
         this.changes = {};
-        this.newrecords = {};
+        this.newRecords = [];
         var that = this;
         this.collections.on('add', function(model){
-            that.newrecords[model.cid] = model.attributes;
+            that.newRecords.push(model.attributes);
         });
         this.collections.on('change', function(model){
             if(model.id == null){
@@ -192,8 +192,17 @@ var Control = Marionette.View.extend({
     },
 
     saveClicked : function(){
+        var changedRecords = [];
+        var that = this;
+        _.each(Object.keys(this.changes), function(id){
+            var mdmChangedColumns = [];
+            changedRecords.push({'id' : id, 'mdmChangedColumns' : mdmChangedColumns});
+            _.each(Object.keys(that.changes[id]), function(columnName){
+                mdmChangedColumns.push({'colName' : columnName, 'prevVal' : that.changes[id][columnName].prevVal, 'val' : that.changes[id][columnName].val});
+            });
+        });
         var Collection =  Backbone.Model.extend({ url: this.url});
-        var collection = new Collection({changes:this.changes, 'newrecords' : this.newrecords});
+        var collection = new Collection({'master' : this.master, 'changedRecords':changedRecords, 'newRecords' : this.newRecords});
         collection.save(null, {
             success: function(){
                 console.log("e");

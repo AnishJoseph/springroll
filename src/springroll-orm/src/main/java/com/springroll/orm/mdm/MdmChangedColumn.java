@@ -3,9 +3,18 @@ package com.springroll.orm.mdm;
 /**
  * Created by anishjoseph on 05/11/16.
  */
-public class MdmAttrChange {
+public class MdmChangedColumn {
+    private String colName;
     private Object val;
     private Object prevVal;
+
+    public String getColName() {
+        return colName;
+    }
+
+    public void setColName(String colName) {
+        this.colName = colName;
+    }
 
     public Object getVal() {
         return val;
