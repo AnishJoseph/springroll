@@ -33,4 +33,11 @@ public class MdmDefinition {
     public void setColDefs(List<ColDef> colDefs) {
         this.colDefs = colDefs;
     }
+
+    public ColDef getColDefByName(String colName){
+        for (ColDef colDef : colDefs) {
+            if(colDef.getName().equals(colName))return colDef;
+        }
+        return null;
+    }
 }

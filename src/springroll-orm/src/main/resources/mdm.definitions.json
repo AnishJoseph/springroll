@@ -9,16 +9,16 @@
         ]
       },
       {
-        "master" : "reviewrule",
+        "master" : "ReviewRule",
         "dataQuery" : "ReviewRule.getRecordsForMdm",
         "colDefs" : [
-            { "name": "Rule Name", "writeable": true, "type": "text"},
-            { "name": "Channel", "writeable": true, "type": "text", "lovSource" : "NotificationChannels"},
-            { "name": "Review Stage", "writeable": true, "type": "num"},
-            { "name": "Approver", "writeable": true, "type": "text", "lovSource" : "Roles"},
-            { "name": "Approvals Needed", "writeable": true, "type": "num", "defVal": "10"},
-            { "name": "FYI Only", "writeable": true, "type": "boolean", "defVal": "false"},
-            { "name": "Description", "writeable": true, "type": "text"}
+            { "name": "ruleName", "writeable": true, "type": "text"},
+            { "name": "channel", "writeable": true, "type": "text", "lovSource" : "NotificationChannels"},
+            { "name": "reviewStage", "writeable": true, "type": "int"},
+            { "name": "approver", "writeable": true, "type": "text", "lovSource" : "Roles"},
+            { "name": "approvalsNeeded", "writeable": true, "type": "int", "defVal": "10"},
+            { "name": "fyiOnly", "writeable": true, "type": "boolean", "defVal": "false"},
+            { "name": "description", "writeable": true, "type": "text"}
         ]
       }
   ],

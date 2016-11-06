@@ -1,7 +1,9 @@
-package com.springroll.orm.mdm;
+package com.springroll.router.dto;
 
 import com.springroll.core.IDTOProcessors;
 import com.springroll.core.ServiceDTO;
+import com.springroll.orm.mdm.MdmChangedRecord;
+import com.springroll.router.CoreDTOProcessors;
 
 import java.util.List;
 import java.util.Map;
@@ -40,6 +42,6 @@ public class MdmDTO implements ServiceDTO {
 
     @Override
     public IDTOProcessors getProcessor() {
-        return null;
+        return CoreDTOProcessors.MDM;
     }
 }

@@ -49,6 +49,10 @@ var MasterRowView = Marionette.View.extend({
                     template.push('<td class="modelattr"><input type="number" data-attrname="' + colDefs[index].name + '" ');
                     if(data.model.get(val) !== undefined && data.model.get(val) !== null) template.push(' value="' + data.model.get(val) + '"');
                     template.push('></td>');
+                } else if (colDefs[index].type === 'int') {
+                    template.push('<td class="modelattr"><input type="number" data-attrname="' + colDefs[index].name + '" ');
+                    if(data.model.get(val) !== undefined && data.model.get(val) !== null) template.push(' value="' + data.model.get(val) + '"');
+                    template.push('></td>');
                 } else {
                     template.push('<td>' + getDisplayValue(colDefs[index], data.model.get(val)) + '</td>');
                 }

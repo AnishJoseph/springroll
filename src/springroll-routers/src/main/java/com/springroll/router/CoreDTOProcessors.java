@@ -4,6 +4,7 @@ import com.springroll.core.DTOBusinessValidator;
 import com.springroll.core.DTOEnricher;
 import com.springroll.core.IDTOProcessors;
 import com.springroll.core.IEvent;
+import com.springroll.router.notification.MdmEvent;
 import com.springroll.router.notification.NotificationAckEvent;
 import com.springroll.router.review.ReviewActionEvent;
 
@@ -13,6 +14,7 @@ import com.springroll.router.review.ReviewActionEvent;
 public enum  CoreDTOProcessors implements IDTOProcessors {
     REVIEW(ReviewActionEvent.class, null, null),
     NOTIFICATION_ACK(NotificationAckEvent.class, null, null),
+    MDM(MdmEvent.class, DummyBusinessValidator.class, DummyEnricher.class),
     NULL(null, null, null);
 
     private Class<? extends DTOEnricher> enricherClass;

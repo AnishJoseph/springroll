@@ -51,11 +51,17 @@
         <module>springroll-routers</module>
         <module>springroll-notification</module>
         <module>springroll-reporting</module>
+        <module>springroll-mdm</module>
         <module>springrollexample</module>
     </modules>
 
     <dependencyManagement>
 		<dependencies>
+            <dependency>
+                <groupId>com.springroll</groupId>
+                <artifactId>springroll-mdm</artifactId>
+                <version>${springroll.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.springroll</groupId>
                 <artifactId>springroll-notification</artifactId>

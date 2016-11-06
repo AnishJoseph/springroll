@@ -2,10 +2,9 @@ package com.springroll.api.facade;
 
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.services.ITemplateManager;
-import com.springroll.orm.mdm.ColDef;
-import com.springroll.orm.mdm.MdmDTO;
+import com.springroll.mdm.MdmManager;
+import com.springroll.router.dto.MdmDTO;
 import com.springroll.orm.mdm.MdmData;
-import com.springroll.orm.mdm.MdmManager;
 import com.springroll.reporting.ReportParameter;
 import com.springroll.reporting.grid.GridReport;
 import com.springroll.reporting.grid.GridReporter;
@@ -18,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Query;
 import java.util.*;
 
 @Transactional
@@ -85,8 +83,7 @@ public class SpringrollAPI extends AbstractAPI {
         return mdmManager.getData(master);
     }
     @RequestMapping(value = "/sr/mdm/update", method = RequestMethod.POST)
-    public String updateMDMData(@RequestBody MdmDTO mdmDTO) {
-        System.out.println("helo world");
-        return "";
+    public Long updateMDMData(@RequestBody MdmDTO mdmDTO) {
+        return route(mdmDTO);
     }
 }

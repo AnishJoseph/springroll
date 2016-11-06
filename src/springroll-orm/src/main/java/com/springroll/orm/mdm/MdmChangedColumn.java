@@ -1,9 +1,11 @@
 package com.springroll.orm.mdm;
 
+import java.io.Serializable;
+
 /**
  * Created by anishjoseph on 05/11/16.
  */
-public class MdmChangedColumn {
+public class MdmChangedColumn implements Serializable {
     private String colName;
     private Object val;
     private Object prevVal;

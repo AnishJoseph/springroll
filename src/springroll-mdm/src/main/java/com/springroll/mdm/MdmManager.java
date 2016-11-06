@@ -1,8 +1,12 @@
-package com.springroll.orm.mdm;
+package com.springroll.mdm;
 
 import com.springroll.core.ILovProvider;
 import com.springroll.core.Lov;
 import com.springroll.core.exceptions.FixableException;
+import com.springroll.orm.mdm.*;
+import com.springroll.router.SpringrollEndPoint;
+import com.springroll.router.dto.MdmDTO;
+import com.springroll.router.notification.MdmEvent;
 import flexjson.JSONDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +30,47 @@ import java.util.stream.Collectors;
 /**
  * Created by anishjoseph on 04/11/16.
  */
-@Service public class MdmManager {
+@Service public class MdmManager extends SpringrollEndPoint {
     private static final Logger logger = LoggerFactory.getLogger(MdmManager.class);
     private MdmDefinitions mdmDefinitions;
     @PersistenceContext EntityManager em;
     @Autowired private ApplicationContext applicationContext;
 
+    private Object convertValue(MdmDefinition mdmDefinition, String value, String colName){
+        ColDef colDef = mdmDefinition.getColDefByName(colName);
+        //FIXME - handle NOT FOUND
+        if(colDef.getType().equals("int"))return Integer.parseInt(value);
+        if(colDef.getType().equals("num"))return Double.parseDouble(value);
+        return value;
+
+    }
+    public void on(MdmEvent mdmEvent) {
+        MdmDTO mdmDTO = mdmEvent.getPayload();
+        MdmDefinition mdmDefinition = getDefinitionForMaster(mdmDTO.getMaster());
+        try {
+            for (MdmChangedRecord mdmChangedRecord : mdmDTO.getChangedRecords()) {
+                StringBuffer sb = new StringBuffer("Update " + mdmDTO.getMaster() + " o SET ");
+                String prepend = "";
+                for (MdmChangedColumn mdmChangedColumn : mdmChangedRecord.getMdmChangedColumns()) {
+                    sb.append(prepend + "o." + mdmChangedColumn.getColName() + " = :" + mdmChangedColumn.getColName());
+                    prepend = ", ";
+                }
+                sb.append(" WHERE o.id = :id");
+                Query query = em.createQuery(sb.toString());
+                query.setParameter("id", mdmChangedRecord.getId());
+                for (MdmChangedColumn mdmChangedColumn : mdmChangedRecord.getMdmChangedColumns()) {
+                    query.setParameter(mdmChangedColumn.getColName(), convertValue(mdmDefinition, (String)mdmChangedColumn.getVal(), mdmChangedColumn.getColName()));
+                }
+                int rowsChanged = query.executeUpdate();
+                System.out.println("Rows Updated = " + rowsChanged);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        //UPDATE Company c SET c.address = :address WHERE c.id = :companyId"
+        System.out.println("Hi There!!");
+    }
     @PostConstruct public void init(){
         try {
             Resource resource = new ClassPathResource("mdm.definitions.json");
@@ -63,18 +102,20 @@ import java.util.stream.Collectors;
         return colDefs;
     }
 
+    private MdmDefinition getDefinitionForMaster(String master){
+        for (MdmDefinition m : mdmDefinitions.getMasters()) {
+            if(m.getMaster().equals(master)){
+                return m;
+            }
+        }
+        return null;
+    }
     public MdmData getData(String master){
         if(mdmDefinitions == null){
             logger.debug("MdmDefinitions is empty");
             throw new FixableException("MdmDefinitions is empty");
         }
-        MdmDefinition mdmDefinition = null;
-        for (MdmDefinition m : mdmDefinitions.getMasters()) {
-            if(m.getMaster().equals(master)){
-                mdmDefinition = m;
-                break;
-            }
-        }
+        MdmDefinition mdmDefinition = getDefinitionForMaster(master);
         if(mdmDefinition == null){
             logger.error("Unable to find MdmDefinition for Master {}", master);
             throw new FixableException("Unable to find MdmDefinition for Master " + master, "mdm.missingdefinition", master);

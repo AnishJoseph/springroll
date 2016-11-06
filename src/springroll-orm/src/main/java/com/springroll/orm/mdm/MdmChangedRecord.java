@@ -1,11 +1,12 @@
 package com.springroll.orm.mdm;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by anishjoseph on 05/11/16.
  */
-public class MdmChangedRecord {
+public class MdmChangedRecord implements Serializable{
     private long id;
     private List<MdmChangedColumn> mdmChangedColumns;
 
