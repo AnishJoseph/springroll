@@ -21,10 +21,6 @@ public class MdmDefinition {
         return master;
     }
 
-    public void setMaster(String master) {
-        this.master = master;
-    }
-
     public String getDataQuery() {
         return dataQuery;
     }
@@ -53,6 +49,7 @@ public class MdmDefinition {
         this.masterClassName = masterClassName;
         try {
             masterClass = Class.forName(masterClassName);
+            master = masterClassName.substring(masterClassName.lastIndexOf(".")+1);
         } catch (ClassNotFoundException e) {
             logger.error("Exception while getting finding MDM class with name   '{}'. Exceptions is {} ", masterClassName, e.getMessage());
             throw new FixableException("", "lov.source.missingenum", masterClassName, e.getMessage());

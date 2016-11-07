@@ -47,6 +47,8 @@ import java.util.stream.Collectors;
                 BeanWrapper wrapper = new BeanWrapperImpl(entity);
                 Map<String, Object> map = new HashMap<>();
                 for (MdmChangedColumn mdmChangedColumn : mdmChangedRecord.getMdmChangedColumns()) {
+                    ColDef colDef = mdmDefinition.getColDefByName(mdmChangedColumn.getColName());
+                    if(!colDef.isWriteable())throw new FixableException("","mdm.notwritable", colDef.getName(), mdmDefinition.getMasterClass().getSimpleName() );
                     map.put(mdmChangedColumn.getColName(), mdmChangedColumn.getVal());
                 }
                 wrapper.setPropertyValues(map);
