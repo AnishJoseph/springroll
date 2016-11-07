@@ -2,6 +2,7 @@
   "masters" : [
       {
         "master" : "role",
+        "masterClassName" : "com.springroll.orm.entities.ReviewRule",
         "dataQuery" : "Role.getRecordsForMdm",
         "colDefs" : [
             { "name": "RoleName", "writeable": true, "type": "text"},
@@ -10,6 +11,7 @@
       },
       {
         "master" : "ReviewRule",
+        "masterClassName" : "com.springroll.orm.entities.ReviewRule",
         "dataQuery" : "ReviewRule.getRecordsForMdm",
         "colDefs" : [
             { "name": "ruleName", "writeable": true, "type": "text"},
