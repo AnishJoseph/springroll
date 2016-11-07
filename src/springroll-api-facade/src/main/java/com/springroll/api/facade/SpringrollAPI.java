@@ -3,7 +3,7 @@ package com.springroll.api.facade;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.services.ITemplateManager;
 import com.springroll.mdm.MdmManager;
-import com.springroll.router.dto.MdmDTO;
+import com.springroll.mdm.MdmDTO;
 import com.springroll.mdm.MdmData;
 import com.springroll.reporting.ReportParameter;
 import com.springroll.reporting.grid.GridReport;

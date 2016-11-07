@@ -4,7 +4,7 @@ import com.springroll.core.DTOBusinessValidator;
 import com.springroll.core.DTOEnricher;
 import com.springroll.core.IDTOProcessors;
 import com.springroll.core.IEvent;
-import com.springroll.router.notification.MdmEvent;
+import com.springroll.router.events.MdmEvent;
 import com.springroll.router.notification.NotificationAckEvent;
 import com.springroll.router.review.ReviewActionEvent;
 

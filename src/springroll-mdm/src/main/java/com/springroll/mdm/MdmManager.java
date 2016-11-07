@@ -2,10 +2,8 @@ package com.springroll.mdm;
 
 import com.springroll.core.Lov;
 import com.springroll.core.exceptions.FixableException;
-import com.springroll.orm.mdm.*;
 import com.springroll.router.SpringrollEndPoint;
-import com.springroll.router.dto.MdmDTO;
-import com.springroll.router.notification.MdmEvent;
+import com.springroll.router.events.MdmEvent;
 import flexjson.JSONDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +46,7 @@ import java.util.stream.Collectors;
 
     }
     public void on(MdmEvent mdmEvent) {
-        MdmDTO mdmDTO = mdmEvent.getPayload();
+        MdmDTO mdmDTO = (MdmDTO) mdmEvent.getPayload();
         MdmDefinition mdmDefinition = getDefinitionForMaster(mdmDTO.getMaster());
         try {
             for (MdmChangedRecord mdmChangedRecord : mdmDTO.getChangedRecords()) {
