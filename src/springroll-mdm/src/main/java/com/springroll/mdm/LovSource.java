@@ -1,4 +1,4 @@
-package com.springroll.orm.mdm;
+package com.springroll.mdm;
 
 
 import java.util.List;

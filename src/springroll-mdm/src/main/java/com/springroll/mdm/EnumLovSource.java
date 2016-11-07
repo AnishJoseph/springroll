@@ -1,4 +1,4 @@
-package com.springroll.orm.mdm;
+package com.springroll.mdm;
 
 import com.springroll.core.Lov;
 import com.springroll.core.exceptions.FixableException;
