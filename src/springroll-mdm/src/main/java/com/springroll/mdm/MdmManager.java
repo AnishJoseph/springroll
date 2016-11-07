@@ -1,6 +1,7 @@
 package com.springroll.mdm;
 
 import com.springroll.core.Lov;
+import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.exceptions.FixableException;
 import com.springroll.router.SpringrollEndPoint;
 import com.springroll.router.events.MdmEvent;
@@ -48,6 +49,7 @@ import java.util.stream.Collectors;
     public void on(MdmEvent mdmEvent) {
         MdmDTO mdmDTO = (MdmDTO) mdmEvent.getPayload();
         MdmDefinition mdmDefinition = getDefinitionForMaster(mdmDTO.getMaster());
+        int rowsChanged = 0;
         try {
             for (MdmChangedRecord mdmChangedRecord : mdmDTO.getChangedRecords()) {
                 StringBuffer sb = new StringBuffer("Update " + mdmDTO.getMaster() + " o SET ");
@@ -62,8 +64,9 @@ import java.util.stream.Collectors;
                 for (MdmChangedColumn mdmChangedColumn : mdmChangedRecord.getMdmChangedColumns()) {
                     query.setParameter(mdmChangedColumn.getColName(), convertValue(mdmDefinition, (String)mdmChangedColumn.getVal(), mdmChangedColumn.getColName()));
                 }
-                int rowsChanged = query.executeUpdate();
+                rowsChanged += query.executeUpdate();
             }
+            logger.debug("{} row(s) updated in Master {} via MDM by {}", rowsChanged, mdmDTO.getMaster(), SpringrollSecurity.getUser().getUsername());
         }catch (Exception e){
             e.printStackTrace();
         }
