@@ -22,10 +22,15 @@
         ]
       }
   ],
-
-  "lovSources" : [
-    {"name" : "NotificationChannels", "type": "java", "source" : "notificationManager"},
-    {"name" : "Roles", "type": "namedQuery", "source" : "Role.getAllRoles"},
-    {"name" : "Enum", "type": "enum", "source" : "com.springroll.notification.CoreNotificationChannels"}
-  ]
+  "lovSources": {
+    "javaSources": [
+      { "name": "NotificationChannels", "type": "java", "source": "notificationManager"}
+    ],
+    "namedQuerySources": [
+      { "name": "Roles", "type": "namedQuery", "source": "Role.getAllRoles"}
+    ],
+    "enumSources": [
+      { "name": "Enum", "type": "enum", "source": "com.springroll.notification.CoreNotificationChannels"}
+    ]
+  }
 }

@@ -89,6 +89,7 @@ import java.util.stream.Collectors;
                     }
                 }
             }
+            mdmDefinitions.init();
 
         }catch (IOException e){
             logger.error("Error while reading MDM definitions. MDM will be disabled. Error is {} ", e.getMessage());
@@ -142,16 +143,20 @@ import java.util.stream.Collectors;
     public List<String> getMdmMasterNames(){
         return mdmDefinitions.getMasters().stream().map(MdmDefinition::getMaster).collect(Collectors.toList());
     }
-    public List<Lov> getLovs(LovSource lovSource) {
-        if("java".equals(lovSource.getType())){
+    public List<Lov> getLovs(ILovSource lovSource) {
+        if(lovSource instanceof JavaLovSource){
             try {
-                ILovProvider lovProvider = (ILovProvider) applicationContext.getBean(lovSource.getSource());
+                ILovProvider lovProvider = ((JavaLovSource) lovSource).getProvider();
+                if(lovProvider == null) {
+                    lovProvider = (ILovProvider) applicationContext.getBean(lovSource.getSource());
+                    ((JavaLovSource) lovSource).setProvider(lovProvider);
+                }
                 return lovProvider.getLovs();
             }catch (Exception e ){
                 logger.error("Unable to find Spring Bean  with name {}. This was configured as a LOV source in {}", lovSource.getSource(), lovSource.getName());
                 throw new FixableException("", "lov.source.missingbean", lovSource.getSource(), lovSource.getName());
             }
-        } else if("namedQuery".equals(lovSource.getType())){
+        } else if(lovSource instanceof NamedQueryLovSource){
             try {
                 List<Lov> lovs = new ArrayList<>();
                 Query query = em.createNamedQuery(lovSource.getSource());
@@ -165,18 +170,12 @@ import java.util.stream.Collectors;
                 logger.error("Exception while running named query {} to get the LOVs for LOV source {}. Exception is - {}", lovSource.getSource(), lovSource.getName(), e.getMessage());
                 throw new FixableException("", "lov.source.namedQuery", lovSource.getSource(), lovSource.getName(), e.getMessage());
             }
-        } else if("enum".equals(lovSource.getType())){
-            try {
-                Class clazz = Class.forName(lovSource.getSource());
-                List<Lov> lovs = new ArrayList<>();
-                for (Object o : clazz.getEnumConstants()) {
-                    lovs.add(new Lov(o));
-                }
-                return lovs;
-            }catch (Exception e ){
-                logger.error("Exception while getting Enum Values from class '{}' to get the LOVs. LOV source {}. Exception is - {}", lovSource.getSource(), lovSource.getName(), e.getMessage());
-                throw new FixableException("", "lov.source.missingenum", lovSource.getSource(), lovSource.getName(), e.getMessage());
+        } else if(lovSource instanceof EnumLovSource){
+            List<Lov> lovs = new ArrayList<>();
+            for (Object o : ((EnumLovSource) lovSource).getEnumClass().getEnumConstants()) {
+                lovs.add(new Lov(o));
             }
+            return lovs;
         }
         return null;
     }

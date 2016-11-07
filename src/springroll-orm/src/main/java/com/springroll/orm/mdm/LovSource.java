@@ -1,6 +1,5 @@
 package com.springroll.orm.mdm;
 
-import com.springroll.core.Lov;
 
 import java.util.List;
 
@@ -8,32 +7,31 @@ import java.util.List;
  * Created by anishjoseph on 04/11/16.
  */
 public class LovSource {
-    private String name;
-    private String type;
-    private String source;
+    private List<EnumLovSource> enumSources;
+    private List<JavaLovSource> javaSources;
+    private List<NamedQueryLovSource> namedQuerySources;
 
-    public String getName() {
-        return name;
+    public List<EnumLovSource> getEnumSources() {
+        return enumSources;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setEnumSources(List<EnumLovSource> enumSources) {
+        this.enumSources = enumSources;
     }
 
-    public String getType() {
-        return type;
+    public List<JavaLovSource> getJavaSources() {
+        return javaSources;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setJavaSources(List<JavaLovSource> javaSources) {
+        this.javaSources = javaSources;
     }
 
-    public String getSource() {
-        return source;
+    public List<NamedQueryLovSource> getNamedQuerySources() {
+        return namedQuerySources;
     }
 
-    public void setSource(String source) {
-        this.source = source;
+    public void setNamedQuerySources(List<NamedQueryLovSource> namedQuerySources) {
+        this.namedQuerySources = namedQuerySources;
     }
-
 }
