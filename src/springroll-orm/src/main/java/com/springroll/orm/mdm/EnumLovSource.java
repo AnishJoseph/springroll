@@ -1,8 +1,12 @@
 package com.springroll.orm.mdm;
 
+import com.springroll.core.Lov;
 import com.springroll.core.exceptions.FixableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by anishjoseph on 04/11/16.
@@ -15,6 +19,15 @@ public class EnumLovSource implements ILovSource {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public List<Lov> getLovs() {
+        List<Lov> lovs = new ArrayList<>();
+        for (Object o : enumClass.getEnumConstants()) {
+            lovs.add(new Lov(o));
+        }
+        return lovs;
     }
 
     public void setName(String name) {
@@ -40,7 +53,4 @@ public class EnumLovSource implements ILovSource {
         return enumClass;
     }
 
-    public void setEnumClass(Class enumClass) {
-        this.enumClass = enumClass;
-    }
 }

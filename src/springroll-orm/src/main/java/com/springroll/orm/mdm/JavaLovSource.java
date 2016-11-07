@@ -1,17 +1,34 @@
 package com.springroll.orm.mdm;
 
 import com.springroll.core.ILovProvider;
+import com.springroll.core.Lov;
+import com.springroll.core.exceptions.FixableException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.ApplicationContext;
+
+import java.util.List;
 
 /**
  * Created by anishjoseph on 04/11/16.
  */
-public class JavaLovSource implements ILovSource {
+@Configurable public class JavaLovSource implements ILovSource {
+    private static final Logger logger = LoggerFactory.getLogger(JavaLovSource.class);
     private String name;
     private String source;
     private ILovProvider provider;
+    @Autowired private ApplicationContext applicationContext;
+
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public List<Lov> getLovs() {
+        return provider.getLovs();
     }
 
     public void setName(String name) {
@@ -24,13 +41,13 @@ public class JavaLovSource implements ILovSource {
 
     public void setSource(String source) {
         this.source = source;
+        try {
+            provider = (ILovProvider) applicationContext.getBean(source);
+        }catch (Exception e ){
+            logger.error("Unable to find Spring Bean  with name {}. This was configured as a LOV source in {}", source, name);
+            throw new FixableException("", "lov.source.missingbean", source, name);
+        }
+
     }
 
-    public ILovProvider getProvider() {
-        return provider;
-    }
-
-    public void setProvider(ILovProvider provider) {
-        this.provider = provider;
-    }
 }

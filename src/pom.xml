@@ -27,7 +27,7 @@
         <apache.activemq.version>5.13.1</apache.activemq.version>
         <apache.camel.version>2.16.2</apache.camel.version>
         <apache.activemq.version.activeio>3.1.4</apache.activemq.version.activeio>
-        <aspectj.version>1.8.8</aspectj.version>
+        <aspectj.version>1.8.9</aspectj.version>
         <version.spring.security>4.0.3.RELEASE</version.spring.security>
         <version.spring.ldap>2.0.4.RELEASE</version.spring.ldap>
         <javax.validation.version>1.1.0.Final</javax.validation.version>
@@ -40,6 +40,7 @@
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.aspectj.plugin.version>1.8</maven.aspectj.plugin.version>
 
     </properties>
 
@@ -54,6 +55,9 @@
         <module>springroll-mdm</module>
         <module>springrollexample</module>
     </modules>
+
+
+
 
     <dependencyManagement>
 		<dependencies>
@@ -391,6 +395,17 @@
 
         </dependencies>
     </dependencyManagement>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>aspectj-maven-plugin</artifactId>
+                    <version>${maven.aspectj.plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
 
     <repositories>
