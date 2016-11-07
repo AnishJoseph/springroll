@@ -40,6 +40,10 @@ import java.util.stream.Collectors;
         //FIXME - handle NOT FOUND
         if(colDef.getType().equals("int"))return Integer.parseInt(value);
         if(colDef.getType().equals("num"))return Double.parseDouble(value);
+        if(colDef.getLovSource() != null && mdmDefinitions.getLovSource(colDef.getLovSource()) instanceof EnumLovSource){
+            EnumLovSource source = (EnumLovSource) mdmDefinitions.getLovSource(colDef.getLovSource());
+            return source.getEnum(value);
+        }
         return value;
 
     }
@@ -61,7 +65,6 @@ import java.util.stream.Collectors;
                     query.setParameter(mdmChangedColumn.getColName(), convertValue(mdmDefinition, (String)mdmChangedColumn.getVal(), mdmChangedColumn.getColName()));
                 }
                 int rowsChanged = query.executeUpdate();
-                System.out.println("Rows Updated = " + rowsChanged);
             }
         }catch (Exception e){
             e.printStackTrace();

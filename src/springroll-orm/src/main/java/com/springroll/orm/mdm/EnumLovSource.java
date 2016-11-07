@@ -53,4 +53,13 @@ public class EnumLovSource implements ILovSource {
         return enumClass;
     }
 
+    public Enum getEnum(String value){
+        try {
+            return Enum.valueOf(enumClass, value);
+        }catch (Exception e){
+            logger.error("Exception while converting value {} to an enum in class {}. LOV source {}. Exception is - {}", value, enumClass.getSimpleName(), name, e.getMessage());
+            throw new FixableException("", "lov.source.invalidenum", value, enumClass.getSimpleName(), name, e.getMessage());
+        }
+    }
+
 }
