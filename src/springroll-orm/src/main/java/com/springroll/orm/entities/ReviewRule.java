@@ -2,6 +2,7 @@ package com.springroll.orm.entities;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by anishjoseph on 05/09/16.
@@ -30,10 +31,14 @@ public class ReviewRule extends AbstractEntity {
     private int approvalsNeeded;
 
     @Column(name = "FYI_ONLY")
-    private Boolean fyiOnly = false;
+    private boolean fyiOnly = false;
 
     @Column(name = "DESCRIPTION")
     private String description;
+
+    @Column(name = "ACTIVE", length = 1)
+    @NotNull
+    private boolean active;
 
     public String getRuleName() {
         return ruleName;
@@ -75,11 +80,11 @@ public class ReviewRule extends AbstractEntity {
         this.description = description;
     }
 
-    public Boolean isFyiOnly() {
+    public boolean isFyiOnly() {
         return fyiOnly;
     }
 
-    public void setFyiOnly(Boolean fyiOnly) {
+    public void setFyiOnly(boolean fyiOnly) {
         this.fyiOnly = fyiOnly;
     }
 
@@ -89,5 +94,13 @@ public class ReviewRule extends AbstractEntity {
 
     public void setChannel(String channel) {
         this.channel = channel;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

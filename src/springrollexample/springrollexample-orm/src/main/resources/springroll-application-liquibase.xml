@@ -9,25 +9,25 @@
 
     <changeSet id="springroll-test" author="anish">
         <sql>
-            INSERT INTO user VALUES (1,0, 'ANISH', 'BOM,GROUP1', 'IN', 'en', null);
-            INSERT INTO user VALUES (2,0, 'BOM1',  'BOM,GROUP1', 'UK', 'en', null);
-            INSERT INTO user VALUES (3,0, 'BOM2',  'BOM,GROUP2', 'US', 'en', 'v1');
+            INSERT INTO user VALUES (1,0, 'ANISH', 'BOM,GROUP1', 'IN', 'en', null, 'T');
+            INSERT INTO user VALUES (2,0, 'BOM1',  'BOM,GROUP1', 'UK', 'en', null, 'T');
+            INSERT INTO user VALUES (3,0, 'BOM2',  'BOM,GROUP2', 'US', 'en', 'v1', 'T');
             <!--INSERT INTO user VALUES (4,0, 'BOM3',  'BOM,GROUP2');-->
 
-            INSERT INTO  role values (1,0, 'BOM1', 'desc1');
-            INSERT INTO  role values (2,0, 'GROUP1',  'desc1');
-            INSERT INTO  role values (3,0, 'GROUP2',  'desc1');
+            INSERT INTO  role values (1,0, 'BOM1', 'T', 'desc1');
+            INSERT INTO  role values (2,0, 'GROUP1', 'T', 'desc1');
+            INSERT INTO  role values (3,0, 'GROUP2', 'T',  'desc1');
             <!--id, parentid, rulename, review stage, approver, approvals needed, fyionly, desc-->
-            INSERT INTO  review_rule values (1,0, 'Rule1', 'REVIEW', 1, 'BOM', 1, 'F', 'desc1');
-            INSERT INTO  review_rule values (2,0, 'Rule2', 'REVIEW', 1, 'BOM', 1, 'F', 'desc2');
-            INSERT INTO  review_rule values (3,0, 'Rule3', 'REVIEW', 1, 'BOM', 1, 'F', 'desc2');
-            INSERT INTO  review_rule values (4,0, 'Rule4', 'REVIEW_FYI', 1, 'BOM', 1, 'T', 'desc2');
+            INSERT INTO  review_rule values (1,0, 'Rule1', 'REVIEW',    1, 'BOM', 1, 'F', 'T', 'desc1');
+            INSERT INTO  review_rule values (2,0, 'Rule2', 'REVIEW',    1, 'BOM', 1, 'F', 'T', 'desc2');
+            INSERT INTO  review_rule values (3,0, 'Rule3', 'REVIEW',    1, 'BOM', 1, 'F', 'T', 'desc2');
+            INSERT INTO  review_rule values (4,0, 'Rule4', 'REVIEW_FYI',1, 'BOM', 1, 'T', 'T', 'desc2');
             <!--INSERT INTO  review_rules values (2,0, 'Rule1', 3, 'BOM', 1, 'desc2');-->
             <!--INSERT INTO  review_rules values (3,0, 'Rule1', 3, 'FM', 1, 'desc3');-->
             <!--INSERT INTO  review_rules values (4,0, 'Rule1', 5, 'BOM', 1, 'desc4');-->
 
-            INSERT INTO  USER_DELEGATION values (1,0, 'BOM1', 'ANISH', '2016-10-08',  '2017-10-08', 'T');
-            INSERT INTO  USER_DELEGATION values (2,0, 'BOM2', 'ANISH', '2016-10-08',  '2017-10-08', 'T');
+            INSERT INTO  USER_DELEGATION values (1,0, 'BOM1', 'ANISH', '2016-10-08',  '2017-10-08', 'T', null);
+            INSERT INTO  USER_DELEGATION values (2,0, 'BOM2', 'ANISH', '2016-10-08',  '2017-10-08', 'T', null);
 
             INSERT INTO  SEQUENCE_TABLE values ('REVIEW_RULE',2);
             INSERT INTO  SEQUENCE_TABLE values ('ROLE',2);

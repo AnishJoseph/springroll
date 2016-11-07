@@ -36,6 +36,7 @@
             <column name="APPROVER" type="VARCHAR2(32)"/>
             <column name="APPROVALS_NEEDED" type="int" defaultValue="1"/>
             <column name="FYI_ONLY" type="varchar(1)" />
+            <column name="ACTIVE" type="varchar(1)" />
             <column name="DESCRIPTION" type="VARCHAR2(128)"/>
         </createTable>
         <createTable tableName="REVIEW_STEP">
@@ -61,6 +62,7 @@
             <column name="ROLE_NAME" type="varchar(32)">
                 <constraints nullable="false" />
             </column>
+            <column name="ACTIVE" type="varchar(1)" />
             <column name="DESCRIPTION" type="varchar(256)"/>
         </createTable>
         <createTable tableName="USER">
@@ -75,6 +77,7 @@
             <column name="COUNTRY" type="varchar(8)"/>
             <column name="LANGAUGE" type="varchar(8)"/>
             <column name="VARIANT" type="varchar(8)"/>
+            <column name="ACTIVE" type="varchar(1)" />
         </createTable>
         <createTable tableName="NOTIFICATION">
             <column name="ID" type="bigint" autoIncrement="false">
@@ -100,7 +103,8 @@
             <column name="DELEGATE" type="varchar(128)"/>
             <column name="START_DATE" type="date"/>
             <column name="END_DATE" type="date"/>
-            <column name="IS_ACTIVE" type="varchar(1)" />
+            <column name="ACTIVE" type="varchar(1)" />
+            <column name="DESCRIPTION" type="varchar(256)"/>
         </createTable>
 
     </changeSet>

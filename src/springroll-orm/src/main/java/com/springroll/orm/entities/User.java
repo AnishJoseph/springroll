@@ -31,6 +31,10 @@ public class User extends AbstractEntity {
     @Column(name = "VARIANT")
     private String variant;
 
+    @Column(name = "ACTIVE")
+    private boolean active;
+
+
     public Collection<String> getRoles() {
         if(rolesList == null)rolesList = StringUtils.commaDelimitedListToSet(roles);
         return rolesList;
@@ -71,5 +75,13 @@ public class User extends AbstractEntity {
 
     public void setVariant(String variant) {
         this.variant = variant;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
