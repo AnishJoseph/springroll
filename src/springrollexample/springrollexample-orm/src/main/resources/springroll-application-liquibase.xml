@@ -29,6 +29,12 @@
             INSERT INTO  USER_DELEGATION values (1,0, 'BOM1', 'ANISH', '2016-10-08',  '2017-10-08', 'T');
             INSERT INTO  USER_DELEGATION values (2,0, 'BOM2', 'ANISH', '2016-10-08',  '2017-10-08', 'T');
 
+            INSERT INTO  SEQUENCE_TABLE values ('REVIEW_RULE',2);
+            INSERT INTO  SEQUENCE_TABLE values ('ROLE',2);
+            INSERT INTO  SEQUENCE_TABLE values ('USER',2);
+            INSERT INTO  SEQUENCE_TABLE values ('USER_DELEGATION',2);
+
+
 
         </sql>
     </changeSet>
