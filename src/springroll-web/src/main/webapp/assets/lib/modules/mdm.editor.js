@@ -209,12 +209,14 @@ var Control = Marionette.View.extend({
     },
     search : function(){
         var searchStr = this.ui.search.val();
+        var re = new RegExp(searchStr, 'i');
+
         _.each(this.collections.models, function(model){
             var found = false;
             _.each(model.attributes, function(value){
                 if(value === null || value === undefined)value = '';
                 if (typeof value !== 'string') value = value + '';
-                if(value.includes(searchStr)){
+                if(value.match(re)){
                     /* Some column contains this search string - Dont hide, trigger show */
                     //FIXME - show only if currently hidden to be efficient
                     found = true;
