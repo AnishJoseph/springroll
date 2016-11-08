@@ -58,10 +58,10 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
         Locale locale;
         String country = userInDb.getCountry() == null ? "": userInDb.getCountry();
         String variant = userInDb.getVariant() == null ? "": userInDb.getVariant();
-        if(userInDb.getLangauge() == null){
+        if(userInDb.getLanguage() == null){
             locale = Locale.getDefault();
         } else {
-            locale = new Locale(userInDb.getLangauge(), country, variant);
+            locale = new Locale(userInDb.getLanguage(), country, variant);
         }
         user.setLocale(locale);
         return user;

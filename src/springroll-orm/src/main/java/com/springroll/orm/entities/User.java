@@ -10,7 +10,7 @@ import java.util.Collection;
  * Created by anishjoseph on 05/09/16.
  */
 @NamedQueries({
-        @NamedQuery(name="User.getRecordsForMdm", query = "SELECT o.id, o.userId, o.roles, o.country, o.langauge, o.variant, o.active FROM User o")
+        @NamedQuery(name="User.getRecordsForMdm", query = "SELECT o.id, o.userId, o.roles, o.country, o.language, o.variant, o.active FROM User o")
 })
 
 @Entity
@@ -28,8 +28,8 @@ public class User extends AbstractEntity {
     @Column(name = "COUNTRY")
     private String country;
 
-    @Column(name = "LANGAUGE")
-    private String langauge;
+    @Column(name = "LANGUAGE")
+    private String language;
 
     @Column(name = "VARIANT")
     private String variant;
@@ -64,12 +64,12 @@ public class User extends AbstractEntity {
         this.country = country;
     }
 
-    public String getLangauge() {
-        return langauge;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setLangauge(String langauge) {
-        this.langauge = langauge;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public String getVariant() {

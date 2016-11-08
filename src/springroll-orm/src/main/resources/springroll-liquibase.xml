@@ -75,7 +75,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="COUNTRY" type="varchar(8)"/>
-            <column name="LANGAUGE" type="varchar(8)"/>
+            <column name="LANGUAGE" type="varchar(8)"/>
             <column name="VARIANT" type="varchar(8)"/>
             <column name="ACTIVE" type="varchar(1)" />
         </createTable>

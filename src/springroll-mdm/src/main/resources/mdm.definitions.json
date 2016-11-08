@@ -27,8 +27,8 @@
         "colDefs" : [
             { "name": "userId", "writeable": false, "type": "text"},
             { "name": "roles", "writeable": true, "type": "text", "lovSource" : "Roles", "multiSelect": true},
-            { "name": "country", "writeable": true, "type": "text"},
-            { "name": "langauge", "writeable": true, "type": "text"},
+            { "name": "country", "writeable": true, "type": "text", "lovSource" : "Countries"},
+            { "name": "language", "writeable": true, "type": "text", "lovSource" : "Languages"},
             { "name": "variant", "writeable": true, "type": "text"},
             { "name": "active", "writeable": true, "type": "boolean", "defVal": "true"},
         ]
@@ -36,7 +36,9 @@
   ],
   "lovSources": {
     "javaSources": [
-      { "name": "NotificationChannels", "type": "java", "source": "notificationManager"}
+      { "name": "NotificationChannels", "type": "java", "source": "notificationManager"},
+      { "name": "Languages", "type": "java", "source": "languages"},
+      { "name": "Countries", "type": "java", "source": "countries"}
     ],
     "namedQuerySources": [
       { "name": "Roles", "type": "namedQuery", "source": "Role.getAllRoles"}
