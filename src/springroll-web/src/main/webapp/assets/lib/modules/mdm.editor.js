@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
 var Application =require('Application');
+Application.requiresTemplate('#mdm.control');
 
 var makeLovList = function(template, colDef, selectedValue){
     template.push('<td style="vertical-align: middle">');
@@ -152,21 +153,12 @@ var MasterTable = Marionette.View.extend({
     }
 });
 var Control = Marionette.View.extend({
-    template : function(data){
-        var template = [];
-        template.push('<h3 style="float: left; margin-right: 50px">Master for ' + Localize(data.master) + '</h3><span id="addRow" class="glyphicon glyphicon-plus" aria-hidden="true"></span> <button class="btn btn-default btn-warning" type="submit">');
-        template.push(Localize('Save'));
-        template.push('</button>');
-        return template.join("");
-    },
-    serializeData: function(){
-        return {master: this.master};
-    },
+    template: "#mdm.control",
+
     initialize : function(options){
         this.masterGridData = options.masterGridData;
         this.url = options.url;
         this.collections = options.collections;
-        this.master = options.master;
         this.changes = {};
         this.newRecords = [];
         var that = this;
@@ -192,8 +184,12 @@ var Control = Marionette.View.extend({
 
     },
     events : {
-        'click .btn' : 'saveClicked',
-        'click #addRow' : 'addRow'
+        'click .save' : 'saveClicked',
+        'click .add' : 'addRow',
+        'keyup .search' : 'search'
+    },
+    search : function(){
+        console.log("Search");
     },
     addRow : function(){
         var newRecord = {};
@@ -256,7 +252,8 @@ Application.MasterView = Marionette.View.extend({
         });
         var collections = new Backbone.Collection(data);
         this.showChildView('tableRegion', new MasterTable({masterGridData : this.masterGridData, collections : collections}));
-        this.showChildView('controlRegion', new Control({masterGridData : this.masterGridData, url: this.url, collections: collections, master : this.master}));
+        this.showChildView('controlRegion',
+            new Control({masterGridData : this.masterGridData, url: this.url, collections: collections, 'model' : new Backbone.Model({'master':this.master})}));
     }
 
 });
