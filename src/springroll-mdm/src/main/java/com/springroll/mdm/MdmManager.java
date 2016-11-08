@@ -25,10 +25,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -145,6 +142,19 @@ import java.util.stream.Collectors;
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
         for (int i = 0; i < colDefs.size(); i++) {
+            if(colDefs.get(i).isMultiSelect() && !resultList.isEmpty()){
+                //FIXME Handling the fact that we store list as CSV in the DB -
+                // example in User we store the List of Roles as a CSV - instead of onetomany, elementcollection etc
+                for (Object[] data : resultList) {
+                    if(data[i] == null)continue;
+                    if(data[i] != null && (data[i] instanceof Collection || data[i].getClass().isArray())){
+                        //Data is already in an collection or array - no data massaging to be done.
+                        break;
+                    }
+                    /* Data exists and now we assume its in CSV format */
+                    data[i] = ((String)data[i]).split(",");
+                }
+            }
             if(colDefs.get(i).getType().equalsIgnoreCase("date")){
                 for (Object[] data : resultList) {
                     LocalDate date = (LocalDate) data[i];

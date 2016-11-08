@@ -2,27 +2,20 @@ var Marionette = require('backbone.marionette');
 var Application =require('Application');
 
 var makeLovList = function(template, colDef, selectedValue){
-    if(colDef.multiSelect === true)var selectedValueAsArray = makeSelectedValue(selectedValue, colDef);
-    template.push('<td>');
+    template.push('<td style="vertical-align: middle">');
     template.push('<select class="selectpicker ' + colDef.name + '" data-attrname="' + colDef.name + '"');
     if(colDef.multiSelect === true) template.push(' multiple');
     template.push(">");
     _.each(colDef.lovList, function(lov){
         var selected = (lov.value == selectedValue)? " selected" : "";
-        if(colDef.multiSelect === true) selected = ($.inArray(lov.value, selectedValueAsArray) > -1)? " selected" : "";
+        if(colDef.multiSelect === true) selected = ($.inArray(lov.value, selectedValue) > -1)? " selected" : "";
         template.push('<option value="' + lov.value + '"' + selected + '>' + Localize(lov.name) + '</option>');
     });
     template.push('</select></td>');
 }
-var makeSelectedValue = function(value){
-    if(value.constructor === Array) return value;
-    if(value.constructor === Array) return value;
-    var res = value.split(",");
-    return res;
-}
 
 var makeDate = function(template, colDef, value){
-    template.push('<td><div class="input-group date datepicker" data-provide="datepicker">');
+    template.push('<td style="vertical-align: middle"><div class="input-group date datepicker" data-provide="datepicker">');
     template.push('<input type="text" class="form-control ' + colDef.name + '" data-attrname="' + colDef.name + '"');
     if(value !== undefined)template.push(' value="' + value + ' "');
     template.push('>');
@@ -51,22 +44,22 @@ var MasterRowView = Marionette.View.extend({
                 } else if (colDefs[index].type === 'date') {
                     makeDate(template, colDefs[index], data.model[colName]);
                 } else if (colDefs[index].type === 'text') {
-                    template.push('<td><input type="text" data-attrname="' + colDefs[index].name + '" class="' + colDefs[index].name + '" ');
+                    template.push('<td style="vertical-align: middle"><input type="text" data-attrname="' + colDefs[index].name + '" class="' + colDefs[index].name + '" ');
                     if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
                     template.push('></td>');
                 } else if (colDefs[index].type === 'num') {
-                    template.push('<td><input type="number" data-attrname="' + colDefs[index].name + '"  class="' + colDefs[index].name + '" ');
+                    template.push('<td style="vertical-align: middle"><input type="number" data-attrname="' + colDefs[index].name + '"  class="' + colDefs[index].name + '" ');
                     if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
                     template.push('></td>');
                 } else if (colDefs[index].type === 'int') {
-                    template.push('<td><input type="number" data-attrname="' + colDefs[index].name + '"  class="' + colDefs[index].name + '" ');
+                    template.push('<td style="vertical-align: middle"><input type="number" data-attrname="' + colDefs[index].name + '"  class="' + colDefs[index].name + '" ');
                     if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
                     template.push('></td>');
                 } else {
                     console.error("Dont know what to do here with coldef type " + colDefs[index].type);
                 }
             } else {
-                template.push('<td>' + getDisplayValue(colDefs[index], data.model[colName]) + '</td>');
+                template.push('<td style="vertical-align: middle">' + getDisplayValue(colDefs[index], data.model[colName]) + '</td>');
             }
         });
         return template.join("");
@@ -113,12 +106,12 @@ var MasterTableBody = Marionette.CollectionView.extend({
     },
 
     onRender : function(){
-        this.$(".selectpicker").selectpicker();
+        this.$(".selectpicker").selectpicker({liveSearch:true, liveSearchNormalize : true, selectOnTab: true });
         this.$(".datepicker").datepicker({ autoclose: true, todayHighlight: true});
     },
 
     onAddChild : function(){
-        this.$(".selectpicker").selectpicker();
+        this.$(".selectpicker").selectpicker({liveSearch:true, liveSearchNormalize : true, selectOnTab: true });
         this.$(".datepicker").datepicker({ autoclose: true, todayHighlight: true});
     }
 });
