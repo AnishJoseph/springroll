@@ -20,6 +20,18 @@
             { "name": "fyiOnly", "writeable": true, "type": "boolean", "defVal": "false"},
             { "name": "description", "writeable": true, "type": "text"}
         ]
+      },
+      {
+        "masterClassName" : "com.springroll.orm.entities.User",
+        "dataQuery" : "User.getRecordsForMdm",
+        "colDefs" : [
+            { "name": "userId", "writeable": false, "type": "text"},
+            { "name": "roles", "writeable": true, "type": "text", "lovSource" : "Roles", "multiSelect": true},
+            { "name": "country", "writeable": true, "type": "text"},
+            { "name": "langauge", "writeable": true, "type": "text"},
+            { "name": "variant", "writeable": true, "type": "text"},
+            { "name": "active", "writeable": true, "type": "boolean", "defVal": "true"},
+        ]
       }
   ],
   "lovSources": {

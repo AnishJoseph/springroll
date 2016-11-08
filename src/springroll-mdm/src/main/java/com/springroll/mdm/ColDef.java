@@ -16,12 +16,14 @@ public class ColDef {
     private String defVal;
     private String lovSource;
     private Object defaultValue;
+    private boolean multiSelect = false;
 
-    public ColDef(String name, boolean writeable, String type, Object defaultValue) {
+    public ColDef(String name, boolean writeable, String type, Object defaultValue, boolean multiSelect) {
         this.name = name;
         this.writeable = writeable;
         this.type = type;
         this.defaultValue = defaultValue;
+        this.multiSelect = multiSelect;
     }
 
     public ColDef() {
@@ -81,5 +83,13 @@ public class ColDef {
 
     public void setLovSource(String lovSource) {
         this.lovSource = lovSource;
+    }
+
+    public boolean isMultiSelect() {
+        return multiSelect;
+    }
+
+    public void setMultiSelect(boolean multiSelect) {
+        this.multiSelect = multiSelect;
     }
 }

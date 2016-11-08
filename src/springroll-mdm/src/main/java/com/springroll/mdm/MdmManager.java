@@ -71,7 +71,7 @@ import java.util.stream.Collectors;
             BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
             mdmDefinitions = (MdmDefinitions) new JSONDeserializer().deserialize(br, MdmDefinitions.class);
             for (MdmDefinition mdmDefinition : mdmDefinitions.getMasters()) {
-                mdmDefinition.getColDefs().add(0, new ColDef("id", false, "num", null));
+                mdmDefinition.getColDefs().add(0, new ColDef("id", false, "num", null, false));
                 for (ColDef colDef : mdmDefinition.getColDefs()) {
                     if("boolean".equals(colDef.getType())){
                         colDef.setLovList(makeBooleanLov());
@@ -121,7 +121,7 @@ import java.util.stream.Collectors;
         mdmData.setData(query.getResultList());
         List<ColDef> colDefs = new ArrayList<>(mdmDefinition.getColDefs().size());
         for (ColDef colDef : mdmDefinition.getColDefs()) {
-            ColDef c = new ColDef(colDef.getName(), colDef.isWriteable(), colDef.getType(), colDef.getDefaultValue());
+            ColDef c = new ColDef(colDef.getName(), colDef.isWriteable(), colDef.getType(), colDef.getDefaultValue(), colDef.isMultiSelect());
             if(colDef.getType().equals("boolean")){
                 c.setLovList(colDef.getLovList());
             } else {

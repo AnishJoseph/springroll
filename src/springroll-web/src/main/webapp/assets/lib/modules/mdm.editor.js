@@ -2,19 +2,28 @@ var Marionette = require('backbone.marionette');
 var Application =require('Application');
 
 var makeLovList = function(template, colDef, selectedValue){
-    template.push('<td class="modelattr">');
-    template.push('<select class="selectpicker " data-attrname="' + colDef.name + '"');
+    if(colDef.multiSelect === true)var selectedValueAsArray = makeSelectedValue(selectedValue, colDef);
+    template.push('<td>');
+    template.push('<select class="selectpicker ' + colDef.name + '" data-attrname="' + colDef.name + '"');
     if(colDef.multiSelect === true) template.push(' multiple');
     template.push(">");
     _.each(colDef.lovList, function(lov){
         var selected = (lov.value == selectedValue)? " selected" : "";
+        if(colDef.multiSelect === true) selected = ($.inArray(lov.value, selectedValueAsArray) > -1)? " selected" : "";
         template.push('<option value="' + lov.value + '"' + selected + '>' + Localize(lov.name) + '</option>');
     });
     template.push('</select></td>');
 }
-var makeDate = function(template, parameter, value){
+var makeSelectedValue = function(value){
+    if(value.constructor === Array) return value;
+    if(value.constructor === Array) return value;
+    var res = value.split(",");
+    return res;
+}
+
+var makeDate = function(template, colDef, value){
     template.push('<td><div class="input-group date datepicker" data-provide="datepicker">');
-    template.push('<input type="text" class="form-control modelattr" data-attrname="' + parameter.name + '"');
+    template.push('<input type="text" class="form-control ' + colDef.name + '" data-attrname="' + colDef.name + '"');
     if(value !== undefined)template.push(' value="' + value + ' "');
     template.push('>');
     template.push('<div class="input-group-addon">');
@@ -34,51 +43,59 @@ var MasterRowView = Marionette.View.extend({
     template : function(data){
         var colDefs = data.colDefs;
         var template = [];
-        _.each(Object.keys(data.model.attributes), function (val, index){
-            if(val === 'id')return; //FIXME - assumtion that each model will have all the cols defined - it should ateast be undefined
-            if(colDefs[index].writeable == true || data.model.get('id') == undefined) {
+        _.each(Object.keys(data.model), function (colName, index){
+            if(colName === 'id')return;
+            if(colDefs[index].writeable == true || data.model['id'] == undefined) {
                 if (colDefs[index].lovList !== null) {
-                    makeLovList(template, colDefs[index], data.model.get(val));
+                    makeLovList(template, colDefs[index], data.model[colName]);
                 } else if (colDefs[index].type === 'date') {
-                    makeDate(template, colDefs[index], data.model.get(val));
+                    makeDate(template, colDefs[index], data.model[colName]);
                 } else if (colDefs[index].type === 'text') {
-                    template.push('<td class="modelattr"><input type="text" data-attrname="' + colDefs[index].name + '" ');
-                    if(data.model.get(val) !== undefined && data.model.get(val) !== null) template.push(' value="' + data.model.get(val) + '"');
+                    template.push('<td><input type="text" data-attrname="' + colDefs[index].name + '" class="' + colDefs[index].name + '" ');
+                    if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
                     template.push('></td>');
                 } else if (colDefs[index].type === 'num') {
-                    template.push('<td class="modelattr"><input type="number" data-attrname="' + colDefs[index].name + '" ');
-                    if(data.model.get(val) !== undefined && data.model.get(val) !== null) template.push(' value="' + data.model.get(val) + '"');
+                    template.push('<td><input type="number" data-attrname="' + colDefs[index].name + '"  class="' + colDefs[index].name + '" ');
+                    if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
                     template.push('></td>');
                 } else if (colDefs[index].type === 'int') {
-                    template.push('<td class="modelattr"><input type="number" data-attrname="' + colDefs[index].name + '" ');
-                    if(data.model.get(val) !== undefined && data.model.get(val) !== null) template.push(' value="' + data.model.get(val) + '"');
+                    template.push('<td><input type="number" data-attrname="' + colDefs[index].name + '"  class="' + colDefs[index].name + '" ');
+                    if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
                     template.push('></td>');
                 } else {
-                    template.push('<td>' + getDisplayValue(colDefs[index], data.model.get(val)) + '</td>');
+                    console.error("Dont know what to do here with coldef type " + colDefs[index].type);
                 }
             } else {
-                template.push('<td>' + getDisplayValue(colDefs[index], data.model.get(val)) + '</td>');
+                template.push('<td>' + getDisplayValue(colDefs[index], data.model[colName]) + '</td>');
             }
         });
         return template.join("");
     },
     serializeData: function(){
-        return {model: this.model, colDefs : this.masterGridData.colDefs};
+        return {model: this.model.attributes, colDefs : this.masterGridData.colDefs};
     },
     initialize : function(options){
         this.masterGridData = options.masterGridData;
+        var events = {};
+        _.each(this.masterGridData.colDefs, function(colDef){
+            events['change .' + colDef.name] = 'changeHandler';
+        });
+        this.delegateEvents(events);
     },
 
-    events: {
-        'change .modelattr' : 'changeHandler'
-    },
     changeHandler: function(evt) {
         var attrName = evt.target.getAttribute('data-attrname');
         if(attrName === undefined){
             console.log("data-attrname not set - dont know which attribute in the the model to update");
             return;
         }
-        this.model.set(attrName, evt.target.value );
+        var classes = [];
+        _.each(evt.target.classList, function(classname){
+            classes.push(classname);
+        });
+        var fullClassSelector = '.' + classes.join(".");
+        var value = this.$el.find(fullClassSelector).val();
+        this.model.set(attrName, value );
     }
 });
 

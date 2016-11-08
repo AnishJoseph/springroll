@@ -14,9 +14,10 @@
             INSERT INTO user VALUES (3,0, 'BOM2',  'BOM,GROUP2', 'US', 'en', 'v1', 'T');
             <!--INSERT INTO user VALUES (4,0, 'BOM3',  'BOM,GROUP2');-->
 
-            INSERT INTO  role values (1,0, 'BOM1', 'T', 'desc1');
+            INSERT INTO  role values (1,0, 'BOM', 'T', 'desc1');
             INSERT INTO  role values (2,0, 'GROUP1', 'T', 'desc1');
             INSERT INTO  role values (3,0, 'GROUP2', 'T',  'desc1');
+            INSERT INTO  role values (4,0, 'GROUP3', 'T',  'desc1');
             <!--id, parentid, rulename, review stage, approver, approvals needed, fyionly, desc-->
             INSERT INTO  review_rule values (1,0, 'Rule1', 'REVIEW',    1, 'BOM', 1, 'F', 'T', 'desc1');
             INSERT INTO  review_rule values (2,0, 'Rule2', 'REVIEW',    1, 'BOM', 1, 'F', 'T', 'desc2');
