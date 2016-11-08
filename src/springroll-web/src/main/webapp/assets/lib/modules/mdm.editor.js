@@ -68,6 +68,13 @@ var MasterRowView = Marionette.View.extend({
     serializeData: function(){
         return {model: this.model.attributes, colDefs : this.masterGridData.colDefs};
     },
+    searchBasedHide : function(){
+        this.$el.hide();
+    },
+    searchBasedShow : function(){
+        this.$el.show();
+    },
+
     initialize : function(options){
         this.masterGridData = options.masterGridData;
         var events = {};
@@ -75,6 +82,8 @@ var MasterRowView = Marionette.View.extend({
             events['change .' + colDef.name] = 'changeHandler';
         });
         this.delegateEvents(events);
+        this.model.on('searchBasedShow', this.searchBasedShow, this);
+        this.model.on('searchBasedHide', this.searchBasedHide, this);
     },
 
     changeHandler: function(evt) {
@@ -181,15 +190,44 @@ var Control = Marionette.View.extend({
             objectHoldingAttrValuesOldAndNew['val'] = newValue;
             objectHoldingAttrValuesOldAndNew['prevVal'] = prevVal;
         });
-
     },
+
+    onRender : function(){
+        var that = this;
+        this.ui.search.keyup(_.debounce(function(){
+            that.search();
+        } , 50, this));
+    },
+
+    ui : {
+        search : '.search'
+    },
+
     events : {
         'click .save' : 'saveClicked',
         'click .add' : 'addRow',
-        'keyup .search' : 'search'
     },
     search : function(){
-        console.log("Search");
+        var searchStr = this.ui.search.val();
+        _.each(this.collections.models, function(model){
+            var found = false;
+            _.each(model.attributes, function(value){
+                if(value === null || value === undefined)value = '';
+                if (typeof value !== 'string') value = value + '';
+                if(value.includes(searchStr)){
+                    /* Some column contains this search string - Dont hide, trigger show */
+                    //FIXME - show only if currently hidden to be efficient
+                    found = true;
+                    model.trigger('searchBasedShow');
+                    return;
+                }
+            });
+            if(found == false){
+                /* NO column contains this search string -  Hide the row */
+                //FIXME - hide only if currently shown to be efficient
+                model.trigger('searchBasedHide');
+            }
+        });
     },
     addRow : function(){
         var newRecord = {};
