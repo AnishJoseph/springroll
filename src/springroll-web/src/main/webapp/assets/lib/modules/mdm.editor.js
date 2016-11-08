@@ -44,22 +44,22 @@ var MasterRowView = Marionette.View.extend({
                 } else if (colDefs[index].type === 'date') {
                     makeDate(template, colDefs[index], data.model[colName]);
                 } else if (colDefs[index].type === 'text') {
-                    template.push('<td style="vertical-align: middle"><input type="text" data-attrname="' + colDefs[index].name + '" class="' + colDefs[index].name + '" ');
+                    template.push('<td ><input type="text" data-attrname="' + colDefs[index].name + '" class="form-control ' + colDefs[index].name + '" ');
                     if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
                     template.push('></td>');
                 } else if (colDefs[index].type === 'num') {
-                    template.push('<td style="vertical-align: middle"><input type="number" data-attrname="' + colDefs[index].name + '"  class="' + colDefs[index].name + '" ');
+                    template.push('<td ><input type="number" data-attrname="' + colDefs[index].name + '"  class="form-control ' + colDefs[index].name + '" ');
                     if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
                     template.push('></td>');
                 } else if (colDefs[index].type === 'int') {
-                    template.push('<td style="vertical-align: middle"><input type="number" data-attrname="' + colDefs[index].name + '"  class="' + colDefs[index].name + '" ');
+                    template.push('<td ><input type="number" data-attrname="' + colDefs[index].name + '"  class="form-control ' + colDefs[index].name + '" ');
                     if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
                     template.push('></td>');
                 } else {
                     console.error("Dont know what to do here with coldef type " + colDefs[index].type);
                 }
             } else {
-                template.push('<td style="vertical-align: middle">' + getDisplayValue(colDefs[index], data.model[colName]) + '</td>');
+                template.push('<td><input disabled class="form-control" value="' + getDisplayValue(colDefs[index], data.model[colName]) + '"/></td>');
             }
         });
         return template.join("");
@@ -106,6 +106,7 @@ var MasterTableBody = Marionette.CollectionView.extend({
     },
 
     onRender : function(){
+        //FIXME - this and below - enable live search always ??
         this.$(".selectpicker").selectpicker({liveSearch:true, liveSearchNormalize : true, selectOnTab: true });
         this.$(".datepicker").datepicker({ autoclose: true, todayHighlight: true});
     },
@@ -226,7 +227,10 @@ var Control = Marionette.View.extend({
 
 });
 Application.MasterView = Marionette.View.extend({
-    template : _.template("<div id='mcontrol' style='margin-bottom: 20px;margin-top: 10px'/><div id='mtable'/>"),
+    template : _.template("<div id='mcontrol' style='margin-bottom: 20px;margin-top: 10px'/>" +
+        "<div style='position: relative;clear: both; height: 100%;width: 100%'>" +
+        "<div style='height: calc(100vh - 150px);overflow: auto' id='mtable'/>" +
+        "</div>"),
     regions : {
         'tableRegion' : '#mtable',
         'controlRegion' : '#mcontrol'
