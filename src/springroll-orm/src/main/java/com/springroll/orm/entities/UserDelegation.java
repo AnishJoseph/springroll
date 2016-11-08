@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @NamedQueries({
         @NamedQuery(name="UserDelegation.findDelegators", query = "SELECT o.userId FROM UserDelegation o WHERE o.delegate = ?1 and ?2 BETWEEN o.startDate AND o.endDate"),
         @NamedQuery(name="UserDelegation.isValidDelegate", query = "SELECT o.userId FROM UserDelegation o WHERE o.delegate = ?1 and ?2 = o.userId and ?3 BETWEEN o.startDate AND o.endDate"),
+        @NamedQuery(name="UserDelegation.getRecordsForMdm", query = "SELECT o.id, o.userId, o.delegate, o.startDate, o.endDate, o.description, o.active FROM UserDelegation o")
 })
 @Configurable
 @Entity

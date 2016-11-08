@@ -10,7 +10,8 @@ import java.util.Collection;
  * Created by anishjoseph on 05/09/16.
  */
 @NamedQueries({
-        @NamedQuery(name="User.getRecordsForMdm", query = "SELECT o.id, o.userId, o.roles, o.country, o.language, o.variant, o.active FROM User o")
+        @NamedQuery(name="User.getRecordsForMdm", query = "SELECT o.id, o.userId, o.roles, o.country, o.language, o.variant, o.active FROM User o"),
+        @NamedQuery(name="User.getActiveUsers", query = "SELECT o.userId FROM User o where o.active = 'T'")
 })
 
 @Entity

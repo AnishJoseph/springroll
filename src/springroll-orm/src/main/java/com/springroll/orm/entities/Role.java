@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
  * Created by anishjoseph on 05/09/16.
  */
 @NamedQueries({
-        @NamedQuery(name="Role.getRecordsForMdm", query = "SELECT o.id, o.roleName, o.description FROM Role o"),
+        @NamedQuery(name="Role.getRecordsForMdm", query = "SELECT o.id, o.roleName, o.description, o.active FROM Role o"),
         @NamedQuery(name="Role.getAllRoles", query = "select r.roleName from Role r")
 })
 @Entity

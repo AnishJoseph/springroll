@@ -4,33 +4,47 @@
         "masterClassName" : "com.springroll.orm.entities.Role",
         "dataQuery" : "Role.getRecordsForMdm",
         "colDefs" : [
-            { "name": "RoleName", "writeable": true, "type": "text"},
-            { "name": "Description", "writeable": false, "type": "text"}
-        ]
+          { "name": "RoleName", "writeable": true, "type": "text"},
+          { "name": "Description", "writeable": false, "type": "text"},
+          { "name": "active", "writeable": true, "type": "boolean", "defVal": "true"}
+      ]
       },
       {
         "masterClassName" : "com.springroll.orm.entities.ReviewRule",
         "dataQuery" : "ReviewRule.getRecordsForMdm",
         "colDefs" : [
-            { "name": "ruleName", "writeable": true, "type": "text"},
-            { "name": "channel", "writeable": true, "type": "text", "lovSource" : "NotificationChannels"},
-            { "name": "reviewStage", "writeable": true, "type": "int"},
-            { "name": "approver", "writeable": true, "type": "text", "lovSource" : "Roles"},
-            { "name": "approvalsNeeded", "writeable": true, "type": "int", "defVal": "10"},
-            { "name": "fyiOnly", "writeable": true, "type": "boolean", "defVal": "false"},
-            { "name": "description", "writeable": true, "type": "text"}
+          { "name": "ruleName", "writeable": true, "type": "text"},
+          { "name": "channel", "writeable": true, "type": "text", "lovSource" : "NotificationChannels"},
+          { "name": "reviewStage", "writeable": true, "type": "int"},
+          { "name": "approver", "writeable": true, "type": "text", "lovSource" : "Roles"},
+          { "name": "approvalsNeeded", "writeable": true, "type": "int", "defVal": "10"},
+          { "name": "fyiOnly", "writeable": true, "type": "boolean", "defVal": "false"},
+          { "name": "description", "writeable": true, "type": "text"},
+          { "name": "active", "writeable": true, "type": "boolean", "defVal": "true"}
         ]
       },
       {
         "masterClassName" : "com.springroll.orm.entities.User",
         "dataQuery" : "User.getRecordsForMdm",
         "colDefs" : [
-            { "name": "userId", "writeable": false, "type": "text"},
-            { "name": "roles", "writeable": true, "type": "text", "lovSource" : "Roles", "multiSelect": true},
-            { "name": "country", "writeable": true, "type": "text", "lovSource" : "Countries"},
-            { "name": "language", "writeable": true, "type": "text", "lovSource" : "Languages"},
-            { "name": "variant", "writeable": true, "type": "text"},
-            { "name": "active", "writeable": true, "type": "boolean", "defVal": "true"},
+          { "name": "userId", "writeable": false, "type": "text"},
+          { "name": "roles", "writeable": true, "type": "text", "lovSource" : "Roles", "multiSelect": true},
+          { "name": "country", "writeable": true, "type": "text", "lovSource" : "Countries"},
+          { "name": "language", "writeable": true, "type": "text", "lovSource" : "Languages"},
+          { "name": "variant", "writeable": true, "type": "text"},
+          { "name": "active", "writeable": true, "type": "boolean", "defVal": "true"},
+        ]
+      },
+      {
+        "masterClassName" : "com.springroll.orm.entities.UserDelegation",
+        "dataQuery" : "UserDelegation.getRecordsForMdm",
+        "colDefs" : [
+          { "name": "userId", "writeable": false, "type": "text", "lovSource" : "ActiveUsers"},
+          { "name": "delegate", "writeable": true, "type": "text", "lovSource" : "ActiveUsers"},
+          { "name": "startDate", "writeable": true, "type": "date"},
+          { "name": "endDate", "writeable": true, "type": "date"},
+          { "name": "description", "writeable": true, "type": "text"},
+          { "name": "active", "writeable": true, "type": "boolean", "defVal": "true"},
         ]
       }
   ],
@@ -41,7 +55,8 @@
       { "name": "Countries", "type": "java", "source": "countries"}
     ],
     "namedQuerySources": [
-      { "name": "Roles", "type": "namedQuery", "source": "Role.getAllRoles"}
+      { "name": "Roles", "type": "namedQuery", "source": "Role.getAllRoles"},
+      { "name": "ActiveUsers", "type": "namedQuery", "source": "User.getActiveUsers"}
     ],
     "enumSources": [
       { "name": "Enum", "type": "enum", "source": "com.springroll.notification.CoreNotificationChannels"}
