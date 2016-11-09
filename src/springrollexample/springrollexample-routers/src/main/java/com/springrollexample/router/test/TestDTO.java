@@ -1,8 +1,6 @@
 package com.springrollexample.router.test;
 
 import com.springroll.core.DTO;
-import com.springroll.core.IDTOProcessors;
-import com.springrollexample.router.ApplicationDTOProcessors;
 
 /**
  * Created by anishjoseph on 11/09/16.

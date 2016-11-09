@@ -1,7 +1,7 @@
 package com.springrollexample.router.test;
 
-import com.springroll.core.IDTOProcessors;
-import com.springrollexample.router.ApplicationDTOProcessors;
+import com.springroll.core.IServiceDefinition;
+import com.springrollexample.router.ApplicationServiceDefinitions;
 
 /**
  * Created by anishjoseph on 11/09/16.
@@ -10,8 +10,8 @@ public class SynchToAsynchDTO extends TestServiceDTO {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public IDTOProcessors getProcessor() {
-        return ApplicationDTOProcessors.SYNCH_TO_ASYNCH;
+    public IServiceDefinition getProcessor() {
+        return ApplicationServiceDefinitions.SYNCH_TO_ASYNCH;
     }
 
 }

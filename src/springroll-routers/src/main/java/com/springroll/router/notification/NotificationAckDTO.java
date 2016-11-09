@@ -1,8 +1,8 @@
 package com.springroll.router.notification;
 
-import com.springroll.core.IDTOProcessors;
+import com.springroll.core.IServiceDefinition;
 import com.springroll.core.ServiceDTO;
-import com.springroll.router.CoreDTOProcessors;
+import com.springroll.router.CoreServiceDefinitions;
 
 /**
  * Created by anishjoseph on 28/09/16.
@@ -25,8 +25,8 @@ public class NotificationAckDTO implements ServiceDTO {
     }
 
     @Override
-    public IDTOProcessors getProcessor() {
-        return CoreDTOProcessors.NOTIFICATION_ACK;
+    public IServiceDefinition getProcessor() {
+        return CoreServiceDefinitions.NOTIFICATION_ACK;
     }
 
 

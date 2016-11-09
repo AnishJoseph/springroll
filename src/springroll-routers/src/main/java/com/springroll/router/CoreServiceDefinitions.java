@@ -1,20 +1,23 @@
-package com.springrollexample.router;
+package com.springroll.router;
 
-import com.springroll.core.IDTOProcessors;
+import com.springroll.core.IServiceDefinition;
 import com.springroll.core.IServiceFactory;
+import com.springroll.core.services.IMdmServiceFactory;
+import com.springroll.core.services.INotificationServiceFactory;
+import com.springroll.core.services.IReviewServiceFactory;
 
 /**
  * Created by anishjoseph on 07/10/16.
  */
-public enum ApplicationDTOProcessors implements IDTOProcessors {
-
-    TEST_ROOT(ITestRootServiceFactory.class),
-    SYNCH_TO_ASYNCH(ITestSynchFromAsynchServiceFactory.class);
+public enum CoreServiceDefinitions implements IServiceDefinition {
+    REVIEW(IReviewServiceFactory.class),
+    NOTIFICATION_ACK(INotificationServiceFactory.class),
+    MDM(IMdmServiceFactory.class);
 
     private Class<? extends IServiceFactory> serviceFactoryClass;
     private IServiceFactory serviceFactory;
 
-    ApplicationDTOProcessors(Class<? extends IServiceFactory> serviceFactoryClass){
+    CoreServiceDefinitions(Class<? extends IServiceFactory> serviceFactoryClass){
         this.serviceFactoryClass = serviceFactoryClass;
     }
 
@@ -33,5 +36,4 @@ public enum ApplicationDTOProcessors implements IDTOProcessors {
     public void setServiceFactory(IServiceFactory serviceFactory) {
         this.serviceFactory = serviceFactory;
     }
-
 }

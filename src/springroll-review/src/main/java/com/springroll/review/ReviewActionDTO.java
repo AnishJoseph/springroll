@@ -1,8 +1,8 @@
 package com.springroll.review;
 
-import com.springroll.core.IDTOProcessors;
+import com.springroll.core.IServiceDefinition;
 import com.springroll.core.ServiceDTO;
-import com.springroll.router.CoreDTOProcessors;
+import com.springroll.router.CoreServiceDefinitions;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class ReviewActionDTO implements ServiceDTO {
     }
 
     @Override
-    public IDTOProcessors getProcessor() {
-        return CoreDTOProcessors.REVIEW;
+    public IServiceDefinition getProcessor() {
+        return CoreServiceDefinitions.REVIEW;
     }
 }
