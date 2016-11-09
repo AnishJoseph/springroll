@@ -34,6 +34,7 @@ import java.util.List;
             List resultList = query.getResultList();
             //FIXME - handle case where both name and value are returned??
             for (Object o : resultList) {
+                if(o == null)continue;
                 lovs.add(new Lov(o));
             }
             return lovs;
