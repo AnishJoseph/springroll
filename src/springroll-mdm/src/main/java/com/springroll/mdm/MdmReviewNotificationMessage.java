@@ -1,13 +1,13 @@
-package com.springroll.notification;
+package com.springroll.mdm;
 
-import com.springroll.core.BusinessValidationResult;
+import com.springroll.notification.AbstractNotificationMessage;
 
 import java.util.List;
 
 /**
  * Created by anishjoseph on 02/10/16.
  */
-public class MdmReviewNotificationMessage extends AbstractNotificationMessage{
+public class MdmReviewNotificationMessage extends AbstractNotificationMessage {
     private List<Long> reviewStepId;
     private String messageKey;
     private String[] args = new String[]{};

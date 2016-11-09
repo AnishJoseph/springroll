@@ -1,10 +1,11 @@
-package com.springroll.notification;
+package com.springroll.review;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.BusinessValidationResult;
+import com.springroll.notification.AbstractNotificationMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * Created by anishjoseph on 02/10/16.
  */
-public class FyiReviewNotificationMessage extends AbstractNotificationMessage{
+public class FyiReviewNotificationMessage extends AbstractNotificationMessage {
     transient private List<BusinessValidationResult> businessValidationResult;
     private String  businessValidationResultJson = "";
     private String messageKey;

@@ -25,16 +25,12 @@ public interface INotificationChannel {
      */
     boolean isPersist();
 
-    void setPersist(boolean persist);
-
     /**
      * If set to true the notification manager will delete the notification when all users that this notification is targeted to acknowledge it
      * If false, an explicit call to deleteNotification needs to made to delete the notfication - regardless of how many users responded to the notification
      * @return
      */
     boolean isAutoClean();
-
-    void setAutoClean(boolean autoClean);
 
     NotificationChannelType getChannelType();
 }

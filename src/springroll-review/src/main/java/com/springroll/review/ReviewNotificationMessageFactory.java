@@ -1,25 +1,18 @@
-package com.springroll.notification;
+package com.springroll.review;
 
 import com.springroll.core.BusinessValidationResult;
-import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.notification.*;
-import com.springroll.orm.entities.Notification;
-import com.springroll.orm.entities.User;
-import com.springroll.orm.repositories.Repositories;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
+import com.springroll.core.services.IReviewNotificationMessageFactory;
+import com.springroll.notification.AbstractNotificationMessageFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Created by anishjoseph on 05/10/16.
  */
-@Component public class ReviewNotificationMessageFactory extends AbstractNotificationMessageFactory {
+@Component public class ReviewNotificationMessageFactory extends AbstractNotificationMessageFactory implements IReviewNotificationMessageFactory {
     @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String serviceName){
         return new ReviewNotificationMessage(reviewStepIds, approver, businessValidationResults, "ui.review.noti.msg", new String[]{serviceName, initiator.getUsername()});
     }

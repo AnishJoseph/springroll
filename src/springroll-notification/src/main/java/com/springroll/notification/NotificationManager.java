@@ -96,7 +96,7 @@ public class NotificationManager implements INotificationManager, ILovProvider {
     @Override
     public void addNotificationChannels(Class<? extends INotificationChannel> clazz) {
         notificationChannels.add(clazz);
-        fixBeans(clazz);
+        resolveFactories(clazz);
     }
 
     @Override
@@ -156,7 +156,7 @@ public class NotificationManager implements INotificationManager, ILovProvider {
         }
         return null;
     }
-    private void fixBeans(Class notificationChannelClass){
+    private void resolveFactories(Class notificationChannelClass){
         INotificationChannel[] enumConstants = (INotificationChannel[])notificationChannelClass.getEnumConstants();
         for (INotificationChannel enumConstant : enumConstants) {
             //FIXME - what if we cant find the bean

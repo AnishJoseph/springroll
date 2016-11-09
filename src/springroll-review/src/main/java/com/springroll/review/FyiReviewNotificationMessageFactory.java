@@ -1,4 +1,4 @@
-package com.springroll.notification;
+package com.springroll.review;
 
 import com.springroll.core.BusinessValidationResult;
 import com.springroll.core.SpringrollSecurity;
@@ -6,7 +6,7 @@ import com.springroll.core.SpringrollUser;
 import com.springroll.core.notification.INotification;
 import com.springroll.core.notification.INotificationChannel;
 import com.springroll.core.notification.INotificationMessage;
-import com.springroll.core.notification.INotificationMessageFactory;
+import com.springroll.core.services.IFyiReviewNotificationMessageFactory;
 import com.springroll.orm.entities.Notification;
 import com.springroll.orm.entities.User;
 import com.springroll.orm.repositories.Repositories;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * Created by anishjoseph on 05/10/16.
  */
-@Component public class FyiReviewNotificationMessageFactory implements INotificationMessageFactory {
+@Component public class FyiReviewNotificationMessageFactory implements IFyiReviewNotificationMessageFactory {
     @Autowired Repositories repositories;
 
     @Override
