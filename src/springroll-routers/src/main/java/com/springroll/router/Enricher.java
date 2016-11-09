@@ -7,10 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-
-
 /**
  * The Enricher is one of the <b>processors</b> on the  Synchronous Route.
  * The on method is invoked by camel as the DTO is routed through
@@ -22,7 +18,6 @@ import java.util.Map;
 public class Enricher {
     private static final Logger logger = LoggerFactory.getLogger(Enricher.class);
 
-    private Map<Class, DTOEnricher> cache = new HashMap<>();
     @Autowired private ApplicationContext applicationContext;
 
     /**
@@ -31,18 +26,16 @@ public class Enricher {
      * @return
      */
     public JobMeta on(JobMeta jobMeta){
-        Class<? extends DTOEnricher> enricherClass = jobMeta.getPayloads().get(0).getProcessor().getEnricherClass();
-        if(enricherClass == null){
+        IServiceFactory serviceFactory = jobMeta.getPayloads().get(0).getProcessor().getServiceFactory();
+        if(serviceFactory == null){
+            serviceFactory = applicationContext.getBean(jobMeta.getPayloads().get(0).getProcessor().getServiceFactoryClass());
+            jobMeta.getPayloads().get(0).getProcessor().setServiceFactory(serviceFactory);
+        }
+        DTOEnricher enricher = serviceFactory.getServiceEnricher();
+        if(enricher == null){
             logger.debug("No Enricher specified for DTO '{}'", jobMeta.getPayloads().get(0).getClass().getSimpleName());
             return jobMeta;
         }
-        DTOEnricher enricher = cache.get(enricherClass);
-        if(enricher == null){
-            enricher = applicationContext.getBean(enricherClass);
-            cache.put(enricherClass, enricher);
-        }
-
-
         //Fixme - do exception handling
         enricher.enrich(jobMeta.getPayloads());
         return jobMeta;

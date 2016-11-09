@@ -5,7 +5,7 @@ const webpack = require('webpack');
 module.exports = {
     entry: "./app.main.js",
     output: {
-		path: path.join(__dirname, 'src/main/webapp/generated'),
+		path: path.join(__dirname, 'src/main/webapp/'),
         filename: "springroll.js"
     },
     module: {

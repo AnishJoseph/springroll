@@ -31,7 +31,7 @@ public class EventCreator {
 
     public Long on(JobMeta jobMeta){
         boolean comingDirectlyFromSyncSide = false;
-        Class<? extends IEvent> eventClass = jobMeta.getPayloads().get(0).getProcessor().getEventClass();
+        Class<? extends IEvent> eventClass = jobMeta.getPayloads().get(0).getProcessor().getServiceFactory().getServiceEvent();
         AbstractEvent event;
         try {
             event = (AbstractEvent) eventClass.newInstance();

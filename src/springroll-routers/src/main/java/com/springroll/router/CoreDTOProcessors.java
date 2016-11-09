@@ -1,42 +1,39 @@
 package com.springroll.router;
 
-import com.springroll.core.DTOBusinessValidator;
-import com.springroll.core.DTOEnricher;
 import com.springroll.core.IDTOProcessors;
-import com.springroll.core.IEvent;
-import com.springroll.router.events.MdmEvent;
-import com.springroll.router.notification.NotificationAckEvent;
-import com.springroll.router.review.ReviewActionEvent;
+import com.springroll.core.IServiceFactory;
+import com.springroll.core.services.IMdmServiceFactory;
+import com.springroll.core.services.INotificationServiceFactory;
+import com.springroll.core.services.IReviewServiceFactory;
 
 /**
  * Created by anishjoseph on 07/10/16.
  */
 public enum  CoreDTOProcessors implements IDTOProcessors {
-    REVIEW(ReviewActionEvent.class, null, null),
-    NOTIFICATION_ACK(NotificationAckEvent.class, null, null),
-    MDM(MdmEvent.class, MdmBusinessValidator.class, DummyEnricher.class),
-    NULL(null, null, null);   //FIXME - why is this needed?
+    REVIEW(IReviewServiceFactory.class),
+    NOTIFICATION_ACK(INotificationServiceFactory.class),
+    MDM(IMdmServiceFactory.class);
 
-    private Class<? extends DTOEnricher> enricherClass;
-    private Class<? extends DTOBusinessValidator> businessValidatorClass;
+    private Class<? extends IServiceFactory> serviceFactoryClass;
+    private IServiceFactory serviceFactory;
 
-    private Class<? extends IEvent> eventClass;
-
-    CoreDTOProcessors(Class<? extends IEvent> eventClass, Class<? extends DTOBusinessValidator> businessValidatorClass, Class<? extends DTOEnricher> enricherClass){
-        this.eventClass = eventClass;
-        this.businessValidatorClass = businessValidatorClass;
-        this.enricherClass = enricherClass;
+    CoreDTOProcessors(Class<? extends IServiceFactory> serviceFactoryClass){
+        this.serviceFactoryClass = serviceFactoryClass;
     }
 
-    @Override public Class<? extends DTOEnricher> getEnricherClass() {
-        return enricherClass;
+    public Class<? extends IServiceFactory> getServiceFactoryClass() {
+        return serviceFactoryClass;
     }
 
-    @Override public Class<? extends DTOBusinessValidator> getBusinessValidatorClass() {
-        return businessValidatorClass;
+    public void setServiceFactoryClass(Class<? extends IServiceFactory> serviceFactoryClass) {
+        this.serviceFactoryClass = serviceFactoryClass;
     }
 
-    @Override public Class<? extends IEvent> getEventClass() {
-        return eventClass;
+    public IServiceFactory getServiceFactory() {
+        return serviceFactory;
+    }
+
+    public void setServiceFactory(IServiceFactory serviceFactory) {
+        this.serviceFactory = serviceFactory;
     }
 }
