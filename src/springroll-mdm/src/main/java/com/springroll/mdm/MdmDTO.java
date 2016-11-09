@@ -1,8 +1,8 @@
 package com.springroll.mdm;
 
 import com.springroll.core.IDTOProcessors;
+import com.springroll.core.ServiceDTO;
 import com.springroll.router.CoreDTOProcessors;
-import com.springroll.router.dto.IMdmDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by anishjoseph on 05/11/16.
  */
-public class MdmDTO implements IMdmDTO {
+public class MdmDTO implements ServiceDTO {
     private String master;
     private List<MdmChangedRecord> changedRecords;
     private List<Map<String, Object>> newRecords;

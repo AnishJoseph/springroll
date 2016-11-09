@@ -4,7 +4,6 @@ import com.springroll.core.Lov;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.exceptions.FixableException;
 import com.springroll.router.SpringrollEndPoint;
-import com.springroll.router.events.MdmEvent;
 import flexjson.JSONDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
