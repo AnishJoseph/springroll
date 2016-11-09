@@ -253,7 +253,7 @@ var Control = Marionette.View.extend({
             });
         });
         var Collection =  Backbone.Model.extend({ url: this.url});
-        var collection = new Collection({'master' : this.master, 'changedRecords':changedRecords, 'newRecords' : this.newRecords});
+        var collection = new Collection({'master' : this.model.get('master'), 'changedRecords':changedRecords, 'newRecords' : this.newRecords});
         collection.save(null, {
             success: function(){
                 console.log("e");
