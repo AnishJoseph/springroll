@@ -220,4 +220,10 @@ public class ReviewManager extends SpringrollEndPoint {
         }
     }
 
+    public DTO getFirstPayload(Long reviewStepId){
+        ReviewStep reviewStep = repo.reviewStep.findOne(reviewStepId);
+        ReviewStep step0 = repo.reviewStep.findByParentIdAndSerializedEventIsNotNull(reviewStep.getParentId());
+        return step0.getEvent().getPayload();
+    }
+
 }

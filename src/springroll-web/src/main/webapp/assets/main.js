@@ -18,6 +18,7 @@ require('indicator.js');
 require('alerts.js');
 require('fyi.alerts.js');
 require('review.alerts.js');
+require('mdm.review.alerts.js');
 require('reviewfyi.alerts.js');
 require('grid.report.view.js');
 require('report.parameter.view.js');

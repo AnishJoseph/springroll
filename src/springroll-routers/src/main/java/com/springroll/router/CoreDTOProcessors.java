@@ -14,7 +14,7 @@ import com.springroll.router.review.ReviewActionEvent;
 public enum  CoreDTOProcessors implements IDTOProcessors {
     REVIEW(ReviewActionEvent.class, null, null),
     NOTIFICATION_ACK(NotificationAckEvent.class, null, null),
-    MDM(MdmEvent.class, DummyBusinessValidator.class, DummyEnricher.class),
+    MDM(MdmEvent.class, MdmBusinessValidator.class, DummyEnricher.class),
     NULL(null, null, null);   //FIXME - why is this needed?
 
     private Class<? extends DTOEnricher> enricherClass;

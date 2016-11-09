@@ -10,6 +10,7 @@ import com.springroll.reporting.grid.GridReport;
 import com.springroll.reporting.grid.GridReporter;
 import com.springroll.router.notification.NotificationAckDTO;
 import com.springroll.router.review.ReviewActionDTO;
+import com.springroll.router.review.ReviewManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ public class SpringrollAPI extends AbstractAPI {
     @Autowired private ITemplateManager templateManager;
     @Autowired private GridReporter gridReporter;
     @Autowired private MdmManager mdmManager;
+    @Autowired ReviewManager reviewManager;
 
     @RequestMapping(value = "/sr/reviewaction", method = RequestMethod.POST)
     public Long reviewAction(@RequestBody ReviewActionDTO reviewActionDTO) {
@@ -85,5 +87,10 @@ public class SpringrollAPI extends AbstractAPI {
     @RequestMapping(value = "/sr/mdm/update", method = RequestMethod.POST)
     public Long updateMDMData(@RequestBody MdmDTO mdmDTO) {
         return route(mdmDTO);
+    }
+
+    @RequestMapping(value = "/sr/mdm/moreinfo", method = RequestMethod.GET)
+    public MdmDTO updateMDMData(@RequestParam Long reviewStepId) {
+        return (MdmDTO)reviewManager.getFirstPayload(reviewStepId);
     }
 }
