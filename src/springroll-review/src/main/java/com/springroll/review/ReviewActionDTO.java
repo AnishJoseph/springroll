@@ -1,4 +1,4 @@
-package com.springroll.router.review;
+package com.springroll.review;
 
 import com.springroll.core.IDTOProcessors;
 import com.springroll.core.ServiceDTO;

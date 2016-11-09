@@ -1,17 +1,15 @@
-package com.springroll.router.review;
+package com.springroll.review;
 
 import com.springroll.core.*;
 import com.springroll.core.notification.INotificationChannel;
 import com.springroll.core.notification.INotificationMessage;
 import com.springroll.core.services.INotificationManager;
-import com.springroll.notification.CoreNotificationChannels;
-import com.springroll.notification.FyiReviewNotificationMessage;
-import com.springroll.notification.ReviewNotificationMessage;
 import com.springroll.orm.entities.Job;
 import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.entities.ReviewRule;
 import com.springroll.orm.repositories.Repositories;
 import com.springroll.router.SpringrollEndPoint;
+import com.springroll.router.review.ReviewNeededEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

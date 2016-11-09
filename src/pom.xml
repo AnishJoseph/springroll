@@ -53,6 +53,7 @@
         <module>springroll-notification</module>
         <module>springroll-reporting</module>
         <module>springroll-mdm</module>
+        <module>springroll-review</module>
         <module>springrollexample</module>
     </modules>
 
@@ -61,6 +62,11 @@
 
     <dependencyManagement>
 		<dependencies>
+            <dependency>
+                <groupId>com.springroll</groupId>
+                <artifactId>springroll-review</artifactId>
+                <version>${springroll.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.springroll</groupId>
                 <artifactId>springroll-mdm</artifactId>

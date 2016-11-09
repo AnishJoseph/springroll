@@ -1,9 +1,8 @@
-package com.springroll.router.review;
+package com.springroll.review;
 
 import com.springroll.core.DTOBusinessValidator;
 import com.springroll.core.DTOEnricher;
 import com.springroll.core.IEvent;
-import com.springroll.core.IServiceFactory;
 import com.springroll.core.services.IReviewServiceFactory;
 import org.springframework.stereotype.Service;
 
