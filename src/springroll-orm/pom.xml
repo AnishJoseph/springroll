@@ -11,6 +11,11 @@
 
 	<dependencies>
         <dependency>
+            <groupId>com.owlike</groupId>
+            <artifactId>genson</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
             <groupId>com.springroll</groupId>
             <artifactId>springroll-core</artifactId>
         </dependency>

@@ -7,6 +7,9 @@ public class Lov {
     private Object value;
     private String name;
 
+    public Lov() {
+    }
+
     public Lov(Object value) {
         this.value = value;
         this.name = value.toString();

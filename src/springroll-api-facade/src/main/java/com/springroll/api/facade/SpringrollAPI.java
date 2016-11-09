@@ -89,8 +89,4 @@ public class SpringrollAPI extends AbstractAPI {
         return route(mdmDTO);
     }
 
-    @RequestMapping(value = "/sr/mdm/moreinfo", method = RequestMethod.GET)
-    public MdmDTO updateMDMData(@RequestParam Long reviewStepId) {
-        return (MdmDTO)reviewManager.getFirstPayload(reviewStepId);
-    }
 }

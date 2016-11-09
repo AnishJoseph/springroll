@@ -44,12 +44,16 @@ public class ReviewManager extends SpringrollEndPoint {
     INotificationManager notificationManager;
 
     public void on(ReviewNeededEvent reviewNeededEvent){
-        createReviewSteps(reviewNeededEvent.getPayload().getReviewNeededViolations(), reviewNeededEvent.getPayload().getEventForReview().getJobId(), reviewNeededEvent);
+        boolean hasReviewSteps = createReviewSteps(reviewNeededEvent.getPayload().getReviewNeededViolations(), reviewNeededEvent.getPayload().getEventForReview().getJobId(), reviewNeededEvent);
+        if(!hasReviewSteps){
+            route(reviewNeededEvent.getPayload().getEventForReview());
+            return;
+        }
         List<ReviewStep> nextReviewSteps = findNextReviewStep(reviewNeededEvent.getPayload().getEventForReview().getJobId(), -1);
         createReviewNotifications(nextReviewSteps);
     }
 
-    private void createReviewSteps(List<BusinessValidationResult> reviewNeededViolations, Long jobId, ReviewNeededEvent reviewNeededEvent){
+    private boolean createReviewSteps(List<BusinessValidationResult> reviewNeededViolations, Long jobId, ReviewNeededEvent reviewNeededEvent){
         List<ReviewStep> reviewSteps = new ArrayList<>();
         for (BusinessValidationResult businessValidationResult : reviewNeededViolations) {
             String approver = businessValidationResult.getApprover();
@@ -67,8 +71,10 @@ public class ReviewManager extends SpringrollEndPoint {
         /* Store the event under review so that we can send it out after all the reviews are done.
            we need to store this in only one place - keep it in the 0th step
         */
+        if(reviewSteps.isEmpty())return false;
         reviewSteps.get(0).setEvent(reviewNeededEvent.getPayload().getEventForReview());
         repo.reviewStep.save(reviewSteps);
+        return true;
     }
     private List<ReviewStep> findNextReviewStep(Long jobId, int completedStepId){
         try {

@@ -78,19 +78,23 @@ public class NotificationManager implements INotificationManager, ILovProvider {
 
     @Override
     public void pushPendingNotifications(String serviceUri) {
-        INotificationChannel notificationChannel = serviceUriToEnum(serviceUri);
-        if(notificationChannel == null){
-            logger.error("Unable to find NotificationChannel for channel '{}' - probably does not exist in the Enums", serviceUri);
-            return;
-        }
-        if(notificationChannel.getMessageFactory() == null)return;
-        List<Notification> pendingNotificationsForUser = (List<Notification>)notificationChannel.getMessageFactory().getPendingNotificationsForUser(notificationChannel);
-        if(pendingNotificationsForUser.isEmpty())return;
+        try {
+            INotificationChannel notificationChannel = serviceUriToEnum(serviceUri);
+            if (notificationChannel == null) {
+                logger.error("Unable to find NotificationChannel for channel '{}' - probably does not exist in the Enums", serviceUri);
+                return;
+            }
+            if (notificationChannel.getMessageFactory() == null) return;
+            List<Notification> pendingNotificationsForUser = (List<Notification>) notificationChannel.getMessageFactory().getPendingNotificationsForUser(notificationChannel);
+            if (pendingNotificationsForUser.isEmpty()) return;
 
-        List<INotificationMessage> notificationMessagesForUser = pendingNotificationsForUser.stream().map(Notification::getNotificationMessage).collect(Collectors.toList());
-        Set<String> user = new HashSet<>(1);
-        user.add(SpringrollSecurity.getUser().getUsername());
-        pushNotification(new PushData(user, notificationMessagesForUser, notificationChannel.getServiceUri()));
+            List<INotificationMessage> notificationMessagesForUser = pendingNotificationsForUser.stream().map(Notification::getNotificationMessage).collect(Collectors.toList());
+            Set<String> user = new HashSet<>(1);
+            user.add(SpringrollSecurity.getUser().getUsername());
+            pushNotification(new PushData(user, notificationMessagesForUser, notificationChannel.getServiceUri()));
+        }catch (Exception e){
+            e.printStackTrace(); //FIXME
+        }
     }
 
     @Override

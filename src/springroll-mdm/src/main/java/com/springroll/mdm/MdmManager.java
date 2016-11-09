@@ -114,15 +114,7 @@ import java.util.stream.Collectors;
         return null;
     }
     public MdmData getData(String master){
-        if(mdmDefinitions == null){
-            logger.debug("MdmDefinitions is empty");
-            throw new FixableException("MdmDefinitions is empty");
-        }
-        MdmDefinition mdmDefinition = getDefinitionForMaster(master);
-        if(mdmDefinition == null){
-            logger.error("Unable to find MdmDefinition for Master {}", master);
-            throw new FixableException("Unable to find MdmDefinition for Master " + master, "mdm.missingdefinition", master);
-        }
+        MdmDefinition mdmDefinition = getMdmDefinition(master);
         MdmData mdmData = new MdmData();
         List<ColDef> colDefs = new ArrayList<>(mdmDefinition.getColDefs().size());
         for (ColDef colDef : mdmDefinition.getColDefs()) {
@@ -168,4 +160,22 @@ import java.util.stream.Collectors;
     public List<String> getMdmMasterNames(){
         return mdmDefinitions.getMasters().stream().map(MdmDefinition::getMaster).collect(Collectors.toList());
     }
+
+    public List<ColDef> getColDefs(String master){
+        return getMdmDefinition(master).getColDefs();
+    }
+
+    private MdmDefinition getMdmDefinition(String master){
+        if(mdmDefinitions == null){
+            logger.debug("MdmDefinitions is empty");
+            throw new FixableException("MdmDefinitions is empty");
+        }
+        MdmDefinition mdmDefinition = getDefinitionForMaster(master);
+        if(mdmDefinition == null){
+            logger.error("Unable to find MdmDefinition for Master {}", master);
+            throw new FixableException("Unable to find MdmDefinition for Master " + master, "mdm.missingdefinition", master);
+        }
+        return mdmDefinition;
+    }
+
 }

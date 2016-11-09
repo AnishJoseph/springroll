@@ -5,12 +5,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.owlike.genson.Genson;
+import com.owlike.genson.GensonBuilder;
 import com.springroll.core.AckLog;
 import com.springroll.core.notification.INotification;
 import com.springroll.core.notification.INotificationMessage;
-import flexjson.JSONDeserializer;
-import flexjson.JSONSerializer;
-import org.hibernate.annotations.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -22,7 +21,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -78,16 +76,18 @@ public class Notification extends AbstractEntity implements INotification {
     }
 
     public INotificationMessage getNotificationMessage() {
+        Genson genson = new GensonBuilder().useRuntimeType(true).useClassMetadata(true).create();
+
         if(notificationMessage != null)return notificationMessage;
         if(payloadJson == null) return null;
-        notificationMessage = (INotificationMessage) new JSONDeserializer().deserialize(payloadJson);
+        notificationMessage = genson.deserialize(payloadJson, INotificationMessage.class);
         return notificationMessage;
     }
 
     public void setNotificationMessage(INotificationMessage notification) {
+        Genson genson = new GensonBuilder().useRuntimeType(true).useClassMetadata(true).create();
         this.notificationMessage = notification;
-        JSONSerializer serializer = new JSONSerializer();
-        payloadJson = serializer.deepSerialize(notification);
+        payloadJson = genson.serialize(notification);
     }
 
     public String getReceivers() {

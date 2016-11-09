@@ -2,16 +2,16 @@
 <table style="width: 100%;" class="table table-hover table-striped">
 <thead>
     <tr>
-        <% _.each(Object.keys(newRecords[0]), function(name) {
-            if(name == "id")return;
+        <% _.each(mdmChangesForReview.colDefs, function(colDef) {
+            if(colDef.name == "id")return;
         %>
-            <th><%- name %></th>
+            <th><%- colDef.name %></th>
         <% }); %>
     </tr>
 </thead>
 <tbody>
 <%
-_.each(newRecords, function(record) {
+_.each(mdmChangesForReview.newRecords, function(record) {
 %>
     <tr>
         <% _.each(Object.keys(record), function(colName) {

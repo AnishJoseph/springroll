@@ -29,26 +29,20 @@ var MdmMoreInfoView = Marionette.View.extend({
     },
 
     onRender : function(){
-        var changedRecords = this.model.get('changedRecords');
-        var newRecords = this.model.get('newRecords');
+        var changedRecords = this.model.get('mdmChangesForReview')['changedRecords'];
+        var newRecords = this.model.get('mdmChangesForReview')['newRecords'];
         if( changedRecords !== null && changedRecords.length > 0){
-            this.showChildView('changedRegion', new ChangedView({'model' : new Backbone.Model(changedRecords)}));
+            this.showChildView('changedRegion', new ChangedView({'model' : this.model}));
         }
         if( newRecords !== null && newRecords.length > 0){
-            this.showChildView('newRegion', new NewView({'model' : new Backbone.Model({'newRecords' : newRecords})}));
+            this.showChildView('newRegion', new NewView({'model' : this.model}));
         }
     }
 });
 
 
 var ReviewItem = Backbone.Model.extend({urlRoot:'/api/sr/reviewaction'});
-var MdmMoreInfo = Backbone.Model.extend({
-    url: function () {
-        var reviewStepId = this.get('reviewStepId');
-        this.unset('reviewStepId');
-        return "/api/sr/mdm/moreinfo?reviewStepId=" + reviewStepId;
-    }
-});
+
 var AlertsView = Marionette.View.extend({
     tagName: 'div',
     template: _.template('<%-localMessage%>'),
@@ -57,15 +51,8 @@ var AlertsView = Marionette.View.extend({
         this.model.set('localMessage', Localize(this.model.get("messageKey"), this.model.get("args")));
     },
     infoClicked : function(){
-        var mdmMoreInfo = new MdmMoreInfo({reviewStepId : this.model.get('reviewStepId')});
-        var that = this;
-        mdmMoreInfo.fetch({
-            success : function(model, data){
-                var view = new MdmMoreInfoView({ 'model': model});
-                Application.showModal("Approval Required", view, that);
-            }
-        });
-
+        var view = new MdmMoreInfoView({ 'model': this.model});
+        Application.showModal("Approval Required", view, this);
     },
     acceptClicked : function(){
         var reviewItem = new ReviewItem({reviewStepId: this.model.get('reviewStepId'), approved : true});
