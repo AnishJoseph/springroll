@@ -1,23 +1,14 @@
 var Marionette = require('backbone.marionette');
 var Application =require('Application');
-Application.requiresTemplate('#mdm.moreinfo');
+Application.requiresTemplate('#mdm.newrecs.moreinfo');
+Application.requiresTemplate('#mdm.changedrecs.moreinfo');
 
 var ChangedView = Marionette.View.extend({
-    template : _.template('<div id="changedRecords">CHANGED VIEW</div>'),
-
-    onRender : function(){
-        console.log("CHANGED");
-    }
-
+    template: '#mdm.changedrecs.moreinfo'
 });
 
 var NewView = Marionette.View.extend({
-    template: '#mdm.moreinfo',
-
-    onRender : function(){
-        console.log("NEW");
-    }
-
+    template: '#mdm.newrecs.moreinfo'
 });
 
 var MdmMoreInfoView = Marionette.View.extend({
@@ -52,7 +43,7 @@ var AlertsView = Marionette.View.extend({
     },
     infoClicked : function(){
         var view = new MdmMoreInfoView({ 'model': this.model});
-        Application.showModal("Approval Required", view, this);
+        Application.showModal(this.model.get('localMessage'), view, this);
     },
     acceptClicked : function(){
         var reviewItem = new ReviewItem({reviewStepId: this.model.get('reviewStepId'), approved : true});

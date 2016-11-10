@@ -245,11 +245,12 @@ var Control = Marionette.View.extend({
     saveClicked : function(){
         var changedRecords = [];
         var that = this;
+        /* Convert this to a MdmDTO */
         _.each(Object.keys(this.changes), function(id){
-            var mdmChangedColumns = [];
+            var mdmChangedColumns = {};
             changedRecords.push({'id' : id, 'mdmChangedColumns' : mdmChangedColumns});
             _.each(Object.keys(that.changes[id]), function(columnName){
-                mdmChangedColumns.push({'colName' : columnName, 'prevVal' : that.changes[id][columnName].prevVal, 'val' : that.changes[id][columnName].val});
+                mdmChangedColumns[columnName] = that.changes[id][columnName];
             });
         });
         var Collection =  Backbone.Model.extend({ url: this.url});

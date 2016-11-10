@@ -2,13 +2,14 @@ package com.springroll.mdm;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by anishjoseph on 05/11/16.
  */
 public class MdmChangedRecord implements Serializable{
     private long id;
-    private List<MdmChangedColumn> mdmChangedColumns;
+    private Map<String, MdmChangedColumn> mdmChangedColumns; //The Key is the name of the column
 
     public long getId() {
         return id;
@@ -18,11 +19,11 @@ public class MdmChangedRecord implements Serializable{
         this.id = id;
     }
 
-    public List<MdmChangedColumn> getMdmChangedColumns() {
+    public Map<String, MdmChangedColumn> getMdmChangedColumns() {
         return mdmChangedColumns;
     }
 
-    public void setMdmChangedColumns(List<MdmChangedColumn> mdmChangedColumns) {
+    public void setMdmChangedColumns(Map<String, MdmChangedColumn> mdmChangedColumns) {
         this.mdmChangedColumns = mdmChangedColumns;
     }
 }

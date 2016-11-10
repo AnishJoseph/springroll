@@ -38,19 +38,20 @@ import java.util.stream.Collectors;
 
     public void on(MdmEvent mdmEvent) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
-        MdmDTO mdmDTO = (MdmDTO) mdmEvent.getPayload();
+        MdmDTO mdmDTO = mdmEvent.getPayload();
         MdmDefinition mdmDefinition = getDefinitionForMaster(mdmDTO.getMaster());
         try {
             for (MdmChangedRecord mdmChangedRecord : mdmDTO.getChangedRecords()) {
                 Object entity = em.find(mdmDefinition.getMasterClass(), mdmChangedRecord.getId());
                 BeanWrapper wrapper = new BeanWrapperImpl(entity);
                 Map<String, Object> map = new HashMap<>();
-                for (MdmChangedColumn mdmChangedColumn : mdmChangedRecord.getMdmChangedColumns()) {
-                    ColDef colDef = mdmDefinition.getColDefByName(mdmChangedColumn.getColName());
+                for (String colName : mdmChangedRecord.getMdmChangedColumns().keySet()) {
+                    ColDef colDef = mdmDefinition.getColDefByName(colName);
                     if(!colDef.isWriteable())throw new FixableException("","mdm.notwritable", colDef.getName(), mdmDefinition.getMasterClass().getSimpleName() );
-                    map.put(mdmChangedColumn.getColName(), mdmChangedColumn.getVal());
+                    MdmChangedColumn mdmChangedColumn = mdmChangedRecord.getMdmChangedColumns().get(colName);
+                    map.put(colName, mdmChangedColumn.getVal());
                     if(colDef.getType().equalsIgnoreCase("date")){
-                        map.put(mdmChangedColumn.getColName(),LocalDate.parse((String)mdmChangedColumn.getVal(), formatter));
+                        map.put(colName,LocalDate.parse((String)mdmChangedColumn.getVal(), formatter));
                     }
                 }
                 wrapper.setPropertyValues(map);

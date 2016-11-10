@@ -1,5 +1,5 @@
-<h3><%-Localize('mdmNewRecs')%></h3>
-<table style="width: 100%;" class="table table-hover table-striped">
+<h4><%-Localize('mdmNewRecs')%></h4>
+<table style="width: 100%;" class="table  table-hover table-striped">
 <thead>
     <tr>
         <% _.each(mdmChangesForReview.colDefs, function(colDef) {
@@ -14,11 +14,11 @@
 _.each(mdmChangesForReview.newRecords, function(record) {
 %>
     <tr>
-        <% _.each(Object.keys(record), function(colName) {
-            if(colName == "id")return;
+        <% _.each(mdmChangesForReview.colDefs, function(colDef) {
+            if(colDef.name == "id")return;
         %>
                 <td>
-                    <%- record[colName]%>
+                    <%- record[colDef.name]%>
                 </td>
         <% }); %>
     </tr>

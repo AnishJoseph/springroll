@@ -1,5 +1,7 @@
 package com.springroll.mdm;
 
+import com.springroll.core.SpringrollSecurity;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +12,7 @@ import java.util.Map;
 
 public class MdmChangesForReview implements Serializable {
     private String master;
+    private String userId;
     private List<MdmChangedRecord> changedRecords;
     private List<Map<String, Object>> newRecords;
     private List<ColDef> colDefs;
@@ -21,6 +24,7 @@ public class MdmChangesForReview implements Serializable {
         this.changedRecords = mdmDTO.getChangedRecords();
         this.newRecords = mdmDTO.getNewRecords();
         this.colDefs = colDefs;
+        userId = SpringrollSecurity.getUser().getUsername();
     }
 
     public String getMaster() {
@@ -53,5 +57,13 @@ public class MdmChangesForReview implements Serializable {
 
     public void setColDefs(List<ColDef> colDefs) {
         this.colDefs = colDefs;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }
