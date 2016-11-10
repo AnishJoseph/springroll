@@ -2,7 +2,8 @@
   "masters" : [
       {
         "masterClassName" : "com.springroll.orm.entities.Role",
-        "dataQuery" : "Role.getRecordsForMdm",
+        "getMdmRecords" : "Role.getRecordsForMdm",
+        "getMdmRecordsForIds" : "Role.getRecordsForMdmForIds",
         "colDefs" : [
           { "name": "RoleName", "writeable": true, "type": "text"},
           { "name": "Description", "writeable": false, "type": "text"},
@@ -11,7 +12,8 @@
       },
       {
         "masterClassName" : "com.springroll.orm.entities.ReviewRule",
-        "dataQuery" : "ReviewRule.getRecordsForMdm",
+        "getMdmRecords" : "ReviewRule.getRecordsForMdm",
+        "getMdmRecordsForIds" : "ReviewRule.getRecordsForMdmForIds",
         "colDefs" : [
           { "name": "ruleName", "writeable": true, "type": "text"},
           { "name": "channel", "writeable": true, "type": "text", "lovSource" : "NotificationChannels"},
@@ -25,7 +27,8 @@
       },
       {
         "masterClassName" : "com.springroll.orm.entities.User",
-        "dataQuery" : "User.getRecordsForMdm",
+        "getMdmRecords" : "User.getRecordsForMdm",
+        "getMdmRecordsForIds" : "User.getRecordsForMdmForIds",
         "colDefs" : [
           { "name": "userId", "writeable": false, "type": "text"},
           { "name": "roles", "writeable": true, "type": "text", "lovSource" : "Roles", "multiSelect": true},
@@ -37,7 +40,8 @@
       },
       {
         "masterClassName" : "com.springroll.orm.entities.UserDelegation",
-        "dataQuery" : "UserDelegation.getRecordsForMdm",
+        "getMdmRecords" : "UserDelegation.getRecordsForMdm",
+        "getMdmRecordsForIds" : "UserDelegation.getRecordsForMdmForIds",
         "colDefs" : [
           { "name": "userId", "writeable": false, "type": "text", "lovSource" : "ActiveUsers"},
           { "name": "delegate", "writeable": true, "type": "text", "lovSource" : "ActiveUsers"},

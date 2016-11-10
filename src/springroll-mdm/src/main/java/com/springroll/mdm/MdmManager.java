@@ -129,7 +129,7 @@ import java.util.stream.Collectors;
         }
 
         mdmData.setColDefs(colDefs);
-        Query query = em.createNamedQuery(mdmDefinition.getDataQuery());
+        Query query = em.createNamedQuery(mdmDefinition.getGetMdmRecords());
         List<Object[]> resultList = query.getResultList();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
@@ -181,7 +181,7 @@ import java.util.stream.Collectors;
 
     public List<Object[]> getData(String master, List<Long> changedIds) {
         MdmDefinition mdmDefinition = getMdmDefinition(master);
-        Query query = em.createNamedQuery(mdmDefinition.getDataQuery()+"Changes"); //FIXME - valid assumption??
+        Query query = em.createNamedQuery(mdmDefinition.getGetMdmRecordsForIds());
         query.setParameter("ids", changedIds);
         return query.getResultList();
     }

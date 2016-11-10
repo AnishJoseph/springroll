@@ -8,7 +8,9 @@ import javax.validation.constraints.NotNull;
  * Created by anishjoseph on 05/09/16.
  */
 @NamedQueries({
-        @NamedQuery(name="ReviewRule.getRecordsForMdm", query = "SELECT o.id, o.ruleName, o.channel, o.reviewStage, o.approver, o.approvalsNeeded, o.fyiOnly, o.description, o.active FROM ReviewRule o")
+        @NamedQuery(name="ReviewRule.getRecordsForMdm", query = "SELECT o.id, o.ruleName, o.channel, o.reviewStage, o.approver, o.approvalsNeeded, o.fyiOnly, o.description, o.active FROM ReviewRule o"),
+        @NamedQuery(name="ReviewRule.getRecordsForMdmForIds",
+                query = "SELECT o.id, o.ruleName, o.channel, o.reviewStage, o.approver, o.approvalsNeeded, o.fyiOnly, o.description, o.active FROM ReviewRule o  where o.id in :ids order by o.id")
 })
 
 @Entity

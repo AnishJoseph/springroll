@@ -13,7 +13,8 @@ public class MdmDefinition {
     private static final Logger logger = LoggerFactory.getLogger(MdmDefinition.class);
     private String master;
     private String masterClassName;
-    private String dataQuery;
+    private String getMdmRecords;
+    private String getMdmRecordsForIds;
     private List<ColDef> colDefs;
     private Class masterClass;
 
@@ -21,12 +22,12 @@ public class MdmDefinition {
         return master;
     }
 
-    public String getDataQuery() {
-        return dataQuery;
+    public String getGetMdmRecords() {
+        return getMdmRecords;
     }
 
-    public void setDataQuery(String dataQuery) {
-        this.dataQuery = dataQuery;
+    public void setGetMdmRecords(String getMdmRecords) {
+        this.getMdmRecords = getMdmRecords;
     }
 
     public List<ColDef> getColDefs() {
@@ -43,6 +44,14 @@ public class MdmDefinition {
 
     public Class getMasterClass() {
         return masterClass;
+    }
+
+    public String getGetMdmRecordsForIds() {
+        return getMdmRecordsForIds;
+    }
+
+    public void setGetMdmRecordsForIds(String getMdmRecordsForIds) {
+        this.getMdmRecordsForIds = getMdmRecordsForIds;
     }
 
     public void setMasterClassName(String masterClassName) {
