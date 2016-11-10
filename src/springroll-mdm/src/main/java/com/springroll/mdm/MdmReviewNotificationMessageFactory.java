@@ -9,7 +9,8 @@ import com.springroll.review.ReviewManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by anishjoseph on 05/10/16.
@@ -20,7 +21,21 @@ import java.util.List;
 
     @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String serviceName){
         MdmDTO mdmDTO = (MdmDTO) reviewManager.getFirstPayload(reviewStepIds.get(0));
-        MdmChangesForReview mdmChangesForReview = new MdmChangesForReview(mdmDTO, mdmManager.getColDefs(mdmDTO.getMaster()));
+        List<ColDef> colDefs = mdmManager.getColDefs(mdmDTO.getMaster());
+        List<MdmChangedRecord> changedRecords = mdmDTO.getChangedRecords();
+        List<String> colNames = colDefs.stream().map(ColDef::getName).collect(Collectors.toList());
+        for (MdmChangedRecord changedRecord : changedRecords) {
+            Map<String, MdmChangedColumn> unchangedCols = new HashMap<>();
+            Set<String> changedCols = changedRecord.getMdmChangedColumns().keySet();
+            for (String colName : colNames) {
+                if(changedCols.contains(colName))continue;
+                unchangedCols.put(colName, new MdmChangedColumn("NC", "NC"));
+            }
+            changedRecord.getMdmChangedColumns().putAll(unchangedCols);
+        }
+
+        MdmChangesForReview mdmChangesForReview = new MdmChangesForReview(mdmDTO, colDefs);
+
         return new MdmReviewNotificationMessage(reviewStepIds, approver, "ui.mdm.review.noti.msg", businessValidationResults.get(0).getArgs(), mdmChangesForReview);
     }
 }
