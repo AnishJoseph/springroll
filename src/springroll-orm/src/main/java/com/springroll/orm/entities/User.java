@@ -11,6 +11,7 @@ import java.util.Collection;
  */
 @NamedQueries({
         @NamedQuery(name="User.getRecordsForMdm", query = "SELECT o.id, o.userId, o.roles, o.country, o.language, o.variant, o.active FROM User o"),
+        @NamedQuery(name="User.getRecordsForMdmChanges", query = "SELECT o.id, o.userId, o.roles, o.country, o.language, o.variant, o.active FROM User o where o.id in :ids order by o.id"),
         @NamedQuery(name="User.getActiveUsers", query = "SELECT o.userId FROM User o where o.active = 'T'")
 })
 

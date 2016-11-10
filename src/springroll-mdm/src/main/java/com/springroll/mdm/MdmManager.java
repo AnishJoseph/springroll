@@ -179,4 +179,10 @@ import java.util.stream.Collectors;
         return mdmDefinition;
     }
 
+    public List<Object[]> getData(String master, List<Long> changedIds) {
+        MdmDefinition mdmDefinition = getMdmDefinition(master);
+        Query query = em.createNamedQuery(mdmDefinition.getDataQuery()+"Changes"); //FIXME - valid assumption??
+        query.setParameter("ids", changedIds);
+        return query.getResultList();
+    }
 }

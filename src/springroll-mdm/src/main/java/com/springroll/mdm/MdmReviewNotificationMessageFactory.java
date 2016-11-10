@@ -9,7 +9,12 @@ import com.springroll.review.ReviewManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -18,20 +23,34 @@ import java.util.stream.Collectors;
 @Component public class MdmReviewNotificationMessageFactory extends AbstractNotificationMessageFactory implements IMdmReviewNotificationMessageFactory {
     @Autowired ReviewManager reviewManager;
     @Autowired MdmManager mdmManager;
+    @PersistenceContext EntityManager em;
 
     @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String serviceName){
         MdmDTO mdmDTO = (MdmDTO) reviewManager.getFirstPayload(reviewStepIds.get(0));
+
+        List<Long> changedIds = mdmDTO.getChangedRecords().stream().map( MdmChangedRecord::getId).collect(Collectors.toList());
+        changedIds.sort((p1, p2) -> p1.compareTo(p2));
+        List<Object[]> existingValues = mdmManager.getData(mdmDTO.getMaster(), changedIds);
+
         List<ColDef> colDefs = mdmManager.getColDefs(mdmDTO.getMaster());
-        List<MdmChangedRecord> changedRecords = mdmDTO.getChangedRecords();
         List<String> colNames = colDefs.stream().map(ColDef::getName).collect(Collectors.toList());
-        for (MdmChangedRecord changedRecord : changedRecords) {
-            Map<String, MdmChangedColumn> unchangedCols = new HashMap<>();
-            Set<String> changedCols = changedRecord.getMdmChangedColumns().keySet();
-            for (String colName : colNames) {
-                if(changedCols.contains(colName))continue;
-                unchangedCols.put(colName, new MdmChangedColumn("NC", "NC"));
+
+        for (int i = 0; i < changedIds.size(); i++) {
+            Object[] existingValuesForThisRecord = existingValues.get(i);
+            for (MdmChangedRecord changedRecord : mdmDTO.getChangedRecords()) {
+                if(changedRecord.getId() == changedIds.get(i)){
+                    Map<String, MdmChangedColumn> unchangedCols = new HashMap<>();
+                    Set<String> changedCols = changedRecord.getMdmChangedColumns().keySet();
+                    for (int j = 0; j < colNames.size(); j++) {
+                        if(changedCols.contains(colNames.get(j)))continue;
+                        unchangedCols.put(colNames.get(j), new MdmChangedColumn(existingValuesForThisRecord[j], existingValuesForThisRecord[j]));
+                        //FIXME - handle date and other types
+                    }
+                    changedRecord.getMdmChangedColumns().putAll(unchangedCols);
+
+                    break; //Go to the next changedId
+                }
             }
-            changedRecord.getMdmChangedColumns().putAll(unchangedCols);
         }
 
         MdmChangesForReview mdmChangesForReview = new MdmChangesForReview(mdmDTO, colDefs);
