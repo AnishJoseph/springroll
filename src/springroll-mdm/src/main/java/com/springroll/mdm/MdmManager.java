@@ -174,29 +174,29 @@ import java.util.stream.Collectors;
                 }
             }
         }
-        int fakeIndex = -1;      //FIXME
-        for (ReviewStep recUnderReview : recsUnderReview) {
-            MdmDTO mdmDTO = (MdmDTO) recUnderReview.getEvent().getPayload();
-            /* Add data for all new records */
-            for (Map<String, Object> newRecord : mdmDTO.getNewRecords()) {
-                Object[] newRecData = new Object[mdmData.getColDefs().size()];
-                resultList.add(newRecData);
-                mdmData.getRecIdsUnderReview().add((long)fakeIndex);
-                int i = 0;
-                for (ColDef colDef : mdmData.getColDefs()) {
-                    if(colDef.getName().equalsIgnoreCase("id"))
-                        newRecData[i++] = fakeIndex--;
-                    else
-                        newRecData[i++] = newRecord.get(colDef.getName());
-                }
-            }
-            /* Add the ids of all updated records under review (previously computed) into the list of records under review */
-            mdmData.getRecIdsUnderReview().addAll(idsUnderReview);
+        int fakeIndex = -1;
 
-            if(showModifedRecords) {
-            /* Get the notification for this review step - the notifcation has the data for the record under modification - we need this to diplay the
-               changed record to the user (the record will be disabled but nevertheless needs to be shown
-             */
+        /* Add the ids of all updated records under review (previously computed) into the list of records under review */
+        mdmData.getRecIdsUnderReview().addAll(idsUnderReview);
+
+        if(showModifedRecords) {
+            for (ReviewStep recUnderReview : recsUnderReview) {
+                MdmDTO mdmDTO = (MdmDTO) recUnderReview.getEvent().getPayload();
+
+                /* Add data for all new records */
+                for (Map<String, Object> newRecord : mdmDTO.getNewRecords()) {
+                    Object[] newRecData = new Object[mdmData.getColDefs().size()];
+                    resultList.add(newRecData);
+                    mdmData.getRecIdsUnderReview().add((long) fakeIndex);
+                    int i = 0;
+                    for (ColDef colDef : mdmData.getColDefs()) {
+                        newRecData[i++] = colDef.getName().equalsIgnoreCase("id") ? fakeIndex--: newRecord.get(colDef.getName());
+                    }
+                }
+
+                /*  Get the notification for this review step - the notification has the data for the record under modification - we need
+                    this to display the changed record to the user (the record will be disabled but nevertheless needs to be shown
+                */
                 MdmReviewNotificationMessage mdmReviewNotificationMessage = (MdmReviewNotificationMessage) repositories.notification.findOne(recUnderReview.getNotificationId()).getNotificationMessage();
                 for (MdmChangedRecord mdmChangedRecord : mdmReviewNotificationMessage.getMdmChangesForReview().getChangedRecords()) {
                     Object[] newRecData = new Object[mdmData.getColDefs().size()];
@@ -208,10 +208,8 @@ import java.util.stream.Collectors;
                             newRecData[i - 1] = ((LocalDate) newRecData[i - 1]).format(formatter);
                         }
                     }
-
                 }
             }
-
         }
 
         mdmData.setData(resultList);
