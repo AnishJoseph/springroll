@@ -2,13 +2,14 @@ package com.springroll.mdm;
 
 import com.springroll.core.Lov;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by anishjoseph on 03/11/16.
  */
 
-public class ColDef {
+public class ColDef implements Serializable{
     private String name;
     private boolean writeable;
     private String type;

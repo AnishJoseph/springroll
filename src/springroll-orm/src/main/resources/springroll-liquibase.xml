@@ -92,7 +92,7 @@
             <column name="ACK_LOG" type="VARCHAR2(2048)"/>
             <column name="CREATION_TIME" type="datetime"/>
             <column name="VERSION" type="bigint"/>
-            <column name="PAYLOAD" type="varchar(3000)"/>
+            <column name="PAYLOAD" type="BLOB"/>
         </createTable>
         <createTable tableName="USER_DELEGATION">
             <column name="ID" type="bigint" autoIncrement="false">

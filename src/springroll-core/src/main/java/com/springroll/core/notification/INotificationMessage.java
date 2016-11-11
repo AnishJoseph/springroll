@@ -1,11 +1,11 @@
 package com.springroll.core.notification;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
 
 /**
  * Created by anishjoseph on 05/10/16.
  */
-public interface INotificationMessage {
+public interface INotificationMessage extends Serializable{
     Long getId();
     void setId(Long notificationId);
     long getCreationTime();

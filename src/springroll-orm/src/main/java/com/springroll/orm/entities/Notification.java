@@ -5,17 +5,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.owlike.genson.Genson;
-import com.owlike.genson.GensonBuilder;
 import com.springroll.core.AckLog;
 import com.springroll.core.notification.INotification;
 import com.springroll.core.notification.INotificationMessage;
+import org.hibernate.internal.util.SerializationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Version;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -33,8 +33,9 @@ public class Notification extends AbstractEntity implements INotification {
 
     private transient INotificationMessage notificationMessage;
 
-    @Column(name = "PAYLOAD")
-    private String payloadJson;
+    @Column(name = "PAYLOAD", columnDefinition = "BLOB")
+    @Lob
+    private byte[] payloadJson;
 
     @Column(name = "RECEIVERS")
     private String receivers;
@@ -76,18 +77,13 @@ public class Notification extends AbstractEntity implements INotification {
     }
 
     public INotificationMessage getNotificationMessage() {
-        Genson genson = new GensonBuilder().useRuntimeType(true).useClassMetadata(true).create();
-
-        if(notificationMessage != null)return notificationMessage;
-        if(payloadJson == null) return null;
-        notificationMessage = genson.deserialize(payloadJson, INotificationMessage.class);
+        if(this.payloadJson == null) return null;
+        notificationMessage = (INotificationMessage) SerializationHelper.deserialize(this.payloadJson);
         return notificationMessage;
     }
 
     public void setNotificationMessage(INotificationMessage notification) {
-        Genson genson = new GensonBuilder().useRuntimeType(true).useClassMetadata(true).create();
-        this.notificationMessage = notification;
-        payloadJson = genson.serialize(notification);
+        this.payloadJson = SerializationHelper.serialize(notification);
     }
 
     public String getReceivers() {

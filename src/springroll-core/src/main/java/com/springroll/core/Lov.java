@@ -1,9 +1,11 @@
 package com.springroll.core;
 
+import java.io.Serializable;
+
 /**
  * Created by anishjoseph on 18/10/16.
  */
-public class Lov {
+public class Lov implements Serializable {
     private Object value;
     private String name;
 
