@@ -1,10 +1,11 @@
 package com.springroll.mdm;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springroll.core.Lov;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.exceptions.FixableException;
 import com.springroll.router.SpringrollEndPoint;
-import flexjson.JSONDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
@@ -78,7 +79,8 @@ import java.util.stream.Collectors;
         try {
             Resource resource = new ClassPathResource("mdm.definitions.json");
             BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
-            mdmDefinitions = (MdmDefinitions) new JSONDeserializer().deserialize(br, MdmDefinitions.class);
+            ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            mdmDefinitions = mapper.readValue(br, MdmDefinitions.class);
             for (MdmDefinition mdmDefinition : mdmDefinitions.getMasters()) {
                 mdmDefinition.getColDefs().add(0, new ColDef("id", false, "num", null, false));
                 for (ColDef colDef : mdmDefinition.getColDefs()) {

@@ -1,12 +1,11 @@
 package com.springroll.reporting.grid;
 
-import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
  * Created by anishjoseph on 18/10/16.
  */
-@Component public class GridConfiguration {
+public class GridConfiguration {
     private List<Grid> grids;
     private List<GridParameter> gridParameters;
 

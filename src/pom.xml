@@ -35,7 +35,6 @@
         <jetty.version>9.2.18.v20160721</jetty.version>
         <cometd.version>3.0.10</cometd.version>
         <version.servlet.api>3.1.0</version.servlet.api>
-        <flexjson.version>3.3</flexjson.version>
         <apache.commons.io.version>2.4</apache.commons.io.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -387,11 +386,6 @@
                 <artifactId>javax.servlet-api</artifactId>
                 <version>${version.servlet.api}</version>
                 <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.sf.flexjson</groupId>
-                <artifactId>flexjson</artifactId>
-                <version>${flexjson.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>

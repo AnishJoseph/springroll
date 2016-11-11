@@ -1,9 +1,10 @@
 package com.springroll.reporting.grid;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springroll.core.exceptions.FixableException;
 import com.springroll.core.Lov;
 import com.springroll.reporting.ReportParameter;
-import flexjson.JSONDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -35,10 +36,11 @@ import java.util.Map;
         try {
             Resource resource = new ClassPathResource("grid.definitions.json");
             BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
-            gridConfiguration = (GridConfiguration) new JSONDeserializer().deserialize(br, GridConfiguration.class);
-            System.out.println("");
+            ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            gridConfiguration = mapper.readValue(br, GridConfiguration.class);
         }catch (Exception e){
             throw new RuntimeException(e);
+            //FIXME - handle exception
         }
     }
     public GridReport getGrid(String gridName, Map<String, Object> parameters) {

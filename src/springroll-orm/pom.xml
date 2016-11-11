@@ -11,11 +11,6 @@
 
 	<dependencies>
         <dependency>
-            <groupId>com.owlike</groupId>
-            <artifactId>genson</artifactId>
-            <version>1.4</version>
-        </dependency>
-        <dependency>
             <groupId>com.springroll</groupId>
             <artifactId>springroll-core</artifactId>
         </dependency>
@@ -74,10 +69,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.flexjson</groupId>
-            <artifactId>flexjson</artifactId>
         </dependency>
     </dependencies>
 
