@@ -161,7 +161,7 @@ import java.util.stream.Collectors;
         }
         /* Now find any MDM records for this master that are review - these includes those that are new and those that were modified */
         List<ReviewStep> recsUnderReview = repositories.reviewStep.findByChannelAndSearchIdAndSerializedEventIsNotNull(mdmDefinitions.getReviewChannelName(), "MDM:" + master);
-        int fakeIndex = 999999;      //FIXME
+        int fakeIndex = -1;      //FIXME
         for (ReviewStep recUnderReview : recsUnderReview) {
             MdmDTO mdmDTO = (MdmDTO) recUnderReview.getEvent().getPayload();
             for (Map<String, Object> newRecord : mdmDTO.getNewRecords()) {
@@ -171,7 +171,7 @@ import java.util.stream.Collectors;
                 int i = 0;
                 for (ColDef colDef : mdmData.getColDefs()) {
                     if(colDef.getName().equalsIgnoreCase("id"))
-                        newRecData[i++] = fakeIndex++;
+                        newRecData[i++] = fakeIndex--;
                     else
                         newRecData[i++] = newRecord.get(colDef.getName());
                 }
