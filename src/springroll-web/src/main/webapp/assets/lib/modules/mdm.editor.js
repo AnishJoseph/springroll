@@ -74,6 +74,9 @@ var MasterRowView = Marionette.View.extend({
     searchBasedShow : function(){
         this.$el.show();
     },
+    disableNewRecords : function(){
+        this.$el.find("input,button,textarea,select").attr("disabled", "disabled");
+    },
 
     initialize : function(options){
         this.masterGridData = options.masterGridData;
@@ -84,6 +87,7 @@ var MasterRowView = Marionette.View.extend({
         this.delegateEvents(events);
         this.model.on('searchBasedShow', this.searchBasedShow, this);
         this.model.on('searchBasedHide', this.searchBasedHide, this);
+        this.model.on('disableNewRecords', this.disableNewRecords, this);
     },
 
     changeHandler: function(evt) {
@@ -178,6 +182,7 @@ var Control = Marionette.View.extend({
             if(model.id == null){
                 return;
             }
+            that.enableSaveButton();
             var attrThatChanged = Object.keys(model.changed)[0];
             var newValue = model.changed[Object.keys(model.changed)[0]];
 
@@ -194,19 +199,25 @@ var Control = Marionette.View.extend({
 
     onRender : function(){
         var that = this;
-        this.ui.search.keyup(_.debounce(function(){
-            that.search();
-        } , 50, this));
+        this.ui.search.keyup(_.debounce(function(){ that.search(); }, 50, this));//Search only after user input has stabilized
     },
 
     ui : {
+        save : '.save',
         search : '.search'
     },
 
     events : {
         'click .save' : 'saveClicked',
-        'click .add' : 'addRow',
+        'click .add' : 'addRow'
     },
+    enableSaveButton : function(){
+        $(this.ui.save).removeClass('disabled');
+    },
+    disableSaveButton : function(){
+        $(this.ui.save).addClass('disabled');
+    },
+
     search : function(){
         var searchStr = this.ui.search.val();
         var re = new RegExp(searchStr, 'i');
@@ -240,24 +251,37 @@ var Control = Marionette.View.extend({
             }
         });
         this.collections.add(newRecord);
+        this.enableSaveButton();
     },
 
     saveClicked : function(){
+        /* This is to handle multiple clicks on the save button */
+        if(this.newRecords.length == 0 && _.isEmpty(this.changes))return;
+        this.disableSaveButton();
+        var copyOfNewRecords = this.newRecords;
+        this.newRecords = [];
+        var copyOfChanges = JSON.parse(JSON.stringify(this.changes));
+        this.changes = {};
+
         var changedRecords = [];
         var that = this;
         /* Convert this to a MdmDTO */
-        _.each(Object.keys(this.changes), function(id){
+        _.each(Object.keys(copyOfChanges), function(id){
             var mdmChangedColumns = {};
             changedRecords.push({'id' : id, 'mdmChangedColumns' : mdmChangedColumns});
-            _.each(Object.keys(that.changes[id]), function(columnName){
-                mdmChangedColumns[columnName] = that.changes[id][columnName];
+            _.each(Object.keys(copyOfChanges[id]), function(columnName){
+                mdmChangedColumns[columnName] = copyOfChanges[id][columnName];
             });
         });
         var Collection =  Backbone.Model.extend({ url: this.url});
-        var collection = new Collection({'master' : this.model.get('master'), 'changedRecords':changedRecords, 'newRecords' : this.newRecords});
+        var collection = new Collection({'master' : this.model.get('master'), 'changedRecords':changedRecords, 'newRecords' : copyOfNewRecords});
         collection.save(null, {
-            success: function(){
-                console.log("e");
+            success: function(model, response){
+                _.each(that.collections.models, function(model){
+                    if(model.id != null)return;
+                    model.trigger('disableNewRecords');
+                });
+
             }
         });
     }
