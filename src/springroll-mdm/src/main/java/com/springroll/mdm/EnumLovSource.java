@@ -1,7 +1,7 @@
 package com.springroll.mdm;
 
 import com.springroll.core.Lov;
-import com.springroll.core.exceptions.FixableException;
+import com.springroll.core.exceptions.SpringrollException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +44,7 @@ public class EnumLovSource implements ILovSource {
             enumClass = Class.forName(source);
         } catch (ClassNotFoundException e) {
             logger.error("Exception while getting Enum Values from class '{}' to get the LOVs. LOV source {}. Exception is - {}", source, name, e.getMessage());
-            throw new FixableException("", "lov.source.missingenum", source, name, e.getMessage());
+            throw new SpringrollException("lov.source.missingenum", source, name, e.getMessage());
         }
 
     }
@@ -58,7 +58,7 @@ public class EnumLovSource implements ILovSource {
             return Enum.valueOf(enumClass, value);
         }catch (Exception e){
             logger.error("Exception while converting value {} to an enum in class {}. LOV source {}. Exception is - {}", value, enumClass.getSimpleName(), name, e.getMessage());
-            throw new FixableException("", "lov.source.invalidenum", value, enumClass.getSimpleName(), name, e.getMessage());
+            throw new SpringrollException("lov.source.invalidenum", value, enumClass.getSimpleName(), name, e.getMessage());
         }
     }
 

@@ -1,7 +1,7 @@
 package com.springroll.mdm;
 
 import com.springroll.core.Lov;
-import com.springroll.core.exceptions.FixableException;
+import com.springroll.core.exceptions.SpringrollException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -40,7 +40,7 @@ import java.util.List;
             return lovs;
         }catch (Exception e ){
             logger.error("Exception while running named query {} to get the LOVs for LOV source {}. Exception is - {}", source, name, e.getMessage());
-            throw new FixableException("", "lov.source.namedQuery", source, name, e.getMessage());
+            throw new SpringrollException( "lov.source.namedQuery", source, name, e.getMessage());
         }    }
 
     public void setName(String name) {

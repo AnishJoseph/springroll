@@ -2,7 +2,7 @@ package com.springroll.reporting.grid;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springroll.core.exceptions.FixableException;
+import com.springroll.core.exceptions.SpringrollException;
 import com.springroll.core.Lov;
 import com.springroll.reporting.ReportParameter;
 import org.slf4j.Logger;
@@ -117,7 +117,7 @@ import java.util.Map;
             Object paramValue = parameters.get(parameter.getName());
             if(paramValue == null){
                 logger.error("The named query '{}' is missing a parameter called '{}'", namedQuery, parameter.getName());
-                throw new FixableException("Missing parameter " + parameter.getName() + " in named query " + namedQuery, "missing.namedquery.parameter", parameter.getName());
+                throw new SpringrollException("missing.namedquery.parameter", parameter.getName());
             }
             try {
                 Object o = convert(paramValue, parameter);

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springroll.core.Lov;
 import com.springroll.core.SpringrollSecurity;
-import com.springroll.core.exceptions.FixableException;
+import com.springroll.core.exceptions.SpringrollException;
 import com.springroll.router.SpringrollEndPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
                 Map<String, Object> map = new HashMap<>();
                 for (String colName : mdmChangedRecord.getMdmChangedColumns().keySet()) {
                     ColDef colDef = mdmDefinition.getColDefByName(colName);
-                    if(!colDef.isWriteable())throw new FixableException("","mdm.notwritable", colDef.getName(), mdmDefinition.getMasterClass().getSimpleName() );
+                    if(!colDef.isWriteable())throw new SpringrollException("mdm.notwritable", colDef.getName(), mdmDefinition.getMasterClass().getSimpleName() );
                     MdmChangedColumn mdmChangedColumn = mdmChangedRecord.getMdmChangedColumns().get(colName);
                     map.put(colName, mdmChangedColumn.getVal());
                     if(colDef.getType().equalsIgnoreCase("date")){
@@ -171,12 +171,12 @@ import java.util.stream.Collectors;
     private MdmDefinition getMdmDefinition(String master){
         if(mdmDefinitions == null){
             logger.debug("MdmDefinitions is empty");
-            throw new FixableException("MdmDefinitions is empty");
+            throw new SpringrollException("MdmDefinitions is empty");
         }
         MdmDefinition mdmDefinition = getDefinitionForMaster(master);
         if(mdmDefinition == null){
             logger.error("Unable to find MdmDefinition for Master {}", master);
-            throw new FixableException("Unable to find MdmDefinition for Master " + master, "mdm.missingdefinition", master);
+            throw new SpringrollException( "mdm.missingdefinition", master);
         }
         return mdmDefinition;
     }

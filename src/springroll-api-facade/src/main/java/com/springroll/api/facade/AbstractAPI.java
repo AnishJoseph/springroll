@@ -1,7 +1,7 @@
 package com.springroll.api.facade;
 
 import com.springroll.core.*;
-import com.springroll.core.exceptions.FixableException;
+import com.springroll.core.exceptions.SpringrollException;
 import com.springroll.orm.repositories.Repositories;
 import com.springroll.router.JobMeta;
 import com.springroll.router.SynchEndPoint;
@@ -44,10 +44,10 @@ public abstract class AbstractAPI {
     public  List<BusinessValidationResult> handleBusinessValidationException(BusinessValidationException ex) {
         return ex.getViolations();
     }
-    @ExceptionHandler(FixableException.class)
+    @ExceptionHandler(SpringrollException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    public  String handleFixableException(FixableException ex) {
-        return LocaleFactory.getLocalizedServerMessage(_locale, ex.getMessageKey(), ex.getMessageArguments());
+    public  String handleSpringrollException(SpringrollException ex) {
+        return LocaleFactory.getLocalizedServerMessage(getUser().getLocale(), ex.getMessageKey(), ex.getMessageArguments());
     }
 
     public Long route(ServiceDTO payload){

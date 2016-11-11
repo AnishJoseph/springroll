@@ -1,6 +1,6 @@
 package com.springroll.mdm;
 
-import com.springroll.core.exceptions.FixableException;
+import com.springroll.core.exceptions.SpringrollException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +51,6 @@ public class MdmDefinitions {
     public ILovSource getLovSource(String sourceName){
         ILovSource source = nameToSourceMap.get(sourceName);
         if(source != null) return source;
-        throw new FixableException("Unable to find LOV Source for name " + sourceName, "lov.source.missingdefinition", sourceName);
+        throw new SpringrollException("lov.source.missingdefinition", sourceName);
     }
 }
