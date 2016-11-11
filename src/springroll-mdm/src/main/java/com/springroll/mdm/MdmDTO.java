@@ -1,6 +1,7 @@
 package com.springroll.mdm;
 
 import com.springroll.core.IServiceDefinition;
+import com.springroll.core.Searchable;
 import com.springroll.core.ServiceDTO;
 import com.springroll.router.CoreServiceDefinitions;
 
@@ -10,7 +11,7 @@ import java.util.Map;
 /**
  * Created by anishjoseph on 05/11/16.
  */
-public class MdmDTO implements ServiceDTO {
+public class MdmDTO implements ServiceDTO, Searchable {
     private String master;
     private List<MdmChangedRecord> changedRecords;
     private List<Map<String, Object>> newRecords;
@@ -42,5 +43,10 @@ public class MdmDTO implements ServiceDTO {
     @Override
     public IServiceDefinition getProcessor() {
         return CoreServiceDefinitions.MDM;
+    }
+
+    @Override
+    public String getSearchId() {
+        return "MDM:" + master;
     }
 }

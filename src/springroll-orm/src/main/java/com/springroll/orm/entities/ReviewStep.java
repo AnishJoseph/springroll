@@ -35,6 +35,9 @@ public class ReviewStep extends AbstractEntity {
     @Column(name = "CHANNEL")
     private String channel;
 
+    @Column(name = "SEARCH_ID")
+    private String searchId;
+
     @Column(name = "REVIEW_STAGE")
     private int reviewStage;
 
@@ -198,5 +201,13 @@ public class ReviewStep extends AbstractEntity {
 
     public void setChannel(String channel) {
         this.channel = channel;
+    }
+
+    public String getSearchId() {
+        return searchId;
+    }
+
+    public void setSearchId(String searchId) {
+        this.searchId = searchId;
     }
 }

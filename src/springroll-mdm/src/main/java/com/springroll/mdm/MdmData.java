@@ -1,5 +1,6 @@
 package com.springroll.mdm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,6 +9,7 @@ import java.util.List;
 public class MdmData {
     private List<Object[]> data;
     private List<ColDef> colDefs;
+    private List<Long> recIdsUnderReview = new ArrayList<>();
 
     public List<Object[]> getData() {
         return data;
@@ -23,5 +25,13 @@ public class MdmData {
 
     public void setColDefs(List<ColDef> colDefs) {
         this.colDefs = colDefs;
+    }
+
+    public List<Long> getRecIdsUnderReview() {
+        return recIdsUnderReview;
+    }
+
+    public void setRecIdsUnderReview(List<Long> recIdsUnderReview) {
+        this.recIdsUnderReview = recIdsUnderReview;
     }
 }

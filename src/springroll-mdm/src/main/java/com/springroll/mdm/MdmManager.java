@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springroll.core.Lov;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.exceptions.SpringrollException;
+import com.springroll.orm.entities.ReviewStep;
+import com.springroll.orm.repositories.Repositories;
 import com.springroll.router.SpringrollEndPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,7 @@ import java.util.stream.Collectors;
     private MdmDefinitions mdmDefinitions;
     @PersistenceContext EntityManager em;
     @Autowired private ApplicationContext applicationContext;
+    @Autowired Repositories repositories;
 
     public void on(MdmEvent mdmEvent) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
@@ -156,6 +159,28 @@ import java.util.stream.Collectors;
                 }
             }
         }
+        /* Now find any MDM records for this master that are review - these includes those that are new and those that were modified */
+        List<ReviewStep> recsUnderReview = repositories.reviewStep.findByChannelAndSearchIdAndSerializedEventIsNotNull(mdmDefinitions.getReviewChannelName(), "MDM:" + master);
+        int fakeIndex = 999999;      //FIXME
+        for (ReviewStep recUnderReview : recsUnderReview) {
+            MdmDTO mdmDTO = (MdmDTO) recUnderReview.getEvent().getPayload();
+            for (Map<String, Object> newRecord : mdmDTO.getNewRecords()) {
+                Object[] newRecData = new Object[mdmData.getColDefs().size()];
+                resultList.add(newRecData);
+                mdmData.getRecIdsUnderReview().add((long)fakeIndex);
+                int i = 0;
+                for (ColDef colDef : mdmData.getColDefs()) {
+                    if(colDef.getName().equalsIgnoreCase("id"))
+                        newRecData[i++] = fakeIndex++;
+                    else
+                        newRecData[i++] = newRecord.get(colDef.getName());
+                }
+            }
+            for (MdmChangedRecord mdmChangedRecord : mdmDTO.getChangedRecords()) {
+                mdmData.getRecIdsUnderReview().add(mdmChangedRecord.getId());
+            }
+        }
+
         mdmData.setData(resultList);
         return mdmData;
     }

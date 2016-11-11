@@ -45,6 +45,7 @@
             </column>
             <column name="PARENT_ID" type="bigint"/>
             <column name="CHANNEL" type="VARCHAR2(48)" />
+            <column name="SEARCH_ID" type="VARCHAR2(48)" />
             <column name="APPROVER" type="VARCHAR2(32)"/>
             <column name="RULE_ID" type="bigint"/>
             <column name="NOTIFICATION_ID" type="bigint"/>

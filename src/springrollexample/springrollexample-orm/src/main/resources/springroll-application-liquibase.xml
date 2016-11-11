@@ -23,6 +23,7 @@
             INSERT INTO  review_rule values (2,0, 'Rule2', 'REVIEW',    1, 'BOM', 1, 'F', 'T', 'desc2');
             INSERT INTO  review_rule values (3,0, 'Rule3', 'REVIEW',    1, 'BOM', 1, 'F', 'T', 'desc2');
             INSERT INTO  review_rule values (4,0, 'Rule4', 'REVIEW_FYI',1, 'BOM', 1, 'T', 'T', 'desc2');
+            INSERT INTO  review_rule values (5,0, 'MdmMasterRule', 'MDM_REVIEW',1, 'BOM', 1, 'T', 'T', 'Rule for MDM Changes');
             <!--INSERT INTO  review_rules values (2,0, 'Rule1', 3, 'BOM', 1, 'desc2');-->
             <!--INSERT INTO  review_rules values (3,0, 'Rule1', 3, 'FM', 1, 'desc3');-->
             <!--INSERT INTO  review_rules values (4,0, 'Rule1', 5, 'BOM', 1, 'desc4');-->

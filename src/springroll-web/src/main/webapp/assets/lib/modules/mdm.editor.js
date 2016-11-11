@@ -103,6 +103,11 @@ var MasterRowView = Marionette.View.extend({
         var fullClassSelector = '.' + classes.join(".");
         var value = this.$el.find(fullClassSelector).val();
         this.model.set(attrName, value );
+    },
+    onRender : function(){
+        if($.inArray(this.model.id, this.masterGridData.recIdsUnderReview) > -1){
+            this.disableNewRecords();
+        }
     }
 });
 
@@ -275,10 +280,17 @@ var Control = Marionette.View.extend({
         var Collection =  Backbone.Model.extend({ url: this.url});
         var collection = new Collection({'master' : this.model.get('master'), 'changedRecords':changedRecords, 'newRecords' : copyOfNewRecords});
         collection.save(null, {
-            success: function(model){
+            success: function(savedModels){
                 Application.Indicator.showSuccessMessage({message:Localize('ui.mdm.submit.success')});
+                var copyOfChanges = that.copyOfChanges;
+                var changedIds = _.pluck(savedModels.get('changedRecords'), 'id');
                 _.each(that.collections.models, function(model){
-                    if(model.id != null)return;
+                    if(model.id != null){
+                        if($.inArray(model.id+'', changedIds) > -1){
+                            model.trigger('disableNewRecords');
+                        }
+                        return;
+                    }
                     model.trigger('disableNewRecords');
                 });
 

@@ -14,5 +14,6 @@ public interface ReviewStepRepository extends AbstractEntityRepository<ReviewSte
     List<ReviewStep> findByParentIdAndReviewStage(Long parentId, int reviewStage);
     List<ReviewStep> findByParentId(Long parentId);
     ReviewStep findByParentIdAndSerializedEventIsNotNull(Long parentId);
+    List<ReviewStep> findByChannelAndSearchIdAndSerializedEventIsNotNull(String channel, String searchId);
 
 }

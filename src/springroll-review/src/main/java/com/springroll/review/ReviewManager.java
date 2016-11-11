@@ -73,6 +73,9 @@ public class ReviewManager extends SpringrollEndPoint {
         */
         if(reviewSteps.isEmpty())return false;
         reviewSteps.get(0).setEvent(reviewNeededEvent.getPayload().getEventForReview());
+        if(reviewNeededEvent.getPayload().getEventForReview().getPayload() instanceof Searchable) {
+            reviewSteps.get(0).setSearchId(((Searchable) reviewNeededEvent.getPayload().getEventForReview().getPayload()).getSearchId());
+        }
         repo.reviewStep.save(reviewSteps);
         return true;
     }
