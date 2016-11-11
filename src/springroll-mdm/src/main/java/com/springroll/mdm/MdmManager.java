@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -39,6 +40,9 @@ import java.util.stream.Collectors;
     @PersistenceContext EntityManager em;
     @Autowired private ApplicationContext applicationContext;
     @Autowired Repositories repositories;
+
+    @Value("${mdm.showModifedRecords}")
+    private boolean showModifedRecords = false;
 
     public void on(MdmEvent mdmEvent) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
@@ -134,8 +138,19 @@ import java.util.stream.Collectors;
         }
 
         mdmData.setColDefs(colDefs);
-        Query query = em.createNamedQuery(mdmDefinition.getGetMdmRecords());
-        List<Object[]> resultList = query.getResultList();
+
+        /* Now find any MDM records for this master that are review - these includes those that are new and those that were modified */
+        List<ReviewStep> recsUnderReview = repositories.reviewStep.findByChannelAndSearchIdAndSerializedEventIsNotNull(mdmDefinitions.getReviewChannelName(), "MDM:" + master);
+        List<Long> idsUnderReview = new ArrayList<>();
+        for (ReviewStep recUnderReview : recsUnderReview) {
+            MdmDTO mdmDTO = (MdmDTO) recUnderReview.getEvent().getPayload();
+            idsUnderReview.addAll(mdmDTO.getChangedRecords().stream().map( MdmChangedRecord::getId).collect(Collectors.toList()));
+        }
+
+        List<Long> tmpIdsUnderReview = new ArrayList<>();
+        if(showModifedRecords)tmpIdsUnderReview.addAll(idsUnderReview);
+        tmpIdsUnderReview.add(-1l);
+        List<Object[]> resultList = em.createNamedQuery(mdmDefinition.getGetMdmRecords()).setParameter("idsUnderReview", tmpIdsUnderReview).getResultList();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
         for (int i = 0; i < colDefs.size(); i++) {
@@ -159,11 +174,10 @@ import java.util.stream.Collectors;
                 }
             }
         }
-        /* Now find any MDM records for this master that are review - these includes those that are new and those that were modified */
-        List<ReviewStep> recsUnderReview = repositories.reviewStep.findByChannelAndSearchIdAndSerializedEventIsNotNull(mdmDefinitions.getReviewChannelName(), "MDM:" + master);
         int fakeIndex = -1;      //FIXME
         for (ReviewStep recUnderReview : recsUnderReview) {
             MdmDTO mdmDTO = (MdmDTO) recUnderReview.getEvent().getPayload();
+            /* Add data for all new records */
             for (Map<String, Object> newRecord : mdmDTO.getNewRecords()) {
                 Object[] newRecData = new Object[mdmData.getColDefs().size()];
                 resultList.add(newRecData);
@@ -176,9 +190,28 @@ import java.util.stream.Collectors;
                         newRecData[i++] = newRecord.get(colDef.getName());
                 }
             }
-            for (MdmChangedRecord mdmChangedRecord : mdmDTO.getChangedRecords()) {
-                mdmData.getRecIdsUnderReview().add(mdmChangedRecord.getId());
+            /* Add the ids of all updated records under review (previously computed) into the list of records under review */
+            mdmData.getRecIdsUnderReview().addAll(idsUnderReview);
+
+            if(showModifedRecords) {
+            /* Get the notification for this review step - the notifcation has the data for the record under modification - we need this to diplay the
+               changed record to the user (the record will be disabled but nevertheless needs to be shown
+             */
+                MdmReviewNotificationMessage mdmReviewNotificationMessage = (MdmReviewNotificationMessage) repositories.notification.findOne(recUnderReview.getNotificationId()).getNotificationMessage();
+                for (MdmChangedRecord mdmChangedRecord : mdmReviewNotificationMessage.getMdmChangesForReview().getChangedRecords()) {
+                    Object[] newRecData = new Object[mdmData.getColDefs().size()];
+                    resultList.add(newRecData);
+                    int i = 0;
+                    for (ColDef colDef : mdmData.getColDefs()) {
+                        newRecData[i++] = mdmChangedRecord.getMdmChangedColumns().get(colDef.getName()).getVal();
+                        if (colDef.getType().equalsIgnoreCase("date")) {
+                            newRecData[i - 1] = ((LocalDate) newRecData[i - 1]).format(formatter);
+                        }
+                    }
+
+                }
             }
+
         }
 
         mdmData.setData(resultList);
