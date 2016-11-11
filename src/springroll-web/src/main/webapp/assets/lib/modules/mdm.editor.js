@@ -13,7 +13,7 @@ var makeLovList = function(template, colDef, selectedValue){
         template.push('<option value="' + lov.value + '"' + selected + '>' + Localize(lov.name) + '</option>');
     });
     template.push('</select></td>');
-}
+};
 
 var makeDate = function(template, colDef, value){
     template.push('<td style="vertical-align: middle"><div class="input-group date datepicker" data-provide="datepicker">');
@@ -23,14 +23,14 @@ var makeDate = function(template, colDef, value){
     template.push('<div class="input-group-addon">');
     template.push('<span class="glyphicon glyphicon-th"></span>');
     template.push('</div></td>');
-}
+};
 
 var getDisplayValue = function(colDef, value){
     if(colDef.lovList === null)return value;
     var selectedLov  = _.findWhere(colDef.lovList, {value: value});
     if(selectedLov == undefined)return "";
     return Localize(selectedLov.name);
-}
+};
 
 var MasterRowView = Marionette.View.extend({
     tagName: 'tr',
@@ -145,8 +145,7 @@ var MasterTable = Marionette.View.extend({
             template.push('<th>' + Localize(colDef.name) + '</th>');
         });
         template.push('</tr><thead> <tbody></tbody>');
-        var  tableheader = template.join("");
-        return tableheader;
+        return template.join("");
     },
 
     initialize : function(options){
@@ -161,7 +160,7 @@ var MasterTable = Marionette.View.extend({
         }
     },
     onRender: function() {
-        this.masterTableBody = new MasterTableBody({ collection: this.collections , masterGridData :  this.masterGridData})
+        this.masterTableBody = new MasterTableBody({ collection: this.collections , masterGridData :  this.masterGridData});
         this.showChildView('body', this.masterTableBody);
     }
 });
@@ -276,7 +275,8 @@ var Control = Marionette.View.extend({
         var Collection =  Backbone.Model.extend({ url: this.url});
         var collection = new Collection({'master' : this.model.get('master'), 'changedRecords':changedRecords, 'newRecords' : copyOfNewRecords});
         collection.save(null, {
-            success: function(model, response){
+            success: function(model){
+                Application.Indicator.showSuccessMessage({message:Localize('ui.mdm.submit.success')});
                 _.each(that.collections.models, function(model){
                     if(model.id != null)return;
                     model.trigger('disableNewRecords');
