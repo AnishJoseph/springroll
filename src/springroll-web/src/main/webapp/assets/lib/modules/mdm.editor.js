@@ -2,6 +2,15 @@ var Marionette = require('backbone.marionette');
 var Application =require('Application');
 Application.requiresTemplate('#mdm.control');
 
+var MdmRecord = Backbone.Model.extend({
+    validate: function(attrs, options) {
+    }
+});
+
+var MdmRecords = Backbone.Collection.extend({
+    model: MdmRecord
+});
+
 var makeLovList = function(template, colDef, selectedValue){
     template.push('<td style="vertical-align: middle">');
     template.push('<select class="selectpicker ' + colDef.name + '" data-attrname="' + colDef.name + '"');
@@ -259,6 +268,10 @@ var Control = Marionette.View.extend({
     },
 
     saveClicked : function(){
+        _.each(this.collections.models, function(model) {
+            model.isValid();
+        });
+
         /* This is to handle multiple clicks on the save button */
         if(this.newRecords.length == 0 && _.isEmpty(this.changes))return;
         this.disableSaveButton();
@@ -327,10 +340,10 @@ Application.MasterView = Marionette.View.extend({
             });
             data.push(rowData);
         });
-        var collections = new Backbone.Collection(data);
-        this.showChildView('tableRegion', new MasterTable({masterGridData : this.masterGridData, collections : collections}));
+        var mdmRecords = new MdmRecords(data);
+        this.showChildView('tableRegion', new MasterTable({masterGridData : this.masterGridData, collections : mdmRecords}));
         this.showChildView('controlRegion',
-            new Control({masterGridData : this.masterGridData, url: this.url, collections: collections, 'model' : new Backbone.Model({'master':this.master})}));
+            new Control({masterGridData : this.masterGridData, url: this.url, collections: mdmRecords, 'model' : new Backbone.Model({'master':this.master})}));
     }
 
 });
