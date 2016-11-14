@@ -15,7 +15,7 @@
         <query>SELECT o.id, o.userId, o.service FROM Job o WHERE o.completed = :completeStatus and o.userId in (:userIds) </query>
     </named-query>
     <named-query name="StringListBooleanDateParam">
-        <query>SELECT o.id, o.userId, o.service FROM Job o WHERE o.completed = :completeStatus and o.userId in (:userIds) and :date > o.startTime  </query>
+        <query>SELECT o.id, o.userId, o.service FROM Job o WHERE o.completed = :completeStatus and o.userId in (:userIds) and :date &lt; o.startTime  </query>
     </named-query>
     <named-query name="User.allUsers">
         <query>SELECT o.userId  FROM User o </query>
