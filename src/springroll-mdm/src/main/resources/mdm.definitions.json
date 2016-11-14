@@ -6,7 +6,7 @@
         "getMdmRecordsForIds" : "Role.getRecordsForMdmForIds",
         "colDefs" : [
           { "name": "RoleName", "writeable": true, "type": "text"},
-          { "name": "Description", "writeable": false, "type": "text"},
+          { "name": "Description", "writeable": true, "type": "text"},
           { "name": "active", "writeable": true, "type": "boolean", "defVal": "true"}
       ]
       },
