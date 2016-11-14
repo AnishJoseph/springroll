@@ -210,7 +210,7 @@ Application.Alerts = {
                 _.each(message.data, function(notification){
 
                     if(_.isUndefined(alertCollection.get(notification.id))){
-                        notification['creationTimeMoment'] = moment(notification.creationTime).format("DD MMM HH:mm");
+                        notification['creationTimeMoment'] = moment(notification.creationTime).format("DD MMM HH:mm"); //FIXME - format should be externalized
                         newAlerts.push(notification);
                     }
                 });
