@@ -147,7 +147,7 @@ var MasterTableBody = Marionette.CollectionView.extend({
 
 var MasterTable = Marionette.View.extend({
     tagName: 'table',
-    className: 'table table-hover table-striped',
+    className: 'table table-hover table-striped nowrap',
     serializeData: function(){
         return {colDefs: this.masterGridData.colDefs};
     },

@@ -42,6 +42,7 @@ module.exports = {
             path.resolve('../../springroll-web/src/main/webapp/assets/lib/modules/'),
             path.resolve('../../springroll-web/src/main/webapp/assets/vendor/cometd/'),
             path.resolve('src/main/webapp/assets/lib/modules/'),
+            path.resolve('../../springroll-web/src/main/webapp/assets/css/')
         ],
         alias: {
             "org/cometd" : 'target/assets/org/cometd.js'

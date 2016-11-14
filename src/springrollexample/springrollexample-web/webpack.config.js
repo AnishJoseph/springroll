@@ -37,6 +37,7 @@ module.exports = {
         root: [
             path.resolve(__dirname),
             path.resolve('target/assets/'),
+            path.resolve('target/assets/css'),
             path.resolve('target/assets/lib/framework/'),
             path.resolve('target/assets/lib/modules/'),
             path.resolve('target/assets/vendor/cometd/'),
