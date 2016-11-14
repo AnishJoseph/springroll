@@ -1,0 +1,63 @@
+$rootMenuHeight : 50px;
+$offsetFromBottomForBodyContent : 10px;
+$marginOnSideForSPA : 5px;
+$marginOnTopAndBottomForBody : 1px;
+$topOfAlertsPanel : 100px;
+
+.spaRootElement {
+  margin-left: $marginOnSideForSPA;
+  margin-right: $marginOnSideForSPA;
+}
+.root-menu {
+    width: 100%;
+    height: $rootMenuHeight;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100
+}
+
+.main-body {
+  width: 100%;
+  position: fixed;
+  top: $rootMenuHeight;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  height: calc(100vh - #{$rootMenuHeight} -  2*#{$marginOnTopAndBottomForBody} );
+}
+
+.main-body-content {
+  overflow: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height: calc(100% - #{$offsetFromBottomForBodyContent});
+  margin: $marginOnTopAndBottomForBody $marginOnSideForSPA $marginOnTopAndBottomForBody $marginOnSideForSPA;
+}
+
+table.nowrap {
+    white-space: nowrap;
+    /*width: auto; *//* This will center the table and table size will be NOT extend full width if it does not have to */
+    /*margin: auto;*/
+}
+.applicationRoot {
+  width : 100%;
+  height : 100vh;
+}
+.alertsPanel {
+  position: fixed;
+  top: $topOfAlertsPanel;
+  right: 0;
+  z-index: 50;
+}
+.alertsIndicator {
+  position: fixed;
+  top: 0;
+  align-content: center;
+  width: 100%;
+  z-index: 900;
+}
+
+.formSubmit {
+  margin: 20px;
+}

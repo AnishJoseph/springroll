@@ -11,7 +11,7 @@
     <script src="springroll.js"></script>
 </head>
 <body>
-        <div id="root-element" style="width: 100%; height: 100vh;"/>
+        <div id="root-element" class="applicationRoot"/>
 <%
     InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("springroll.properties");
     Properties props = new Properties();

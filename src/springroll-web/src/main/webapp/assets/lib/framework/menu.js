@@ -8,7 +8,7 @@ Application.MenuView = Marionette.View.extend({
     template: function() {
         var template = [];
 
-        template.push('<nav class="navbar navbar-default" style="margin-right: 5px;margin-left: 5px">');
+        template.push('<nav class="navbar navbar-default spaRootElement">');
         template.push('<div class="container-fluid">');
         template.push('<div id="navbar" class="navbar-collapse collapse"> ');
 

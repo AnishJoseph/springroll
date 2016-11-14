@@ -12,6 +12,7 @@ module.exports = {
         loaders: [
             //FIXME - we changed comet.js
             //{ test: /org\/cometd\.js$/, loader: 'imports?org=>{}'},
+            { test: /\.scss$/, loader: "style!css!sass" },
             { test: /\.css$/, loader: 'style-loader!css-loader' },
             { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file" },
             { test: /\.(woff|woff2)$/, loader:"url?prefix=font/&limit=5000" },

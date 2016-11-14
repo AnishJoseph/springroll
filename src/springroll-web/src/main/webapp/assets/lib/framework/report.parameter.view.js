@@ -48,8 +48,8 @@ Application.ReportParamsView  = Marionette.View.extend({
             }
         });
 
-        template.push('<div class="clearfix " style="clear: both; margin-top: 10px">');
-        template.push('<div style="margin:20px">');
+        template.push('<div class="clearfix " style="clear: both;">');
+        template.push('<div  class="formSubmit">');
         template.push('<button id="submit">Submit</button>');
         template.push('</div>');
         template.push('</div>');
