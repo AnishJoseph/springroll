@@ -1,34 +1,6 @@
 var Marionette = require('backbone.marionette');
-var Application =require('Application');
+var Application = require('Application');
 var moment = require('moment');
-
-
-var makeDate = function(template, parameter){
-    var now = moment().format("DD/MM/YYYY"); //FIXME - format hardcoded
-    template.push('<div class="col-md-3">');
-    template.push('<div>' + Localize(parameter.name) + '</div>');
-    template.push('<div class="input-group date datepicker" data-provide="datepicker">');
-    template.push('<input id="' + parameter.name + '" type="text" class="form-control" value="' + now + '">');
-    template.push('<div class="input-group-addon">');
-    template.push('<span class="glyphicon glyphicon-th"></span>');
-    template.push('</div>');
-    template.push('</div>');
-    template.push('</div>');
-};
-var makeLovList = function(template, parameter){
-    template.push('<div class="col-md-3">');
-    template.push('<div>' + Localize(parameter.name) + '</div>');
-    template.push('<select id="' + parameter.name + '" class="selectpicker"');
-    if(parameter.multiSelect) template.push('multiple');
-    template.push(">");
-    _.each(parameter.lovList, function(lov, index){
-        var selected = index == 0 ? "selected" : "";
-        //template.push('<option value="' + lov.value + '">' + lov.name + '</option>');
-        template.push('<option value="' + lov.value + '"' + selected + '>' + Localize(lov.name) + '</option>');
-    });
-    template.push('</select>');
-    template.push('</div>');
-};
 
 Application.ReportParamsView  = Marionette.View.extend({
 
@@ -41,12 +13,17 @@ Application.ReportParamsView  = Marionette.View.extend({
 
         _.each(parameters, function (parameter) {
             if (parameter.javaType == "java.time.LocalDateTime"){
-                template.push(makeDate(template, parameter));
-            }else if(parameter.javaType == "java.lang.Boolean") {
-                parameter.lovList = [{name: 'Y', value: true}, {name: 'N', value: false}];
-                template.push(makeLovList(template, parameter));
+                var now = moment().format("DD/MM/YYYY"); //FIXME - format hardcoded
+                template.push('<div class="col-md-3">');
+                template.push('<div>' + Localize(parameter.name) + '</div>');
+                Application.Utils.addDatePickerToTemplate(template, parameter, now);
+                template.push('</div>');
             }else if(parameter.lovList != null) {
-                template.push(makeLovList(template, parameter));
+                template.push('<div class="col-md-3">');
+                template.push('<div>' + Localize(parameter.name) + '</div>');
+                var selected = (parameter.multiSelect === true) ? [parameter.lovList[0].value] : parameter.lovList[0].value;
+                Application.Utils.addLovToTemplate(template, parameter, selected);
+                template.push('</div>');
             }
         });
 
@@ -87,9 +64,10 @@ Application.ReportParamsView  = Marionette.View.extend({
         _.each(this.parameters, function(parameter){
             events['change #' + parameter.name] = 'changeHandler';
             if(parameter.javaType == "java.lang.Boolean") {
+                parameter.lovList = [{name: 'true', value: true}, {name: 'false', value: false}];
                 that.params[parameter.name] = "true";
             } else if (parameter.lovList != null){
-                that.params[parameter.name] = parameter.lovList[0].value;
+                that.params[parameter.name] = (parameter.multiSelect === true) ? [parameter.lovList[0].value] : parameter.lovList[0].value;
             } else if (parameter.javaType == "java.time.LocalDateTime"){
                 var now = moment().format("DD/MM/YYYY"); //FIXME - format hardcoded
                 that.params[parameter.name] = now;
