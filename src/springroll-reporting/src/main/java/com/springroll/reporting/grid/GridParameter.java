@@ -1,5 +1,7 @@
 package com.springroll.reporting.grid;
 
+import java.util.List;
+
 /**
  * Created by anishjoseph on 19/10/16.
  */
@@ -7,7 +9,7 @@ public class GridParameter {
     private String name;
     private boolean multiSelect;
     private String  namedQuery;
-    private String  list;
+    private List<String> list;
 
     public String getName() {
         return name;
@@ -33,11 +35,11 @@ public class GridParameter {
         this.namedQuery = namedQuery;
     }
 
-    public String getList() {
+    public List<String> getList() {
         return list;
     }
 
-    public void setList(String list) {
+    public void setList(List<String> list) {
         this.list = list;
     }
 }

@@ -9,10 +9,8 @@
     }
   ],
   "gridParameters" : [
-    {"name" : "userIds", "multiSelect": true, "namedQuery":"User.allUsers"},
-    {"name" : "completeStatus", "type":"boolean"},
-    {"name" : "date"},
-    {"name" : "enum"},
-    {"name" : "list", "type":"list", "list":"Opt1:Opt2:Opt3", "multiSelect": true}
+    {"name" : "userId", "multiSelect": true, "namedQuery":"User.allUsers"},
+    {"name" : "completeStatus"},
+    {"name" : "userIdsss", "list":["Opt1","Opt2","Opt3"], "multiSelect": true}
   ]
 }

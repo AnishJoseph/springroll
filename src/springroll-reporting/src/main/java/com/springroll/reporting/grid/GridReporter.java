@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Created by anishjoseph on 18/10/16.
@@ -106,12 +107,8 @@ import java.util.regex.Pattern;
         return reportParameters;
     }
 
-    private List<Lov> getLovsFromList(String list) {
-        List<Lov> lovs = new ArrayList<>();
-        String[] split = list.split(":");
-        for (String s : split) {
-            lovs.add(new Lov(s));
-        }
+    private List<Lov> getLovsFromList(List<String> list) {
+        List<Lov> lovs = list.stream().map(Lov::new).collect(Collectors.toList());
         return lovs;
     }
     private List<Lov> getLovsFromEnum(Class enumClass){
