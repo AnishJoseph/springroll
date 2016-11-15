@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +47,12 @@ import java.util.stream.Collectors;
                         for (int j = 0; j < colNames.size(); j++) {
                             if (changedCols.contains(colNames.get(j))) continue;
                             unchangedCols.put(colNames.get(j), new MdmChangedColumn(existingValuesForThisRecord[j], existingValuesForThisRecord[j]));
+                            if(existingValuesForThisRecord[j] != null && existingValuesForThisRecord[j].getClass().equals(LocalDate.class)){
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
+                                String formattedDate = ((LocalDate) existingValuesForThisRecord[j]).format(formatter);
+                                unchangedCols.put(colNames.get(j), new MdmChangedColumn(formattedDate, formattedDate));
+                            }
+
                             //FIXME - handle date and other types
                         }
                         changedRecord.getMdmChangedColumns().putAll(unchangedCols);

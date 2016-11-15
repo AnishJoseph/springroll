@@ -204,9 +204,9 @@ import java.util.stream.Collectors;
                     int i = 0;
                     for (ColDef colDef : mdmData.getColDefs()) {
                         newRecData[i++] = mdmChangedRecord.getMdmChangedColumns().get(colDef.getName()).getVal();
-                        if (colDef.getType().equalsIgnoreCase("date")) {
-                            newRecData[i - 1] = ((LocalDate) newRecData[i - 1]).format(formatter);
-                        }
+//                        if (colDef.getType().equalsIgnoreCase("date")) {
+//                            newRecData[i - 1] = ((LocalDate) newRecData[i - 1]).format(formatter);
+//                        }
                     }
                 }
             }

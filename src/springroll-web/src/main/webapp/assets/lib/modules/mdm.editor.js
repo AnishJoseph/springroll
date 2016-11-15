@@ -11,29 +11,6 @@ var MdmRecords = Backbone.Collection.extend({
     model: MdmRecord
 });
 
-var makeLovList = function(template, colDef, selectedValue){
-    template.push('<td style="vertical-align: middle">');
-    template.push('<select class="selectpicker ' + colDef.name + '" data-attrname="' + colDef.name + '"');
-    if(colDef.multiSelect === true) template.push(' multiple');
-    template.push(">");
-    _.each(colDef.lovList, function(lov){
-        var selected = (lov.value == selectedValue)? " selected" : "";
-        if(colDef.multiSelect === true) selected = ($.inArray(lov.value, selectedValue) > -1)? " selected" : "";
-        template.push('<option value="' + lov.value + '"' + selected + '>' + Localize(lov.name) + '</option>');
-    });
-    template.push('</select></td>');
-};
-
-var makeDate = function(template, colDef, value){
-    template.push('<td style="vertical-align: middle"><div class="input-group date datepicker" data-provide="datepicker">');
-    template.push('<input type="text" class="form-control ' + colDef.name + '" data-attrname="' + colDef.name + '"');
-    if(value !== undefined)template.push(' value="' + value + ' "');
-    template.push('>');
-    template.push('<div class="input-group-addon">');
-    template.push('<span class="glyphicon glyphicon-th"></span>');
-    template.push('</div></td>');
-};
-
 var getDisplayValue = function(colDef, value){
     if(colDef.lovList === null)return value;
     var selectedLov  = _.findWhere(colDef.lovList, {value: value});
@@ -50,19 +27,23 @@ var MasterRowView = Marionette.View.extend({
             if(colName === 'id')return;
             if(colDefs[index].writeable == true || data.model['id'] == undefined) {
                 if (colDefs[index].lovList !== null) {
-                    makeLovList(template, colDefs[index], data.model[colName]);
+                    template.push('<td style="vertical-align: middle">');
+                    Application.Utils.addLovToTemplate(template, colDefs[index], data.model[colName]);
+                    template.push('</td>');
                 } else if (colDefs[index].type === 'date') {
-                    makeDate(template, colDefs[index], data.model[colName]);
+                    template.push('<td style="vertical-align: middle">');
+                    Application.Utils.addDatePickerToTemplate(template, colDefs[index], data.model[colName]);
+                    template.push('</td>');
                 } else if (colDefs[index].type === 'text') {
-                    template.push('<td ><input type="text" data-attrname="' + colDefs[index].name + '" class="form-control ' + colDefs[index].name + '" ');
+                    template.push('<td ><input type="text" data-attrname="' + colDefs[index].name + '" class="form-control " id ="' + colDefs[index].name + '" ');
                     if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
                     template.push('></td>');
                 } else if (colDefs[index].type === 'num') {
-                    template.push('<td ><input type="number" data-attrname="' + colDefs[index].name + '"  class="form-control ' + colDefs[index].name + '" ');
+                    template.push('<td ><input type="number" data-attrname="' + colDefs[index].name + '"  class="form-control " id ="' + colDefs[index].name + '" ');
                     if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
                     template.push('></td>');
                 } else if (colDefs[index].type === 'int') {
-                    template.push('<td ><input type="number" data-attrname="' + colDefs[index].name + '"  class="form-control ' + colDefs[index].name + '" ');
+                    template.push('<td ><input type="number" data-attrname="' + colDefs[index].name + '"  class="form-control " id ="' + colDefs[index].name + '" ');
                     if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
                     template.push('></td>');
                 } else {
@@ -91,7 +72,11 @@ var MasterRowView = Marionette.View.extend({
         this.masterGridData = options.masterGridData;
         var events = {};
         _.each(this.masterGridData.colDefs, function(colDef){
-            events['change .' + colDef.name] = 'changeHandler';
+            events['change #' + colDef.name] = function(evt){
+                var value = this.$el.find('#' + colDef.name).val();
+                if(colDef.type === 'boolean') value = value === 'true';
+                this.model.set(colDef.name, value );
+            };
         });
         this.delegateEvents(events);
         this.model.on('searchBasedShow', this.searchBasedShow, this);
@@ -99,20 +84,6 @@ var MasterRowView = Marionette.View.extend({
         this.model.on('disableNewRecords', this.disableNewRecords, this);
     },
 
-    changeHandler: function(evt) {
-        var attrName = evt.target.getAttribute('data-attrname');
-        if(attrName === undefined){
-            console.log("data-attrname not set - dont know which attribute in the the model to update");
-            return;
-        }
-        var classes = [];
-        _.each(evt.target.classList, function(classname){
-            classes.push(classname);
-        });
-        var fullClassSelector = '.' + classes.join(".");
-        var value = this.$el.find(fullClassSelector).val();
-        this.model.set(attrName, value );
-    },
     onRender : function(){
         if($.inArray(this.model.id, this.masterGridData.recIdsUnderReview) > -1){
             this.disableNewRecords();

@@ -27,6 +27,7 @@ require('modal.js');
 require('review.moreinfo.js');
 require('mdm.js');
 require('mdm.editor.js');
+require('utils.js');
 
 $(function() {
     $.ajaxSetup({
