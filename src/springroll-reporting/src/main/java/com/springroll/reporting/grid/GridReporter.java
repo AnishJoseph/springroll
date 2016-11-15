@@ -60,6 +60,11 @@ import java.util.regex.Pattern;
     }
     Pattern paramPattern = Pattern.compile(":(\\w*)");
 
+    /* Ideally we can just get the query parameters from the Query - however query.getParameters() returns an iterator and there
+       is no guarantee on the order of the parameter - which means the user will potentially see the parameters in a different
+       order everytime. To avoid this, we get the query string and parse out the parameters and show the user the parameters in
+       the same order as they appear in the query string
+     */
     private List<Parameter<?>> getQueryParameters(Query query){
         List<Parameter<?>> parameters = new ArrayList<>();
         List<String> parameterNames = new ArrayList<>();
@@ -109,8 +114,6 @@ import java.util.regex.Pattern;
         }
         return lovs;
     }
-//    public ReportParameter(String name, String javaType, boolean isConstrained, boolean mandatory, boolean multiSelect, boolean visible) {
-
     private List<Lov> getLovsFromEnum(Class enumClass){
         List<Lov> lovs = new ArrayList<>();
         Object[] enumConstants = enumClass.getEnumConstants();
