@@ -91,6 +91,7 @@ import java.util.regex.Pattern;
 
         for (Parameter<?> parameter : grid.getParameters()) {
             GridParameter gridParameter = gridConfiguration.findParameterByName(parameter.getName());
+            //FIXME - handle gridParameter when NULL
             boolean multiSelect = gridParameter == null ? false: gridParameter.isMultiSelect();
             String displayName = gridParameter == null || gridParameter.getDisplayName() == null? parameter.getName(): gridParameter.getDisplayName();
             List<Lov> lovs;
