@@ -6,7 +6,7 @@ var moment = require('moment');
 var makeDate = function(template, parameter){
     var now = moment().format("DD/MM/YYYY"); //FIXME - format hardcoded
     template.push('<div class="col-md-3">');
-    template.push('<div>' + parameter.displayName + '</div>');
+    template.push('<div>' + Localize(parameter.name) + '</div>');
     template.push('<div class="input-group date datepicker" data-provide="datepicker">');
     template.push('<input id="' + parameter.name + '" type="text" class="form-control" value="' + now + '">');
     template.push('<div class="input-group-addon">');
@@ -17,7 +17,7 @@ var makeDate = function(template, parameter){
 };
 var makeLovList = function(template, parameter){
     template.push('<div class="col-md-3">');
-    template.push('<div>' + parameter.displayName + '</div>');
+    template.push('<div>' + Localize(parameter.name) + '</div>');
     template.push('<select id="' + parameter.name + '" class="selectpicker"');
     if(parameter.multiSelect) template.push('multiple');
     template.push(">");

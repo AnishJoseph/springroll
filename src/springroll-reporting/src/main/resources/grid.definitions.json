@@ -9,10 +9,10 @@
     }
   ],
   "gridParameters" : [
-    {"name" : "userIds", "displayName":"Users", "multiSelect": true, "namedQuery":"User.allUsers"},
-    {"name" : "completeStatus", "displayName":"Status", "type":"boolean"},
-    {"name" : "date", "displayName":"Start Date"},
-    {"name" : "enum", "displayName":"Channel Type"},
-    {"name" : "list", "displayName":"List", "type":"list", "list":"Opt1:Opt2:Opt3", "multiSelect": true}
+    {"name" : "userIds", "multiSelect": true, "namedQuery":"User.allUsers"},
+    {"name" : "completeStatus", "type":"boolean"},
+    {"name" : "date"},
+    {"name" : "enum"},
+    {"name" : "list", "type":"list", "list":"Opt1:Opt2:Opt3", "multiSelect": true}
   ]
 }

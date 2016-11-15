@@ -5,7 +5,6 @@ package com.springroll.reporting.grid;
  */
 public class GridParameter {
     private String name;
-    private String displayName;
     private boolean multiSelect;
     private String  namedQuery;
     private String  list;
@@ -16,14 +15,6 @@ public class GridParameter {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
     }
 
     public boolean isMultiSelect() {

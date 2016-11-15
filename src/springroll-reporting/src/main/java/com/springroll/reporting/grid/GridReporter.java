@@ -91,18 +91,17 @@ import java.util.regex.Pattern;
 
         for (Parameter<?> parameter : grid.getParameters()) {
             GridParameter gridParameter = gridConfiguration.findParameterByName(parameter.getName());
-            //FIXME - handle gridParameter when NULL
             boolean multiSelect = gridParameter == null ? false: gridParameter.isMultiSelect();
-            String displayName = gridParameter == null || gridParameter.getDisplayName() == null? parameter.getName(): gridParameter.getDisplayName();
             List<Lov> lovs;
             if(gridParameter != null && gridParameter.getNamedQuery() != null) {
                 lovs = getLovsFromNamedQuery(gridParameter.getNamedQuery(), parameters);
             } else if(gridParameter != null && gridParameter.getList() != null){
                 lovs = getLovsFromList(gridParameter.getList());
             } else {
+                /* We will come here is the type is text, enum, date etc - the getLovsFromEnum will only return LOVs for enum class else null */
                 lovs = getLovsFromEnum(parameter.getParameterType());
             }
-            reportParameters.add(new ReportParameter(parameter.getName(), displayName, parameter.getParameterType().getName(), true, true, multiSelect, true, lovs ));
+            reportParameters.add(new ReportParameter(parameter.getName(), parameter.getParameterType().getName(), true, true, multiSelect, true, lovs ));
         }
         return reportParameters;
     }
