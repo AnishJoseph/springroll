@@ -3,8 +3,8 @@ var Application =require('Application');
 
 var GridData = Backbone.Model.extend({
     url: function () {
-        var gridName = this.get('gridName');
-        this.unset('gridName');
+        var gridName = this.get('reportName');
+        this.unset('reportName');
         return "/api/sr/getGridData/" + gridName;
     }
 });
@@ -71,8 +71,8 @@ Application.GridView = Marionette.View.extend({
         var reportParams  = new ReportParams({gridName: this.gridName});
         var that = this;
         reportParams.save(null, {
-           success: function(model, data){
-               that.showChildView('paramsRegion', new Application.ReportParamsView({"data":data, "gridName":that.gridName, "myParent":that}));
+           success: function(model, parameters){
+               that.showChildView('paramsRegion', new Application.ReportParamsView({"parameters":parameters, "reportName":that.gridName, "myParent":that}));
            }
         });
     },
@@ -80,7 +80,7 @@ Application.GridView = Marionette.View.extend({
         $(this.ui.paramPanel).toggle();
     },
 
-    onGridDataChanged : function(userChosenParameters){
+    onParametersChanged : function(userChosenParameters){
         var gridData = new GridData(userChosenParameters);
         var that = this;
         gridData.save(null, {
