@@ -23,6 +23,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by anishjoseph on 18/10/16.
@@ -56,7 +58,20 @@ import java.util.Map;
         gridReport.setData(data);
         return gridReport;
     }
+    Pattern paramPattern = Pattern.compile(":(\\w*)");
 
+    private List<Parameter<?>> getQueryParameters(Query query){
+        List<Parameter<?>> parameters = new ArrayList<>();
+        List<String> parameterNames = new ArrayList<>();
+        String queryString = query.unwrap(org.hibernate.Query.class).getQueryString();
+        Matcher m = paramPattern.matcher(queryString);
+        while (m.find( )) {
+            if(parameterNames.contains(m.group(1)))continue;
+            parameterNames.add(m.group(1));
+            parameters.add(query.getParameter(m.group(1)));
+        }
+        return parameters;
+    }
     public List<ReportParameter> getParameters(String gridName, Map<String, Object> parameters){
         List<ReportParameter> reportParameters = new ArrayList<>();
         Grid grid = gridConfiguration.findGridByName(gridName);
@@ -65,7 +80,11 @@ import java.util.Map;
             throw new RuntimeException("Unable to find grid by name " + gridName); //FIXME - handle correctly
         }
         Query query = em.createNamedQuery(grid.getNamedQuery());
-        for (Parameter<?> parameter : query.getParameters()) {
+        if(grid.getParameters() == null){
+            grid.setParameters(getQueryParameters(query));
+        }
+
+        for (Parameter<?> parameter : grid.getParameters()) {
             GridParameter gridParameter = gridConfiguration.findParameterByName(parameter.getName());
             boolean multiSelect = gridParameter == null ? false: gridParameter.isMultiSelect();
             String displayName = gridParameter == null || gridParameter.getDisplayName() == null? parameter.getName(): gridParameter.getDisplayName();

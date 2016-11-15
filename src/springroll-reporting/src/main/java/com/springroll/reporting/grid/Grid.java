@@ -1,5 +1,6 @@
 package com.springroll.reporting.grid;
 
+import javax.persistence.Parameter;
 import java.util.List;
 
 /**
@@ -10,6 +11,7 @@ public class Grid {
     private int fixedColumns;
     private String  namedQuery;
     private List<Column> columns;
+    private List<Parameter<?>> parameters = null;
 
     public String getName() {
         return name;
@@ -41,5 +43,13 @@ public class Grid {
 
     public void setNamedQuery(String namedQuery) {
         this.namedQuery = namedQuery;
+    }
+
+    public List<Parameter<?>> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(List<Parameter<?>> parameters) {
+        this.parameters = parameters;
     }
 }
