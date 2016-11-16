@@ -27,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,12 +41,13 @@ import java.util.stream.Collectors;
     @PersistenceContext EntityManager em;
     @Autowired private ApplicationContext applicationContext;
     @Autowired Repositories repositories;
+    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
+    private DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); //FIXME take this from properties file
 
     @Value("${mdm.showModifedRecords}")
     private boolean showModifedRecords = false;
 
     public void on(MdmEvent mdmEvent) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
         MdmDTO mdmDTO = mdmEvent.getPayload();
         MdmDefinition mdmDefinition = getDefinitionForMaster(mdmDTO.getMaster());
         try {
@@ -59,7 +61,10 @@ import java.util.stream.Collectors;
                     MdmChangedColumn mdmChangedColumn = mdmChangedRecord.getMdmChangedColumns().get(colName);
                     map.put(colName, mdmChangedColumn.getVal());
                     if(colDef.getType().equalsIgnoreCase("date")){
-                        map.put(colName,LocalDate.parse((String)mdmChangedColumn.getVal(), formatter));
+                        map.put(colName,LocalDate.parse((String)mdmChangedColumn.getVal(), dateFormatter));
+                    }
+                    if(colDef.getType().equalsIgnoreCase("datetime")){
+                        map.put(colName,LocalDateTime.parse((String)mdmChangedColumn.getVal(), datetimeFormatter));
                     }
                 }
                 wrapper.setPropertyValues(map);
@@ -69,7 +74,10 @@ import java.util.stream.Collectors;
                 for (String colName : newRecord.keySet()) {
                     ColDef colDef = mdmDefinition.getColDefByName(colName);
                     if(colDef.getType().equalsIgnoreCase("date")){
-                        newRecord.put(colName,LocalDate.parse((String)newRecord.get(colName), formatter));
+                        newRecord.put(colName,LocalDate.parse((String)newRecord.get(colName), dateFormatter));
+                    }
+                    else if(colDef.getType().equalsIgnoreCase("datetime")){
+                        newRecord.put(colName,LocalDateTime.parse((String)newRecord.get(colName), datetimeFormatter));
                     }
                 }
                 BeanWrapper wrapper = new BeanWrapperImpl(mdmDefinition.getMasterClass());
@@ -152,7 +160,6 @@ import java.util.stream.Collectors;
         tmpIdsUnderReview.add(-1l);
         List<Object[]> resultList = em.createNamedQuery(mdmDefinition.getGetMdmRecords()).setParameter("idsUnderReview", tmpIdsUnderReview).getResultList();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
         for (int i = 0; i < colDefs.size(); i++) {
             if(colDefs.get(i).isMultiSelect() && !resultList.isEmpty()){
                 //FIXME Handling the fact that we store list as CSV in the DB -
@@ -170,7 +177,12 @@ import java.util.stream.Collectors;
             if(colDefs.get(i).getType().equalsIgnoreCase("date")){
                 for (Object[] data : resultList) {
                     LocalDate date = (LocalDate) data[i];
-                    data[i] = date.format(formatter);
+                    data[i] = date.format(dateFormatter);
+                }
+            } else if(colDefs.get(i).getType().equalsIgnoreCase("datetime")){
+                for (Object[] data : resultList) {
+                    LocalDateTime date = (LocalDateTime) data[i];
+                    data[i] = date.format(datetimeFormatter);
                 }
             }
         }

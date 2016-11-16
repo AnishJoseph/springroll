@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,8 @@ import java.util.stream.Collectors;
     @Autowired ReviewManager reviewManager;
     @Autowired MdmManager mdmManager;
     @PersistenceContext EntityManager em;
+    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
+    private DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); //FIXME take this from properties file
 
     @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String serviceName){
         MdmDTO mdmDTO = (MdmDTO) reviewManager.getFirstPayload(reviewStepIds.get(0));
@@ -48,8 +51,10 @@ import java.util.stream.Collectors;
                             if (changedCols.contains(colNames.get(j))) continue;
                             unchangedCols.put(colNames.get(j), new MdmChangedColumn(existingValuesForThisRecord[j], existingValuesForThisRecord[j]));
                             if(existingValuesForThisRecord[j] != null && existingValuesForThisRecord[j].getClass().equals(LocalDate.class)){
-                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
-                                String formattedDate = ((LocalDate) existingValuesForThisRecord[j]).format(formatter);
+                                String formattedDate = ((LocalDate) existingValuesForThisRecord[j]).format(dateFormatter);
+                                unchangedCols.put(colNames.get(j), new MdmChangedColumn(formattedDate, formattedDate));
+                            } else if (existingValuesForThisRecord[j] != null && existingValuesForThisRecord[j].getClass().equals(LocalDateTime.class)){
+                                String formattedDate = ((LocalDateTime) existingValuesForThisRecord[j]).format(datetimeFormatter);
                                 unchangedCols.put(colNames.get(j), new MdmChangedColumn(formattedDate, formattedDate));
                             }
 

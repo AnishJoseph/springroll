@@ -2,8 +2,8 @@ var Marionette = require('backbone.marionette');
 var Application = require('Application');
 
 Application.Utils = {
-    addDatePickerToTemplate : function(template, p, value){
-        template.push('<div class="input-group date datepicker" data-provide="datepicker">');
+    addDatePickerToTemplate : function(template, p, value, datepickerclass){
+        template.push('<div class="input-group date ' + datepickerclass + '">');
         template.push('<input id="' + p.name + '" type="text" class="form-control" data-attrname="' + p.name + '"');
         if(value !== undefined)template.push(' value="' + value + ' "');
         template.push('>');

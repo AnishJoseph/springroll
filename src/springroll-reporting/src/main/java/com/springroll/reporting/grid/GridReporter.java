@@ -18,6 +18,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -151,12 +152,10 @@ import java.util.stream.Collectors;
 
     private Object convert(Object paramValue, Parameter parameter){
         if(parameter.getParameterType().equals(LocalDateTime.class)){
-            String x = (String) paramValue;
-            x = x + " 00:00";
-            //FIXME - handle this correctly
-            return LocalDateTime.parse(x, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-        }
-        if(parameter.getParameterType().equals(Boolean.class)){
+            return LocalDateTime.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        } else if (parameter.getParameterType().equals(LocalDate.class)){
+            return LocalDateTime.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        } else if (parameter.getParameterType().equals(Boolean.class)){
             return "true".equalsIgnoreCase((String)paramValue);
         }
         return paramValue;

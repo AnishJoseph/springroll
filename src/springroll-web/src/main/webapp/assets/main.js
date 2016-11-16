@@ -6,7 +6,8 @@ var Application =require('Application');
 require( 'datatables.net' );
 require( 'datatables.net-buttons' );
 require('bootstrap-select');
-require('bootstrap-datepicker');
+require('moment');
+require('eonasdan-bootstrap-datetimepicker');
 
 
 
@@ -69,7 +70,7 @@ $(function() {
         }
     });
 
-    $.fn.datepicker.defaults.format = UIProperties.uiDateFormatJs;
+    //$.fn.datepicker.defaults.format = UIProperties.uiDateFormatJs;
     Application.loadTemplates();
     Application.loadUser();
     Application.loadLocaleMessages();
