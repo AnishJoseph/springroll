@@ -9,7 +9,7 @@
     }
   ],
   "gridParameters" : [
-    {"name" : "userId", "multiSelect": true, "namedQuery":"User.allUsers"},
+    {"name" : "userIds", "multiSelect": true, "namedQuery":"User.allUsers"},
     {"name" : "completeStatus"},
     {"name" : "userIdsss", "list":["Opt1","Opt2","Opt3"], "multiSelect": true}
   ]
