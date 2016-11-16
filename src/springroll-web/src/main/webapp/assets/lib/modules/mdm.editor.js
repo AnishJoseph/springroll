@@ -1,5 +1,5 @@
 var Marionette = require('backbone.marionette');
-var Application =require('Application');
+var Application = require('Application');
 Application.requiresTemplate('#mdm.control');
 
 var MdmRecord = Backbone.Model.extend({
@@ -32,7 +32,11 @@ var MasterRowView = Marionette.View.extend({
                     template.push('</td>');
                 } else if (colDefs[index].type === 'date') {
                     template.push('<td style="vertical-align: middle">');
-                    Application.Utils.addDatePickerToTemplate(template, colDefs[index], data.model[colName]);
+                    Application.Utils.addDatePickerToTemplate(template, colDefs[index], data.model[colName], colDefs[index].name + ' datepicker');
+                    template.push('</td>');
+                } else if (colDefs[index].type === 'datetime') {
+                    template.push('<td style="vertical-align: middle">');
+                    Application.Utils.addDatePickerToTemplate(template, colDefs[index], data.model[colName], 'datetimepicker');
                     template.push('</td>');
                 } else if (colDefs[index].type === 'text') {
                     template.push('<td ><input type="text" data-attrname="' + colDefs[index].name + '" class="form-control " id ="' + colDefs[index].name + '" ');
@@ -72,11 +76,19 @@ var MasterRowView = Marionette.View.extend({
         this.masterGridData = options.masterGridData;
         var events = {};
         _.each(this.masterGridData.colDefs, function(colDef){
-            events['change #' + colDef.name] = function(evt){
-                var value = this.$el.find('#' + colDef.name).val();
-                if(colDef.type === 'boolean') value = value === 'true';
-                this.model.set(colDef.name, value );
-            };
+            if(colDef.type != 'datetime' && colDef.type != 'date') {
+                events['change #' + colDef.name] = function (evt) {
+                    var value = this.$el.find('#' + colDef.name).val();
+                    if (colDef.type === 'boolean') value = value === 'true';
+                    this.model.set(colDef.name, value);
+                };
+            } else {
+                events['dp.change .' + colDef.name] = function(evt){
+                    if(evt.oldDate == null)return;
+                    var value = (colDef.type == 'date') ? evt.date.format('DD/MM/YYYY') : evt.date.format('DD/MM/YYYY HH:mm');//FIXME - hardcoded format
+                    this.model.set(colDef.name, value);
+                }
+            }
         });
         this.delegateEvents(events);
         this.model.on('searchBasedShow', this.searchBasedShow, this);
@@ -88,6 +100,10 @@ var MasterRowView = Marionette.View.extend({
         if($.inArray(this.model.id, this.masterGridData.recIdsUnderReview) > -1){
             this.disableNewRecords();
         }
+        this.$(".selectpicker").selectpicker({liveSearch:true, liveSearchNormalize : true, selectOnTab: true });
+        this.$(".datepicker").datetimepicker({format : 'DD/MM/YYYY'});
+        this.$(".datetimepicker").datetimepicker({format : 'DD/MM/YYYY HH:mm'});
+
     }
 });
 
@@ -104,16 +120,6 @@ var MasterTableBody = Marionette.CollectionView.extend({
         }
     },
 
-    onRender : function(){
-        //FIXME - this and below - enable live search always ??
-        this.$(".selectpicker").selectpicker({liveSearch:true, liveSearchNormalize : true, selectOnTab: true });
-        this.$(".datepicker").datepicker({ autoclose: true, todayHighlight: true});
-    },
-
-    onAddChild : function(){
-        this.$(".selectpicker").selectpicker({liveSearch:true, liveSearchNormalize : true, selectOnTab: true });
-        this.$(".datepicker").datepicker({ autoclose: true, todayHighlight: true});
-    }
 });
 
 var MasterTable = Marionette.View.extend({
