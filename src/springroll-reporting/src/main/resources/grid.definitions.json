@@ -12,6 +12,7 @@
     {"name" : "userIds", "multiSelect": true, "namedQuery":"User.allUsers"},
     {"name" : "completeStatus"},
     {"name" : "userIdsss", "list":["Opt1","Opt2","Opt3"], "multiSelect": true},
-    {"name" : "startTime", "setTime" : "START_OF_DAY"}
+    {"name" : "startTime", "setTime" : "START_OF_DAY"},
+    {"name" : "endTime", "setTime" : "END_OF_DAY"}
   ]
 }
