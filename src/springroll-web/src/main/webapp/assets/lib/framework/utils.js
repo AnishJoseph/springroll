@@ -10,6 +10,7 @@ Application.Utils = {
         template.push('<div class="input-group-addon">');
         template.push('<span class="glyphicon glyphicon-th"></span>');
         template.push('</div>');
+        template.push('</div>');
     },
 
     addLovToTemplate : function(template, p, selectedValue){
