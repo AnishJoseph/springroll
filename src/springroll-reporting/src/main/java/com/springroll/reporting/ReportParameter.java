@@ -1,6 +1,7 @@
 package com.springroll.reporting;
 
 import com.springroll.core.Lov;
+import com.springroll.core.SetTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +17,11 @@ public class ReportParameter {
     private boolean mandatory = false;
     private boolean multiSelect = false;
     private boolean visible = true;
+    private SetTime setTime;
+
 
     public ReportParameter(){}
-    public ReportParameter(String name, String javaType, boolean isConstrained, boolean mandatory, boolean multiSelect, boolean visible, List<Lov> lovs) {
+    public ReportParameter(String name, String javaType, boolean isConstrained, boolean mandatory, boolean multiSelect, boolean visible, List<Lov> lovs, SetTime setTime) {
         this.name = name;
         this.javaType = javaType;
         this.isConstrained = isConstrained;
@@ -26,6 +29,7 @@ public class ReportParameter {
         this.multiSelect = multiSelect;
         this.visible = visible;
         this.lovList = lovs;
+        this.setTime = setTime;
     }
 
     public String getName() {
@@ -82,5 +86,13 @@ public class ReportParameter {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public SetTime getSetTime() {
+        return setTime;
+    }
+
+    public void setSetTime(SetTime setTime) {
+        this.setTime = setTime;
     }
 }

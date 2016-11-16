@@ -1,5 +1,7 @@
 package com.springroll.reporting.grid;
 
+import com.springroll.core.SetTime;
+
 import java.util.List;
 
 /**
@@ -9,6 +11,7 @@ public class GridParameter {
     private String name;
     private boolean multiSelect;
     private String  namedQuery;
+    private SetTime setTime;
     private List<String> list;
 
     public String getName() {
@@ -41,5 +44,13 @@ public class GridParameter {
 
     public void setList(List<String> list) {
         this.list = list;
+    }
+
+    public SetTime getSetTime() {
+        return setTime;
+    }
+
+    public void setSetTime(SetTime setTime) {
+        this.setTime = setTime;
     }
 }

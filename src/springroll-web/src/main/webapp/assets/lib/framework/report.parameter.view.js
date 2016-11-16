@@ -12,17 +12,17 @@ Application.ReportParamsView  = Marionette.View.extend({
         template.push('<div class="container">');
 
         _.each(parameters, function (parameter) {
-            if (parameter.javaType == "java.time.LocalDateTime"){
-                var now = moment().format("DD/MM/YYYY HH:mm"); //FIXME - format hardcoded
-                template.push('<div class="col-md-3">');
-                template.push('<div>' + Localize(parameter.name) + '</div>');
-                Application.Utils.addDatePickerToTemplate(template, parameter, now, 'datetimepicker');
-                template.push('</div>');
-            } else if (parameter.javaType == "java.time.LocalDate"){
+            if (parameter.javaType == "java.time.LocalDate" || (parameter.javaType == "java.time.LocalDateTime" && (parameter.setTime === 'START_OF_DAY' || parameter.setTime === 'END_OF_DAY'))){
                 var now = moment().format("DD/MM/YYYY"); //FIXME - format hardcoded
                 template.push('<div class="col-md-3">');
                 template.push('<div>' + Localize(parameter.name) + '</div>');
-                Application.Utils.addDatePickerToTemplate(template, parameter, now, 'datepicker');
+                Application.Utils.addDatePickerToTemplate(template, parameter, now, 'datepicker ' + parameter.name);
+                template.push('</div>');
+            } else if (parameter.javaType == "java.time.LocalDateTime"){
+                var now = moment().format("DD/MM/YYYY HH:mm"); //FIXME - format hardcoded
+                template.push('<div class="col-md-3">');
+                template.push('<div>' + Localize(parameter.name) + '</div>');
+                Application.Utils.addDatePickerToTemplate(template, parameter, now, 'datetimepicker ' + parameter.name);
                 template.push('</div>');
             }else if(parameter.lovList != null) {
                 template.push('<div class="col-md-3">');
@@ -78,7 +78,7 @@ Application.ReportParamsView  = Marionette.View.extend({
                     if(evt.oldDate == null)return;
                     var value = (parameter.javaType == "java.time.LocalDate") ? evt.date.format('DD/MM/YYYY') : evt.date.format('DD/MM/YYYY HH:mm');//FIXME - hardcoded format
                     that.params[parameter.name] =  value;
-                }
+                };
             }
             /* Set the default values for each of the parameters */
             if(parameter.javaType == "java.lang.Boolean") {
@@ -87,8 +87,8 @@ Application.ReportParamsView  = Marionette.View.extend({
             } else if (parameter.lovList != null){
                 that.params[parameter.name] = (parameter.multiSelect === true) ? [parameter.lovList[0].value] : parameter.lovList[0].value;
             } else if (parameter.javaType == "java.time.LocalDateTime"){
-                var now = moment().format("DD/MM/YYYY HH:mm"); //FIXME - format hardcoded
-                that.params[parameter.name] = now;
+                var now = parameter.setTime === null ? moment() : parameter.setTime == 'START_OF_DAY' ? moment().startOf('day') :moment().endOf('day');
+                that.params[parameter.name] = now.format("DD/MM/YYYY HH:mm");
             }else if (parameter.javaType == "java.time.LocalDate"){
                 var now = moment().format("DD/MM/YYYY"); //FIXME - format hardcoded
                 that.params[parameter.name] = now;
@@ -99,8 +99,5 @@ Application.ReportParamsView  = Marionette.View.extend({
     submit : function(){
         this.params["reportName"] = this.reportName;
         this.myParent.triggerMethod("parameters:changed", this.params);
-    },
-    changeHandler : function(evt){
-        this.params[evt.currentTarget.id] = $(evt.target).val();
     }
 });

@@ -103,7 +103,7 @@ import java.util.stream.Collectors;
                 /* We will come here is the type is text, enum, date etc - the getLovsFromEnum will only return LOVs for enum class else null */
                 lovs = getLovsFromEnum(parameter.getParameterType());
             }
-            reportParameters.add(new ReportParameter(parameter.getName(), parameter.getParameterType().getName(), true, true, multiSelect, true, lovs ));
+            reportParameters.add(new ReportParameter(parameter.getName(), parameter.getParameterType().getName(), true, true, multiSelect, true, lovs, gridParameter == null ? null : gridParameter.getSetTime() ));
         }
         return reportParameters;
     }
