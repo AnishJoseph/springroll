@@ -13,10 +13,16 @@ Application.ReportParamsView  = Marionette.View.extend({
 
         _.each(parameters, function (parameter) {
             if (parameter.javaType == "java.time.LocalDateTime"){
+                var now = moment().format("DD/MM/YYYY HH:mm"); //FIXME - format hardcoded
+                template.push('<div class="col-md-3">');
+                template.push('<div>' + Localize(parameter.name) + '</div>');
+                Application.Utils.addDatePickerToTemplate(template, parameter, now, 'datetimepicker');
+                template.push('</div>');
+            } else if (parameter.javaType == "java.time.LocalDate"){
                 var now = moment().format("DD/MM/YYYY"); //FIXME - format hardcoded
                 template.push('<div class="col-md-3">');
                 template.push('<div>' + Localize(parameter.name) + '</div>');
-                Application.Utils.addDatePickerToTemplate(template, parameter, now);
+                Application.Utils.addDatePickerToTemplate(template, parameter, now, 'datepicker');
                 template.push('</div>');
             }else if(parameter.lovList != null) {
                 template.push('<div class="col-md-3">');
@@ -40,15 +46,14 @@ Application.ReportParamsView  = Marionette.View.extend({
     },
     onRender: function() {
         this.ui.selectpicker.selectpicker();
-        this.ui.datepicker.datepicker({
-            autoclose: true,
-            todayHighlight: true
-        });
+        this.ui.datepicker.datetimepicker({format : 'DD/MM/YYYY'});
+        this.ui.datetimepicker.datetimepicker({format : 'DD/MM/YYYY HH:mm'});
     },
 
     ui: {
         selectpicker:  '.selectpicker',
         datepicker:  '.datepicker',
+        datetimepicker:  '.datetimepicker',
     },
 
     initialize: function(options) {
@@ -62,13 +67,29 @@ Application.ReportParamsView  = Marionette.View.extend({
         events['click #submit'] =  'submit';
         /* For each parameter setup a changeHandler and also set the default value for that parameter */
         _.each(this.parameters, function(parameter){
-            events['change #' + parameter.name] = 'changeHandler';
+
+            if(parameter.javaType != "java.time.LocalDate" && parameter.javaType != "java.time.LocalDateTime") {
+                events['change #' + parameter.name] = function (evt) {
+                    var value = this.$el.find('#' + parameter.name).val();
+                    that.params[parameter.name] =  value;
+                };
+            } else {
+                events['dp.change .' + parameter.name] = function(evt){
+                    if(evt.oldDate == null)return;
+                    var value = (parameter.javaType == "java.time.LocalDate") ? evt.date.format('DD/MM/YYYY') : evt.date.format('DD/MM/YYYY HH:mm');//FIXME - hardcoded format
+                    that.params[parameter.name] =  value;
+                }
+            }
+            /* Set the default values for each of the parameters */
             if(parameter.javaType == "java.lang.Boolean") {
                 parameter.lovList = [{name: 'true', value: true}, {name: 'false', value: false}];
                 that.params[parameter.name] = "true";
             } else if (parameter.lovList != null){
                 that.params[parameter.name] = (parameter.multiSelect === true) ? [parameter.lovList[0].value] : parameter.lovList[0].value;
             } else if (parameter.javaType == "java.time.LocalDateTime"){
+                var now = moment().format("DD/MM/YYYY HH:mm"); //FIXME - format hardcoded
+                that.params[parameter.name] = now;
+            }else if (parameter.javaType == "java.time.LocalDate"){
                 var now = moment().format("DD/MM/YYYY"); //FIXME - format hardcoded
                 that.params[parameter.name] = now;
             }
