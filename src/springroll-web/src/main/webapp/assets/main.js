@@ -36,15 +36,16 @@ $(function() {
         cache: false,
         statusCode : {
             406:function(message){   //NOT_ACCEPTABLE
-                Application.Indicator.showErrorMessage({message:message.responseText});
+                // Check if this is already handled in the business logic
+                if(message.errorHandled == undefined) {
+                    Application.Indicator.showErrorMessage({message:message.responseText});
+                }
             },
             409:function(message){   //CONFLICT BUSINESS VIOLATIONS
                 // Check if this is already handled in the business logic
                 if(message.errorHandled == undefined) {
                     _.each(message.responseJSON, function (violation) {
-                        /* Add the localized version of the field name at position 0 or the args (if the field exists) */
-                        if (violation.field != undefined && violation.field != null) violation.args.unshift(Localize(violation.field));
-                        Application.Indicator.showErrorMessage({message: Localize(violation.messageKey, violation.args)});
+                        Application.Indicator.showErrorMessage({message:violation.message});
                     });
                 }
             },

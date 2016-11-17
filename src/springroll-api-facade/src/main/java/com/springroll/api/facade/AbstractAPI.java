@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by anishjoseph on 12/09/16.
@@ -41,8 +42,14 @@ public abstract class AbstractAPI {
 
     @ExceptionHandler(BusinessValidationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public  List<BusinessValidationResult> handleBusinessValidationException(BusinessValidationException ex) {
-        return ex.getViolations();
+    public  List<BusinessValidationViolations> handleBusinessValidationException(BusinessValidationException ex) {
+        List<BusinessValidationViolations> violations =
+                ex.getViolations().stream()
+                        .map(businessValidationResult -> new BusinessValidationViolations(businessValidationResult.getDtoIndex(), businessValidationResult.getField(),
+                                                                LocaleFactory.getLocalizedServerMessage(getUser().getLocale(), businessValidationResult.getMessageKey(), businessValidationResult.getArgs())))
+                        .collect(Collectors.toList());
+
+        return violations;
     }
     @ExceptionHandler(SpringrollException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)

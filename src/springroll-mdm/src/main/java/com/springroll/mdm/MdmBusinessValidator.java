@@ -36,19 +36,19 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
                     hasValidationErrors = true;
                 }
                 if(colDef.getType().equalsIgnoreCase("text") && colDef.getSizeMin() != null && mdmChangedColumn.getVal().toString().length() < colDef.getSizeMin()){
-                    businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.minSize", new String[]{colDef.getSizeMin().toString()});
+                    businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.minSize", new String[]{fldName, colDef.getSizeMin().toString()});
                     hasValidationErrors = true;
                 }
                 if(colDef.getType().equalsIgnoreCase("text") && colDef.getSizeMax() != null && mdmChangedColumn.getVal().toString().length() > colDef.getSizeMax()){
-                    businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.maxSize", new String[]{colDef.getSizeMax().toString()});
+                    businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.maxSize", new String[]{fldName, colDef.getSizeMax().toString()});
                     hasValidationErrors = true;
                 }
                 if(isNumberCol && colDef.getMax() != null && value > colDef.getMax()){
-                    businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.max", new String[]{getValue(colDef.getType(), colDef.getMax())});
+                    businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.max", new String[]{fldName, getValue(colDef.getType(), colDef.getMax())});
                     hasValidationErrors = true;
                 }
                 if(isNumberCol && colDef.getMin() != null && value < colDef.getMin()){
-                    businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.min", new String[]{getValue(colDef.getType(), colDef.getMin())});
+                    businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.min", new String[]{fldName, getValue(colDef.getType(), colDef.getMin())});
                     hasValidationErrors = true;
                 }
             }
