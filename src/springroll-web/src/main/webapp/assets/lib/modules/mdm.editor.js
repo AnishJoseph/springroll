@@ -135,7 +135,7 @@ var MasterTable = Marionette.View.extend({
             if(index == 0)return;
             template.push('<th>' + Localize(colDef.name) + '</th>');
         });
-        template.push('</tr><thead> <tbody></tbody>');
+        template.push('</tr></thead> <tbody></tbody>');
         return template.join("");
     },
 
