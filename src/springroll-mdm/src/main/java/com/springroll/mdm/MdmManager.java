@@ -136,7 +136,7 @@ import java.util.stream.Collectors;
         MdmData mdmData = new MdmData();
         List<ColDef> colDefs = new ArrayList<>(mdmDefinition.getColDefs().size());
         for (ColDef colDef : mdmDefinition.getColDefs()) {
-            ColDef c = new ColDef(colDef.getName(), colDef.isWriteable(), colDef.getType(), colDef.getDefaultValue(), colDef.isMultiSelect());
+            ColDef c = new ColDef(colDef);
             if(colDef.getType().equals("boolean")){
                 c.setLovList(colDef.getLovList());
             } else {

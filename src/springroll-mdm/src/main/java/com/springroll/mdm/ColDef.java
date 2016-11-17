@@ -18,6 +18,24 @@ public class ColDef implements Serializable{
     private String lovSource;
     private Object defaultValue;
     private boolean multiSelect = false;
+    private boolean nullable = true;
+    private Integer sizeMin;
+    private Integer sizeMax;
+    private Double min;
+    private Double max;
+
+    public ColDef(ColDef colDef){
+        this.name = colDef.name;
+        this.writeable = colDef.writeable;
+        this.type = colDef.type;
+        this.defaultValue = colDef.defaultValue;
+        this.multiSelect = colDef.multiSelect;
+        this.nullable = colDef.nullable;
+        this.sizeMin = colDef.sizeMin;
+        this.sizeMin = colDef.sizeMin;
+        this.min = colDef.min;
+        this.max = colDef.max;
+    }
 
     public ColDef(String name, boolean writeable, String type, Object defaultValue, boolean multiSelect) {
         this.name = name;
@@ -92,5 +110,45 @@ public class ColDef implements Serializable{
 
     public void setMultiSelect(boolean multiSelect) {
         this.multiSelect = multiSelect;
+    }
+
+    public boolean isNullable() {
+        return nullable;
+    }
+
+    public void setNullable(boolean nullable) {
+        this.nullable = nullable;
+    }
+
+    public Integer getSizeMin() {
+        return sizeMin;
+    }
+
+    public void setSizeMin(Integer sizeMin) {
+        this.sizeMin = sizeMin;
+    }
+
+    public Integer getSizeMax() {
+        return sizeMax;
+    }
+
+    public void setSizeMax(Integer sizeMax) {
+        this.sizeMax = sizeMax;
+    }
+
+    public Double getMin() {
+        return min;
+    }
+
+    public void setMin(Double min) {
+        this.min = min;
+    }
+
+    public Double getMax() {
+        return max;
+    }
+
+    public void setMax(Double max) {
+        this.max = max;
     }
 }
