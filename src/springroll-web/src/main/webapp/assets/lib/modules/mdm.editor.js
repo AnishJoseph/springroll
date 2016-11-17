@@ -253,9 +253,7 @@ var Control = Marionette.View.extend({
         if(this.newRecords.length == 0 && _.isEmpty(this.changes))return;
         this.disableSaveButton();
         var copyOfNewRecords = this.newRecords;
-        this.newRecords = [];
         var copyOfChanges = JSON.parse(JSON.stringify(this.changes));
-        this.changes = {};
 
         var changedRecords = [];
         var that = this;
@@ -272,6 +270,9 @@ var Control = Marionette.View.extend({
         collection.save(null, {
             success: function(savedModels){
                 Application.Indicator.showSuccessMessage({message:Localize('ui.mdm.submit.success')});
+                /* Clear out any New or Changes submitted */
+                that.newRecords = [];
+                that.changes = {};
                 var copyOfChanges = that.copyOfChanges;
                 var changedIds = _.pluck(savedModels.get('changedRecords'), 'id');
                 _.each(that.collections.models, function(model){
@@ -284,6 +285,10 @@ var Control = Marionette.View.extend({
                     model.trigger('disableNewRecords');
                 });
 
+            },
+            error : function(){
+                /* Now that the save has failed - enable the save button */
+                that.enableSaveButton();
             }
         });
     }
