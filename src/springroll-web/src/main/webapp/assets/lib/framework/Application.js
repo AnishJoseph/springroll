@@ -138,14 +138,19 @@ var getLocaleMessage = function(messageKey){
     })(arguments));
 };
 
+/*
+    Case 1 : Localize(messageKey) -  with no arguments
+    Case 2 : Localize(messageKey, arg1, arg2.. argn)  - variable number of arguments
+    Case 3 : Localize(messageKey, [arg1, arg2.. argn]) - arguments as an array
+ */
 Application.Localize = function(messageKey, args){
-    if(args == undefined)return getLocaleMessage(messageKey);
-    if(args instanceof Array && arguments.length == 2) {
+    if(args == undefined)return getLocaleMessage(messageKey);   //Case 1
+    if(args instanceof Array ) {    //Case 3
         var argsToUse = args.slice(); //Make a copy of the array
         argsToUse.unshift(messageKey);
         return getLocaleMessage.apply(this, argsToUse);
     }
-    return getLocaleMessage.apply(this, arguments);
+    return getLocaleMessage.apply(this, arguments); //Case 2
 };
 
 Application.showModal = function(title, viewToShow, viewOfCaller ){
