@@ -48,27 +48,38 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
         boolean isNumberCol = isNumberCol(colDef.getType());
         boolean hasValidationErrors = false;
         Number value = null;
+        String messagekey = colDef.getMessageKey();
         if(isNumberCol){
             value = valueToValidate != null ? getValue(colDef.getType(), valueToValidate) : null;
         }
         if(!colDef.isNullable() && valueToValidate == null){
-            businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.notNullable", new String[]{fldName});
+            if(messagekey == null)messagekey = "mdm.validation.notNullable";
+            businessValidationResults.addBusinessViolation(1, fldName, messagekey, new String[]{fldName});
             hasValidationErrors = true;
         }
         if(valueToValidate != null && colDef.getType().equalsIgnoreCase("text") && colDef.getSizeMin() != null && valueToValidate.toString().length() < colDef.getSizeMin()){
-            businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.minSize", new String[]{fldName, colDef.getSizeMin().toString()});
+            if(messagekey == null)messagekey = "mdm.validation.minSize";
+            businessValidationResults.addBusinessViolation(1, fldName, messagekey, new String[]{fldName, colDef.getSizeMin().toString()});
             hasValidationErrors = true;
         }
         if(valueToValidate != null && colDef.getType().equalsIgnoreCase("text") && colDef.getSizeMax() != null && valueToValidate.toString().length() > colDef.getSizeMax()){
-            businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.maxSize", new String[]{fldName, colDef.getSizeMax().toString()});
+            if(messagekey == null)messagekey = "mdm.validation.maxSize";
+            businessValidationResults.addBusinessViolation(1, fldName, messagekey, new String[]{fldName, colDef.getSizeMax().toString()});
             hasValidationErrors = true;
         }
         if(valueToValidate != null && isNumberCol && colDef.getMax() != null && value.doubleValue() > colDef.getMax()){
-            businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.max", new String[]{fldName, getValueString(colDef.getType(), colDef.getMax())});
+            if(messagekey == null)messagekey = "mdm.validation.max";
+            businessValidationResults.addBusinessViolation(1, fldName, messagekey, new String[]{fldName, getValueString(colDef.getType(), colDef.getMax())});
             hasValidationErrors = true;
         }
         if(valueToValidate != null && isNumberCol && colDef.getMin() != null && value.doubleValue() < colDef.getMin()){
-            businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.min", new String[]{fldName, getValueString(colDef.getType(), colDef.getMin())});
+            if(messagekey == null)messagekey = "mdm.validation.min";
+            businessValidationResults.addBusinessViolation(1, fldName, messagekey, new String[]{fldName, getValueString(colDef.getType(), colDef.getMin())});
+            hasValidationErrors = true;
+        }
+        if(valueToValidate != null && !isNumberCol && colDef.getPattern() != null && !colDef.getPattern().matcher(valueToValidate+"").matches()){
+            if(messagekey == null)messagekey = "mdm.validation.pattern";
+            businessValidationResults.addBusinessViolation(1, fldName, messagekey, new String[]{fldName, colDef.getPattern().toString()});
             hasValidationErrors = true;
         }
         return hasValidationErrors;

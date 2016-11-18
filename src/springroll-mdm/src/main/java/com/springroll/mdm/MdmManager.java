@@ -113,6 +113,7 @@ import java.util.stream.Collectors;
 
         }catch (IOException e){
             logger.error("Error while reading MDM definitions. MDM will be disabled. Error is {} ", e.getMessage());
+            throw new RuntimeException("Error while reading MDM definitions. Error is  " + e.getMessage());
         }
     }
 

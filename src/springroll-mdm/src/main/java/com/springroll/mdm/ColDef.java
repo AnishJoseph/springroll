@@ -4,6 +4,7 @@ import com.springroll.core.Lov;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by anishjoseph on 03/11/16.
@@ -23,6 +24,8 @@ public class ColDef implements Serializable{
     private Integer sizeMax;
     private Double min;
     private Double max;
+    private Pattern pattern;
+    private String messageKey;
 
     public ColDef(ColDef colDef){
         this.name = colDef.name;
@@ -150,5 +153,21 @@ public class ColDef implements Serializable{
 
     public void setMax(Double max) {
         this.max = max;
+    }
+
+    public Pattern getPattern() {
+        return pattern;
+    }
+
+    public void setPattern(Pattern pattern) {
+        this.pattern = pattern;
+    }
+
+    public String getMessageKey() {
+        return messageKey;
+    }
+
+    public void setMessageKey(String messageKey) {
+        this.messageKey = messageKey;
     }
 }
