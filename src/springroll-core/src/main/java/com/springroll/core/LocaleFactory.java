@@ -1,5 +1,6 @@
 package com.springroll.core;
 
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -49,7 +50,11 @@ public class LocaleFactory {
         }
     }
     public static String  getLocalizedServerMessage(Locale locale, String messageKey, Object... args) {
-        String localizedMessage = serverMessages.getMessage(messageKey, args, locale);
-        return localizedMessage;
+        try {
+            return serverMessages.getMessage(messageKey, args, locale);
+        }catch (NoSuchMessageException exception){
+            //FIXME - add a logger message here
+            return messageKey;
+        }
     }
 }
