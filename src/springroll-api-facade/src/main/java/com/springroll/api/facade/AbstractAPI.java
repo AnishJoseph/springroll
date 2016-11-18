@@ -57,6 +57,13 @@ public abstract class AbstractAPI {
         return LocaleFactory.getLocalizedServerMessage(getUser().getLocale(), ex.getMessageKey(), ex.getMessageArguments());
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    public  String handleRuntimeException(RuntimeException ex) {
+        ex.printStackTrace();
+        return ex.getMessage();
+    }
+
     public Long route(ServiceDTO payload){
         List<ServiceDTO> payloads = new ArrayList<>(1);
         payloads.add(payload);
