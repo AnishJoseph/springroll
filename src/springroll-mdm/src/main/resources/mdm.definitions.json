@@ -17,7 +17,7 @@
         "colDefs" : [
           { "name": "ruleName", "writeable": true, "type": "text", "nullable" : false, "sizeMin" : 4, "sizeMax" : 10},
           { "name": "channel", "writeable": true, "type": "text", "lovSource" : "NotificationChannels"},
-          { "name": "reviewStage", "writeable": true, "type": "int", "min" : 1, "max" : 10},
+          { "name": "reviewStage", "writeable": true, "type": "int", "min" : 1, "max" : 10, "nullable" : false, "defVal" : "1"},
           { "name": "approver", "writeable": true, "type": "text", "lovSource" : "Roles"},
           { "name": "approvalsNeeded", "writeable": true, "type": "int", "defVal": "1"},
           { "name": "fyiOnly", "writeable": true, "type": "boolean", "defVal": "false"},

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by anishjoseph on 09/11/16.
@@ -26,31 +27,15 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
                 ColDef colDef = getColDef(fldName, colDefs);
                 if(colDef == null)throw new SpringrollException("mdm.unknownColumn", fldName, mdmDTO.getMaster());
                 MdmChangedColumn mdmChangedColumn = mdmChangedRecord.getMdmChangedColumns().get(fldName);
-                boolean isNumberCol = isNumberCol(colDef.getType());
-                Double value = null;
-                if(isNumberCol){
-                    value = Double.parseDouble((String)mdmChangedColumn.getVal());
-                }
-                if(!colDef.isNullable() && mdmChangedColumn.getVal() == null){
-                    businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.notNullable", new String[]{fldName});
-                    hasValidationErrors = true;
-                }
-                if(colDef.getType().equalsIgnoreCase("text") && colDef.getSizeMin() != null && mdmChangedColumn.getVal().toString().length() < colDef.getSizeMin()){
-                    businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.minSize", new String[]{fldName, colDef.getSizeMin().toString()});
-                    hasValidationErrors = true;
-                }
-                if(colDef.getType().equalsIgnoreCase("text") && colDef.getSizeMax() != null && mdmChangedColumn.getVal().toString().length() > colDef.getSizeMax()){
-                    businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.maxSize", new String[]{fldName, colDef.getSizeMax().toString()});
-                    hasValidationErrors = true;
-                }
-                if(isNumberCol && colDef.getMax() != null && value > colDef.getMax()){
-                    businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.max", new String[]{fldName, getValue(colDef.getType(), colDef.getMax())});
-                    hasValidationErrors = true;
-                }
-                if(isNumberCol && colDef.getMin() != null && value < colDef.getMin()){
-                    businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.min", new String[]{fldName, getValue(colDef.getType(), colDef.getMin())});
-                    hasValidationErrors = true;
-                }
+                hasValidationErrors = validate(fldName, mdmChangedColumn.getVal(), colDef, businessValidationResults);
+            }
+        }
+        for (Map<String, Object> newRecord : mdmDTO.getNewRecords()) {
+            for (String fldName : newRecord.keySet()) {
+                if("id".equalsIgnoreCase(fldName))continue;
+                ColDef colDef = getColDef(fldName, colDefs);
+                if(colDef == null)throw new SpringrollException("mdm.unknownColumn", fldName, mdmDTO.getMaster());
+                hasValidationErrors = validate(fldName, newRecord.get(fldName), colDef, businessValidationResults);
             }
         }
 
@@ -59,6 +44,36 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
         }
     }
 
+    private boolean validate(String fldName, Object valueToValidate, ColDef colDef, IBusinessValidationResults businessValidationResults){
+        boolean isNumberCol = isNumberCol(colDef.getType());
+        boolean hasValidationErrors = false;
+        Number value = null;
+        if(isNumberCol){
+            value = valueToValidate != null ? getValue(colDef.getType(), valueToValidate) : null;
+        }
+        if(!colDef.isNullable() && valueToValidate == null){
+            businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.notNullable", new String[]{fldName});
+            hasValidationErrors = true;
+        }
+        if(valueToValidate != null && colDef.getType().equalsIgnoreCase("text") && colDef.getSizeMin() != null && valueToValidate.toString().length() < colDef.getSizeMin()){
+            businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.minSize", new String[]{fldName, colDef.getSizeMin().toString()});
+            hasValidationErrors = true;
+        }
+        if(valueToValidate != null && colDef.getType().equalsIgnoreCase("text") && colDef.getSizeMax() != null && valueToValidate.toString().length() > colDef.getSizeMax()){
+            businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.maxSize", new String[]{fldName, colDef.getSizeMax().toString()});
+            hasValidationErrors = true;
+        }
+        if(valueToValidate != null && isNumberCol && colDef.getMax() != null && value.doubleValue() > colDef.getMax()){
+            businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.max", new String[]{fldName, getValueString(colDef.getType(), colDef.getMax())});
+            hasValidationErrors = true;
+        }
+        if(valueToValidate != null && isNumberCol && colDef.getMin() != null && value.doubleValue() < colDef.getMin()){
+            businessValidationResults.addBusinessViolation(1, fldName, "mdm.validation.min", new String[]{fldName, getValueString(colDef.getType(), colDef.getMin())});
+            hasValidationErrors = true;
+        }
+        return hasValidationErrors;
+
+    }
     private ColDef getColDef(String colName, List<ColDef> colDefs){
         for (ColDef colDef : colDefs) {
             if(colDef.getName().equalsIgnoreCase(colName))return colDef;
@@ -70,13 +85,21 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
         return (type.equalsIgnoreCase("int") || type.equalsIgnoreCase("num"));
     }
 
-    private String getValue(String type, Number value){
+    private Number getValue(String type, Object value){
+        String v = value + "";
         if("int".equalsIgnoreCase(type)){
-            Integer i = value.intValue();
-            return i.toString();
+            Integer i = Integer.parseInt(v);
+            return i;
         }
-        Double d = value.doubleValue();
-        return d.toString();
+        Double d = Double.parseDouble(v);
+        return d;
+
+    }
+    private String getValueString(String type, Number value){
+        if("int".equalsIgnoreCase(type)){
+            return value.intValue() + "";
+        }
+        return value.doubleValue() + "";
     }
 }
 
