@@ -47,39 +47,50 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
     private boolean validate(String fldName, Object valueToValidate, ColDef colDef, IBusinessValidationResults businessValidationResults){
         boolean isNumberCol = isNumberCol(colDef.getType());
         boolean hasValidationErrors = false;
-        Number value = null;
-        String messagekey = colDef.getMessageKey();
+        Number valueToValidateAsNumber = null;
+        String messageKey = colDef.getMessageKey();
         if(isNumberCol){
-            value = valueToValidate != null ? getValue(colDef.getType(), valueToValidate) : null;
+            valueToValidateAsNumber = !isNullOrEmpty(valueToValidate) ? getValue(colDef.getType(), valueToValidate) : null;
         }
-        if(!colDef.isNullable() && valueToValidate == null){
-            if(messagekey == null)messagekey = "mdm.validation.notNullable";
-            businessValidationResults.addBusinessViolation(1, fldName, messagekey, new String[]{fldName});
+
+        /*  If the colDef specifies that the value CANNOT be NULL and the changed value is either null OR EMPTY, THEN we have a violation */
+        if(!colDef.isNullable() && isNullOrEmpty(valueToValidate)){
+            if(messageKey == null)messageKey = "mdm.validation.notNullable";
+            businessValidationResults.addBusinessViolation(1, fldName, messageKey, new String[]{fldName});
             hasValidationErrors = true;
         }
         if(valueToValidate != null && colDef.getType().equalsIgnoreCase("text") && colDef.getSizeMin() != null && valueToValidate.toString().length() < colDef.getSizeMin()){
-            if(messagekey == null)messagekey = "mdm.validation.minSize";
-            businessValidationResults.addBusinessViolation(1, fldName, messagekey, new String[]{fldName, colDef.getSizeMin().toString()});
+            if(messageKey == null)messageKey = "mdm.validation.minSize";
+            businessValidationResults.addBusinessViolation(1, fldName, messageKey, new String[]{fldName, colDef.getSizeMin().toString()});
             hasValidationErrors = true;
         }
         if(valueToValidate != null && colDef.getType().equalsIgnoreCase("text") && colDef.getSizeMax() != null && valueToValidate.toString().length() > colDef.getSizeMax()){
-            if(messagekey == null)messagekey = "mdm.validation.maxSize";
-            businessValidationResults.addBusinessViolation(1, fldName, messagekey, new String[]{fldName, colDef.getSizeMax().toString()});
+            if(messageKey == null)messageKey = "mdm.validation.maxSize";
+            businessValidationResults.addBusinessViolation(1, fldName, messageKey, new String[]{fldName, colDef.getSizeMax().toString()});
             hasValidationErrors = true;
         }
-        if(valueToValidate != null && isNumberCol && colDef.getMax() != null && value.doubleValue() > colDef.getMax()){
-            if(messagekey == null)messagekey = "mdm.validation.max";
-            businessValidationResults.addBusinessViolation(1, fldName, messagekey, new String[]{fldName, getValueString(colDef.getType(), colDef.getMax())});
+        /*  If this is a col that holds a number, AND the value received from the UI is not null, AND the definition of the column specifies a constraint with a MAX value,
+            AND the value of the user entered value is greater than the MAX value specified THEN we have a violation
+         */
+        if(isNumberCol && valueToValidateAsNumber != null && colDef.getMax() != null && valueToValidateAsNumber.doubleValue() > colDef.getMax()){
+            if(messageKey == null)messageKey = "mdm.validation.max";
+            businessValidationResults.addBusinessViolation(1, fldName, messageKey, new String[]{fldName, getValueString(colDef.getType(), colDef.getMax())});
             hasValidationErrors = true;
         }
-        if(valueToValidate != null && isNumberCol && colDef.getMin() != null && value.doubleValue() < colDef.getMin()){
-            if(messagekey == null)messagekey = "mdm.validation.min";
-            businessValidationResults.addBusinessViolation(1, fldName, messagekey, new String[]{fldName, getValueString(colDef.getType(), colDef.getMin())});
+        /*  If this is a col that holds a number, AND the value received from the UI is not null, AND the definition of the column specifies a constraint with a MIN value,
+            AND the value of the user entered value is less than the MIN value specified THEN we have a violation
+         */
+        if(isNumberCol && valueToValidateAsNumber != null && colDef.getMin() != null && valueToValidateAsNumber.doubleValue() < colDef.getMin()){
+            if(messageKey == null)messageKey = "mdm.validation.min";
+            businessValidationResults.addBusinessViolation(1, fldName, messageKey, new String[]{fldName, getValueString(colDef.getType(), colDef.getMin())});
             hasValidationErrors = true;
         }
-        if(valueToValidate != null && !isNumberCol && colDef.getPattern() != null && !colDef.getPattern().matcher(valueToValidate+"").matches()){
-            if(messagekey == null)messagekey = "mdm.validation.pattern";
-            businessValidationResults.addBusinessViolation(1, fldName, messagekey, new String[]{fldName, colDef.getPattern().toString()});
+        /*  If the changed value is NOT null AND this is a col that holds TEXT,  AND the definition of the column specifies a regex based constraint,
+            AND the changed value does not match the PATTERN, THEN we have a violation
+         */
+        if(valueToValidate != null && "text".equalsIgnoreCase(colDef.getType()) && colDef.getPattern() != null && !colDef.getPattern().matcher(valueToValidate+"").matches()){
+            if(messageKey == null)messageKey = "mdm.validation.pattern";
+            businessValidationResults.addBusinessViolation(1, fldName, messageKey, new String[]{fldName, colDef.getPattern().toString()});
             hasValidationErrors = true;
         }
         return hasValidationErrors;
@@ -111,6 +122,10 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
             return value.intValue() + "";
         }
         return value.doubleValue() + "";
+    }
+
+    private boolean isNullOrEmpty(Object value){
+        return value == null || value.toString().isEmpty();
     }
 }
 
