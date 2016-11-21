@@ -134,7 +134,7 @@ var MasterTableBody = Marionette.CollectionView.extend({
             masterGridData: this.masterGridData,
             childIndex: index
         }
-    },
+    }
 
 });
 
@@ -180,7 +180,9 @@ var Control = Marionette.View.extend({
         this.collections = options.collections;
         this.changes = {};
         this.newRecords = [];
+        this.errorRecords = [];
         var that = this;
+
         this.collections.on('add', function(model){
             var newRecord = model.attributes;
             newRecord['cid'] = model['cid'];
@@ -214,18 +216,54 @@ var Control = Marionette.View.extend({
 
     ui : {
         save : '.save',
-        search : '.search'
+        search : '.search',
+        toggleErrors : '.toggleErrors'
     },
 
     events : {
         'click .save' : 'saveClicked',
-        'click .add' : 'addRow'
+        'click .add' : 'addRow',
+        'click .toggleErrors' : 'toggleErrors'
     },
     enableSaveButton : function(){
         $(this.ui.save).removeClass('disabled');
     },
     disableSaveButton : function(){
         $(this.ui.save).addClass('disabled');
+    },
+    enableShowErrorsButton : function(){
+        $(this.ui.toggleErrors).removeClass('hidden');
+    },
+    disableShowErrorsButton : function(){
+        $(this.ui.toggleErrors).addClass('hidden');
+    },
+
+    toggleErrors : function () {
+        if($(this.ui.toggleErrors).hasClass('allRecs')){
+            this.showErrorRecords();
+            $(this.ui.toggleErrors).addClass('errRecs').removeClass('allRecs');
+            return;
+        }
+        if($(this.ui.toggleErrors).hasClass('errRecs')){
+            this.showAllRecords();
+            $(this.ui.toggleErrors).addClass('allRecs').removeClass('errRecs');
+            return;
+        }
+    },
+
+    showAllRecords : function(){
+        _.each(this.collections.models, function(model){
+            model.trigger('searchBasedShow');
+        });
+
+    },
+    showErrorRecords : function(){
+        _.each(this.collections.models, function(model){
+            model.trigger('searchBasedHide');
+        });
+        _.each(this.errorRecords, function(model){
+            model.trigger('searchBasedShow');
+        });
     },
 
     search : function(){
@@ -268,7 +306,8 @@ var Control = Marionette.View.extend({
         _.each(this.collections.models, function(model) {
             model.isValid();
         });
-
+        this.disableShowErrorsButton();
+        this.showAllRecords();
         /* This is to handle multiple clicks on the save button */
         if(this.newRecords.length == 0 && _.isEmpty(this.changes))return;
         this.disableSaveButton();
@@ -293,6 +332,7 @@ var Control = Marionette.View.extend({
                 /* Clear out any New or Changes submitted */
                 that.newRecords = [];
                 that.changes = {};
+                that.errorRecords = [];
                 var copyOfChanges = that.copyOfChanges;
                 var changedIds = _.pluck(savedModels.get('changedRecords'), 'id');
                 _.each(that.collections.models, function(model){
@@ -323,6 +363,10 @@ var Control = Marionette.View.extend({
                         return;
                     }
                     errModel.trigger('showError', violation.field, violation.message);
+                    errModel.trigger('searchBasedShow');
+                    that.errorRecords.push(errModel);
+                    that.showErrorRecords();
+                    that.enableShowErrorsButton();
                 });
 
             }
