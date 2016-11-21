@@ -226,10 +226,10 @@ var Control = Marionette.View.extend({
         'click .toggleErrors' : 'toggleErrors'
     },
     enableSaveButton : function(){
-        $(this.ui.save).removeClass('disabled');
+        $(this.ui.save).removeClass('hidden');
     },
     disableSaveButton : function(){
-        $(this.ui.save).addClass('disabled');
+        $(this.ui.save).addClass('hidden');
     },
     enableShowErrorsButton : function(){
         $(this.ui.toggleErrors).removeClass('hidden');
