@@ -44,7 +44,7 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
         }
 
         if(!hasValidationErrors) {
-            businessValidationResults.addReviewNeeded(0, "fld", "rule4", new String[]{mdmDTO.getMaster(), SpringrollSecurity.getUser().getUsername()}, "MdmMasterRule");
+            businessValidationResults.addReviewNeeded(null, 0, "fld", "rule4", new String[]{mdmDTO.getMaster(), SpringrollSecurity.getUser().getUsername()}, "MdmMasterRule");
         }
     }
 
@@ -59,17 +59,17 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
         /*  If the colDef specifies that the value CANNOT be NULL and the changed value is either null OR EMPTY, THEN we have a violation */
         if(!colDef.isNullable() && isNullOrEmpty(valueToValidate)){
             if(messageKey == null)messageKey = "mdm.validation.notNullable";
-            businessValidationResults.addBusinessViolation(1, id + ":" + fldName, messageKey, new String[]{});
+            businessValidationResults.addBusinessViolation(id, 1, fldName, messageKey, new String[]{});
             return true;
         }
         if(valueToValidate != null && colDef.getType().equalsIgnoreCase("text") && colDef.getSizeMin() != null && valueToValidate.toString().length() < colDef.getSizeMin()){
             if(messageKey == null)messageKey = "mdm.validation.minSize";
-            businessValidationResults.addBusinessViolation(1, id + ":" + fldName, messageKey, new String[]{colDef.getSizeMin().toString()});
+            businessValidationResults.addBusinessViolation(id, 1, fldName, messageKey, new String[]{colDef.getSizeMin().toString()});
             return true;
         }
         if(valueToValidate != null && colDef.getType().equalsIgnoreCase("text") && colDef.getSizeMax() != null && valueToValidate.toString().length() > colDef.getSizeMax()){
             if(messageKey == null)messageKey = "mdm.validation.maxSize";
-            businessValidationResults.addBusinessViolation(1, id + ":" + fldName, messageKey, new String[]{colDef.getSizeMax().toString()});
+            businessValidationResults.addBusinessViolation(id, 1, fldName, messageKey, new String[]{colDef.getSizeMax().toString()});
             return true;
         }
         /*  If this is a col that holds a number, AND the value received from the UI is not null, AND the definition of the column specifies a constraint with a MAX value,
@@ -77,7 +77,7 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
          */
         if(isNumberCol && valueToValidateAsNumber != null && colDef.getMax() != null && valueToValidateAsNumber.doubleValue() > colDef.getMax()){
             if(messageKey == null)messageKey = "mdm.validation.max";
-            businessValidationResults.addBusinessViolation(1, id + ":" + fldName, messageKey, new String[]{getValueString(colDef.getType(), colDef.getMax())});
+            businessValidationResults.addBusinessViolation(id, 1, fldName, messageKey, new String[]{getValueString(colDef.getType(), colDef.getMax())});
             return true;
         }
         /*  If this is a col that holds a number, AND the value received from the UI is not null, AND the definition of the column specifies a constraint with a MIN value,
@@ -85,7 +85,7 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
          */
         if(isNumberCol && valueToValidateAsNumber != null && colDef.getMin() != null && valueToValidateAsNumber.doubleValue() < colDef.getMin()){
             if(messageKey == null)messageKey = "mdm.validation.min";
-            businessValidationResults.addBusinessViolation(1, id + ":" + fldName, messageKey, new String[]{getValueString(colDef.getType(), colDef.getMin())});
+            businessValidationResults.addBusinessViolation(id, 1, fldName, messageKey, new String[]{getValueString(colDef.getType(), colDef.getMin())});
             return true;
         }
         /*  If the changed value is NOT null AND this is a col that holds TEXT,  AND the definition of the column specifies a regex based constraint,
@@ -93,7 +93,7 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
          */
         if(valueToValidate != null && "text".equalsIgnoreCase(colDef.getType()) && colDef.getPattern() != null && !colDef.getPattern().matcher(valueToValidate+"").matches()){
             if(messageKey == null)messageKey = "mdm.validation.pattern";
-            businessValidationResults.addBusinessViolation(1, id + ":" + fldName, messageKey, new String[]{colDef.getPattern().toString()});
+            businessValidationResults.addBusinessViolation(id, 1, fldName, messageKey, new String[]{colDef.getPattern().toString()});
             return true;
         }
         return false;

@@ -312,22 +312,17 @@ var Control = Marionette.View.extend({
                 that.enableSaveButton();
                 response['errorHandled'] = true;
                 _.each(response.responseJSON, function (violation) {
-                    /* The server return the field in the form of id:field -  we split by ':' to get to the
-                       id and the field - however if the name of the field has ':' in it we would get more
-                       that 2 elements in the array. Handle this by splitting by ':', take the 1st element
-                       as the ID and join the rest to construct the field name.
+                    /* The server returns and error in a 'BusinessValidationResult' object. Where cookie carries the cid,
+                       the field is the name of the field with an error and the message is the localized error message
                      */
-                    var v = violation.field.split(":");
-                    var id = v.shift();
-                    var fld = v.join(':');
                     var errModel = _.find(that.collections.models, function(model) {
-                        return model.cid == id;
+                        return model.cid == violation.cookie;
                     });
                     if(errModel === undefined){
                         console.log("Unable to find field and id from " + violation.field);
                         return;
                     }
-                    errModel.trigger('showError', fld, violation.message);
+                    errModel.trigger('showError', violation.field, violation.message);
                 });
 
             }

@@ -1,5 +1,7 @@
 package com.springroll.core;
 
+import java.io.Serializable;
+
 /**
  * Created by anishjoseph on 27/09/16.
  */
@@ -12,18 +14,20 @@ public interface IBusinessValidationResults {
      * The payload of the exception contains the list of business violations encountered. Note the routing is not stopped
      * immediately - all DTOs in the payload will be validated before the exception is thrown.
      *
+     * @param cookie - a serializable object that can be set by the BusinessValidator
      * @param dtoIndex - the index of the DTO which had the violation
      * @param field - the field, if any, that caused the violation. Unlike property validations, a business violation may not be directly linked to a field.
      * @param messageKey - the message key that will be used to generate the error message
      * @param args - arguments to the message key that will be used construct the error message
      */
-    void addBusinessViolation(int dtoIndex, String field, String messageKey, String[] args);
+    void addBusinessViolation(Serializable cookie, int dtoIndex, String field, String messageKey, String[] args);
 
-    void addReviewNeeded(int dtoIndex, String field, String messageKey, String[] args, String violatedRule);
+    void addReviewNeeded(Serializable cookie, int dtoIndex, String field, String messageKey, String[] args, String violatedRule);
     /**
      * Use this to send a notification to a set of people - this is not for review but just as informational
      * The payload of the exception contains the list of such notifications needed
      *
+     * @param cookie - a serializable object that can be set by the BusinessValidator
      * @param dtoIndex - the index of the DTO which had the violation
      * @param field - the field, if any, that caused the violation. Unlike property validations, this violation may not be directly linked to a field.
      * @param messageKey - the message key that will be used to generate the error message
@@ -32,5 +36,5 @@ public interface IBusinessValidationResults {
      * @param approver - the role to which the notification needs to be sent to - overrides the role given in table ReviewRule
      *
      */
-    void addReviewNeeded(int dtoIndex, String field, String messageKey, String[] args, String violatedRule, String approver);
+    void addReviewNeeded(Serializable cookie, int dtoIndex, String field, String messageKey, String[] args, String violatedRule, String approver);
 }

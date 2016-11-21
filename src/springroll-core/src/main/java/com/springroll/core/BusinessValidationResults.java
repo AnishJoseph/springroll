@@ -13,18 +13,18 @@ public class BusinessValidationResults implements IBusinessValidationResults, Se
 
 
     @Override
-    public void addBusinessViolation(int dtoIndex, String field, String messageKey, String[] args) {
-        businessViolations.add(new BusinessValidationResult(dtoIndex, field, messageKey, args, null, null));
+    public void addBusinessViolation(Serializable cookie, int dtoIndex, String field, String messageKey, String[] args) {
+        businessViolations.add(new BusinessValidationResult(cookie, dtoIndex, field, messageKey, args, null, null));
     }
 
     @Override
-    public void addReviewNeeded(int dtoIndex, String field, String messageKey, String[] args, String violatedRule) {
-        reviewNeededViolations.add(new BusinessValidationResult(dtoIndex, field, messageKey, args, violatedRule, null));
+    public void addReviewNeeded(Serializable cookie, int dtoIndex, String field, String messageKey, String[] args, String violatedRule) {
+        reviewNeededViolations.add(new BusinessValidationResult(cookie, dtoIndex, field, messageKey, args, violatedRule, null));
     }
 
     @Override
-    public void addReviewNeeded(int dtoIndex, String field, String messageKey, String[] args, String violatedRule, String approver) {
-        reviewNeededViolations.add(new BusinessValidationResult(dtoIndex, field, messageKey, args, violatedRule, approver));
+    public void addReviewNeeded(Serializable cookie, int dtoIndex, String field, String messageKey, String[] args, String violatedRule, String approver) {
+        reviewNeededViolations.add(new BusinessValidationResult(cookie, dtoIndex, field, messageKey, args, violatedRule, approver));
     }
 
     public List<BusinessValidationResult> getBusinessViolations() {

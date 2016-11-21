@@ -1,5 +1,7 @@
 package com.springroll.core;
 
+import java.io.Serializable;
+
 /**
  * Created by anishjoseph on 17/11/16.
  */
@@ -7,11 +9,13 @@ public class BusinessValidationViolations {
     private int dtoIndex;
     private String field;
     private String message;
+    private Serializable cookie;
 
-    public BusinessValidationViolations(int dtoIndex, String field, String message) {
+    public BusinessValidationViolations(Serializable cookie, int dtoIndex, String field, String message) {
         this.dtoIndex = dtoIndex;
         this.field = field;
         this.message = message;
+        this.cookie = cookie;
     }
 
     public int getDtoIndex() {
@@ -36,5 +40,13 @@ public class BusinessValidationViolations {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Serializable getCookie() {
+        return cookie;
+    }
+
+    public void setCookie(Serializable cookie) {
+        this.cookie = cookie;
     }
 }

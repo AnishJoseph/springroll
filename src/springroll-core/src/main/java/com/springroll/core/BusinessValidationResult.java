@@ -12,17 +12,20 @@ public class BusinessValidationResult implements Serializable{
     private String[] args = new String[]{};
     private String violatedRule;
     private String approver;
+    private Serializable cookie;
 
     public BusinessValidationResult() {
     }
 
-    public BusinessValidationResult(int dtoIndex, String field, String messageKey, String[] args, String violatedRule, String approver) {
+    public BusinessValidationResult(Serializable cookie, int dtoIndex, String field, String messageKey, String[] args, String violatedRule, String approver) {
         this.dtoIndex = dtoIndex;
         this.field = field;
         this.messageKey = messageKey;
         this.violatedRule = violatedRule;
         this.approver = approver;
+        this.approver = approver;
         if(args != null) this.args = args;
+        this.cookie = cookie;
 
     }
 
@@ -48,5 +51,13 @@ public class BusinessValidationResult implements Serializable{
 
     public String getApprover() {
         return approver;
+    }
+
+    public Serializable getCookie() {
+        return cookie;
+    }
+
+    public void setCookie(Serializable cookie) {
+        this.cookie = cookie;
     }
 }

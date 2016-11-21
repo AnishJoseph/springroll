@@ -45,7 +45,7 @@ public abstract class AbstractAPI {
     public  List<BusinessValidationViolations> handleBusinessValidationException(BusinessValidationException ex) {
         List<BusinessValidationViolations> violations =
                 ex.getViolations().stream()
-                        .map(businessValidationResult -> new BusinessValidationViolations(businessValidationResult.getDtoIndex(), businessValidationResult.getField(),
+                        .map(businessValidationResult -> new BusinessValidationViolations(businessValidationResult.getCookie(), businessValidationResult.getDtoIndex(), businessValidationResult.getField(),
                                                                 LocaleFactory.getLocalizedServerMessage(getUser().getLocale(), businessValidationResult.getMessageKey(), businessValidationResult.getArgs())))
                         .collect(Collectors.toList());
 
