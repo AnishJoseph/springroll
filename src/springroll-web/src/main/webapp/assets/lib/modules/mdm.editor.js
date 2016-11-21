@@ -29,27 +29,36 @@ var MasterRowView = Marionette.View.extend({
                 if (colDefs[index].lovList !== null) {
                     template.push('<td style="vertical-align: middle">');
                     Application.Utils.addLovToTemplate(template, colDefs[index], data.model[colName]);
+                    template.push('<div class="bg-danger err' + colDefs[index].name + '"></div>');
                     template.push('</td>');
                 } else if (colDefs[index].type === 'date') {
                     template.push('<td style="vertical-align: middle">');
                     Application.Utils.addDatePickerToTemplate(template, colDefs[index], data.model[colName], colDefs[index].name + ' datepicker');
+                    template.push('<div class="bg-danger err' + colDefs[index].name + '"></div>');
                     template.push('</td>');
                 } else if (colDefs[index].type === 'datetime') {
                     template.push('<td style="vertical-align: middle">');
                     Application.Utils.addDatePickerToTemplate(template, colDefs[index], data.model[colName], 'datetimepicker');
+                    template.push('<div class="bg-danger err' + colDefs[index].name + '"></div>');
                     template.push('</td>');
                 } else if (colDefs[index].type === 'text') {
-                    template.push('<td ><input type="text" data-attrname="' + colDefs[index].name + '" class="form-control " id ="' + colDefs[index].name + '" ');
+                    template.push('<td style="vertical-align: middle"><input type="text" data-attrname="' + colDefs[index].name + '" class="form-control " id ="' + colDefs[index].name + '" ');
                     if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
-                    template.push('></td>');
+                    template.push('>');
+                    template.push('<div class="bg-danger err' + colDefs[index].name + '"></div>');
+                    template.push('</td>');
                 } else if (colDefs[index].type === 'num') {
-                    template.push('<td ><input type="number" data-attrname="' + colDefs[index].name + '"  class="form-control " id ="' + colDefs[index].name + '" ');
+                    template.push('<td style="vertical-align: middle"><input type="number" data-attrname="' + colDefs[index].name + '"  class="form-control " id ="' + colDefs[index].name + '" ');
                     if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
-                    template.push('></td>');
+                    template.push('>');
+                    template.push('<div class="bg-danger err' + colDefs[index].name + '"></div>');
+                    template.push('</td>');
                 } else if (colDefs[index].type === 'int') {
-                    template.push('<td ><input type="number" data-attrname="' + colDefs[index].name + '"  class="form-control " id ="' + colDefs[index].name + '" ');
+                    template.push('<td style="vertical-align: middle"><input type="number" data-attrname="' + colDefs[index].name + '"  class="form-control " id ="' + colDefs[index].name + '" ');
                     if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
-                    template.push('></td>');
+                    template.push('>');
+                    template.push('<div class="bg-danger err' + colDefs[index].name + '"></div>');
+                    template.push('</td>');
                 } else {
                     console.error("Dont know what to do here with coldef type " + colDefs[index].type);
                 }
@@ -70,6 +79,10 @@ var MasterRowView = Marionette.View.extend({
     },
     disableNewRecords : function(){
         this.$el.find("input,button,textarea,select").attr("disabled", "disabled");
+    },
+
+    showError : function(errorFld, message){
+        this.$el.find('.err' + errorFld).text(message);
     },
 
     initialize : function(options){
@@ -94,6 +107,8 @@ var MasterRowView = Marionette.View.extend({
         this.model.on('searchBasedShow', this.searchBasedShow, this);
         this.model.on('searchBasedHide', this.searchBasedHide, this);
         this.model.on('disableNewRecords', this.disableNewRecords, this);
+        this.model.on('showError', this.showError, this);
+
     },
 
     onRender : function(){
@@ -166,7 +181,9 @@ var Control = Marionette.View.extend({
         this.newRecords = [];
         var that = this;
         this.collections.on('add', function(model){
-            that.newRecords.push(model.attributes);
+            var newRecord = model.attributes;
+            newRecord['cid'] = model['cid'];
+            that.newRecords.push(newRecord);
         });
         this.collections.on('change', function(model){
             if(model.id == null){
@@ -174,6 +191,7 @@ var Control = Marionette.View.extend({
             }
             that.enableSaveButton();
             var attrThatChanged = Object.keys(model.changed)[0];
+            if(attrThatChanged == 'sr.error') return;
             var newValue = model.changed[Object.keys(model.changed)[0]];
 
             var changesForThisId = that.changes[model.id] || {};
@@ -252,7 +270,7 @@ var Control = Marionette.View.extend({
         /* This is to handle multiple clicks on the save button */
         if(this.newRecords.length == 0 && _.isEmpty(this.changes))return;
         this.disableSaveButton();
-        var copyOfNewRecords = this.newRecords;
+        var copyOfNewRecords = this.newRecords.slice();
         var copyOfChanges = JSON.parse(JSON.stringify(this.changes));
 
         var changedRecords = [];
@@ -286,9 +304,29 @@ var Control = Marionette.View.extend({
                 });
 
             },
-            error : function(){
+            error : function(model, response){
                 /* Now that the save has failed - enable the save button */
                 that.enableSaveButton();
+                response['errorHandled'] = true;
+                _.each(response.responseJSON, function (violation) {
+                    /* The server return the field in the form of id:field -  we split by ':' to get to the
+                       id and the field - however if the name of the field has ':' in it we would get more
+                       that 2 elements in the array. Handle this by splitting by ':', take the 1st element
+                       as the ID and join the rest to construct the field name.
+                     */
+                    var v = violation.field.split(":");
+                    var id = v.shift();
+                    var fld = v.join(':');
+                    var errModel = _.find(that.collections.models, function(model) {
+                        return model.cid == id;
+                    });
+                    if(errModel === undefined){
+                        console.log("Unable to find field and id from " + violation.field);
+                        return;
+                    }
+                    errModel.trigger('showError', fld, violation.message);
+                });
+
             }
         });
     }
