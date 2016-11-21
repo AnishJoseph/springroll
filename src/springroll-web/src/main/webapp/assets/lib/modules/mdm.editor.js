@@ -94,6 +94,7 @@ var MasterRowView = Marionette.View.extend({
                     var value = this.$el.find('#' + colDef.name).val();
                     if (colDef.type === 'boolean') value = value === 'true';
                     this.model.set(colDef.name, value);
+                    this.$el.find('.err' + colDef.name).text('');/* Clear any error if present */
                 };
             } else {
                 events['dp.change .' + colDef.name] = function(evt){
