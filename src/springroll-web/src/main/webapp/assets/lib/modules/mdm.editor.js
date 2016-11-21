@@ -202,6 +202,7 @@ var Control = Marionette.View.extend({
             var prevVal = objectHoldingAttrValuesOldAndNew['prevVal'] || model.previousAttributes()[Object.keys(model.changed)[0]];
             objectHoldingAttrValuesOldAndNew['val'] = newValue;
             objectHoldingAttrValuesOldAndNew['prevVal'] = prevVal;
+            changesForThisId['cid'] = {'val' : model['cid']};
         });
     },
 
@@ -305,6 +306,7 @@ var Control = Marionette.View.extend({
 
             },
             error : function(model, response){
+                if(response.status != 409)return; /* Handle only business validation errors here */
                 /* Now that the save has failed - enable the save button */
                 that.enableSaveButton();
                 response['errorHandled'] = true;
