@@ -45,7 +45,7 @@ $(function() {
                 // Check if this is already handled in the business logic
                 if(message.errorHandled == undefined) {
                     _.each(message.responseJSON, function (violation) {
-                        Application.Indicator.showErrorMessage({message:violation.message});
+                        Application.Indicator.showErrorMessage({message:violation.field + ': ' + violation.message});
                     });
                 }
             },
