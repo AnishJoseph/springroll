@@ -71,7 +71,7 @@ import java.util.stream.Collectors;
                 }
                 wrapper.setPropertyValues(map);
                 List<Reviews> logs = new ArrayList<>(mdmEvent.getReviewLog().size());
-                logs.addAll(mdmEvent.getReviewLog().stream().map(reviewLog -> new Reviews(reviewLog.isApproved(), reviewLog.getReviewer(), reviewLog.getReviewComment(), reviewLog.getTime(), "ReviewRule", entity.getID())).collect(Collectors.toList()));
+                logs.addAll(mdmEvent.getReviewLog().stream().map(reviewLog -> new Reviews(reviewLog.isApproved(), reviewLog.getReviewer(), reviewLog.getReviewComment(), reviewLog.getTime(), entity.getClass().getSimpleName(), entity.getID())).collect(Collectors.toList()));
                 repositories.reviews.save(logs);
             }
             for (Map<String, Object> newRecord : mdmDTO.getNewRecords()) {
@@ -90,7 +90,7 @@ import java.util.stream.Collectors;
                 AbstractEntity entity = (AbstractEntity) wrapper.getWrappedInstance();
                 List<Reviews> logs = new ArrayList<>(mdmEvent.getReviewLog().size());
                 em.persist(entity);
-                logs.addAll(mdmEvent.getReviewLog().stream().map(reviewLog -> new Reviews(reviewLog.isApproved(), reviewLog.getReviewer(), reviewLog.getReviewComment(), reviewLog.getTime(), "ReviewRule", entity.getID())).collect(Collectors.toList()));
+                logs.addAll(mdmEvent.getReviewLog().stream().map(reviewLog -> new Reviews(reviewLog.isApproved(), reviewLog.getReviewer(), reviewLog.getReviewComment(), reviewLog.getTime(), entity.getClass().getSimpleName(), entity.getID())).collect(Collectors.toList()));
                 repositories.reviews.save(logs);
             }
             logger.debug("{} row(s) updated and {} row(s) created in Master {} via MDM by {}", mdmDTO.getChangedRecords().size(),mdmDTO.getNewRecords().size(), mdmDTO.getMaster(), SpringrollSecurity.getUser().getUsername());
