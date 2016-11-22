@@ -20,4 +20,6 @@ import org.springframework.stereotype.Component;
     @Autowired public UserDelegationRepository delegation;
 
     @Autowired public RoleRepository role;
+
+    @Autowired public ReviewsRepository reviews;
 }

@@ -3,8 +3,6 @@ package com.springroll.orm.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by anishjoseph on 05/09/16.
@@ -18,7 +16,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "Review_Rule")
-public class ReviewRule extends AbstractEntity implements IMdmEntity{
+public class ReviewRule extends AbstractEntity{
+
 
     @Column(name = "RULE_NAME")
     private String ruleName;
@@ -44,11 +43,6 @@ public class ReviewRule extends AbstractEntity implements IMdmEntity{
     @Column(name = "ACTIVE", length = 1)
     @NotNull
     private boolean active;
-
-    @ElementCollection
-    @CollectionTable(name = "REVIEWS", joinColumns=@JoinColumn(name="PARENT_ID"))
-    private List<Reviews> reviewLogs = new ArrayList<>();
-
 
     public String getRuleName() {
         return ruleName;
@@ -114,11 +108,4 @@ public class ReviewRule extends AbstractEntity implements IMdmEntity{
         this.active = active;
     }
 
-    public List<Reviews> getReviewLogs() {
-        return reviewLogs;
-    }
-
-    public void setReviewLogs(List<Reviews> reviewLogs) {
-        this.reviewLogs = reviewLogs;
-    }
 }

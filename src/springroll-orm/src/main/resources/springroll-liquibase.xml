@@ -108,7 +108,11 @@
             <column name="DESCRIPTION" type="varchar(256)"/>
         </createTable>
         <createTable tableName="REVIEWS">
+            <column name="ID" type="bigint" autoIncrement="false">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
             <column name="PARENT_ID" type="bigint"/>
+            <column name="MASTER" type="varchar(128)"/>
             <column name="REVIEWER" type="varchar(128)"/>
             <column name="APPROVED" type="varchar(1)" />
             <column name="COMMENT" type="varchar(128)"/>
