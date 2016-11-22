@@ -12,6 +12,7 @@ import java.util.List;
 public class ReviewActionDTO implements ServiceDTO {
     private List<Long> reviewStepId;
     private boolean approved;
+    private String reviewComment;
 
     public ReviewActionDTO(){}
 
@@ -34,5 +35,13 @@ public class ReviewActionDTO implements ServiceDTO {
     @Override
     public IServiceDefinition getProcessor() {
         return CoreServiceDefinitions.REVIEW;
+    }
+
+    public String getReviewComment() {
+        return reviewComment;
+    }
+
+    public void setReviewComment(String reviewComment) {
+        this.reviewComment = reviewComment;
     }
 }

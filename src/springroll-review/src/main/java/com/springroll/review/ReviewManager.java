@@ -134,11 +134,11 @@ public class ReviewManager extends SpringrollEndPoint {
         }
         //FIXME - can we parallelize here
         for (Long reviewStepId : reviewActionDTO.getReviewStepId()) {
-            actOnOneStep(reviewStepId, reviewActionDTO.isApproved());
+            actOnOneStep(reviewStepId, reviewActionDTO.isApproved(), reviewActionDTO.getReviewComment());
         }
     }
 
-    private void actOnOneStep(Long reviewStepId, boolean isApproved){
+    private void actOnOneStep(Long reviewStepId, boolean isApproved, String reviewComment){
         ReviewStep reviewStep = repo.reviewStep.findOne(reviewStepId);
         if(reviewStep == null){
             logger.error("Unable to find a review step with id {} - returning silently", reviewStepId);
@@ -154,7 +154,7 @@ public class ReviewManager extends SpringrollEndPoint {
             return;
         }
 
-        reviewStep.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), isApproved));
+        reviewStep.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), isApproved, reviewComment));
         if(reviewStep.getRuleId() != -1) {
             ReviewRule reviewRule = repo.reviewRules.findOne(reviewStep.getRuleId());
             notificationManager.addNotificationAcknowledgement(reviewStep.getNotificationId());

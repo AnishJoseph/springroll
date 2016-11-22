@@ -8,11 +8,13 @@ import java.time.LocalDateTime;
  */
 public class ReviewLog extends AckLog {
     private boolean approved;
+    private String reviewComment;
 
     public ReviewLog(){}
-    public ReviewLog(String reviewer, LocalDateTime time, boolean approved) {
+    public ReviewLog(String reviewer, LocalDateTime time, boolean approved, String reviewComment) {
         super(reviewer, time);
         this.approved = approved;
+        this.reviewComment = reviewComment;
     }
 
     public boolean isApproved() {
@@ -21,5 +23,13 @@ public class ReviewLog extends AckLog {
 
     public void setApproved(boolean approved) {
         this.approved = approved;
+    }
+
+    public String getReviewComment() {
+        return reviewComment;
+    }
+
+    public void setReviewComment(String reviewComment) {
+        this.reviewComment = reviewComment;
     }
 }
