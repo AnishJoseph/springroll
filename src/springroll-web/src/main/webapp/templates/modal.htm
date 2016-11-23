@@ -5,14 +5,24 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title text-info"><%-title%></h4>
             </div>
-            <div class="modal-body" id="modal-body">
+            <div class="modal-body sr-modal-body" id="modal-body">
             </div>
             <div class="modal-footer">
-                <input type="text" id='comments' class="form-control hidden"/>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button id='accept' type="button" class="btn btn-primary hidden">Approve</button>
-                <button id='reject' type="button" class="btn btn-primary hidden">Reject</button>
-                <button id='dismiss' type="button" class="btn btn-primary hidden">Dismiss</button>
+                <div class="row">
+                    <div class="col-md-8">
+                        <input type="text" id='comments' class="form-control hidden" placeholder="<%-Localize('ui.reviewComments')%>">
+                    </div>
+                    <div class="col-md-1">
+                        <span id='accept' class="glyphicon glyphicon-ok-sign form-control hidden form-control" title="<%-Localize('Approve')%>"/>
+                    </div>
+                    <div class="col-md-1">
+                        <span id='reject' class="glyphicon glyphicon-remove-sign form-control hidden form-control" title="<%-Localize('Reject')%>"/>
+                    </div>
+                    <div class="col-md-1">
+                        <span id='dismiss' class="glyphicon glyphicon-trash form-control hidden form-control" title="<%-Localize('Dismiss')%>"/>
+                    </div>
+                </div>
+                <!--<span data-dismiss="modal" class="glyphicon glyphicon-eye-close form-control" title="<%-Localize('Close')%>"/>-->
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

@@ -61,3 +61,7 @@ table.nowrap {
 .formSubmit {
   margin: 20px;
 }
+.sr-modal-body {
+  overflow: auto;
+  max-height: calc(100vh - 300px);
+}
