@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "Review_Rule")
-public class ReviewRule extends AbstractEntity{
+public class ReviewRule extends MdmEntity{
 
 
     @Column(name = "RULE_NAME")

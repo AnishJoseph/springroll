@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 })
 @Entity
 @Table(name = "ROLE")
-public class Role extends AbstractEntity {
+public class Role extends MdmEntity {
 
     @Column(name = "ROLE_NAME", length = 32)
     private String roleName;

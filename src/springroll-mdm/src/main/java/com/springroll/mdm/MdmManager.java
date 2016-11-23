@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springroll.core.Lov;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.exceptions.SpringrollException;
-import com.springroll.orm.entities.AbstractEntity;
+import com.springroll.orm.entities.MdmEntity;
 import com.springroll.orm.entities.Reviews;
 import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.repositories.Repositories;
@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
         MdmDefinition mdmDefinition = getDefinitionForMaster(mdmDTO.getMaster());
         try {
             for (MdmChangedRecord mdmChangedRecord : mdmDTO.getChangedRecords()) {
-                AbstractEntity entity = (AbstractEntity) em.find(mdmDefinition.getMasterClass(), mdmChangedRecord.getId());
+                MdmEntity entity = (MdmEntity) em.find(mdmDefinition.getMasterClass(), mdmChangedRecord.getId());
                 BeanWrapper wrapper = new BeanWrapperImpl(entity);
                 Map<String, Object> map = new HashMap<>();
                 for (String colName : mdmChangedRecord.getMdmChangedColumns().keySet()) {
@@ -70,6 +70,8 @@ import java.util.stream.Collectors;
                     }
                 }
                 wrapper.setPropertyValues(map);
+                entity.setCreatedBy(mdmEvent.getUser().getUsername());
+                entity.setCreatedAt( LocalDateTime.now());
                 List<Reviews> logs = new ArrayList<>(mdmEvent.getReviewLog().size());
                 logs.addAll(mdmEvent.getReviewLog().stream().map(reviewLog -> new Reviews(reviewLog.isApproved(), reviewLog.getReviewer(), reviewLog.getReviewComment(), reviewLog.getTime(), entity.getClass().getSimpleName(), entity.getID())).collect(Collectors.toList()));
                 repositories.reviews.save(logs);
@@ -87,8 +89,10 @@ import java.util.stream.Collectors;
                 }
                 BeanWrapper wrapper = new BeanWrapperImpl(mdmDefinition.getMasterClass());
                 wrapper.setPropertyValues(newRecord);
-                AbstractEntity entity = (AbstractEntity) wrapper.getWrappedInstance();
+                MdmEntity entity = (MdmEntity) wrapper.getWrappedInstance();
                 List<Reviews> logs = new ArrayList<>(mdmEvent.getReviewLog().size());
+                entity.setCreatedBy(mdmEvent.getUser().getUsername());
+                entity.setCreatedAt( LocalDateTime.now());
                 em.persist(entity);
                 logs.addAll(mdmEvent.getReviewLog().stream().map(reviewLog -> new Reviews(reviewLog.isApproved(), reviewLog.getReviewer(), reviewLog.getReviewComment(), reviewLog.getTime(), entity.getClass().getSimpleName(), entity.getID())).collect(Collectors.toList()));
                 repositories.reviews.save(logs);

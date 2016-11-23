@@ -17,7 +17,7 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "USER")
-public class User extends AbstractEntity {
+public class User extends MdmEntity {
 
     private transient Collection<String> rolesList;
 

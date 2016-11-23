@@ -37,6 +37,8 @@
             <column name="APPROVALS_NEEDED" type="int" defaultValue="1"/>
             <column name="FYI_ONLY" type="varchar(1)" />
             <column name="ACTIVE" type="varchar(1)" />
+            <column name="CREATED_BY" type="varchar(128)"/>
+            <column name="CREATED_AT" type="datetime"/>
             <column name="DESCRIPTION" type="VARCHAR2(128)"/>
         </createTable>
         <createTable tableName="REVIEW_STEP">
@@ -64,6 +66,8 @@
                 <constraints nullable="false" />
             </column>
             <column name="ACTIVE" type="varchar(1)" />
+            <column name="CREATED_BY" type="varchar(128)"/>
+            <column name="CREATED_AT" type="datetime"/>
             <column name="DESCRIPTION" type="varchar(256)"/>
         </createTable>
         <createTable tableName="USER">
@@ -79,6 +83,8 @@
             <column name="LANGUAGE" type="varchar(8)"/>
             <column name="VARIANT" type="varchar(8)"/>
             <column name="ACTIVE" type="varchar(1)" />
+            <column name="CREATED_BY" type="varchar(128)"/>
+            <column name="CREATED_AT" type="datetime"/>
         </createTable>
         <createTable tableName="NOTIFICATION">
             <column name="ID" type="bigint" autoIncrement="false">
@@ -105,6 +111,8 @@
             <column name="START_DATE" type="date"/>
             <column name="END_DATE" type="date"/>
             <column name="ACTIVE" type="varchar(1)" />
+            <column name="CREATED_BY" type="varchar(128)"/>
+            <column name="CREATED_AT" type="datetime"/>
             <column name="DESCRIPTION" type="varchar(256)"/>
         </createTable>
         <createTable tableName="REVIEWS">
