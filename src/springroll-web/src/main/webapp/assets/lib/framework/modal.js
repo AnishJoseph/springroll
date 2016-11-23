@@ -50,14 +50,22 @@ Application.ModalView = Marionette.View.extend({
     onRender : function() {
         $(this.ui.mymodal).modal();
         this.showChildView('modalBody', this.viewToShow);
-        if (_.contains(_.functions(this.viewOfCaller), "acceptClicked")) {
-            $(this.ui.accept).removeClass('hidden');
-        }
+
         if (_.contains(_.functions(this.viewOfCaller), "rejectClicked")) {
             $(this.ui.reject).removeClass('hidden');
         }
         if (_.contains(_.functions(this.viewOfCaller), "dismissClicked")) {
             $(this.ui.dismiss).removeClass('hidden');
+        }
+        var acceptFunction = _.find(_.functions(this.viewOfCaller), function(funcName){ return funcName == "acceptClicked"; });
+        if(acceptFunction != undefined){
+            $(this.ui.accept).removeClass('hidden');
+            if(this.viewOfCaller['acceptClicked'].length == 1){
+                /* The accept function takes an argument - we infer therefore that the caller
+                   needs a review comment to be given, so show the input tag to get the comment
+                */
+                $(this.ui.comments).removeClass('hidden');
+            }
         }
     }
 });
