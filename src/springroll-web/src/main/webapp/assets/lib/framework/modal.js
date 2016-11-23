@@ -9,6 +9,7 @@ Application.ModalView = Marionette.View.extend({
     initialize : function(options){
         this.viewToShow = options.viewToShow;
         this.viewOfCaller = options.viewOfCaller;
+        this.commentText = '';
     },
 
     regions : {
@@ -18,25 +19,30 @@ Application.ModalView = Marionette.View.extend({
         mymodal : '#mymodal',
         accept : '#accept',
         reject : '#reject',
-        dismiss : '#dismiss'
+        dismiss : '#dismiss',
+        comments : '#comments'
     },
 
     events: {
         'click #dismiss' : "dismissClicked",
         'click #accept'  : "acceptClicked",
         'click #reject'  : "rejectClicked",
+        'change #comments'  : "commentChanged",
     },
 
+    commentChanged : function(){
+        this.commentText = $(this.ui.comments).val();
+    },
     dismissClicked : function(){
         this.viewOfCaller.dismissClicked();
         $(this.ui.mymodal).modal('hide');
     },
     acceptClicked : function(){
-        this.viewOfCaller.acceptClicked();
+        this.viewOfCaller.acceptClicked(this.commentText);
         $(this.ui.mymodal).modal('hide');
     },
     rejectClicked : function(){
-        this.viewOfCaller.rejectClicked();
+        this.viewOfCaller.rejectClicked(this.commentText);
         $(this.ui.mymodal).modal('hide');
     },
 

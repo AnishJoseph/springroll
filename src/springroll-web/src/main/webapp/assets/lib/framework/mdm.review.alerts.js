@@ -45,8 +45,8 @@ var AlertsView = Marionette.View.extend({
         var view = new MdmMoreInfoView({ 'model': this.model});
         Application.showModal(this.model.get('localMessage'), view, this);
     },
-    acceptClicked : function(){
-        var reviewItem = new ReviewItem({reviewStepId: this.model.get('reviewStepId'), approved : true});
+    acceptClicked : function(commentText){
+        var reviewItem = new ReviewItem({reviewStepId: this.model.get('reviewStepId'), approved : true, 'reviewComment':commentText});
         var that = this;
         reviewItem.save({},{
             success : function () {
@@ -57,8 +57,8 @@ var AlertsView = Marionette.View.extend({
             }
         });
     },
-    rejectClicked : function(){
-        var reviewItem = new ReviewItem({reviewStepId: this.model.get('reviewStepId'), approved : false});
+    rejectClicked : function(commentText){
+        var reviewItem = new ReviewItem({reviewStepId: this.model.get('reviewStepId'), approved : false, 'reviewComment':commentText});
         var that = this;
         reviewItem.save({},{
             success : function () {
@@ -75,6 +75,6 @@ Application.subscribeForAlert('/core/mdmreview', {
     view: AlertsView,
     showDismiss: false,
     showInfo: true,
-    showAccept: true,
-    showReject: true,
+    showAccept: false,
+    showReject: false,
 });
