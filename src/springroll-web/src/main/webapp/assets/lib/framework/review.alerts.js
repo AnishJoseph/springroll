@@ -19,8 +19,8 @@ var AlertsView = Marionette.View.extend({
         var view = new Application.ReviewMoreInfoTableView({ collection: new Backbone.Collection(violations)});
         Application.showModal("Approval Required", view, this);
     },
-    acceptClicked : function(){
-        var reviewItem = new ReviewItem({reviewStepId: this.model.get('reviewStepId'), approved : true});
+    acceptClicked : function(reviewComment){
+        var reviewItem = new ReviewItem({reviewStepId: this.model.get('reviewStepId'), approved : true, 'reviewComment' : reviewComment});
         var that = this;
         reviewItem.save({},{
             success : function () {
@@ -31,8 +31,8 @@ var AlertsView = Marionette.View.extend({
             }
         });
     },
-    rejectClicked : function(){
-        var reviewItem = new ReviewItem({reviewStepId: this.model.get('reviewStepId'), approved : false});
+    rejectClicked : function(reviewComment){
+        var reviewItem = new ReviewItem({reviewStepId: this.model.get('reviewStepId'), approved : false, 'reviewComment' : reviewComment});
         var that = this;
         reviewItem.save({},{
             success : function () {
@@ -49,6 +49,6 @@ Application.subscribeForAlert('/core/review', {
     view: AlertsView,
     showDismiss: false,
     showInfo: true,
-    showAccept: true,
-    showReject: true,
+    showAccept: false,
+    showReject: false,
 });
