@@ -10,8 +10,8 @@ import javax.persistence.*;
 public abstract class AbstractEntity
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "tableBasedIdGenerator")
-    @TableGenerator(name = "tableBasedIdGenerator", table = "SEQUENCE_TABLE", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", allocationSize = 100)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "tableBasedIdGenerator") //FIXME - what should the initial value be?
+    @TableGenerator(name = "tableBasedIdGenerator", table = "SEQUENCE_TABLE", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", initialValue = 100)
     private Long id;
 
     @Column(name = "PARENT_ID")
