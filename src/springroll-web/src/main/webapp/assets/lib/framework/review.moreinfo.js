@@ -17,7 +17,7 @@ var TableBody = Marionette.CollectionView.extend({
 var MoreInfoTableView = Marionette.View.extend({
     tagName: 'table',
     className: 'table table-hover table-striped',
-    template: _.template('<thead> <tr> <th><%-Localize("breachedRuleName")%></th> <th><%-Localize("breachedRuleText")%></th> </tr> </thead> <tbody></tbody>'),
+    template: _.template('<thead> <tr> <th><%-Localize("review.breachedRuleName")%></th> <th><%-Localize("review.breachedRuleText")%></th> </tr> </thead> <tbody></tbody>'),
 
     regions: {
         body: {
@@ -35,7 +35,7 @@ var MoreInfoTableView = Marionette.View.extend({
 
 Application.ReviewMoreInfoTableView = Marionette.View.extend({
     tagName: 'div',
-    template: _.template('<div id="prevreviews"></div><h4><%-Localize("breachedRules")%></h4><div id="breaches"></div>'),
+    template: _.template('<div id="prevreviews"></div><h4><%-Localize("review.breachedRules")%></h4><div id="breaches"></div>'),
 
     regions: {
         prevreviews : '#prevreviews',
@@ -71,7 +71,7 @@ var PreviousReviewersTableBody = Marionette.CollectionView.extend({
 
 var PreviousReviewersHeader = Marionette.View.extend({
     tagName: 'div',
-    template: _.template('<h4 id="previousReviewers"><%-Localize("previousReviewers")%></h4>'),
+    template: _.template('<h4 id="previousReviewers"><%-Localize("review.previousReviewers")%></h4>'),
 
     initialize : function(options){
       this.tableView = options.tableView
@@ -104,7 +104,7 @@ var PreviousReviewersSection = Marionette.View.extend({
 var PreviousReviewers = Marionette.View.extend({
     tagName: 'table',
     className: 'table table-hover table-striped ',
-    template: _.template('<thead> <tr> <th><%-Localize("reviewer")%></th> <th><%-Localize("review.comments")%></th><th><%-Localize("review.time")%></th> </tr> </thead> <tbody></tbody>'),
+    template: _.template('<thead> <tr> <th><%-Localize("review.reviewer")%></th> <th><%-Localize("review.comments")%></th><th><%-Localize("review.time")%></th> </tr> </thead> <tbody></tbody>'),
 
     regions: {
         body: {
