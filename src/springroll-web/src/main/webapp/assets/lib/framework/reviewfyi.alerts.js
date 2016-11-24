@@ -20,7 +20,7 @@ var AlertsView = Marionette.View.extend({
             violations.push({violatedRule: Localize(violation.violatedRule), message : Localize(violation.messageKey, violation.args)});
         });
         var view = new Application.ReviewMoreInfoTableView({ violations: new Backbone.Collection(violations), model : this.model});
-        Application.showModal("For your information", view, this);
+        Application.showModal(this.model.get('localMessage'), view, this);
     },
 });
 
