@@ -1,6 +1,5 @@
 package com.springroll.orm;
 
-import com.springroll.orm.AtomikosFactory;
 import org.hibernate.engine.transaction.jta.platform.internal.AbstractJtaPlatform;
 import org.springframework.beans.factory.annotation.Configurable;
 

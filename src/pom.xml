@@ -16,7 +16,7 @@
 		<springroll.version>1.0.0</springroll.version>
         <liquibase.version>3.3.0</liquibase.version>
         <tomcat.jdbc.version>8.0.30</tomcat.jdbc.version>
-        <hibernate.version>4.3.11.Final</hibernate.version>
+        <hibernate.version>5.0.11.Final</hibernate.version>
         <hibernate.validator.version>5.1.0.Final</hibernate.validator.version>
         <version.javax.persistence>2.0.3</version.javax.persistence>
         <version.jpa.api>1.0.0.Final</version.jpa.api>
@@ -157,12 +157,22 @@
                         <groupId>javassist</groupId>
                         <artifactId>javassist</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.logging</groupId>
+                        <artifactId>jboss-logging</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-entitymanager</artifactId>
                 <version>${hibernate.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jboss.logging</groupId>
+                        <artifactId>jboss-logging</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
@@ -178,6 +188,11 @@
                 <groupId>org.hibernate.javax.persistence</groupId>
                 <artifactId>hibernate-jpa-2.1-api</artifactId>
                 <version>${version.jpa.api}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-java8</artifactId>
+                <version>${hibernate.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
