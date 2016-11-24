@@ -50,7 +50,7 @@ public class ReviewManager extends SpringrollEndPoint {
             return;
         }
         List<ReviewStep> nextReviewSteps = findNextReviewStep(reviewNeededEvent.getPayload().getEventForReview().getJobId(), -1);
-        createReviewNotifications(nextReviewSteps);
+        createReviewNotifications(nextReviewSteps,  null);
     }
 
     private boolean createReviewSteps(List<BusinessValidationResult> reviewNeededViolations, Long jobId, ReviewNeededEvent reviewNeededEvent){
@@ -94,7 +94,7 @@ public class ReviewManager extends SpringrollEndPoint {
         }
     }
 
-    private void createReviewNotifications(List<ReviewStep> reviewSteps){
+    private void createReviewNotifications(List<ReviewStep> reviewSteps, List<ReviewLog> reviewLog){
         ReviewStep step0 = repo.reviewStep.findByParentIdAndSerializedEventIsNotNull(reviewSteps.get(0).getParentId());
         Map<String, List<Long>> approverToNoti = new HashMap<>();
         for (ReviewStep reviewStep : reviewSteps) {
@@ -118,7 +118,7 @@ public class ReviewManager extends SpringrollEndPoint {
             INotificationChannel notificationChannel = notificationManager.nameToEnum(step.getChannel());
 
             String serviceName = ((ServiceDTO)step0.getEvent().getPayload()).getProcessor().name();
-            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(approverToNoti.get(approver), approver, businessValidationResults, step0.getEvent().getUser(), serviceName);
+            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(approverToNoti.get(approver), approver, businessValidationResults, step0.getEvent().getUser(), serviceName, reviewLog);
             Long notiId = notificationManager.sendNotification(notificationChannel, message);
             for (Long stepId : approverToNoti.get(approver)) {
                 repo.reviewStep.findOne(stepId).setNotificationId(notiId);
@@ -167,13 +167,13 @@ public class ReviewManager extends SpringrollEndPoint {
         notificationManager.deleteNotification(reviewStep.getNotificationId());
 
         List<ReviewStep> reviewSteps = findNextReviewStep(reviewStep.getParentId(), reviewStep.getReviewStage());
+        List<ReviewStep> allReviewSteps = repo.reviewStep.findByParentId(reviewStep.getParentId());
+        List<ReviewLog> reviewLog = new ArrayList<>();
+        for (ReviewStep rs : allReviewSteps) {
+            reviewLog.addAll(rs.getReviewLog());
+        }
         if(reviewSteps.isEmpty() || !isApproved || reviewSteps.get(0).getReviewStage() == REVIEW_STAGE_FOR_FYI){
             // All reviews are complete or someone has rejected this or the remaining steps are just FYI
-            List<ReviewStep> allReviewSteps = repo.reviewStep.findByParentId(reviewStep.getParentId());
-            List<ReviewLog> reviewLog = new ArrayList<>();
-            for (ReviewStep rs : allReviewSteps) {
-                reviewLog.addAll(rs.getReviewLog());
-            }
             Job job = repo.job.findOne(reviewStep.getParentId());
             job.setReviewLog(reviewLog);
             job.setUnderReview(false);
@@ -194,6 +194,7 @@ public class ReviewManager extends SpringrollEndPoint {
 
                 /* Now that the review is complete and approved, send out  FYI notifications, if any */
                 if(!reviewSteps.isEmpty())sendFyiNotification(reviewSteps);
+                //FIXME - should we notify the initiator that his transaction has been fully approved and is under processing
             } else {
                 job.setEndTime(LocalDateTime.now());
                 job.setStatus(job.getStatus() + " Review Rejected by " + SpringrollSecurity.getUser().getUsername());
@@ -202,10 +203,16 @@ public class ReviewManager extends SpringrollEndPoint {
             repo.reviewStep.delete(allReviewSteps);
             return;
         }
-        createReviewNotifications(reviewSteps);
+        createReviewNotifications(reviewSteps, reviewLog);
     }
 
     private void sendFyiNotification(List<ReviewStep> reviewSteps){
+        List<ReviewStep> allReviewSteps = repo.reviewStep.findByParentId(reviewSteps.get(0).getParentId());
+        List<ReviewLog> reviewLog = new ArrayList<>();
+        for (ReviewStep rs : allReviewSteps) {
+            reviewLog.addAll(rs.getReviewLog());
+        }
+
         ReviewStep step0 = repo.reviewStep.findByParentIdAndSerializedEventIsNotNull(reviewSteps.get(0).getParentId());
         Map<String, List<Long>> approverToNoti = new HashMap<>();
         for (ReviewStep reviewStep : reviewSteps) {
@@ -221,7 +228,8 @@ public class ReviewManager extends SpringrollEndPoint {
             }
             INotificationChannel notificationChannel = notificationManager.nameToEnum(step.getChannel());
             String serviceName = ((ServiceDTO)step0.getEvent().getPayload()).getProcessor().name();
-            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(approverToNoti.get(approver), approver, businessValidationResults, step0.getEvent().getUser(), serviceName);
+            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(approverToNoti.get(approver), approver, businessValidationResults, step0.getEvent().getUser(), serviceName, reviewLog);
+            //FIXME - above - we are sending null as set of reviews who have reviewed the message - need to send the actual reviews done if any
 
             notificationManager.sendNotification(notificationChannel, message);
         }

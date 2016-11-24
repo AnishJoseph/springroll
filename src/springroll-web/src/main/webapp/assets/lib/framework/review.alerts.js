@@ -16,8 +16,8 @@ var AlertsView = Marionette.View.extend({
         _.each(this.model.get('businessValidationResult'), function(violation){
             violations.push({violatedRule: Localize(violation.violatedRule), message : Localize(violation.messageKey, violation.args)});
         });
-        var view = new Application.ReviewMoreInfoTableView({ collection: new Backbone.Collection(violations)});
-        Application.showModal("Approval Required", view, this);
+        var view = new Application.ReviewMoreInfoTableView({ violations: new Backbone.Collection(violations), model : this.model});
+        Application.showModal("Approval Required", view, this);  //FIXME - give a proper message
     },
     acceptClicked : function(reviewComment){
         var reviewItem = new ReviewItem({reviewStepId: this.model.get('reviewStepId'), approved : true, 'reviewComment' : reviewComment});

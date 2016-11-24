@@ -1,12 +1,13 @@
 package com.springroll.core;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * Created by anishjoseph on 29/09/16.
  *
  */
-public class AckLog {
+public class AckLog implements Serializable{
     private String reviewer;
     private LocalDateTime time;
 

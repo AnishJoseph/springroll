@@ -1,6 +1,7 @@
 package com.springroll.review;
 
 import com.springroll.core.BusinessValidationResult;
+import com.springroll.core.ReviewLog;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.notification.INotification;
@@ -54,7 +55,7 @@ import java.util.stream.Collectors;
         notifications.addAll(repositories.notification.findByChannelNameAndReceivers(notificationChannel.getChannelName(), userId));
         return notifications;
     }
-    @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String serviceName){
-        return new FyiReviewNotificationMessage(approver, businessValidationResults, "ui.fyi.review.noti.msg", new String[]{serviceName, initiator.getUsername()});
+    @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String serviceName, List<ReviewLog> reviewLog){
+        return new FyiReviewNotificationMessage(approver, businessValidationResults, "ui.fyi.review.noti.msg", new String[]{serviceName, initiator.getUsername()}, reviewLog);
     }
 }

@@ -19,7 +19,7 @@ var AlertsView = Marionette.View.extend({
         _.each(this.model.get('businessValidationResult'), function(violation){
             violations.push({violatedRule: Localize(violation.violatedRule), message : Localize(violation.messageKey, violation.args)});
         });
-        var view = new Application.ReviewMoreInfoTableView({ collection: new Backbone.Collection(violations)});
+        var view = new Application.ReviewMoreInfoTableView({ violations: new Backbone.Collection(violations), model : this.model});
         Application.showModal("For your information", view, this);
     },
 });

@@ -1,6 +1,7 @@
 package com.springroll.mdm;
 
 import com.springroll.core.BusinessValidationResult;
+import com.springroll.core.ReviewLog;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.notification.INotificationMessage;
 import com.springroll.core.services.IMdmReviewNotificationMessageFactory;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
     private DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); //FIXME take this from properties file
 
-    @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String serviceName){
+    @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String serviceName, List<ReviewLog> reviewLog){
         MdmDTO mdmDTO = (MdmDTO) reviewManager.getFirstPayload(reviewStepIds.get(0));
         List<ColDef> colDefs = mdmManager.getColDefs(mdmDTO.getMaster());
 

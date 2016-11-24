@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.BusinessValidationResult;
+import com.springroll.core.ReviewLog;
 import com.springroll.notification.AbstractNotificationMessage;
 
 import java.io.IOException;
@@ -19,14 +20,17 @@ public class FyiReviewNotificationMessage extends AbstractNotificationMessage {
     private String  businessValidationResultJson = "";
     private String messageKey;
     private String[] args = new String[]{};
+    private List<ReviewLog> reviewLog;
+
 
     public FyiReviewNotificationMessage(){}
 
-    public FyiReviewNotificationMessage(String approver, List<BusinessValidationResult> businessValidationResult, String messageKey, String[] args) {
+    public FyiReviewNotificationMessage(String approver, List<BusinessValidationResult> businessValidationResult, String messageKey, String[] args, List<ReviewLog> reviewLog) {
         setNotificationReceivers(approver);
         setBusinessValidationResult(businessValidationResult);
         this.messageKey = messageKey;
         if(args != null)this.args = args;
+        this.reviewLog = reviewLog;
     }
 
     public List<BusinessValidationResult> getBusinessValidationResult() {
@@ -76,5 +80,13 @@ public class FyiReviewNotificationMessage extends AbstractNotificationMessage {
 
     public void setArgs(String[] args) {
         this.args = args;
+    }
+
+    public List<ReviewLog> getReviewLog() {
+        return reviewLog;
+    }
+
+    public void setReviewLog(List<ReviewLog> reviewLog) {
+        this.reviewLog = reviewLog;
     }
 }

@@ -1,6 +1,7 @@
 package com.springroll.notification;
 
 import com.springroll.core.BusinessValidationResult;
+import com.springroll.core.ReviewLog;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.notification.*;
@@ -46,7 +47,7 @@ import java.util.stream.Collectors;
     }
 
     @Override
-    public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String serviceName) {
+    public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String serviceName, List<ReviewLog> reviewLog) {
         //FIXME
         return null;
     }
