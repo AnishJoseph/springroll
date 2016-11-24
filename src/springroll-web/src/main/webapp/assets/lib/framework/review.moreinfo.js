@@ -35,7 +35,7 @@ var MoreInfoTableView = Marionette.View.extend({
 
 Application.ReviewMoreInfoTableView = Marionette.View.extend({
     tagName: 'div',
-    template: _.template('<h4 id="previousReviewers"><%-Localize("previousReviewers")%></h4><div id="prevreviews"></div><div class="border-line-bottom"/> <h4><%-Localize("breachedRules")%></h4><div id="breaches"></div>'),
+    template: _.template('<div id="prevreviews"></div><h4><%-Localize("breachedRules")%></h4><div id="breaches"></div>'),
 
     regions: {
         prevreviews : '#prevreviews',
@@ -43,20 +43,8 @@ Application.ReviewMoreInfoTableView = Marionette.View.extend({
 
     },
 
-    events : {
-        'click #previousReviewers' : 'toggleReviewerTable'
-    },
-
     initialize : function(options){
         this.violations = options.violations
-    },
-
-    toggleReviewerTable : function(){
-        if(this.$el.find('.prt').hasClass('hidden')){
-            this.$el.find('.prt').removeClass('hidden');
-        } else {
-            this.$el.find('.prt').addClass('hidden');
-        }
     },
 
     onRender: function() {
@@ -67,7 +55,7 @@ Application.ReviewMoreInfoTableView = Marionette.View.extend({
             var str=log.time.dayOfMonth + ":" + log.time.monthValue + ":" + log.time.year + ":" + log.time.hour + ":" + log.time.minute;
             log['dateAsString'] = moment(str, 'D:M:YYYY:H:m').format("DD MMM HH:mm"); //FIXME - format should be externalized;
         });
-        this.showChildView('prevreviews', new PreviousReviewers({ collection: new Backbone.Collection(reviewLog)}));
+        this.showChildView('prevreviews', new PreviousReviewersSection({ collection: new Backbone.Collection(reviewLog)}));
     }
 });
 
@@ -81,10 +69,42 @@ var PreviousReviewersTableBody = Marionette.CollectionView.extend({
     childView: PreviousReviewersRowView
 });
 
+var PreviousReviewersHeader = Marionette.View.extend({
+    tagName: 'div',
+    template: _.template('<h4 id="previousReviewers"><%-Localize("previousReviewers")%></h4>'),
+
+    initialize : function(options){
+      this.tableView = options.tableView
+    },
+    events : {
+        'click #previousReviewers' : 'toggleReviewerTable'
+    },
+    toggleReviewerTable : function(){
+    }
+
+
+});
+
+var PreviousReviewersSection = Marionette.View.extend({
+    tagName: 'div',
+    template: _.template('<div id="previousReviewersHeader"></div><div id="previousReviewersTable"></div>'),
+
+    regions: {
+        previousReviewersHeader : '#previousReviewersHeader',
+        previousReviewersTable : '#previousReviewersTable'
+    },
+
+    onRender: function() {
+        var previousReviewers = new PreviousReviewers({ collection: this.collection});
+        this.showChildView('previousReviewersTable', previousReviewers);
+        this.showChildView('previousReviewersHeader', new PreviousReviewersHeader({ tableView: previousReviewers}));
+    }
+});
+
 var PreviousReviewers = Marionette.View.extend({
     tagName: 'table',
-    className: 'prt table table-hover table-striped hidden',
-    template: _.template('<thead> <tr> <th><%-Localize("reviewer")%></th> <th><%-Localize("comments")%></th><th><%-Localize("time")%></th> </tr> </thead> <tbody></tbody>'),
+    className: 'table table-hover table-striped ',
+    template: _.template('<thead> <tr> <th><%-Localize("reviewer")%></th> <th><%-Localize("review.comments")%></th><th><%-Localize("review.time")%></th> </tr> </thead> <tbody></tbody>'),
 
     regions: {
         body: {
