@@ -1,12 +1,11 @@
 package com.springroll.review;
 
-import com.springroll.core.BusinessValidationResult;
-import com.springroll.core.ReviewLog;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.notification.INotification;
 import com.springroll.core.notification.INotificationChannel;
 import com.springroll.core.notification.INotificationMessage;
+import com.springroll.core.notification.INotificationMeta;
 import com.springroll.core.services.IFyiReviewNotificationMessageFactory;
 import com.springroll.orm.entities.Notification;
 import com.springroll.orm.entities.User;
@@ -55,7 +54,7 @@ import java.util.stream.Collectors;
         notifications.addAll(repositories.notification.findByChannelNameAndReceivers(notificationChannel.getChannelName(), userId));
         return notifications;
     }
-    @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String serviceName, List<ReviewLog> reviewLog){
-        return new FyiReviewNotificationMessage(approver, businessValidationResults, "ui.fyi.review.noti.msg", new String[]{serviceName, initiator.getUsername()}, reviewLog);
+    @Override public INotificationMessage makeMessage(INotificationMeta notificationMeta){
+        return new FyiReviewNotificationMessage(notificationMeta.getApprover(), notificationMeta.getBusinessValidationResults(), "ui.fyi.review.noti.msg", new String[]{notificationMeta.getApprover(), notificationMeta.getInitiator().getUsername()}, notificationMeta.getReviewLogs());
     }
 }

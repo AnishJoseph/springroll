@@ -1,9 +1,7 @@
 package com.springroll.mdm;
 
-import com.springroll.core.BusinessValidationResult;
-import com.springroll.core.ReviewLog;
-import com.springroll.core.SpringrollUser;
 import com.springroll.core.notification.INotificationMessage;
+import com.springroll.core.notification.INotificationMeta;
 import com.springroll.core.services.IMdmReviewNotificationMessageFactory;
 import com.springroll.notification.AbstractNotificationMessageFactory;
 import com.springroll.review.ReviewManager;
@@ -31,8 +29,8 @@ import java.util.stream.Collectors;
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
     private DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); //FIXME take this from properties file
 
-    @Override public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String serviceName, List<ReviewLog> reviewLog){
-        MdmDTO mdmDTO = (MdmDTO) reviewManager.getFirstPayload(reviewStepIds.get(0));
+    @Override public INotificationMessage makeMessage(INotificationMeta notificationMeta){
+        MdmDTO mdmDTO = (MdmDTO) reviewManager.getFirstPayload(notificationMeta.getReviewStepIds().get(0));
         List<ColDef> colDefs = mdmManager.getColDefs(mdmDTO.getMaster());
 
         if(!mdmDTO.getChangedRecords().isEmpty()) {
@@ -71,6 +69,6 @@ import java.util.stream.Collectors;
 
         MdmChangesForReview mdmChangesForReview = new MdmChangesForReview(mdmDTO, colDefs);
 
-        return new MdmReviewNotificationMessage(reviewStepIds, approver, "ui.mdm.review.noti.msg", businessValidationResults.get(0).getArgs(), mdmChangesForReview);
+        return new MdmReviewNotificationMessage(notificationMeta.getReviewStepIds(), notificationMeta.getApprover(), "ui.mdm.review.noti.msg", notificationMeta.getBusinessValidationResults().get(0).getArgs(), mdmChangesForReview);
     }
 }

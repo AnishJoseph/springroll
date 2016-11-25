@@ -3,10 +3,11 @@ package com.springroll.review;
 import com.springroll.core.*;
 import com.springroll.core.notification.INotificationChannel;
 import com.springroll.core.notification.INotificationMessage;
+import com.springroll.core.notification.INotificationMeta;
 import com.springroll.core.services.INotificationManager;
 import com.springroll.orm.entities.Job;
-import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.entities.ReviewRule;
+import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.repositories.Repositories;
 import com.springroll.router.SpringrollEndPoint;
 import com.springroll.router.review.ReviewNeededEvent;
@@ -118,7 +119,7 @@ public class ReviewManager extends SpringrollEndPoint {
             INotificationChannel notificationChannel = notificationManager.nameToEnum(step.getChannel());
 
             String serviceName = ((ServiceDTO)step0.getEvent().getPayload()).getProcessor().name();
-            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(approverToNoti.get(approver), approver, businessValidationResults, step0.getEvent().getUser(), serviceName, reviewLog);
+            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new NotificationMeta(approverToNoti.get(approver), approver, businessValidationResults, step0.getEvent().getUser(), serviceName, reviewLog));
             Long notiId = notificationManager.sendNotification(notificationChannel, message);
             for (Long stepId : approverToNoti.get(approver)) {
                 repo.reviewStep.findOne(stepId).setNotificationId(notiId);
@@ -228,7 +229,7 @@ public class ReviewManager extends SpringrollEndPoint {
             }
             INotificationChannel notificationChannel = notificationManager.nameToEnum(step.getChannel());
             String serviceName = ((ServiceDTO)step0.getEvent().getPayload()).getProcessor().name();
-            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(approverToNoti.get(approver), approver, businessValidationResults, step0.getEvent().getUser(), serviceName, reviewLog);
+            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new NotificationMeta(approverToNoti.get(approver), approver, businessValidationResults, step0.getEvent().getUser(), serviceName, reviewLog));
             //FIXME - above - we are sending null as set of reviews who have reviewed the message - need to send the actual reviews done if any
 
             notificationManager.sendNotification(notificationChannel, message);
@@ -239,6 +240,54 @@ public class ReviewManager extends SpringrollEndPoint {
         ReviewStep reviewStep = repo.reviewStep.findOne(reviewStepId);
         ReviewStep step0 = repo.reviewStep.findByParentIdAndSerializedEventIsNotNull(reviewStep.getParentId());
         return step0.getEvent().getPayload();
+    }
+
+    private class NotificationMeta implements INotificationMeta  {
+        private List<Long> reviewStepIds;
+        private String approver;
+        private List<BusinessValidationResult> businessValidationResults;
+        private SpringrollUser initiator;
+        private String service;
+        private List<ReviewLog> reviewLogs;
+
+        public NotificationMeta(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String service, List<ReviewLog> reviewLogs) {
+            this.reviewStepIds = reviewStepIds;
+            this.approver = approver;
+            this.businessValidationResults = businessValidationResults;
+            this.initiator = initiator;
+            this.service = service;
+            this.reviewLogs = reviewLogs;
+        }
+
+        @Override
+        public List<Long> getReviewStepIds() {
+            return reviewStepIds;
+        }
+
+        @Override
+        public String getApprover() {
+            return approver;
+        }
+
+        @Override
+        public List<BusinessValidationResult> getBusinessValidationResults() {
+            return businessValidationResults;
+        }
+
+        @Override
+        public SpringrollUser getInitiator() {
+            return initiator;
+        }
+
+        @Override
+        public String getService() {
+            return service;
+        }
+
+        @Override
+        public List<ReviewLog> getReviewLogs() {
+            return reviewLogs;
+        }
     }
 
 }

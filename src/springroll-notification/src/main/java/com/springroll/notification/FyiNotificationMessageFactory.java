@@ -1,7 +1,5 @@
 package com.springroll.notification;
 
-import com.springroll.core.BusinessValidationResult;
-import com.springroll.core.ReviewLog;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.notification.*;
@@ -12,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
     }
 
     @Override
-    public INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String serviceName, List<ReviewLog> reviewLog) {
+    public INotificationMessage makeMessage(INotificationMeta notificationMeta) {
         //FIXME
         return null;
     }

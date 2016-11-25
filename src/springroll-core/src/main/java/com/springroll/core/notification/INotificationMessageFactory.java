@@ -14,5 +14,5 @@ public interface INotificationMessageFactory {
     Set<String> getTargetUsers(INotificationMessage notificationMessage);
     List<? extends INotification> getPendingNotificationsForUser(INotificationChannel notificationChannel);
     //FIXME - no reason why we should have a make message - its required only for alerts??
-    INotificationMessage makeMessage(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String service, List<ReviewLog> reviewLog);
+    INotificationMessage makeMessage(INotificationMeta notificationMeta);
 }
