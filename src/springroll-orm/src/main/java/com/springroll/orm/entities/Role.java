@@ -1,5 +1,7 @@
 package com.springroll.orm.entities;
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -14,6 +16,7 @@ import javax.validation.constraints.NotNull;
 })
 @Entity
 @Table(name = "ROLE")
+@Audited
 public class Role extends MdmEntity {
 
     @Column(name = "ROLE_NAME", length = 32)

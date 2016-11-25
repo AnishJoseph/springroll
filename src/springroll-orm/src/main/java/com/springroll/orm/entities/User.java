@@ -1,6 +1,7 @@
 package com.springroll.orm.entities;
 
 
+import org.hibernate.envers.Audited;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "USER")
+@Audited
 public class User extends MdmEntity {
 
     private transient Collection<String> rolesList;

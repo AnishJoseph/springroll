@@ -1,6 +1,8 @@
 package com.springroll.orm.entities;
 
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -16,6 +18,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "Review_Rule")
+@Audited
 public class ReviewRule extends MdmEntity{
 
 

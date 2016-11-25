@@ -1,6 +1,7 @@
 package com.springroll.orm.entities;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import javax.persistence.*;
@@ -21,7 +22,7 @@ import java.time.LocalDate;
 @Configurable
 @Entity
 @Table(name = "USER_DELEGATION", uniqueConstraints = { @UniqueConstraint(name = "I_USER_DELEGATION", columnNames = {"USER_ID", "START_DATE" }) })
-
+@Audited
 public class UserDelegation extends MdmEntity {
 
     private static final long serialVersionUID = 1l;
