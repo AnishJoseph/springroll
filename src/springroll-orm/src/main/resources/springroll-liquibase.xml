@@ -39,6 +39,8 @@
             <column name="ACTIVE" type="varchar(1)" />
             <column name="CREATED_BY" type="varchar(128)"/>
             <column name="CREATED_AT" type="datetime"/>
+            <column name="MODIFIED_BY" type="varchar(128)"/>
+            <column name="MODIFIED_ON" type="datetime"/>
             <column name="DESCRIPTION" type="VARCHAR2(128)"/>
         </createTable>
         <createTable tableName="REVIEW_RULE_AUD">
@@ -55,6 +57,8 @@
             <column name="ACTIVE" type="varchar(1)" />
             <column name="CREATED_BY" type="varchar(128)"/>
             <column name="CREATED_AT" type="datetime"/>
+            <column name="MODIFIED_BY" type="varchar(128)"/>
+            <column name="MODIFIED_ON" type="datetime"/>
             <column name="DESCRIPTION" type="VARCHAR2(128)"/>
         </createTable>
         <createTable tableName="REVIEW_STEP">
@@ -84,6 +88,8 @@
             <column name="ACTIVE" type="varchar(1)" />
             <column name="CREATED_BY" type="varchar(128)"/>
             <column name="CREATED_AT" type="datetime"/>
+            <column name="MODIFIED_BY" type="varchar(128)"/>
+            <column name="MODIFIED_ON" type="datetime"/>
             <column name="DESCRIPTION" type="varchar(256)"/>
         </createTable>
         <createTable tableName="ROLE_AUD">
@@ -95,6 +101,8 @@
             <column name="ACTIVE" type="varchar(1)" />
             <column name="CREATED_BY" type="varchar(128)"/>
             <column name="CREATED_AT" type="datetime"/>
+            <column name="MODIFIED_BY" type="varchar(128)"/>
+            <column name="MODIFIED_ON" type="datetime"/>
             <column name="DESCRIPTION" type="varchar(256)"/>
         </createTable>
         <createTable tableName="USER">
@@ -112,6 +120,8 @@
             <column name="ACTIVE" type="varchar(1)" />
             <column name="CREATED_BY" type="varchar(128)"/>
             <column name="CREATED_AT" type="datetime"/>
+            <column name="MODIFIED_BY" type="varchar(128)"/>
+            <column name="MODIFIED_ON" type="datetime"/>
         </createTable>
         <createTable tableName="USER_AUD">
             <column name="ID" type="bigint"> <constraints primaryKey="true"/> </column>
@@ -126,6 +136,8 @@
             <column name="ACTIVE" type="varchar(1)" />
             <column name="CREATED_BY" type="varchar(128)"/>
             <column name="CREATED_AT" type="datetime"/>
+            <column name="MODIFIED_BY" type="varchar(128)"/>
+            <column name="MODIFIED_ON" type="datetime"/>
         </createTable>
         <createTable tableName="NOTIFICATION">
             <column name="ID" type="bigint" autoIncrement="false">
@@ -154,6 +166,8 @@
             <column name="ACTIVE" type="varchar(1)" />
             <column name="CREATED_BY" type="varchar(128)"/>
             <column name="CREATED_AT" type="datetime"/>
+            <column name="MODIFIED_BY" type="varchar(128)"/>
+            <column name="MODIFIED_ON" type="datetime"/>
             <column name="DESCRIPTION" type="varchar(256)"/>
         </createTable>
         <createTable tableName="USER_DELEGATION_AUD">
@@ -168,6 +182,8 @@
             <column name="ACTIVE" type="varchar(1)" />
             <column name="CREATED_BY" type="varchar(128)"/>
             <column name="CREATED_AT" type="datetime"/>
+            <column name="MODIFIED_BY" type="varchar(128)"/>
+            <column name="MODIFIED_ON" type="datetime"/>
             <column name="DESCRIPTION" type="varchar(256)"/>
         </createTable>
         <createTable tableName="REVIEWS">

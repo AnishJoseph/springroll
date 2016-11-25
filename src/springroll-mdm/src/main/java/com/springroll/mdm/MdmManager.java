@@ -70,8 +70,8 @@ import java.util.stream.Collectors;
                     }
                 }
                 wrapper.setPropertyValues(map);
-                entity.setCreatedBy(mdmEvent.getUser().getUsername());
-                entity.setCreatedAt( LocalDateTime.now());
+                entity.setModifiedBy(mdmEvent.getUser().getUsername());
+                entity.setModifiedOn( LocalDateTime.now());
                 List<Reviews> logs = new ArrayList<>(mdmEvent.getReviewLog().size());
                 logs.addAll(mdmEvent.getReviewLog().stream().map(reviewLog -> new Reviews(reviewLog.isApproved(), reviewLog.getReviewer(), reviewLog.getReviewComment(), reviewLog.getTime(), entity.getClass().getSimpleName(), entity.getID())).collect(Collectors.toList()));
                 repositories.reviews.save(logs);
