@@ -106,6 +106,10 @@ public class NotificationManager implements INotificationManager, ILovProvider {
     @Override
     public void deleteNotification(Long notificationId) {
         Notification notification = repositories.notification.findOne(notificationId);
+        if(notification == null){
+            logger.error("Unable to find notification with id {}", notificationId);
+            return;
+        }
         NotificationCancellationMessage msg = new NotificationCancellationMessage(notification.getNotificationMessage().getChannelType(), notificationId);
         List<INotificationMessage> msgs = new ArrayList<>();
         msgs.add(msg);
