@@ -222,6 +222,7 @@ public class ReviewManager extends SpringrollEndPoint {
                 job.setCompleted(true);
             }
             repo.reviewStep.delete(allReviewSteps);
+            repo.reviewStepMeta.delete(reviewStepMeta.getID());
             return;
         }
         createReviewNotifications(reviewSteps, reviewStepMeta.getReviewLog());

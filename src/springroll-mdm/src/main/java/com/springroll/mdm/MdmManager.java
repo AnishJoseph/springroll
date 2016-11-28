@@ -6,9 +6,9 @@ import com.springroll.core.Lov;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.exceptions.SpringrollException;
 import com.springroll.orm.entities.MdmEntity;
+import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.entities.ReviewStepMeta;
 import com.springroll.orm.entities.Reviews;
-import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.repositories.Repositories;
 import com.springroll.router.SpringrollEndPoint;
 import org.slf4j.Logger;
@@ -47,8 +47,8 @@ import java.util.stream.Collectors;
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
     private DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); //FIXME take this from properties file
 
-    @Value("${mdm.showModifedRecords}")
-    private boolean showModifedRecords = false;
+    @Value("${mdm.showModifiedRecords}")
+    private boolean showModifiedRecords = false;
 
     public void on(MdmEvent mdmEvent) {
         MdmDTO mdmDTO = mdmEvent.getPayload();
@@ -170,7 +170,7 @@ import java.util.stream.Collectors;
         }
 
         List<Long> tmpIdsUnderReview = new ArrayList<>();
-        if(showModifedRecords)tmpIdsUnderReview.addAll(idsUnderReview);
+        if(showModifiedRecords)tmpIdsUnderReview.addAll(idsUnderReview);
         tmpIdsUnderReview.add(-1l);
         List<Object[]> resultList = em.createNamedQuery(mdmDefinition.getGetMdmRecords()).setParameter("idsUnderReview", tmpIdsUnderReview).getResultList();
 
@@ -205,9 +205,9 @@ import java.util.stream.Collectors;
         /* Add the ids of all updated records under review (previously computed) into the list of records under review */
         mdmData.getRecIdsUnderReview().addAll(idsUnderReview);
 
-        if(showModifedRecords) {
-            for (ReviewStepMeta recUnderReview : reviewStepMetas) {
-                MdmDTO mdmDTO = (MdmDTO) recUnderReview.getEvent().getPayload();
+        if(showModifiedRecords) {
+            for (ReviewStepMeta reviewStepMeta : reviewStepMetas) {
+                MdmDTO mdmDTO = (MdmDTO) reviewStepMeta.getEvent().getPayload();
 
                 /* Add data for all new records */
                 for (Map<String, Object> newRecord : mdmDTO.getNewRecords()) {
@@ -223,17 +223,22 @@ import java.util.stream.Collectors;
                 /*  Get the notification for this review step - the notification has the data for the record under modification - we need
                     this to display the changed record to the user (the record will be disabled but nevertheless needs to be shown
                 */
-//                MdmReviewNotificationMessage mdmReviewNotificationMessage = (MdmReviewNotificationMessage) repositories.notification.findOne(recUnderReview.getNotificationId()).getNotificationMessage();  //FIXME
-                MdmReviewNotificationMessage mdmReviewNotificationMessage = null;
+                List<ReviewStep> reviewSteps = repositories.reviewStep.findByParentId(reviewStepMeta.getID());
+                Long notificationId = null;
+                for (ReviewStep reviewStep : reviewSteps) {
+                    if(reviewStep.getNotificationId() != null){
+                        notificationId = reviewStep.getNotificationId();
+                        break;
+                    }
+                }
+
+                MdmReviewNotificationMessage mdmReviewNotificationMessage = (MdmReviewNotificationMessage) repositories.notification.findOne(notificationId).getNotificationMessage();  //FIXME
                 for (MdmChangedRecord mdmChangedRecord : mdmReviewNotificationMessage.getMdmChangesForReview().getChangedRecords()) {
                     Object[] newRecData = new Object[mdmData.getColDefs().size()];
                     resultList.add(newRecData);
                     int i = 0;
                     for (ColDef colDef : mdmData.getColDefs()) {
                         newRecData[i++] = mdmChangedRecord.getMdmChangedColumns().get(colDef.getName()).getVal();
-//                        if (colDef.getType().equalsIgnoreCase("date")) {
-//                            newRecData[i - 1] = ((LocalDate) newRecData[i - 1]).format(formatter);
-//                        }
                     }
                 }
             }
