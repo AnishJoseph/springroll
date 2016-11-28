@@ -19,10 +19,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by anishjoseph on 27/09/16.
@@ -166,7 +163,6 @@ public class ReviewManager extends SpringrollEndPoint {
     private boolean markStepCompleteAndDetermineIfStepIsComplete(ReviewStep reviewStep, ReviewActionDTO reviewActionDTO){
         reviewStep.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionDTO.isApproved(), reviewActionDTO.getReviewComment()));
         ReviewRule reviewRule = repo.reviewRules.findOne(reviewStep.getRuleId());
-        notificationManager.addNotificationAcknowledgement(reviewStep.getNotificationId());
         if (reviewActionDTO.isApproved() && reviewRule.getApprovalsNeeded() > reviewStep.getReviewLog().size()) {
             /* Oh this rule requires multiple approvals for this stage - this step is not yet complete */
             return false;
@@ -174,6 +170,7 @@ public class ReviewManager extends SpringrollEndPoint {
         reviewStep.setCompleted(true);
         return true;
     }
+
     public void on(ReviewActionEvent reviewActionEvent) {
         ReviewActionDTO reviewActionDTO = reviewActionEvent.getPayload();
         if (reviewActionDTO.getReviewStepId() == null) {
@@ -182,6 +179,7 @@ public class ReviewManager extends SpringrollEndPoint {
         }
         boolean isAnyStepIscomplete = false;
         ReviewStep reviewStep = null;
+        Set<Long> notificationIds = new HashSet<>();
         for (Long reviewStepId : reviewActionDTO.getReviewStepId()) {
             reviewStep = repo.reviewStep.findOne(reviewStepId);
             /* FIXME - If any review is invalid just return - we do this else may assume that this step is complete*/
@@ -191,7 +189,10 @@ public class ReviewManager extends SpringrollEndPoint {
                 isAnyStepIscomplete = true;
                 continue;
             }
+            if(notificationIds.contains(reviewStep.getNotificationId()))continue;
+            notificationManager.addNotificationAcknowledgement(reviewStep.getNotificationId()); //FIXME - why bother updating when we are going to delete it?
             notificationManager.deleteNotification(reviewStep.getNotificationId());
+            notificationIds.add(reviewStep.getNotificationId());
         }
         ReviewStepMeta reviewStepMeta = repo.reviewStepMeta.findOne(reviewStep.getParentId());
         reviewStepMeta.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionDTO.isApproved(), reviewActionDTO.getReviewComment()));
