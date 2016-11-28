@@ -9,7 +9,6 @@ import java.util.List;
  */
 public interface ReviewStepMetaRepository extends AbstractEntityRepository<ReviewStepMeta>{
         List<ReviewStepMeta> findBySearchId(String searchId);
-        ReviewStepMeta findByParentId(Long parentId);
 
 
 }

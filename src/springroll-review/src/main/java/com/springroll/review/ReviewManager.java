@@ -144,7 +144,7 @@ public class ReviewManager extends SpringrollEndPoint {
             /* This step is already been reviewed and needs no further review */
             return false;
         }
-        List<ReviewStep> earlierUncompletedSteps = repo.reviewStep.findByCompletedAndParentIdAndReviewStageIsLessThan(false, reviewStep.getParentId(), reviewStep.getReviewStage());
+        List<ReviewStep> earlierUncompletedSteps = repo.reviewStep.findByCompletedIsFalseAndParentIdAndReviewStageIsLessThan(reviewStep.getParentId(), reviewStep.getReviewStage());
         if (!earlierUncompletedSteps.isEmpty()) {
             logger.error("User '{}' is trying to approve/reject a step that is not yet ready for approval", SpringrollSecurity.getUser().getUsername());
             return false;
