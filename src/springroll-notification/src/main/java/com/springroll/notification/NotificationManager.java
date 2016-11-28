@@ -43,8 +43,8 @@ public class NotificationManager implements INotificationManager, ILovProvider {
         this.addNotificationChannels(CoreNotificationChannels.class);
     }
 
-    @Override public Long sendNotification(INotificationChannel notificationChannel, INotificationMessage notificationMessage) {
-        Set<String> targetUsers = notificationChannel.getMessageFactory().getTargetUsers(notificationMessage);
+    @Override public Long sendNotification(INotificationChannel notificationChannel, INotificationMessage notificationMessage, String initiator) {
+        Set<String> targetUsers = notificationChannel.getMessageFactory().getTargetUsers(notificationMessage, initiator);
         /* Use spring to publish - spring will deliver this on a successful commit of the transaction.
            This ensures that the notification is pushed to the user ONLY after the current transaction commits.
            If we don't have this, then the event is pushed to the user even if the transaction rolls back
@@ -59,7 +59,7 @@ public class NotificationManager implements INotificationManager, ILovProvider {
         notification.setChannelName(notificationChannel.getChannelName());
         notification.setUsers(targetUsers);
         notification.setCreationTime(LocalDateTime.now());
-        notification.setInitiator(SpringrollSecurity.getUser().getUsername());
+        notification.setInitiator(initiator);
         notification.setAutoClean(notificationChannel.isAutoClean());
 
         notificationMessage.setCreationTime(System.currentTimeMillis());

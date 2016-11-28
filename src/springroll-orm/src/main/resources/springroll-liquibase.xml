@@ -36,6 +36,7 @@
             <column name="APPROVER" type="VARCHAR2(32)"/>
             <column name="APPROVALS_NEEDED" type="int" defaultValue="1"/>
             <column name="FYI_ONLY" type="varchar(1)" />
+            <column name="SELF_REVIEW" type="varchar(1)" />
             <column name="ACTIVE" type="varchar(1)" />
             <column name="CREATED_BY" type="varchar(128)"/>
             <column name="CREATED_AT" type="datetime"/>
@@ -54,6 +55,7 @@
             <column name="APPROVER" type="VARCHAR2(32)"/>
             <column name="APPROVALS_NEEDED" type="int" defaultValue="1"/>
             <column name="FYI_ONLY" type="varchar(1)" />
+            <column name="SELF_REVIEW" type="varchar(1)" />
             <column name="ACTIVE" type="varchar(1)" />
             <column name="CREATED_BY" type="varchar(128)"/>
             <column name="CREATED_AT" type="datetime"/>
@@ -66,15 +68,23 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="PARENT_ID" type="bigint"/>
-            <column name="CHANNEL" type="VARCHAR2(48)" />
-            <column name="SEARCH_ID" type="VARCHAR2(48)" />
-            <column name="APPROVER" type="VARCHAR2(32)"/>
             <column name="RULE_ID" type="bigint"/>
-            <column name="NOTIFICATION_ID" type="bigint"/>
+            <column name="CHANNEL" type="VARCHAR2(48)" />
             <column name="REVIEW_STAGE" type="int" />
+            <column name="APPROVER" type="VARCHAR2(32)"/>
+            <column name="NOTIFICATION_ID" type="bigint"/>
             <column name="COMPLETED" type="varchar(1)" />
             <column name="REVIEW_LOG" type="VARCHAR2(2048)"/>
             <column name="VIOLATION_FOR_THIS_STEP" type="VARCHAR2(256)"/>
+        </createTable>
+        <createTable tableName="REVIEW_STEP_META">
+            <column name="ID" type="bigint" autoIncrement="false">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="PARENT_ID" type="bigint"/>
+            <column name="INITIATOR" type="VARCHAR2(32)"/>
+            <column name="SEARCH_ID" type="VARCHAR2(48)" />
+            <column name="REVIEW_LOG" type="VARCHAR2(2048)"/>
             <column name="EVENT" type="longblob" />
         </createTable>
         <createTable tableName="ROLE">

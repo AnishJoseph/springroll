@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
     @Autowired Repositories repositories;
 
     @Override
-    public Set<String> getTargetUsers(INotificationMessage notificationMessage) {
+    public Set<String> getTargetUsers(INotificationMessage notificationMessage, String initiator) {
         FyiNotificationMessage message = (FyiNotificationMessage) notificationMessage;
         // The notificationReceiver can either be a user or a role
         User user = repositories.users.findByUserIdIgnoreCase(notificationMessage.getNotificationReceivers());

@@ -6,6 +6,7 @@ import com.springroll.core.Lov;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.exceptions.SpringrollException;
 import com.springroll.orm.entities.MdmEntity;
+import com.springroll.orm.entities.ReviewStepMeta;
 import com.springroll.orm.entities.Reviews;
 import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.repositories.Repositories;
@@ -161,9 +162,9 @@ import java.util.stream.Collectors;
         mdmData.setColDefs(colDefs);
 
         /* Now find any MDM records for this master that are review - these includes those that are new and those that were modified */
-        List<ReviewStep> recsUnderReview = repositories.reviewStep.findByChannelAndSearchIdAndSerializedEventIsNotNull(mdmDefinitions.getReviewChannelName(), "MDM:" + master);
+        List<ReviewStepMeta> reviewStepMetas = repositories.reviewStepMeta.findBySearchId("MDM:" + master);
         List<Long> idsUnderReview = new ArrayList<>();
-        for (ReviewStep recUnderReview : recsUnderReview) {
+        for (ReviewStepMeta recUnderReview : reviewStepMetas) {
             MdmDTO mdmDTO = (MdmDTO) recUnderReview.getEvent().getPayload();
             idsUnderReview.addAll(mdmDTO.getChangedRecords().stream().map( MdmChangedRecord::getId).collect(Collectors.toList()));
         }
@@ -205,7 +206,7 @@ import java.util.stream.Collectors;
         mdmData.getRecIdsUnderReview().addAll(idsUnderReview);
 
         if(showModifedRecords) {
-            for (ReviewStep recUnderReview : recsUnderReview) {
+            for (ReviewStepMeta recUnderReview : reviewStepMetas) {
                 MdmDTO mdmDTO = (MdmDTO) recUnderReview.getEvent().getPayload();
 
                 /* Add data for all new records */
@@ -222,7 +223,8 @@ import java.util.stream.Collectors;
                 /*  Get the notification for this review step - the notification has the data for the record under modification - we need
                     this to display the changed record to the user (the record will be disabled but nevertheless needs to be shown
                 */
-                MdmReviewNotificationMessage mdmReviewNotificationMessage = (MdmReviewNotificationMessage) repositories.notification.findOne(recUnderReview.getNotificationId()).getNotificationMessage();
+//                MdmReviewNotificationMessage mdmReviewNotificationMessage = (MdmReviewNotificationMessage) repositories.notification.findOne(recUnderReview.getNotificationId()).getNotificationMessage();  //FIXME
+                MdmReviewNotificationMessage mdmReviewNotificationMessage = null;
                 for (MdmChangedRecord mdmChangedRecord : mdmReviewNotificationMessage.getMdmChangesForReview().getChangedRecords()) {
                     Object[] newRecData = new Object[mdmData.getColDefs().size()];
                     resultList.add(newRecData);

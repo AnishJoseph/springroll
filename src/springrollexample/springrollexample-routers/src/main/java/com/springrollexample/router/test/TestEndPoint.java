@@ -2,6 +2,7 @@ package com.springrollexample.router.test;
 
 import com.springroll.core.DTO;
 import com.springroll.core.ServiceDTO;
+import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.services.INotificationManager;
 import com.springroll.notification.CoreNotificationChannels;
 import com.springroll.notification.FyiNotificationMessage;
@@ -74,7 +75,7 @@ public class TestEndPoint extends SpringrollEndPoint {
     public void on(TE1_1 event){
 
         FyiNotificationMessage payload = new FyiNotificationMessage("messageKEY", new String[]{"Arg1", "Arg2"}, "BOM");
-        notificationManager.sendNotification(CoreNotificationChannels.FYI, payload);
+        notificationManager.sendNotification(CoreNotificationChannels.FYI, payload, SpringrollSecurity.getUser().getUsername());
         checkAndRunTest(event);
         TE1_2 te2 = new TE1_2();
         te2.setPayload(event.getPayload());

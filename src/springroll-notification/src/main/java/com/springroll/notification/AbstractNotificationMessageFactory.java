@@ -1,6 +1,5 @@
 package com.springroll.notification;
 
-import com.springroll.core.BusinessValidationResult;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.notification.INotification;
@@ -12,7 +11,6 @@ import com.springroll.orm.entities.User;
 import com.springroll.orm.repositories.Repositories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.List;
@@ -23,10 +21,10 @@ import java.util.stream.Collectors;
  * Created by anishjoseph on 05/10/16.
  */
 public abstract class AbstractNotificationMessageFactory implements INotificationMessageFactory {
-    @Autowired Repositories repositories;
+    @Autowired protected Repositories repositories;
 
     @Override
-    public Set<String> getTargetUsers(INotificationMessage notificationMessage) {
+    public Set<String> getTargetUsers(INotificationMessage notificationMessage, String initiator) {
         // The notificationReceiver can either be a user or a role
         User user = repositories.users.findByUserIdIgnoreCase(notificationMessage.getNotificationReceivers());
         if(user != null){
@@ -37,7 +35,7 @@ public abstract class AbstractNotificationMessageFactory implements INotificatio
         Set<String> usersThatBelongToRole = repositories.users.findUsersThatBelongToRole("%" + notificationMessage.getNotificationReceivers() + "%");
 
         /* Remove the initiator from the set of users to be notified */
-        usersThatBelongToRole.remove(SpringrollSecurity.getUser().getUsername());
+        usersThatBelongToRole.remove(initiator);
         return usersThatBelongToRole;
     }
 

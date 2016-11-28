@@ -6,18 +6,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.BusinessValidationResult;
-import com.springroll.core.IEvent;
 import com.springroll.core.ReviewLog;
-import org.hibernate.internal.util.SerializationHelper;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.persistence.*;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +19,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "REVIEW_STEP")
+@NamedQueries({
+        @NamedQuery(name="ReviewStep.findByParentIds", query = "SELECT o FROM ReviewStep o where o.parentId  in :parentIds"),
+})
 public class ReviewStep extends AbstractEntity {
 
     @Column(name = "RULE_ID")
@@ -34,9 +29,6 @@ public class ReviewStep extends AbstractEntity {
 
     @Column(name = "CHANNEL")
     private String channel;
-
-    @Column(name = "SEARCH_ID")
-    private String searchId;
 
     @Column(name = "REVIEW_STAGE")
     private int reviewStage;
@@ -50,10 +42,6 @@ public class ReviewStep extends AbstractEntity {
     @Column(name = "COMPLETED")
     private Boolean completed = false;
 
-    @Column(name = "EVENT")
-    @Lob
-    private byte[] serializedEvent;
-
     @Column(name = "REVIEW_LOG")
     private String reviewLogAsJson = "";
 
@@ -64,7 +52,7 @@ public class ReviewStep extends AbstractEntity {
 
 
     public BusinessValidationResult getViolationForThisStep() {
-        if (this.violationForThisStepJson.isEmpty() )return null;
+        if (this.violationForThisStepJson.isEmpty()) return null;
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         try {
@@ -89,9 +77,10 @@ public class ReviewStep extends AbstractEntity {
     }
 
     private transient List<ReviewLog> reviewLog;
-    private transient IEvent event;
 
-    public ReviewStep(){}
+    public ReviewStep() {
+    }
+
     public ReviewStep(Long ruleId, String channel, int reviewStage, Long parentId, String approver, BusinessValidationResult violationForThisStep) {
         this.ruleId = ruleId;
         this.reviewStage = reviewStage;
@@ -101,19 +90,8 @@ public class ReviewStep extends AbstractEntity {
         this.setViolationForThisStep(violationForThisStep);
     }
 
-    public IEvent getEvent() {
-        if (this.event == null)
-            this.event = (IEvent) SerializationHelper.deserialize(serializedEvent);
-        return event;
-    }
-
-    public void setEvent(IEvent event) {
-        this.event = event;
-        serializedEvent = SerializationHelper.serialize((Serializable) event);
-    }
-
     public List<ReviewLog> getReviewLog() {
-        if(reviewLogAsJson.isEmpty()){
+        if (reviewLogAsJson.isEmpty()) {
             reviewLog = new ArrayList<>();
             return reviewLog;
         }
@@ -122,7 +100,8 @@ public class ReviewStep extends AbstractEntity {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             try {
-                this.reviewLog = mapper.readValue(reviewLogAsJson, new TypeReference<List<ReviewLog>>(){});
+                this.reviewLog = mapper.readValue(reviewLogAsJson, new TypeReference<List<ReviewLog>>() {
+                });
             } catch (IOException e) {
                 //FIXME
                 throw new RuntimeException(e);
@@ -131,7 +110,7 @@ public class ReviewStep extends AbstractEntity {
         return reviewLog;
     }
 
-    public void addReviewLog(ReviewLog reviewLog){
+    public void addReviewLog(ReviewLog reviewLog) {
         getReviewLog();
         this.reviewLog.add(reviewLog);
         ObjectMapper mapper = new ObjectMapper();
@@ -169,11 +148,11 @@ public class ReviewStep extends AbstractEntity {
     }
 
 
-    public Boolean hasThisUserAlreadyReviewedThisStep(String  userId){
+    public Boolean hasThisUserAlreadyReviewedThisStep(String userId) {
         List<ReviewLog> reviewLog = getReviewLog();
-        if(reviewLog == null)return false;
+        if (reviewLog == null) return false;
         for (ReviewLog data : reviewLog) {
-            if(data.getReviewer().equals(userId))return true;
+            if (data.getReviewer().equals(userId)) return true;
         }
         return false;
 
@@ -203,11 +182,4 @@ public class ReviewStep extends AbstractEntity {
         this.channel = channel;
     }
 
-    public String getSearchId() {
-        return searchId;
-    }
-
-    public void setSearchId(String searchId) {
-        this.searchId = searchId;
-    }
 }

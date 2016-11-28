@@ -37,6 +37,10 @@ public class ReviewRule extends MdmEntity{
     @Column(name = "APPROVALS_NEEDED")
     private int approvalsNeeded;
 
+    @Column(name = "SELF_REVIEW", length = 1)
+    @NotNull
+    private boolean selfReview;
+
     @Column(name = "FYI_ONLY")
     private boolean fyiOnly = false;
 
@@ -111,4 +115,11 @@ public class ReviewRule extends MdmEntity{
         this.active = active;
     }
 
+    public boolean isSelfReview() {
+        return selfReview;
+    }
+
+    public void setSelfReview(boolean selfReview) {
+        this.selfReview = selfReview;
+    }
 }

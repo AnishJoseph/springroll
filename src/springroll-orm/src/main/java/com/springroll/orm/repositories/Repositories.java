@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 
     @Autowired public ReviewStepRepository reviewStep;
 
+    @Autowired public ReviewStepMetaRepository reviewStepMeta;
+
     @Autowired public JobRepository job;
 
     @Autowired public NotificationRepository notification;
