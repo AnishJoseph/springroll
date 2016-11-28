@@ -67,6 +67,12 @@ public class ReviewManager extends SpringrollEndPoint {
                 if("SELF".equals(approver)) approver = SpringrollSecurity.getUser().getUsername();
                 ReviewStep reviewStep = new ReviewStep(reviewRule.getID(), reviewRule.getChannel(), reviewStage, null, approver, businessValidationResult);
                 reviewSteps.add(reviewStep);
+
+                if(reviewRule.isSelfReview() && !approver.equals(SpringrollSecurity.getUser().getUsername())){
+                    /* This rule requires that a initiator approval is required before it is sent to other approvers */
+                    reviewStep = new ReviewStep(reviewRule.getID(), reviewRule.getChannel(), 0, null, SpringrollSecurity.getUser().getUsername(), businessValidationResult);
+                    reviewSteps.add(reviewStep);
+                }
             }
         }
 

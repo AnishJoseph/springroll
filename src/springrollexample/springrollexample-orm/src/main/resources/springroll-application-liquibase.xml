@@ -19,14 +19,11 @@
             INSERT INTO  role values (3,0, 'GROUP2', 'T', 'SCRIPT', null , null, null,'desc1');
             INSERT INTO  role values (4,0, 'GROUP3', 'T', 'SCRIPT', null, null, null,'desc1');
             <!--id, parentid, rulename, review stage, approver, approvals needed, fyionly, desc-->
-            INSERT INTO  review_rule values (1,0, 'Rule1', 'REVIEW',    1, 'BOM', 1, 'F', 'F', 'T', 'SCRIPT', null, null, null,'desc1');
-            INSERT INTO  review_rule values (2,0, 'Rule2', 'REVIEW',    2, 'BOM', 1, 'F', 'F', 'T', 'SCRIPT', null, null, null,'desc2');
-            INSERT INTO  review_rule values (3,0, 'Rule3', 'REVIEW',    2, 'BOM', 1, 'F', 'F', 'T', 'SCRIPT', null, null, null,'desc2');
-            INSERT INTO  review_rule values (4,0, 'Rule4', 'REVIEW_FYI',4, 'BOM', 1, 'T', 'F', 'T', 'SCRIPT', null, null, null,'desc2');
+            INSERT INTO  review_rule values (1,0, 'Rule1',         'REVIEW',    1, 'BOM', 1, 'F', 'T', 'T', 'SCRIPT', null, null, null,'desc1');
+            INSERT INTO  review_rule values (2,0, 'Rule2',         'REVIEW',    2, 'BOM', 1, 'F', 'T', 'T', 'SCRIPT', null, null, null,'desc2');
+            INSERT INTO  review_rule values (3,0, 'Rule3',         'REVIEW',    2, 'BOM', 1, 'F', 'F', 'T', 'SCRIPT', null, null, null,'desc2');
+            INSERT INTO  review_rule values (4,0, 'Rule4',         'REVIEW_FYI',4, 'BOM', 1, 'T', 'F', 'T', 'SCRIPT', null, null, null,'desc2');
             INSERT INTO  review_rule values (5,0, 'MdmMasterRule', 'MDM_REVIEW',1, 'BOM', 1, 'F', 'F', 'T', 'SCRIPT', null, null, null,'Rule for MDM Changes');
-            <!--INSERT INTO  review_rules values (2,0, 'Rule1', 3, 'BOM', 1, 'desc2');-->
-            <!--INSERT INTO  review_rules values (3,0, 'Rule1', 3, 'FM', 1, 'desc3');-->
-            <!--INSERT INTO  review_rules values (4,0, 'Rule1', 5, 'BOM', 1, 'desc4');-->
 
             INSERT INTO  USER_DELEGATION values (1,0, 'BOM1', 'ANISH', '2016-10-08',  '2017-10-08', 'T', 'SCRIPT', null, null, null, null);
             INSERT INTO  USER_DELEGATION values (2,0, 'BOM2', 'ANISH', '2016-10-08',  '2017-10-08', 'T', 'SCRIPT', null, null, null, null);

@@ -11,9 +11,9 @@ import javax.validation.constraints.NotNull;
  */
 @NamedQueries({
         @NamedQuery(name="ReviewRule.getRecordsForMdm",
-                query = "SELECT o.id, o.ruleName, o.channel, o.reviewStage, o.approver, o.approvalsNeeded, o.fyiOnly, o.description, o.active FROM ReviewRule o where o.id not  in :idsUnderReview order by o.id"),
+                query = "SELECT o.id, o.ruleName, o.channel, o.reviewStage, o.selfReview, o.approver, o.approvalsNeeded, o.fyiOnly, o.description, o.active FROM ReviewRule o where o.id not  in :idsUnderReview order by o.id"),
         @NamedQuery(name="ReviewRule.getRecordsForMdmForIds",
-                query = "SELECT o.id, o.ruleName, o.channel, o.reviewStage, o.approver, o.approvalsNeeded, o.fyiOnly, o.description, o.active FROM ReviewRule o  where o.id in :ids order by o.id")
+                query = "SELECT o.id, o.ruleName, o.channel, o.reviewStage, o.selfReview, o.approver, o.approvalsNeeded, o.fyiOnly, o.description, o.active FROM ReviewRule o  where o.id in :ids order by o.id")
 })
 
 @Entity
