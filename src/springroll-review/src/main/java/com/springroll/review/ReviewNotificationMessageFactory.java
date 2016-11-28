@@ -1,5 +1,6 @@
 package com.springroll.review;
 
+import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.notification.INotificationMessage;
 import com.springroll.core.notification.INotificationMeta;
 import com.springroll.core.services.IReviewNotificationMessageFactory;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @Component public class ReviewNotificationMessageFactory extends AbstractNotificationMessageFactory implements IReviewNotificationMessageFactory {
     @Override public INotificationMessage makeMessage(INotificationMeta notificationMeta){
-        String msgKey = notificationMeta.getApprover().equals(notificationMeta.getApprover()) ? "ui.review.noti.self.msg" : "ui.review.noti.msg";
+        String msgKey = notificationMeta.getApprover().equals(SpringrollSecurity.getUser().getUsername()) ? "ui.review.noti.self.msg" : "ui.review.noti.msg";
         return new ReviewNotificationMessage(notificationMeta.getReviewStepIds(), notificationMeta.getApprover(), notificationMeta.getBusinessValidationResults(), msgKey, new String[]{notificationMeta.getService(), notificationMeta.getInitiator().getUsername()}, notificationMeta.getReviewLogs());
     }
 }
