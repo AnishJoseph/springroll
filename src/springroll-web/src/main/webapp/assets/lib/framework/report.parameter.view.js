@@ -45,13 +45,15 @@ Application.ReportParamsView  = Marionette.View.extend({
         return template.join("");
     },
     onRender: function() {
-        this.ui.selectpicker.selectpicker();
+        this.ui.selectpicker.selectpicker({selectOnTab: true });
+        this.ui.selectpickerSearchable.selectpicker({liveSearch:true, liveSearchNormalize : true, selectOnTab: true });
         this.ui.datepicker.datetimepicker({format : 'DD/MM/YYYY'});
         this.ui.datetimepicker.datetimepicker({format : 'DD/MM/YYYY HH:mm'});
     },
 
     ui: {
         selectpicker:  '.selectpicker',
+        selectpickerSearchable:  '.selectpickerSearchable',
         datepicker:  '.datepicker',
         datetimepicker:  '.datetimepicker',
     },

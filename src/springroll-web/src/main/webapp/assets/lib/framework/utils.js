@@ -14,7 +14,9 @@ Application.Utils = {
     },
 
     addLovToTemplate : function(template, p, selectedValue){
-        template.push('<select class="selectpicker" id="' + p.name + '" data-attrname="' + p.name + '"');
+        var selectPickerClass = "selectpicker";
+        if(p.lovList.length > 10 ) selectPickerClass = "selectpickerSearchable";
+        template.push('<select class="' + selectPickerClass + '" id="' + p.name + '" data-attrname="' + p.name + '"');
         if(p.multiSelect === true) template.push(' multiple');
         template.push(">");
         _.each(p.lovList, function(lov){

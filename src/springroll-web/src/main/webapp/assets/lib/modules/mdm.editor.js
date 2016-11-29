@@ -111,15 +111,21 @@ var MasterRowView = Marionette.View.extend({
         this.model.on('showError', this.showError, this);
 
     },
+    ui: {
+        selectpicker:  '.selectpicker',
+        selectpickerSearchable:  '.selectpickerSearchable',
+        datepicker:  '.datepicker',
+        datetimepicker:  '.datetimepicker',
+    },
 
     onRender : function(){
         if($.inArray(this.model.id, this.masterGridData.recIdsUnderReview) > -1){
             this.disableNewRecords();
         }
-        this.$(".selectpicker").selectpicker({liveSearch:true, liveSearchNormalize : true, selectOnTab: true });
-        this.$(".datepicker").datetimepicker({format : 'DD/MM/YYYY'});
-        this.$(".datetimepicker").datetimepicker({format : 'DD/MM/YYYY HH:mm'});
-
+        this.ui.selectpicker.selectpicker({selectOnTab: true });
+        this.ui.selectpickerSearchable.selectpicker({liveSearch:true, liveSearchNormalize : true, selectOnTab: true });
+        this.ui.datepicker.datetimepicker({format : 'DD/MM/YYYY'});
+        this.ui.datetimepicker.datetimepicker({format : 'DD/MM/YYYY HH:mm'});
     }
 });
 
