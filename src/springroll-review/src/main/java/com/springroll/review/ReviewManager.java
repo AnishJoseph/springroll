@@ -163,7 +163,7 @@ public class ReviewManager extends SpringrollEndPoint {
     private boolean markStepCompleteAndDetermineIfStepIsComplete(ReviewStep reviewStep, ReviewActionDTO reviewActionDTO){
         reviewStep.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionDTO.isApproved(), reviewActionDTO.getReviewComment()));
         ReviewRule reviewRule = repo.reviewRules.findOne(reviewStep.getRuleId());
-        if (reviewActionDTO.isApproved() && reviewRule.getApprovalsNeeded() > reviewStep.getReviewLog().size()) {
+        if (reviewStep.getReviewStage() != 0 && reviewActionDTO.isApproved() && reviewRule.getApprovalsNeeded() > reviewStep.getReviewLog().size()) {
             /* Oh this rule requires multiple approvals for this stage - this step is not yet complete */
             return false;
         }
@@ -177,26 +177,24 @@ public class ReviewManager extends SpringrollEndPoint {
             logger.error("Review Step ID is null");
             return;
         }
-        boolean isAnyStepIscomplete = false;
+        boolean areAllStepsComplete = true;
         ReviewStep reviewStep = null;
         Set<Long> notificationIds = new HashSet<>();
         for (Long reviewStepId : reviewActionDTO.getReviewStepId()) {
             reviewStep = repo.reviewStep.findOne(reviewStepId);
-            /* FIXME - If any review is invalid just return - we do this else may assume that this step is complete*/
-            if (!isValid(reviewStep, reviewStepId)) return;
-            boolean isStepComplete = markStepCompleteAndDetermineIfStepIsComplete(reviewStep, reviewActionDTO);
-            if (!isStepComplete) {
-                isAnyStepIscomplete = true;
-                continue;
-            }
-            if(notificationIds.contains(reviewStep.getNotificationId()))continue;
-            notificationManager.addNotificationAcknowledgement(reviewStep.getNotificationId()); //FIXME - why bother updating when we are going to delete it?
-            notificationManager.deleteNotification(reviewStep.getNotificationId());
+            if (!isValid(reviewStep, reviewStepId)) continue;
+            boolean isThisStepComplete = markStepCompleteAndDetermineIfStepIsComplete(reviewStep, reviewActionDTO);
+            areAllStepsComplete =   isThisStepComplete && areAllStepsComplete;
             notificationIds.add(reviewStep.getNotificationId());
+            notificationManager.addNotificationAcknowledgement(reviewStep.getNotificationId());
         }
         ReviewStepMeta reviewStepMeta = repo.reviewStepMeta.findOne(reviewStep.getParentId());
         reviewStepMeta.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionDTO.isApproved(), reviewActionDTO.getReviewComment()));
-        if(isAnyStepIscomplete) return;
+        if(!areAllStepsComplete) return;
+
+        for (Long notificationId : notificationIds) {
+            notificationManager.deleteNotification(notificationId);
+        }
 
         /* All the steps reviewed (for this stage) are complete - move to the next step if present, else emit the event that was under review */
         List<ReviewStep> reviewSteps = findNextReviewStep(reviewStepMeta, reviewStep.getReviewStage());
