@@ -17,6 +17,8 @@ public class MdmDefinition {
     private String getMdmRecordsForIds;
     private List<ColDef> colDefs;
     private Class masterClass;
+    private List<String> constraints;
+    private String queryForConstraintValidation = null;
 
     public String getMaster() {
         return master;
@@ -70,5 +72,21 @@ public class MdmDefinition {
             if(colDef.getName().equals(colName))return colDef;
         }
         return null;
+    }
+
+    public List<String> getConstraints() {
+        return constraints;
+    }
+
+    public void setConstraints(List<String> constraints) {
+        this.constraints = constraints;
+    }
+
+    public String getQueryForConstraintValidation() {
+        return queryForConstraintValidation;
+    }
+
+    public void setQueryForConstraintValidation(String queryForConstraintValidation) {
+        this.queryForConstraintValidation = queryForConstraintValidation;
     }
 }

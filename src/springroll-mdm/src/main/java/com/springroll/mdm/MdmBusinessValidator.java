@@ -8,8 +8,12 @@ import com.springroll.core.exceptions.SpringrollException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by anishjoseph on 09/11/16.
@@ -17,12 +21,15 @@ import java.util.Map;
 @Service
 public class MdmBusinessValidator implements DTOBusinessValidator {
     private static final String CID = "cid";
+    @PersistenceContext
+    EntityManager em;
 
     @Autowired private MdmManager mdmManager;
     @Override
     public void validate(List<? extends DTO> dtos, IBusinessValidationResults businessValidationResults) {
         MdmDTO mdmDTO = (MdmDTO)dtos.get(0);
-        List<ColDef> colDefs = mdmManager.getColDefs(mdmDTO.getMaster());
+        MdmDefinition mdmDefinition = mdmManager.getDefinition(mdmDTO.getMaster());
+        List<ColDef> colDefs = mdmDefinition.getColDefs();
         boolean hasValidationErrors = false;
         for (MdmChangedRecord mdmChangedRecord : mdmDTO.getChangedRecords()) {
             String cid = mdmChangedRecord.getMdmChangedColumns().remove(CID).getVal().toString();
@@ -32,6 +39,12 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
                 MdmChangedColumn mdmChangedColumn = mdmChangedRecord.getMdmChangedColumns().get(fldName);
                 hasValidationErrors = validate(fldName, mdmChangedColumn.getVal(), colDef, businessValidationResults, cid);
             }
+            if(!hasValidationErrors) {
+                if (!validateConstraintsForExistingRecords(mdmDefinition, mdmChangedRecord)) {
+                    mdmDefinition.getConstraints().forEach(s -> businessValidationResults.addBusinessViolation(cid, 1, s, "non-uniq", new String[]{}));
+                    hasValidationErrors = true;
+                }
+            }
         }
         for (Map<String, Object> newRecord : mdmDTO.getNewRecords()) {
             String cid = newRecord.remove(CID).toString();
@@ -40,6 +53,12 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
                 ColDef colDef = getColDef(fldName, colDefs);
                 if(colDef == null)throw new SpringrollException("mdm.unknownColumn", fldName, mdmDTO.getMaster());
                 hasValidationErrors = validate(fldName, newRecord.get(fldName), colDef, businessValidationResults, cid);
+            }
+            if(!hasValidationErrors) {
+                if (!validateConstraintsForNewRecords(mdmDefinition, newRecord)) {
+                    mdmDefinition.getConstraints().forEach(s -> businessValidationResults.addBusinessViolation(cid, 1, s, "non-uniq", new String[]{}));
+                    hasValidationErrors = true;
+                }
             }
         }
 
@@ -97,6 +116,33 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
             return true;
         }
         return false;
+
+    }
+    private Query getValidationQuery(MdmDefinition mdmDefinition){
+        String queryForConstraintValidation = mdmDefinition.getQueryForConstraintValidation();
+        if(queryForConstraintValidation == null){
+            String queryStr = "SELECT o FROM " + mdmDefinition.getMasterClass().getSimpleName() + " o where ";
+            queryStr += mdmDefinition.getConstraints().stream().map(s -> "o." + s + " = :" + s).collect(Collectors.joining(" AND "));
+            queryForConstraintValidation = mdmDefinition.getMasterClass().getSimpleName() + "_queryForConstraintValidation";
+            mdmDefinition.setQueryForConstraintValidation(queryForConstraintValidation);
+            Query query = em.createQuery(queryStr);
+            em.getEntityManagerFactory().addNamedQuery(queryForConstraintValidation, query);
+        }
+        return em.createNamedQuery(queryForConstraintValidation);
+
+    }
+    private boolean validateConstraintsForExistingRecords(MdmDefinition mdmDefinition, MdmChangedRecord  mdmChangedRecord){
+        Query query = getValidationQuery(mdmDefinition);
+        mdmDefinition.getConstraints().forEach(s -> query.setParameter(s, mdmChangedRecord.getMdmChangedColumns().get(s).getVal()));
+        List resultList = query.getResultList();
+        return resultList.isEmpty();
+
+    }
+    private boolean validateConstraintsForNewRecords(MdmDefinition mdmDefinition, Map<String, Object>  newRecord){
+        Query query = getValidationQuery(mdmDefinition);
+        mdmDefinition.getConstraints().forEach(s -> query.setParameter(s, newRecord.get(s)));
+        List resultList = query.getResultList();
+        return resultList.isEmpty();
 
     }
     private ColDef getColDef(String colName, List<ColDef> colDefs){

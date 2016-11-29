@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
     @Override public INotificationMessage makeMessage(INotificationMeta notificationMeta){
         MdmDTO mdmDTO = (MdmDTO) reviewManager.getFirstPayload(notificationMeta.getReviewStepIds().get(0));
-        List<ColDef> colDefs = mdmManager.getColDefs(mdmDTO.getMaster());
+        List<ColDef> colDefs = mdmManager.getDefinition(mdmDTO.getMaster()).getColDefs();
 
         if(!mdmDTO.getChangedRecords().isEmpty()) {
             List<Long> changedIds = mdmDTO.getChangedRecords().stream().map(MdmChangedRecord::getId).collect(Collectors.toList());

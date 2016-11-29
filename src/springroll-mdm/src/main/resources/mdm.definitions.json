@@ -4,9 +4,10 @@
         "masterClassName" : "com.springroll.orm.entities.Role",
         "getMdmRecords" : "Role.getRecordsForMdm",
         "getMdmRecordsForIds" : "Role.getRecordsForMdmForIds",
+        "constraints" : ["roleName"],
         "colDefs" : [
-          { "name": "RoleName", "writeable": true, "type": "text"},
-          { "name": "Description", "writeable": true, "type": "text"},
+          { "name": "roleName", "writeable": false, "type": "text"},
+          { "name": "description", "writeable": true, "type": "text"},
           { "name": "active", "writeable": true, "type": "boolean", "defVal": "true"}
       ]
       },
@@ -30,6 +31,7 @@
         "masterClassName" : "com.springroll.orm.entities.User",
         "getMdmRecords" : "User.getRecordsForMdm",
         "getMdmRecordsForIds" : "User.getRecordsForMdmForIds",
+        "constraints" : ["userId"],
         "colDefs" : [
           { "name": "userId", "writeable": false, "type": "text"},
           { "name": "roles", "writeable": true, "type": "text", "lovSource" : "Roles", "multiSelect": true},

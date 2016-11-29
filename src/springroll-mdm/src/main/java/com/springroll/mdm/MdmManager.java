@@ -252,8 +252,8 @@ import java.util.stream.Collectors;
         return mdmDefinitions.getMasters().stream().map(MdmDefinition::getMaster).collect(Collectors.toList());
     }
 
-    public List<ColDef> getColDefs(String master){
-        return getMdmDefinition(master).getColDefs();
+    public MdmDefinition getDefinition(String master){
+        return getMdmDefinition(master);
     }
 
     private MdmDefinition getMdmDefinition(String master){
