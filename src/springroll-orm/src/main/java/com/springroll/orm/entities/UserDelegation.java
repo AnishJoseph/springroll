@@ -1,11 +1,11 @@
 package com.springroll.orm.entities;
 
-import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 /**
@@ -26,6 +26,7 @@ public class UserDelegation extends MdmEntity {
 
     @Column(name = "USER_ID")
     @NotNull
+    @Size(max = 32, min = 1)
     private String userId;
 
     @Column(name = "DELEGATE")

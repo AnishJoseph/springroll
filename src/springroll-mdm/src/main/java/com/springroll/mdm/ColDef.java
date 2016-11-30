@@ -4,7 +4,6 @@ import com.springroll.core.Lov;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Created by anishjoseph on 03/11/16.
@@ -20,12 +19,6 @@ public class ColDef implements Serializable{
     private Object defaultValue;
     private boolean multiSelect = false;
     private boolean nullable = true;
-    private Integer sizeMin;
-    private Integer sizeMax;
-    private Double min;
-    private Double max;
-    private Pattern pattern;
-    private String messageKey;
 
     public ColDef(ColDef colDef){
         this.name = colDef.name;
@@ -34,10 +27,6 @@ public class ColDef implements Serializable{
         this.defaultValue = colDef.defaultValue;
         this.multiSelect = colDef.multiSelect;
         this.nullable = colDef.nullable;
-        this.sizeMin = colDef.sizeMin;
-        this.sizeMin = colDef.sizeMin;
-        this.min = colDef.min;
-        this.max = colDef.max;
     }
 
     public ColDef(String name, boolean writeable, String type, Object defaultValue, boolean multiSelect) {
@@ -123,51 +112,4 @@ public class ColDef implements Serializable{
         this.nullable = nullable;
     }
 
-    public Integer getSizeMin() {
-        return sizeMin;
-    }
-
-    public void setSizeMin(Integer sizeMin) {
-        this.sizeMin = sizeMin;
-    }
-
-    public Integer getSizeMax() {
-        return sizeMax;
-    }
-
-    public void setSizeMax(Integer sizeMax) {
-        this.sizeMax = sizeMax;
-    }
-
-    public Double getMin() {
-        return min;
-    }
-
-    public void setMin(Double min) {
-        this.min = min;
-    }
-
-    public Double getMax() {
-        return max;
-    }
-
-    public void setMax(Double max) {
-        this.max = max;
-    }
-
-    public Pattern getPattern() {
-        return pattern;
-    }
-
-    public void setPattern(Pattern pattern) {
-        this.pattern = pattern;
-    }
-
-    public String getMessageKey() {
-        return messageKey;
-    }
-
-    public void setMessageKey(String messageKey) {
-        this.messageKey = messageKey;
-    }
 }

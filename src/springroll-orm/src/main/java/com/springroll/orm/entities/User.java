@@ -5,6 +5,8 @@ import org.hibernate.envers.Audited;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 
 /**
@@ -19,9 +21,13 @@ import java.util.Collection;
 @Audited
 public class User extends MdmEntity {
 
+    @NotNull
+    @Size(min = 1)
     private transient Collection<String> rolesList;
 
     @Column(name = "USER_ID")
+    @NotNull
+    @Size(max = 32, min = 1)
     private String userId;
 
     @Column(name = "ROLES")
@@ -37,6 +43,7 @@ public class User extends MdmEntity {
     private String variant;
 
     @Column(name = "ACTIVE")
+    @NotNull
     private boolean active;
 
 
