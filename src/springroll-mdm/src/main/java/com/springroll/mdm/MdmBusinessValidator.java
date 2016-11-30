@@ -85,10 +85,16 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
             MdmDTO mdmDTO = (MdmDTO) reviewStepMeta.getEvent().getPayload();
             if(mdmDTO.getNewRecords() == null || mdmDTO.getNewRecords().isEmpty())continue;
             for (Map<String, Object> recordUnderReview : mdmDTO.getNewRecords()) {
+                boolean gotMatch = true;
                 for (String constraintColName : mdmDefinition.getConstraints()) {
-                    if(recordUnderReview.get(constraintColName).equals(newRecord.get(constraintColName)))return false;
+                    if(!recordUnderReview.get(constraintColName).equals(newRecord.get(constraintColName))){
+                        gotMatch = false;
+                        break;
+                    }
                 }
+                if(gotMatch) return false;
             }
+
         }
         return true;
     }
