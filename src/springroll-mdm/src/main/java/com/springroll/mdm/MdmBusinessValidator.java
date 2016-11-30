@@ -5,6 +5,8 @@ import com.springroll.core.DTOBusinessValidator;
 import com.springroll.core.IBusinessValidationResults;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.exceptions.SpringrollException;
+import com.springroll.orm.entities.ReviewStepMeta;
+import com.springroll.orm.repositories.Repositories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,8 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
     private static final String CID = "cid";
     @PersistenceContext
     EntityManager em;
+    @Autowired
+    Repositories repositories;
 
     @Autowired private MdmManager mdmManager;
     @Override
@@ -131,8 +135,18 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
         Query query = em.createNamedQuery(mdmDefinition.getQueryForConstraintValidation());
         mdmDefinition.getConstraints().forEach(s -> query.setParameter(s, newRecord.get(s)));
         List resultList = query.getResultList();
-        return resultList.isEmpty();
-
+        if(!resultList.isEmpty()) return false;
+        List<ReviewStepMeta> reviewStepMetas = repositories.reviewStepMeta.findBySearchId(MdmManager.SEARCH_ID_PREFIX + mdmDefinition.getMasterClass().getSimpleName());
+        for (ReviewStepMeta reviewStepMeta : reviewStepMetas) {
+            MdmDTO mdmDTO = (MdmDTO) reviewStepMeta.getEvent().getPayload();
+            if(mdmDTO.getNewRecords() == null || mdmDTO.getNewRecords().isEmpty())continue;
+            for (Map<String, Object> recordUnderReview : mdmDTO.getNewRecords()) {
+                for (String constraintColName : mdmDefinition.getConstraints()) {
+                    if(recordUnderReview.get(constraintColName).equals(newRecord.get(constraintColName)))return false;
+                }
+            }
+        }
+        return true;
     }
     private ColDef getColDef(String colName, List<ColDef> colDefs){
         for (ColDef colDef : colDefs) {

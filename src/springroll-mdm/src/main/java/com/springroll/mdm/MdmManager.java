@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
  * Created by anishjoseph on 04/11/16.
  */
 @Service public class MdmManager extends SpringrollEndPoint {
+    public static final String SEARCH_ID_PREFIX = "MDM:";
     private static final Logger logger = LoggerFactory.getLogger(MdmManager.class);
     private MdmDefinitions mdmDefinitions;
     @PersistenceContext EntityManager em;
@@ -193,7 +194,7 @@ import java.util.stream.Collectors;
         mdmData.setColDefs(colDefs);
 
         /* Now find any MDM records for this master that are review - these includes those that are new and those that were modified */
-        List<ReviewStepMeta> reviewStepMetas = repositories.reviewStepMeta.findBySearchId("MDM:" + master);
+        List<ReviewStepMeta> reviewStepMetas = repositories.reviewStepMeta.findBySearchId(SEARCH_ID_PREFIX + master);
         List<Long> idsUnderReview = new ArrayList<>();
         for (ReviewStepMeta recUnderReview : reviewStepMetas) {
             MdmDTO mdmDTO = (MdmDTO) recUnderReview.getEvent().getPayload();
