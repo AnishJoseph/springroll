@@ -11,10 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Parameter;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -71,7 +75,7 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
     private boolean validateConstraintsForNewRecords(MdmDefinition mdmDefinition, Map<String, Object>  newRecord){
         if(mdmDefinition.getQueryForConstraintValidation() == null)return true;
         Query query = em.createNamedQuery(mdmDefinition.getQueryForConstraintValidation());
-        mdmDefinition.getConstraints().forEach(s -> query.setParameter(s, newRecord.get(s)));
+        mdmDefinition.getConstraints().forEach(s -> query.setParameter(s, convert(newRecord.get(s), query.getParameter(s))));
         List resultList = query.getResultList();
         if(!resultList.isEmpty()) return false;
         List<ReviewStepMeta> reviewStepMetas = repositories.reviewStepMeta.findBySearchId(MdmManager.SEARCH_ID_PREFIX + mdmDefinition.getMasterClass().getSimpleName());
@@ -85,6 +89,16 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
             }
         }
         return true;
+    }
+    private Object convert(Object paramValue, Parameter parameter){
+        if(parameter.getParameterType().equals(LocalDateTime.class)){
+            return LocalDateTime.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        } else if (parameter.getParameterType().equals(LocalDate.class)){
+            return LocalDate.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        } else if (parameter.getParameterType().equals(Boolean.class)){
+            return "true".equalsIgnoreCase((String)paramValue);
+        }
+        return paramValue;
     }
 }
 

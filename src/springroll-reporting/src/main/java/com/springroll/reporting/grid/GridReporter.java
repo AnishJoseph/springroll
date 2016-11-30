@@ -154,7 +154,7 @@ import java.util.stream.Collectors;
         if(parameter.getParameterType().equals(LocalDateTime.class)){
             return LocalDateTime.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
         } else if (parameter.getParameterType().equals(LocalDate.class)){
-            return LocalDateTime.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            return LocalDate.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         } else if (parameter.getParameterType().equals(Boolean.class)){
             return "true".equalsIgnoreCase((String)paramValue);
         }
