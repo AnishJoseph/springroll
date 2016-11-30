@@ -8,6 +8,7 @@ import com.springroll.orm.entities.MdmEntity;
 import com.springroll.orm.entities.ReviewStepMeta;
 import com.springroll.orm.repositories.Repositories;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -37,6 +38,7 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
 
     @Autowired private MdmManager mdmManager;
 
+    @Autowired private DefaultConversionService conversionService;
     @Override
     public void validate(List<? extends DTO> dtos, IBusinessValidationResults businessValidationResults) {
         MdmDTO mdmDTO = (MdmDTO)dtos.get(0);
@@ -92,13 +94,12 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
     }
     private Object convert(Object paramValue, Parameter parameter){
         if(parameter.getParameterType().equals(LocalDateTime.class)){
-            return LocalDateTime.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-        } else if (parameter.getParameterType().equals(LocalDate.class)){
-            return LocalDate.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        } else if (parameter.getParameterType().equals(Boolean.class)){
-            return "true".equalsIgnoreCase((String)paramValue);
+            return LocalDateTime.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")); //FIXME - externalize pattern
+        } else if (parameter.getParameterType().equals(LocalDate.class)) {
+            return LocalDate.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy")); //FIXME - externalize pattern
         }
-        return paramValue;
+        Object o = conversionService.convert(paramValue, parameter.getParameterType());
+        return o;
     }
 }
 
