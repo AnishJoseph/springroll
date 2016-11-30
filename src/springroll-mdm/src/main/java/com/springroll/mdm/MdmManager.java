@@ -79,7 +79,7 @@ import java.util.stream.Collectors;
         Map<String, Object> valueMap = new HashMap<>();
         for (String colName : newRecord.keySet()) {
             ColDef colDef = mdmDefinition.getColDefByName(colName);
-            valueMap.put(colName, newRecord.get(colName));
+            if(newRecord.get(colName) != null)valueMap.put(colName, newRecord.get(colName));
             if(colDef.getType().equalsIgnoreCase("date")){
                 valueMap.put(colName,LocalDate.parse((String)newRecord.get(colName), dateFormatter));
             } else if (colDef.getType().equalsIgnoreCase("datetime")){
