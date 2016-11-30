@@ -2,8 +2,6 @@
   "masters" : [
       {
         "masterClassName" : "com.springroll.orm.entities.Role",
-        "getMdmRecords" : "Role.getRecordsForMdm",
-        "getMdmRecordsForIds" : "Role.getRecordsForMdmForIds",
         "constraints" : ["roleName"],
         "colDefs" : [
           { "name": "roleName", "writeable": false, "type": "text"},
@@ -13,8 +11,6 @@
       },
       {
         "masterClassName" : "com.springroll.orm.entities.ReviewRule",
-        "getMdmRecords" : "ReviewRule.getRecordsForMdm",
-        "getMdmRecordsForIds" : "ReviewRule.getRecordsForMdmForIds",
         "colDefs" : [
           { "name": "ruleName", "writeable": true, "type": "text", "nullable" : false, "sizeMin" : 4, "sizeMax" : 20},
           { "name": "channel", "writeable": true, "type": "text", "lovSource" : "NotificationChannels"},
@@ -29,8 +25,6 @@
       },
       {
         "masterClassName" : "com.springroll.orm.entities.User",
-        "getMdmRecords" : "User.getRecordsForMdm",
-        "getMdmRecordsForIds" : "User.getRecordsForMdmForIds",
         "constraints" : ["userId"],
         "colDefs" : [
           { "name": "userId", "writeable": false, "type": "text"},
@@ -43,8 +37,6 @@
       },
       {
         "masterClassName" : "com.springroll.orm.entities.UserDelegation",
-        "getMdmRecords" : "UserDelegation.getRecordsForMdm",
-        "getMdmRecordsForIds" : "UserDelegation.getRecordsForMdmForIds",
         "colDefs" : [
           { "name": "userId", "writeable": false, "type": "text", "lovSource" : "ActiveUsers"},
           { "name": "delegate", "writeable": true, "type": "text", "lovSource" : "ActiveUsers"},

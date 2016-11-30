@@ -13,8 +13,8 @@ public class MdmDefinition {
     private static final Logger logger = LoggerFactory.getLogger(MdmDefinition.class);
     private String master;
     private String masterClassName;
-    private String getMdmRecords;
-    private String getMdmRecordsForIds;
+    private String queryToGetMdmRecords;
+    private String queryToGetSpecificMdmRecords;
     private List<ColDef> colDefs;
     private Class masterClass;
     private List<String> constraints;
@@ -24,12 +24,12 @@ public class MdmDefinition {
         return master;
     }
 
-    public String getGetMdmRecords() {
-        return getMdmRecords;
+    public String getQueryToGetMdmRecords() {
+        return queryToGetMdmRecords;
     }
 
-    public void setGetMdmRecords(String getMdmRecords) {
-        this.getMdmRecords = getMdmRecords;
+    public void setQueryToGetMdmRecords(String queryToGetMdmRecords) {
+        this.queryToGetMdmRecords = queryToGetMdmRecords;
     }
 
     public List<ColDef> getColDefs() {
@@ -48,12 +48,12 @@ public class MdmDefinition {
         return masterClass;
     }
 
-    public String getGetMdmRecordsForIds() {
-        return getMdmRecordsForIds;
+    public String getQueryToGetSpecificMdmRecords() {
+        return queryToGetSpecificMdmRecords;
     }
 
-    public void setGetMdmRecordsForIds(String getMdmRecordsForIds) {
-        this.getMdmRecordsForIds = getMdmRecordsForIds;
+    public void setQueryToGetSpecificMdmRecords(String queryToGetSpecificMdmRecords) {
+        this.queryToGetSpecificMdmRecords = queryToGetSpecificMdmRecords;
     }
 
     public void setMasterClassName(String masterClassName) {

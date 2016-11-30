@@ -39,12 +39,12 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
                 MdmChangedColumn mdmChangedColumn = mdmChangedRecord.getMdmChangedColumns().get(fldName);
                 hasValidationErrors = validate(fldName, mdmChangedColumn.getVal(), colDef, businessValidationResults, cid);
             }
-            if(!hasValidationErrors) {
-                if (!validateConstraintsForExistingRecords(mdmDefinition, mdmChangedRecord)) {
-                    mdmDefinition.getConstraints().forEach(s -> businessValidationResults.addBusinessViolation(cid, 1, s, "non-uniq", new String[]{}));
-                    hasValidationErrors = true;
-                }
-            }
+//            if(!hasValidationErrors) {
+//                if (!validateConstraintsForExistingRecords(mdmDefinition, mdmChangedRecord)) {
+//                    mdmDefinition.getConstraints().forEach(s -> businessValidationResults.addBusinessViolation(cid, 1, s, "non-uniq", new String[]{}));
+//                    hasValidationErrors = true;
+//                }
+//            }
         }
         for (Map<String, Object> newRecord : mdmDTO.getNewRecords()) {
             String cid = newRecord.remove(CID).toString();
@@ -118,28 +118,17 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
         return false;
 
     }
-    private Query getValidationQuery(MdmDefinition mdmDefinition){
-        String queryForConstraintValidation = mdmDefinition.getQueryForConstraintValidation();
-        if(queryForConstraintValidation == null){
-            String queryStr = "SELECT o FROM " + mdmDefinition.getMasterClass().getSimpleName() + " o where ";
-            queryStr += mdmDefinition.getConstraints().stream().map(s -> "o." + s + " = :" + s).collect(Collectors.joining(" AND "));
-            queryForConstraintValidation = mdmDefinition.getMasterClass().getSimpleName() + "_queryForConstraintValidation";
-            mdmDefinition.setQueryForConstraintValidation(queryForConstraintValidation);
-            Query query = em.createQuery(queryStr);
-            em.getEntityManagerFactory().addNamedQuery(queryForConstraintValidation, query);
-        }
-        return em.createNamedQuery(queryForConstraintValidation);
-
-    }
     private boolean validateConstraintsForExistingRecords(MdmDefinition mdmDefinition, MdmChangedRecord  mdmChangedRecord){
-        Query query = getValidationQuery(mdmDefinition);
+        if(mdmDefinition.getQueryForConstraintValidation() == null)return true;
+        Query query = em.createNamedQuery(mdmDefinition.getQueryForConstraintValidation());
         mdmDefinition.getConstraints().forEach(s -> query.setParameter(s, mdmChangedRecord.getMdmChangedColumns().get(s).getVal()));
         List resultList = query.getResultList();
         return resultList.isEmpty();
 
     }
     private boolean validateConstraintsForNewRecords(MdmDefinition mdmDefinition, Map<String, Object>  newRecord){
-        Query query = getValidationQuery(mdmDefinition);
+        if(mdmDefinition.getQueryForConstraintValidation() == null)return true;
+        Query query = em.createNamedQuery(mdmDefinition.getQueryForConstraintValidation());
         mdmDefinition.getConstraints().forEach(s -> query.setParameter(s, newRecord.get(s)));
         List resultList = query.getResultList();
         return resultList.isEmpty();

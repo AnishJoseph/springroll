@@ -121,6 +121,7 @@ import java.util.stream.Collectors;
                         colDef.setDefaultValue(colDef.getDefVal() == null ? null : Float.parseFloat(colDef.getDefVal()));
                     }
                 }
+                makeNamedQueries(mdmDefinition);
             }
             mdmDefinitions.init();
 
@@ -128,6 +129,36 @@ import java.util.stream.Collectors;
             logger.error("Error while reading MDM definitions. MDM will be disabled. Error is {} ", e.getMessage());
             throw new RuntimeException("Error while reading MDM definitions. Error is  " + e.getMessage());
         }
+    }
+
+    private void makeNamedQueries(MdmDefinition mdmDefinition){
+        makeValidationQuery(mdmDefinition);
+        makeQueryForGettingMdmRecords(mdmDefinition);
+
+    }
+    private void makeQueryForGettingMdmRecords(MdmDefinition mdmDefinition){
+        String queryStr = "SELECT ";
+        queryStr += mdmDefinition.getColDefs().stream().map(s -> "o." + s.getName() ).collect(Collectors.joining(", "));
+
+        String queryStrForGettingMdmRecords = queryStr + " FROM " + mdmDefinition.getMasterClass().getSimpleName() + " o where o.id not in :idsUnderReview order by o.id";
+        mdmDefinition.setQueryToGetMdmRecords(mdmDefinition.getMasterClass().getSimpleName() + "_queryForGettingMdmRecords");
+        Query query = em.createQuery(queryStrForGettingMdmRecords);
+        em.getEntityManagerFactory().addNamedQuery(mdmDefinition.getQueryToGetMdmRecords(), query);
+
+
+        String queryStrForGettingSpecificMdmRecords = queryStr + " FROM " + mdmDefinition.getMasterClass().getSimpleName() + " o where o.id in :ids order by o.id";
+        mdmDefinition.setQueryToGetSpecificMdmRecords(mdmDefinition.getMasterClass().getSimpleName() + "_queryForGettingSpecificMdmRecords");
+        query = em.createQuery(queryStrForGettingSpecificMdmRecords);
+        em.getEntityManagerFactory().addNamedQuery(mdmDefinition.getQueryToGetSpecificMdmRecords(), query);
+
+    }
+    private void makeValidationQuery(MdmDefinition mdmDefinition){
+        if(mdmDefinition.getConstraints() == null || mdmDefinition.getConstraints().isEmpty())return;
+        String queryStr = "SELECT o FROM " + mdmDefinition.getMasterClass().getSimpleName() + " o where ";
+        queryStr += mdmDefinition.getConstraints().stream().map(s -> "o." + s + " = :" + s).collect(Collectors.joining(" AND "));
+        mdmDefinition.setQueryForConstraintValidation(mdmDefinition.getMasterClass().getSimpleName() + "_queryForConstraintValidation");
+        Query query = em.createQuery(queryStr);
+        em.getEntityManagerFactory().addNamedQuery(mdmDefinition.getQueryForConstraintValidation(), query);
     }
 
     private List<Lov> makeBooleanLov(){
@@ -172,7 +203,7 @@ import java.util.stream.Collectors;
         List<Long> tmpIdsUnderReview = new ArrayList<>();
         if(showModifiedRecords)tmpIdsUnderReview.addAll(idsUnderReview);
         tmpIdsUnderReview.add(-1l);
-        List<Object[]> resultList = em.createNamedQuery(mdmDefinition.getGetMdmRecords()).setParameter("idsUnderReview", tmpIdsUnderReview).getResultList();
+        List<Object[]> resultList = em.createNamedQuery(mdmDefinition.getQueryToGetMdmRecords()).setParameter("idsUnderReview", tmpIdsUnderReview).getResultList();
 
         for (int i = 0; i < colDefs.size(); i++) {
             if(colDefs.get(i).isMultiSelect() && !resultList.isEmpty()){
@@ -269,9 +300,9 @@ import java.util.stream.Collectors;
         return mdmDefinition;
     }
 
-    public List<Object[]> getData(String master, List<Long> changedIds) {
+    public List<Object[]> getDataForSpecificRecords(String master, List<Long> changedIds) {
         MdmDefinition mdmDefinition = getMdmDefinition(master);
-        Query query = em.createNamedQuery(mdmDefinition.getGetMdmRecordsForIds());
+        Query query = em.createNamedQuery(mdmDefinition.getQueryToGetSpecificMdmRecords());
         query.setParameter("ids", changedIds);
         return query.getResultList();
     }

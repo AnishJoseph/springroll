@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
         if(!mdmDTO.getChangedRecords().isEmpty()) {
             List<Long> changedIds = mdmDTO.getChangedRecords().stream().map(MdmChangedRecord::getId).collect(Collectors.toList());
             changedIds.sort((p1, p2) -> p1.compareTo(p2));
-            List<Object[]> existingValues = mdmManager.getData(mdmDTO.getMaster(), changedIds);
+            List<Object[]> existingValues = mdmManager.getDataForSpecificRecords(mdmDTO.getMaster(), changedIds);
 
             List<String> colNames = colDefs.stream().map(ColDef::getName).collect(Collectors.toList());
 
