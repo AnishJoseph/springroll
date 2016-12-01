@@ -223,7 +223,8 @@ public class ReviewManager extends SpringrollEndPoint {
                 //FIXME - should we notify the initiator that his transaction has been fully approved and is under processing
             } else {
                 job.setEndTime(LocalDateTime.now());
-                job.setStatus(job.getStatus() + " Review Rejected by " + SpringrollSecurity.getUser().getUsername());
+                String prevStatus = job.getStatus() == null ? "" : job.getStatus();
+                job.setStatus(prevStatus + " Review Rejected by " + SpringrollSecurity.getUser().getUsername());
                 job.setCompleted(true);
             }
             repo.reviewStep.delete(allReviewSteps);
