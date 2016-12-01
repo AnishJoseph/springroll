@@ -19,18 +19,7 @@ var View = Marionette.View.extend({
         var simpleTransaction = new SimpleTransaction();
         simpleTransaction.set('testCase', 1);
         simpleTransaction.set('testLocation', 0);
-        simpleTransaction.save({},{
-            error : function(model, response){
-                if(response.status == 409){
-                    response['errorHandled'] = true;
-                    _.each(response.responseJSON, function (violation) {
-                        /* Add the localized version of the field name at position 0 or the args (if the field exists) */
-                        if (violation.field != undefined && violation.field != null) violation.args.unshift(Localize(violation.field));
-                        Application.Indicator.showErrorMessage({message: Localize(violation.messageKey, violation.args)});
-                    });
-                }
-            }
-        });
+        simpleTransaction.save({},{});
     }
 
 });
