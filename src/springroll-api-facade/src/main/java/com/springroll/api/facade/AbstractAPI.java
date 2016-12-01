@@ -60,8 +60,10 @@ public abstract class AbstractAPI {
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public  String handleRuntimeException(RuntimeException ex) {
-        ex.printStackTrace();
-        return ex.getMessage();
+        Throwable caused = ex;
+        while(caused.getCause() != null)caused = caused.getCause();
+        caused.printStackTrace();
+        return caused.getMessage() == null ? "System Error : " + caused.getClass().getSimpleName() : "System Error : " + caused.getMessage();
     }
 
     public Long route(ServiceDTO payload){
