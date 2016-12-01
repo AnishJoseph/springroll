@@ -237,12 +237,12 @@ import java.util.stream.Collectors;
             if(colDefs.get(i).getType().equalsIgnoreCase("date")){
                 for (Object[] data : resultList) {
                     LocalDate date = (LocalDate) data[i];
-                    data[i] = date.format(dateFormatter);
+                    if(date != null)data[i] = date.format(dateFormatter);
                 }
             } else if(colDefs.get(i).getType().equalsIgnoreCase("datetime")){
                 for (Object[] data : resultList) {
                     LocalDateTime date = (LocalDateTime) data[i];
-                    data[i] = date.format(datetimeFormatter);
+                    if(date != null)data[i] = date.format(datetimeFormatter);
                 }
             }
         }
