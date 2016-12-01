@@ -37,6 +37,7 @@
       },
       {
         "masterClassName" : "com.springroll.orm.entities.UserDelegation",
+        "constraints" : ["startDate", "active"],
         "colDefs" : [
           { "name": "userId", "writeable": false, "type": "text", "lovSource" : "ActiveUsers"},
           { "name": "delegate", "writeable": true, "type": "text", "lovSource" : "ActiveUsers"},
@@ -44,6 +45,29 @@
           { "name": "endDate", "writeable": true, "type": "date"},
           { "name": "description", "writeable": true, "type": "text"},
           { "name": "active", "writeable": true, "type": "boolean", "defVal": "true"}
+        ]
+      },
+      {
+        "masterClassName" : "com.springrollexample.orm.entities.TestTableToCheckMdm",
+        "constraints" : ["enumType"],
+        "colDefs" : [
+          {"name": "stringVariable",  "writeable" : true, "type": "text"},
+          {"name": "booleanVariable", "writeable" : true, "type": "boolean"},
+          {"name": "intVariable", "writeable" : true, "type": "int"},
+          {"name": "floatVariable", "writeable" : true, "type": "num"},
+          {"name": "longVariable", "writeable" : true, "type": "int"},
+          {"name": "doubleVariable", "writeable" : true, "type": "num"},
+          {"name": "shortVariable", "writeable" : true, "type": "int"},
+          {"name": "booleanCVariable", "writeable" : true, "type": "boolean"},
+          {"name": "intCVariable", "writeable" : true, "type": "int"},
+          {"name": "floatCVariable", "writeable" : true, "type": "num"},
+          {"name": "longCVariable", "writeable" : true, "type": "int"},
+          {"name": "doubleCVariable", "writeable" : true, "type": "num"},
+          {"name": "bigDecimalVariable", "writeable" : true, "type": "num"},
+          {"name": "bigIntegerVariable", "writeable" : true, "type": "int"},
+          {"name": "enumType", "writeable" : true, "type": "int", "lovSource" : "setTime"},
+          {"name": "localDateVariable", "writeable" : true, "type": "date"},
+          {"name": "localDateTimeVariable", "writeable" : true, "type": "datetime"}
         ]
       }
   ],
@@ -58,7 +82,8 @@
       { "name": "ActiveUsers", "type": "namedQuery", "source": "User.getActiveUsers"}
     ],
     "enumSources": [
-      { "name": "Enum", "type": "enum", "source": "com.springroll.notification.CoreNotificationChannels"}
+      { "name": "Enum", "type": "enum", "source": "com.springroll.notification.CoreNotificationChannels"},
+      { "name": "setTime", "type": "enum", "source": "com.springroll.core.SetTime"}
     ]
   }
 }

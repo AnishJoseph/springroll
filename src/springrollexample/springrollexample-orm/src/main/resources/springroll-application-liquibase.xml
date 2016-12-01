@@ -7,6 +7,37 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
+    <changeSet id="springroll-test-mdm" author="anish">
+        <createTable tableName="TestTableToCheckMdm">
+            <column name="ID" type="bigint" autoIncrement="false">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="PARENT_ID" type="bigint"/>
+            <column name="stringVariable" type="varchar(10)"/>
+            <column name="booleanVariable" type="varchar(1)" />
+            <column name="booleanCVariable" type="varchar(1)" />
+            <column name="intVariable" type="int"/>
+            <column name="intCVariable" type="int"/>
+            <column name="floatVariable" type="float"/>
+            <column name="floatCVariable" type="float"/>
+            <column name="longVariable" type="bigint"/>
+            <column name="longCVariable" type="bigint"/>
+            <column name="doubleVariable" type="double"/>
+            <column name="doubleCVariable" type="double"/>
+            <column name="shortVariable" type="smallint"/>
+            <column name="shortCVariable" type="smallint"/>
+            <column name="enumType" type="varchar(12)" />
+            <column name="bigDecimalVariable" type="decimal(19,2)"/>
+            <column name="bigIntegerVariable" type="decimal(19,0) "/>
+
+            <column name="localDateVariable" type="date"/>
+            <column name="localDateTimeVariable" type="datetime"/>
+            <column name="CREATED_BY" type="varchar(128)"/>
+            <column name="CREATED_AT" type="datetime"/>
+            <column name="MODIFIED_BY" type="varchar(128)"/>
+            <column name="MODIFIED_ON" type="datetime"/>
+        </createTable>
+    </changeSet>
     <changeSet id="springroll-test" author="anish">
         <sql>
             INSERT INTO user VALUES (1,0, 'ANISH', 'BOM,GROUP1', 'IN', 'en', null, 'T', 'SCRIPT', null, null, null);
