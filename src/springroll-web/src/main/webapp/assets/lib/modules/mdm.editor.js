@@ -353,6 +353,7 @@ var Control = Marionette.View.extend({
 
             },
             error : function(model, response){
+                that.enableSaveButton();
                 if(response.status != 409)return; /* Handle only business validation errors here */
                 /* Now that the save has failed - enable the save button */
                 that.enableSaveButton();
