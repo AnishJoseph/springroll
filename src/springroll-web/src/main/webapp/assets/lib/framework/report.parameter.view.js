@@ -7,7 +7,7 @@ Application.ReportParamsView  = Marionette.View.extend({
     template: function(parameters){
         var template = [];
         template.push('<div class="panel panel-default">');
-        template.push('<div class="panel-heading">' + Localize('Parameters') + '</div>' );
+        //template.push('<div class="panel-heading">' + Localize('Parameters') + '</div>' );
         template.push('<div class="panel-body">');
         template.push('<form class="form-inline"> ');
 
