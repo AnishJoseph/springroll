@@ -53,7 +53,7 @@ var GridView  = Marionette.View.extend({
 
 Application.GridView = Marionette.View.extend({
     tagName: 'div',
-    template: _.template("<div id='params'/><div id='grid'/> "),
+    template: _.template("<h4 class='text-info'><%-title%></h4><div id='params'/><div id='grid'/> "),
     regions: {
         paramsRegion: '#params',
         gridRegion: '#grid',
@@ -61,6 +61,7 @@ Application.GridView = Marionette.View.extend({
     initialize: function(options) {
         this.gridName = options.gridName;
         this.parameters = options.parameters;
+        this.model = new Backbone.Model({title:this.gridName});
     },
 
     ui : {
