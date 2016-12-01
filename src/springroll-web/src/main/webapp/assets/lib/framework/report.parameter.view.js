@@ -9,23 +9,23 @@ Application.ReportParamsView  = Marionette.View.extend({
         template.push('<div class="panel panel-default">');
         template.push('<div class="panel-heading">' + Localize('Parameters') + '</div>' );
         template.push('<div class="panel-body">');
-        template.push('<div class="container">');
+        template.push('<form class="form-inline"> ');
 
         _.each(parameters, function (parameter) {
             if (parameter.javaType == "java.time.LocalDate" || (parameter.javaType == "java.time.LocalDateTime" && (parameter.setTime === 'START_OF_DAY' || parameter.setTime === 'END_OF_DAY'))){
                 var now = moment().format("DD/MM/YYYY"); //FIXME - format hardcoded
-                template.push('<div class="col-md-3">');
+                template.push('<div class="form-group rep-param">');
                 template.push('<div>' + Localize(parameter.name) + '</div>');
                 Application.Utils.addDatePickerToTemplate(template, parameter, now, 'datepicker ' + parameter.name);
                 template.push('</div>');
             } else if (parameter.javaType == "java.time.LocalDateTime"){
                 var now = moment().format("DD/MM/YYYY HH:mm"); //FIXME - format hardcoded
-                template.push('<div class="col-md-3">');
+                template.push('<div class="form-group rep-param">');
                 template.push('<div>' + Localize(parameter.name) + '</div>');
                 Application.Utils.addDatePickerToTemplate(template, parameter, now, 'datetimepicker ' + parameter.name);
                 template.push('</div>');
             }else if(parameter.lovList != null) {
-                template.push('<div class="col-md-3">');
+                template.push('<div class="form-group rep-param">');
                 template.push('<div>' + Localize(parameter.name) + '</div>');
                 var selected = (parameter.multiSelect === true) ? [parameter.lovList[0].value] : parameter.lovList[0].value;
                 Application.Utils.addLovToTemplate(template, parameter, selected);
@@ -39,7 +39,7 @@ Application.ReportParamsView  = Marionette.View.extend({
         template.push('</div>');
         template.push('</div>');
 
-        template.push('</div>');
+        template.push('</form>');
         template.push('</div>');
         template.push('</div>');
         return template.join("");
