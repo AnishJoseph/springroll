@@ -73,7 +73,12 @@ Application.GridView = Marionette.View.extend({
         var that = this;
         reportParams.save(null, {
            success: function(model, parameters){
-               that.showChildView('paramsRegion', new Application.ReportParamsView({"parameters":parameters, "reportName":that.gridName, "myParent":that}));
+               if(parameters.length == 0){
+                   that.onParametersChanged({'reportName' : that.gridName});
+               }
+               else {
+                   that.showChildView('paramsRegion', new Application.ReportParamsView({"parameters":parameters, "reportName":that.gridName, "myParent":that}));
+               }
            }
         });
     },
