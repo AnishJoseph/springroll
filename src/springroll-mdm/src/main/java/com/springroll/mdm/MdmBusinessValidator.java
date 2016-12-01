@@ -7,6 +7,8 @@ import com.springroll.core.SpringrollSecurity;
 import com.springroll.orm.entities.MdmEntity;
 import com.springroll.orm.entities.ReviewStepMeta;
 import com.springroll.orm.repositories.Repositories;
+import org.springframework.beans.PropertyAccessException;
+import org.springframework.beans.PropertyBatchUpdateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.stereotype.Service;
@@ -52,8 +54,15 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
 
         for (Map<String, Object> newRecord : mdmDTO.getNewRecords()) {
             String cid = newRecord.remove(CID).toString();
-            MdmEntity mdmEntity = mdmManager.createEntityFromNewRecord(mdmDefinition, newRecord);
-            hasNoErrorsInNewRecords = validate(mdmEntity, businessValidationResults, cid);
+            try {
+                MdmEntity mdmEntity = mdmManager.createEntityFromNewRecord(mdmDefinition, newRecord);
+                hasNoErrorsInNewRecords = validate(mdmEntity, businessValidationResults, cid);
+            } catch (PropertyBatchUpdateException e) {
+                hasNoErrorsInNewRecords = false;
+                for (PropertyAccessException propertyAccessException : e.getPropertyAccessExceptions()) {
+                    businessValidationResults.addBusinessViolation(cid, 1, propertyAccessException.getPropertyName(), propertyAccessException.getErrorCode(), null);
+                }
+            }
             if(hasNoErrorsInNewRecords) {
                 if (!validateConstraintsForNewRecords(mdmDefinition, newRecord)) {
                     mdmDefinition.getConstraints().forEach(s -> businessValidationResults.addBusinessViolation(cid, 1, s, "non-uniq", new String[]{}));
