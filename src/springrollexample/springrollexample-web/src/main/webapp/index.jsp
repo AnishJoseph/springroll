@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>SpringRoll</title>
-    <script src="springroll.js"></script>
+    <script src="generated/springroll.js"></script>
 </head>
 <body>
         <div id="root-element" class="applicationRoot"/>
