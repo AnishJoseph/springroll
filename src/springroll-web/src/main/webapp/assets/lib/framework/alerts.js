@@ -204,7 +204,7 @@ Application.Alerts = {
             Application.subscribe(notificationChannel, function(message){
                 var newAlerts = [];
                 var alertCollection;
-                if(message.data[0].channelType == 'ACTION') alertCollection = actionCollection;
+                if(message.data[0].channelType == 'ACTION') {alertCollection = actionCollection;alertsPanel.toggleAlertContainer(null, true);}
                 if(message.data[0].channelType == 'ERROR') alertCollection = errorCollection;
                 if(message.data[0].channelType == 'INFO') alertCollection = infoCollection;
                 _.each(message.data, function(notification){
