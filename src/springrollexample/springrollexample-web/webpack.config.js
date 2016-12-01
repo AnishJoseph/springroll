@@ -6,7 +6,8 @@ module.exports = {
     entry: "./app.main.js",
     output: {
 		path: path.join(__dirname, 'src/main/webapp/assets/generated'),
-        filename: "springroll.js"
+        filename: "springroll.js",
+        publicPath: "/assets/generated/"
     },
     module: {
         loaders: [
@@ -15,14 +16,14 @@ module.exports = {
             { test: /\.scss$/, loader: "style!css!sass" },
             { test: /\.css$/, loader: 'style-loader!css-loader' },
             { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file" },
-            { test: /\.(woff|woff2)$/, loader:"url?prefix=font/&limit=5000&publicPath=assets/generated/" },
-            { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/octet-stream&publicPath=assets/generated/" },
-            { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=image/svg+xml&publicPath=assets/generated/" },
+            { test: /\.(woff|woff2)$/, loader:"url?prefix=font/&limit=5000" },
+            { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/octet-stream" },
+            { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=image/svg+xml" },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
                 loaders: [
-                    'file?hash=sha512&digest=hex&name=[hash].[ext]&publicPath=assets/generated/',
-                    'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false&publicPath=assets/generated/'
+                    'file?hash=sha512&digest=hex&name=[hash].[ext]',
+                    'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
                 ]
             }
         ]
