@@ -30,29 +30,20 @@ var GridView  = Marionette.View.extend({
     },
 
     onRender : function(){
-        var that = this;
-        var ht = (window.innerHeight - 300) + "px"; //FIXME - we need a better soln
+        var ht = (window.innerHeight - 220) + "px"; //FIXME - we need a better soln
         this.gridtable = this.ui.griddiv.DataTable( {
-            "dom": 'Bflrtip',
+            "dom": 'flrtip',
             data: this.gridata,
             paging:   false,
             scrollY:  ht,
             scrollCollapse: true,
             search : true,
             columns: this.columnDefinitions,
-            buttons: [
-                {
-                    text: 'Parameters',
-                    action: function ( e, dt, node, config ) {
-                        that.myParent.triggerMethod("show:parameters");
-                    }
-                }
-            ]
         } );
     },
 
     onAttach : function(){
-        /* Since the initil calculations of the datatable are done BEFORE the view is attached to
+        /* Since the initial calculations of the datatable are done BEFORE the view is attached to
            the DOM, datatables makes all sorts of errors when calculating col widths - as a
            workaround we ask datatables to adjust the col width post render
          */
@@ -63,7 +54,7 @@ var GridView  = Marionette.View.extend({
 
 Application.GridView = Marionette.View.extend({
     tagName: 'div',
-    template: _.template("<h4 class='text-info'><%-title%></h4><div id='grid'/> "),
+    template: _.template("<div class='grid-title-panel'><div class='pull-left'><h4 class='pull-left text-info'><%-title%></h4></div><div id='filter' title='<%-filter%>' style='padding-left: 100px' class='pull-right glyphicon glyphicon-filter'></div></div><div id='grid'/> "),
     regions: {
         paramsRegion: '#params',
         gridRegion: '#grid',
@@ -71,7 +62,15 @@ Application.GridView = Marionette.View.extend({
     initialize: function(options) {
         this.gridName = options.gridName;
         this.fixedParameters = options.parameters;
-        this.model = new Backbone.Model({title:this.gridName});
+        this.model = new Backbone.Model({title:this.gridName, filter : Localize('Filter')});
+    },
+
+    events : {
+        'click #filter' : "showParameters"
+    },
+
+    ui : {
+        filter:  '#filter'
     },
 
     onRender: function() {
@@ -80,6 +79,7 @@ Application.GridView = Marionette.View.extend({
         reportParams.save(null, {
            success: function(model, parameters){
                if(parameters.length == 0){
+                   that.ui.filter.hide();
                    that.onParametersChanged({'reportName' : that.gridName});
                }
                else {
@@ -89,7 +89,7 @@ Application.GridView = Marionette.View.extend({
            }
         });
     },
-    onShowParameters : function(){
+    showParameters : function(){
         if(this.reportParamView != undefined)Application.showModal("", this.reportParamView, this, true, true);
     },
 
