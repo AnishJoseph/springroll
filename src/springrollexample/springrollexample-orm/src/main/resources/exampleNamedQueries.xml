@@ -3,7 +3,7 @@
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd " >
     <named-query name="noParam">
-        <query>SELECT o FROM Job o WHERE o.userId = :userId </query>
+        <query>SELECT o.id, o.userId, o.service FROM Job o </query>
     </named-query>
     <named-query name="singleStringParam">
         <query>SELECT o.id, o.userId, o.service FROM Job o WHERE o.userId = :userId </query>
