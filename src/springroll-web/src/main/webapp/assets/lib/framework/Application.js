@@ -162,9 +162,10 @@ Application.Localize = function(messageKey, args){
  * @param detachViewOnHide - normally the view (viewToShow) will not be detached when the modal window in hidden. As a desiarable side effect when another modal window
  *                           is opened the original modal view is destroyed and also destroys any child views (in this case the viewToShow). However if you dont
  *                           want the viewToShow to be destroyed then set this flag to true. IF YOU DO THIS YOU MUST TAKE CARE OF DESTROYING THIS VIEW YOURSELF
+ * @param hinderClose - prevents the Modal window from closing on clicking outside the modal or the ESC key
  */
-Application.showModal = function(title, viewToShow, viewOfCaller, detachViewOnHide){
-    Application.rootView.triggerMethod("show:modal", title, viewToShow, viewOfCaller, detachViewOnHide);
+Application.showModal = function(title, viewToShow, viewOfCaller, detachViewOnHide, hinderClose){
+    Application.rootView.triggerMethod("show:modal", title, viewToShow, viewOfCaller, detachViewOnHide || false, hinderClose || false);
 } ;
 Application.hideModal = function(){
     Application.rootView.triggerMethod("hide:modal");

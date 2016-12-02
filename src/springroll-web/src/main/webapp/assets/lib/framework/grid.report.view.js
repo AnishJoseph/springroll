@@ -84,13 +84,13 @@ Application.GridView = Marionette.View.extend({
                }
                else {
                    that.reportParamView = new Application.ReportParamsView({"parameters":parameters, "reportName":that.gridName, "myParent":that});
-                   Application.showModal("", that.reportParamView, this, true);
+                   Application.showModal("", that.reportParamView, this, true, true);
                }
            }
         });
     },
     onShowParameters : function(){
-        if(this.reportParamView != undefined)Application.showModal("", this.reportParamView, this, true);
+        if(this.reportParamView != undefined)Application.showModal("", this.reportParamView, this, true, true);
     },
 
     onDestroy : function(){

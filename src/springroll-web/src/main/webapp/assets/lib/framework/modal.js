@@ -12,6 +12,7 @@ Application.ModalView = Marionette.View.extend({
         this.commentText = '';
         this.needsComment = false;
         this.detachViewOnHide = options.detachViewOnHide || false;
+        this.hinderClose = options.hinderClose || false;
     },
 
     regions : {
@@ -73,7 +74,14 @@ Application.ModalView = Marionette.View.extend({
             }
         }, 50, this));
 
-        $(this.ui.mymodal).modal();
+        if(this.hinderClose){
+            $(this.ui.mymodal).modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        } else {
+            $(this.ui.mymodal).modal();
+        }
         this.showChildView('modalBody', this.viewToShow);
 
         if (_.contains(_.functions(this.viewOfCaller), "dismissClicked")) {
