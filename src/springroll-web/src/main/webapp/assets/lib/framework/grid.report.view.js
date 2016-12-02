@@ -83,21 +83,21 @@ Application.GridView = Marionette.View.extend({
                    that.onParametersChanged({'reportName' : that.gridName});
                }
                else {
-                   that.reportView = new Application.ReportParamsView({"parameters":parameters, "reportName":that.gridName, "myParent":that});
-                   Application.showModal("", that.reportView, this, true);
+                   that.reportParamView = new Application.ReportParamsView({"parameters":parameters, "reportName":that.gridName, "myParent":that});
+                   Application.showModal("", that.reportParamView, this, true);
                }
            }
         });
     },
     onShowParameters : function(){
-        Application.showModal("", this.reportView, this, true);
+        if(this.reportParamView != undefined)Application.showModal("", this.reportParamView, this, true);
     },
 
     onDestroy : function(){
-        this.reportView.destroy();
+        if(this.reportParamView != undefined)this.reportParamView.destroy();
     },
     onParametersChanged : function(userChosenParameters){
-        Application.hideModal();
+        if(this.reportParamView != undefined) Application.hideModal();
         var gridData = new GridData(userChosenParameters);
         var that = this;
         gridData.save(null, {
