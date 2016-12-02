@@ -35,6 +35,11 @@ Application.ModalView = Marionette.View.extend({
         this.commentText = $(this.ui.comments).val();
 
     },
+
+    hide : function(){
+        $(this.ui.mymodal).modal('hide');
+    },
+
     dismissClicked : function(){
         this.viewOfCaller.dismissClicked();
         $(this.ui.mymodal).modal('hide');

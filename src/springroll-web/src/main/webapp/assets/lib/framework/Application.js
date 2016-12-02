@@ -156,6 +156,9 @@ Application.Localize = function(messageKey, args){
 Application.showModal = function(title, viewToShow, viewOfCaller ){
     Application.rootView.triggerMethod("show:modal", title, viewToShow, viewOfCaller);
 } ;
+Application.hideModal = function(){
+    Application.rootView.triggerMethod("hide:modal");
+} ;
 
 var promises = [];
 

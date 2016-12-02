@@ -63,19 +63,15 @@ var GridView  = Marionette.View.extend({
 
 Application.GridView = Marionette.View.extend({
     tagName: 'div',
-    template: _.template("<h4 class='text-info'><%-title%></h4><div id='params'/><div id='grid'/> "),
+    template: _.template("<h4 class='text-info'><%-title%></h4><div id='grid'/> "),
     regions: {
         paramsRegion: '#params',
         gridRegion: '#grid',
     },
     initialize: function(options) {
         this.gridName = options.gridName;
-        this.parameters = options.parameters;
+        this.initialParameters = options.parameters;
         this.model = new Backbone.Model({title:this.gridName});
-    },
-
-    ui : {
-        paramPanel : '#params'
     },
 
     onRender: function() {
@@ -87,23 +83,24 @@ Application.GridView = Marionette.View.extend({
                    that.onParametersChanged({'reportName' : that.gridName});
                }
                else {
-                   that.showChildView('paramsRegion', new Application.ReportParamsView({"parameters":parameters, "reportName":that.gridName, "myParent":that}));
+                   that.parameters = parameters;
+                   Application.showModal("", new Application.ReportParamsView({"parameters":parameters, "reportName":that.gridName, "myParent":that}), this);
                }
            }
         });
     },
     onParamPanelToggled : function(){
-        $(this.ui.paramPanel).toggle();
+        Application.showModal("", new Application.ReportParamsView({"parameters":this.parameters, "reportName":this.gridName, "myParent":this}), this);
     },
 
     onParametersChanged : function(userChosenParameters){
+        Application.hideModal();
         var gridData = new GridData(userChosenParameters);
         var that = this;
         gridData.save(null, {
             success : function(model, data){
                 data.myParent = that;
                 that.showChildView('gridRegion', new GridView(data));
-                $(that.ui.paramPanel).hide();
             }
         });
     },
