@@ -18,7 +18,7 @@ var ReportParams = Backbone.Model.extend({
 
 var GridView  = Marionette.View.extend({
 
-    template: _.template("<table class='table-striped table-bordered table-hover' id='gridtable' style='width: 100%'/>"),
+    template: _.template("<table class='table table-striped table-bordered table-hover' id='gridtable'/>"),
     ui : {
         griddiv : '#gridtable'
     },
@@ -31,12 +31,13 @@ var GridView  = Marionette.View.extend({
 
     onRender : function(){
         var that = this;
-        this.ui.griddiv.DataTable( {
+        var ht = (window.innerHeight - 300) + "px"; //FIXME - we need a better soln
+        this.gridtable = this.ui.griddiv.DataTable( {
             "dom": 'Bflrtip',
             data: this.gridata,
             paging:   false,
-        //    scrollY:        '45vh',
-        //    scrollCollapse: true,
+            scrollY:  ht,
+            scrollCollapse: true,
             search : true,
             columns: this.columnDefinitions,
             buttons: [
@@ -48,6 +49,15 @@ var GridView  = Marionette.View.extend({
                 }
             ]
         } );
+    },
+
+    onAttach : function(){
+        /* Since the initil calculations of the datatable are done BEFORE the view is attached to
+           the DOM, datatables makes all sorts of errors when calculating col widths - as a
+           workaround we ask datatables to adjust the col width post render
+         */
+
+        this.gridtable.columns.adjust().draw();
     }
 });
 
