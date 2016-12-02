@@ -44,7 +44,7 @@ var GridView  = Marionette.View.extend({
                 {
                     text: 'Parameters',
                     action: function ( e, dt, node, config ) {
-                        that.myParent.triggerMethod("param:panel:toggled");
+                        that.myParent.triggerMethod("show:parameters");
                     }
                 }
             ]
@@ -70,7 +70,7 @@ Application.GridView = Marionette.View.extend({
     },
     initialize: function(options) {
         this.gridName = options.gridName;
-        this.initialParameters = options.parameters;
+        this.fixedParameters = options.parameters;
         this.model = new Backbone.Model({title:this.gridName});
     },
 
@@ -83,16 +83,19 @@ Application.GridView = Marionette.View.extend({
                    that.onParametersChanged({'reportName' : that.gridName});
                }
                else {
-                   that.parameters = parameters;
-                   Application.showModal("", new Application.ReportParamsView({"parameters":parameters, "reportName":that.gridName, "myParent":that}), this);
+                   that.reportView = new Application.ReportParamsView({"parameters":parameters, "reportName":that.gridName, "myParent":that});
+                   Application.showModal("", that.reportView, this, true);
                }
            }
         });
     },
-    onParamPanelToggled : function(){
-        Application.showModal("", new Application.ReportParamsView({"parameters":this.parameters, "reportName":this.gridName, "myParent":this}), this);
+    onShowParameters : function(){
+        Application.showModal("", this.reportView, this, true);
     },
 
+    onDestroy : function(){
+        this.reportView.destroy();
+    },
     onParametersChanged : function(userChosenParameters){
         Application.hideModal();
         var gridData = new GridData(userChosenParameters);

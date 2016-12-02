@@ -11,6 +11,7 @@ Application.ModalView = Marionette.View.extend({
         this.viewOfCaller = options.viewOfCaller;
         this.commentText = '';
         this.needsComment = false;
+        this.detachViewOnHide = options.detachViewOnHide || false;
     },
 
     regions : {
@@ -29,6 +30,11 @@ Application.ModalView = Marionette.View.extend({
         'click #accept'  : "acceptClicked",
         'click #reject'  : "rejectClicked",
         'change #comments'  : "commentChanged",
+        'hidden.bs.modal'  : "hidden",
+    },
+
+    hidden : function() {
+        if(this.detachViewOnHide)this.detachChildView('modalBody');
     },
 
     commentChanged : function(){

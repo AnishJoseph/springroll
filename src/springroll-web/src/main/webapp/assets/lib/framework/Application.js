@@ -153,8 +153,18 @@ Application.Localize = function(messageKey, args){
     return getLocaleMessage.apply(this, arguments); //Case 2
 };
 
-Application.showModal = function(title, viewToShow, viewOfCaller ){
-    Application.rootView.triggerMethod("show:modal", title, viewToShow, viewOfCaller);
+/**
+ *
+ * @param title - title to show in the Modal window
+ * @param viewToShow - the view to show in the Modal window
+ * @param viewOfCaller - view of the caller - is used to call methods in that view when the dismiss, accept or reject buttons are clicked (NOTE: these buttons are ONLY
+ *                       shown if the caller view has methods like dismissClicked etc
+ * @param detachViewOnHide - normally the view (viewToShow) will not be detached when the modal window in hidden. As a desiarable side effect when another modal window
+ *                           is opened the original modal view is destroyed and also destroys any child views (in this case the viewToShow). However if you dont
+ *                           want the viewToShow to be destroyed then set this flag to true. IF YOU DO THIS YOU MUST TAKE CARE OF DESTROYING THIS VIEW YOURSELF
+ */
+Application.showModal = function(title, viewToShow, viewOfCaller, detachViewOnHide){
+    Application.rootView.triggerMethod("show:modal", title, viewToShow, viewOfCaller, detachViewOnHide);
 } ;
 Application.hideModal = function(){
     Application.rootView.triggerMethod("hide:modal");
