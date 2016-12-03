@@ -30,6 +30,12 @@ Application.ReportParamsView  = Marionette.View.extend({
                 var selected = (parameter.multiSelect === true) ? [parameter.lovList[0].value] : parameter.lovList[0].value;
                 Application.Utils.addLovToTemplate(template, parameter, selected);
                 template.push('</div>');
+            } else {
+                //FIXME - handle string, int and float separately
+                template.push('<div class="form-group rep-param">');
+                template.push('<div>' + Localize(parameter.name) + '</div>');
+                template.push('<input class="form-control " type="text" id="'+ parameter.name + '"> ');
+                template.push('</div>');
             }
         });
 

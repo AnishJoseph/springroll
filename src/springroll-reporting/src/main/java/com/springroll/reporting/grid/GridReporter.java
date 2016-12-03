@@ -7,6 +7,8 @@ import com.springroll.core.Lov;
 import com.springroll.reporting.ReportParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -35,6 +37,8 @@ import java.util.stream.Collectors;
     private static final Logger logger = LoggerFactory.getLogger(GridReporter.class);
     @PersistenceContext EntityManager em;
     private GridConfiguration gridConfiguration;
+    @Autowired
+    private DefaultConversionService conversionService;
 
     @PostConstruct public void init(){
         try {
@@ -149,15 +153,14 @@ import java.util.stream.Collectors;
         }
         return query.getResultList();
     }
-
+    //FIXME - See dup code in MdmBusinessValidator
     private Object convert(Object paramValue, Parameter parameter){
         if(parameter.getParameterType().equals(LocalDateTime.class)){
-            return LocalDateTime.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-        } else if (parameter.getParameterType().equals(LocalDate.class)){
-            return LocalDate.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        } else if (parameter.getParameterType().equals(Boolean.class)){
-            return "true".equalsIgnoreCase((String)paramValue);
+            return LocalDateTime.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")); //FIXME - externalize pattern
+        } else if (parameter.getParameterType().equals(LocalDate.class)) {
+            return LocalDate.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy")); //FIXME - externalize pattern
         }
-        return paramValue;
+        Object o = conversionService.convert(paramValue, parameter.getParameterType());
+        return o;
     }
 }
