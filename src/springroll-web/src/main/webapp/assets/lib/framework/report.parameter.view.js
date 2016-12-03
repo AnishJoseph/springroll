@@ -30,8 +30,18 @@ Application.ReportParamsView  = Marionette.View.extend({
                 var selected = (parameter.multiSelect === true) ? [parameter.lovList[0].value] : parameter.lovList[0].value;
                 Application.Utils.addLovToTemplate(template, parameter, selected);
                 template.push('</div>');
+            } else if (parameter.javaType == "java.lang.Integer" || parameter.javaType == "java.lang.Long"  || parameter.javaType == "java.math.BigInteger" || parameter.javaType == "java.lang.Short"){
+                template.push('<div class="form-group rep-param">');
+                template.push('<div>' + Localize(parameter.name) + '</div>');
+                template.push('<input class="form-control " type="number" step="1" id="'+ parameter.name + '"> ');
+                template.push('</div>');
+            } else if (parameter.javaType == "java.lang.Double"  || parameter.javaType == "java.lang.Float" || parameter.javaType == "java.math.BigDecimal" ){
+                template.push('<div class="form-group rep-param">');
+                template.push('<div>' + Localize(parameter.name) + '</div>');
+                template.push('<input class="form-control " type="number" id="'+ parameter.name + '"> ');
+                template.push('</div>');
             } else {
-                //FIXME - handle string, int and float separately
+                // Only string and enum should come here
                 template.push('<div class="form-group rep-param">');
                 template.push('<div>' + Localize(parameter.name) + '</div>');
                 template.push('<input class="form-control " type="text" id="'+ parameter.name + '"> ');
