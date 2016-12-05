@@ -5,9 +5,6 @@
     <named-query name="noParam">
         <query>SELECT o.id, o.userId, o.service FROM Job o </query>
     </named-query>
-    <named-query name="singleStringParam">
-        <query>SELECT o.id, o.userId, o.service FROM Job o WHERE o.userId = :userId </query>
-    </named-query>
     <named-query name="StringListParam">
         <query>SELECT o.id, o.userId, o.service FROM Job o WHERE o.userId in (:userIds) </query>
     </named-query>

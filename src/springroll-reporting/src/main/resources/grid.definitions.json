@@ -6,6 +6,24 @@
           {"title": "User"},
           {"title": "ServiceName", "type":"string"}
         ]
+    },
+    {"name" : "TestGridAllTypes", "namedQuery": "TestGridAllTypes",
+      "columns":[
+          {"title": "stringVariable", "type":"text"},
+          {"title": "booleanVariable", "type":"boolean"},
+          {"title": "intVariable", "type":"boolean"},
+          {"title": "floatCVariable", "type":"boolean"},
+          {"title": "bigDecimalVariable", "type":"boolean"},
+          {"title": "bigIntegerVariable", "type":"boolean"},
+          {"title": "enumType", "type":"boolean"}
+        ]
+    },
+    {"name" : "TestGridParamFromSpringrollUser", "namedQuery": "TestGridParamFromSpringrollUser",
+      "columns":[
+        {"title": "ID", "type":"num"},
+        {"title": "User"},
+        {"title": "ServiceName", "type":"string"}
+      ]
     }
   ],
   "gridParameters" : [
@@ -13,6 +31,13 @@
     {"name" : "completeStatus"},
     {"name" : "userIdsss", "list":["Opt1","Opt2","Opt3"], "multiSelect": true},
     {"name" : "startTime", "setTime" : "START_OF_DAY"},
-    {"name" : "endTime", "setTime" : "END_OF_DAY"}
+    {"name" : "endTime", "setTime" : "END_OF_DAY"},
+    {"name" : "loggedInUser", "hidden" : true, "method" : "getUsername", "bean" : "SpringrollUser"}
+  ],
+
+  "namedQueries" : [
+    {"name" : "TestGridAllTypes", "query": "SELECT o.stringVariable, o.booleanVariable, o.intVariable, o.floatCVariable, o.bigDecimalVariable, o.bigIntegerVariable, o.enumType  FROM TestTableToCheckMdm o where o.stringVariable = :stringVariable AND  o.booleanVariable = :booleanVariable AND  o.intVariable = :intVariable AND  o.floatCVariable = :floatCVariable AND  o.bigDecimalVariable = :bigDecimalVariable AND  o.bigIntegerVariable = :bigIntegerVariable AND  o.enumType = :enumType"},
+    {"name" : "TestGridParamFromSpringrollUser", "query": "SELECT o.id, o.userId, o.service FROM Job o WHERE o.userId = :loggedInUser"}
   ]
+
 }
