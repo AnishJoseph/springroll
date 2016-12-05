@@ -9,7 +9,6 @@ import com.springroll.router.exceptions.BusinessValidationException;
 import com.springroll.router.exceptions.PropertyValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -94,7 +93,7 @@ public abstract class AbstractAPI {
     }
 
     private SpringrollUser getUser(){
-        return (SpringrollUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return SpringrollSecurity.getUser();
     }
 
     public ModelAndView propertyViolationsAsModelAndView(Map<String,Map<String,String>> violations) {

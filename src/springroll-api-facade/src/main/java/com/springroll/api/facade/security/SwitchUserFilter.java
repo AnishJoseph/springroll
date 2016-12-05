@@ -1,5 +1,6 @@
 package com.springroll.api.facade.security;
 
+import com.springroll.core.ContextStore;
 import com.springroll.core.SpringrollUser;
 import com.springroll.orm.repositories.Repositories;
 import org.slf4j.Logger;
@@ -16,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -43,6 +43,8 @@ public class SwitchUserFilter extends org.springframework.security.web.authentic
                 }
             }
         }
+        /* For every request that comes in set the Context to that of the user that has logged in */
+        ContextStore.put((SpringrollUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal(), null, null);
 
         super.doFilter(req, res, chain);
     }
