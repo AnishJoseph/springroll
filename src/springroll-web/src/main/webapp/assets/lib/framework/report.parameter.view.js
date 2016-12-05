@@ -9,7 +9,7 @@ Application.ReportParamsView  = Marionette.View.extend({
         template.push('<div class="panel panel-default">');
         //template.push('<div class="panel-heading">' + Localize('Parameters') + '</div>' );
         template.push('<div class="panel-body">');
-        template.push('<form class="form-inline"> ');
+        template.push('<form class="form-inline report-param-form"> ');
 
         _.each(parameters, function (parameter) {
             if (parameter.javaType == "java.time.LocalDate" || (parameter.javaType == "java.time.LocalDateTime" && (parameter.setTime === 'START_OF_DAY' || parameter.setTime === 'END_OF_DAY'))){
@@ -33,18 +33,18 @@ Application.ReportParamsView  = Marionette.View.extend({
             } else if (parameter.javaType == "java.lang.Integer" || parameter.javaType == "java.lang.Long"  || parameter.javaType == "java.math.BigInteger" || parameter.javaType == "java.lang.Short"){
                 template.push('<div class="form-group rep-param">');
                 template.push('<div>' + Localize(parameter.name) + '</div>');
-                template.push('<input class="form-control " type="number" step="1" id="'+ parameter.name + '"> ');
+                template.push('<input required class="form-control " type="number" step="1" id="'+ parameter.name + '"> ');
                 template.push('</div>');
             } else if (parameter.javaType == "java.lang.Double"  || parameter.javaType == "java.lang.Float" || parameter.javaType == "java.math.BigDecimal" ){
                 template.push('<div class="form-group rep-param">');
                 template.push('<div>' + Localize(parameter.name) + '</div>');
-                template.push('<input class="form-control " type="number" id="'+ parameter.name + '"> ');
+                template.push('<input required class="form-control " type="number" id="'+ parameter.name + '"> ');
                 template.push('</div>');
             } else {
-                // Only string and enum should come here
+                // Only string should come here
                 template.push('<div class="form-group rep-param">');
                 template.push('<div>' + Localize(parameter.name) + '</div>');
-                template.push('<input class="form-control " type="text" id="'+ parameter.name + '"> ');
+                template.push('<input required class="form-control " type="text" id="'+ parameter.name + '"> ');
                 template.push('</div>');
             }
         });
@@ -72,6 +72,7 @@ Application.ReportParamsView  = Marionette.View.extend({
         selectpickerSearchable:  '.selectpickerSearchable',
         datepicker:  '.datepicker',
         datetimepicker:  '.datetimepicker',
+        reportParamForm:  '.report-param-form',
     },
 
     initialize: function(options) {
@@ -115,6 +116,8 @@ Application.ReportParamsView  = Marionette.View.extend({
         this.delegateEvents(events);
     },
     submit : function(){
+        var valid = this.ui.reportParamForm[0].checkValidity();
+        if(!valid)return;
         this.params["reportName"] = this.reportName;
         this.myParent.triggerMethod("parameters:changed", this.params);
     }
