@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springroll.core.Lov;
 import com.springroll.core.SpringrollSecurity;
+import com.springroll.core.SpringrollUtils;
 import com.springroll.core.exceptions.SpringrollException;
 import com.springroll.reporting.ReportParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -23,9 +23,6 @@ import javax.persistence.Query;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +37,9 @@ import java.util.stream.Collectors;
     private static final Logger logger = LoggerFactory.getLogger(GridReporter.class);
     @PersistenceContext EntityManager em;
     private GridConfiguration gridConfiguration;
-    @Autowired
-    private DefaultConversionService conversionService;
+
+    @Autowired SpringrollUtils springrollUtils;
+
     @Autowired private ApplicationContext applicationContext;
 
     @PostConstruct public void init(){
@@ -155,7 +153,7 @@ import java.util.stream.Collectors;
                 throw new SpringrollException("missing.namedquery.parameter", parameter.getName());
             }
             try {
-                Object o = convert(paramValue, parameter);
+                Object o = springrollUtils.convert(paramValue, parameter.getParameterType());
                 query.setParameter(parameter.getName(), o);
             }catch (Exception e){
                 e.printStackTrace();
@@ -165,15 +163,6 @@ import java.util.stream.Collectors;
         return query.getResultList();
     }
     //FIXME - See dup code in MdmBusinessValidator
-    private Object convert(Object paramValue, Parameter parameter){
-        if(parameter.getParameterType().equals(LocalDateTime.class)){
-            return LocalDateTime.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")); //FIXME - externalize pattern
-        } else if (parameter.getParameterType().equals(LocalDate.class)) {
-            return LocalDate.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy")); //FIXME - externalize pattern
-        }
-        Object o = conversionService.convert(paramValue, parameter.getParameterType());
-        return o;
-    }
 
     private Object getContextValue(String bean, String methodName){
         try {
