@@ -2,12 +2,14 @@ package com.springroll.reporting.grid;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springroll.core.exceptions.SpringrollException;
 import com.springroll.core.Lov;
+import com.springroll.core.SpringrollSecurity;
+import com.springroll.core.exceptions.SpringrollException;
 import com.springroll.reporting.ReportParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -20,6 +22,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -39,6 +42,7 @@ import java.util.stream.Collectors;
     private GridConfiguration gridConfiguration;
     @Autowired
     private DefaultConversionService conversionService;
+    @Autowired private ApplicationContext applicationContext;
 
     @PostConstruct public void init(){
         try {
@@ -97,6 +101,7 @@ import java.util.stream.Collectors;
 
         for (Parameter<?> parameter : grid.getParameters()) {
             GridParameter gridParameter = gridConfiguration.findParameterByName(parameter.getName());
+            if(gridParameter.isHidden())continue;   //Dont send hidden param to the UI
             boolean multiSelect = gridParameter == null ? false: gridParameter.isMultiSelect();
             List<Lov> lovs;
             if(gridParameter != null && gridParameter.getNamedQuery() != null) {
@@ -138,7 +143,9 @@ import java.util.stream.Collectors;
     private List executeQuery(String namedQuery, Map<String, Object> parameters){
         Query query = em.createNamedQuery(namedQuery);
         for (Parameter<?> parameter : query.getParameters()) {
+            GridParameter gridParameter = gridConfiguration.findParameterByName(parameter.getName());
             Object paramValue = parameters.get(parameter.getName());
+            if(gridParameter != null && gridParameter.isHidden()) paramValue = getContextValue(gridParameter.getBean(), gridParameter.getMethod());
             if(paramValue == null){
                 logger.error("The named query '{}' is missing a parameter called '{}'", namedQuery, parameter.getName());
                 throw new SpringrollException("missing.namedquery.parameter", parameter.getName());
@@ -162,5 +169,19 @@ import java.util.stream.Collectors;
         }
         Object o = conversionService.convert(paramValue, parameter.getParameterType());
         return o;
+    }
+
+    private Object getContextValue(String bean, String methodName){
+        try {
+            if("SpringrollUser".equalsIgnoreCase(bean)) {
+                Method method = SpringrollSecurity.getUser().getClass().getMethod(methodName);
+                return method.invoke(SpringrollSecurity.getUser());
+            }
+            Object beanInstance = applicationContext.getBean(bean);
+            return beanInstance.getClass().getMethod(methodName).invoke(beanInstance);
+        }catch (Exception e){
+            logger.error("Exception while invoking method {}", methodName);
+        }
+        return null;
     }
 }

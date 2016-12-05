@@ -10,7 +10,10 @@ import java.util.List;
 public class GridParameter {
     private String name;
     private boolean multiSelect;
+    private boolean hidden = false;
     private String  namedQuery;
+    private String  method;
+    private String  bean;
     private SetTime setTime;
     private List<String> list;
 
@@ -52,5 +55,29 @@ public class GridParameter {
 
     public void setSetTime(SetTime setTime) {
         this.setTime = setTime;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public String getBean() {
+        return bean;
+    }
+
+    public void setBean(String bean) {
+        this.bean = bean;
     }
 }
