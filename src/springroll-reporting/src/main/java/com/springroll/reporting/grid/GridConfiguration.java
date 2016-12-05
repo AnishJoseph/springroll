@@ -9,6 +9,7 @@ public class GridConfiguration {
     private List<Grid> grids;
     private List<GridParameter> gridParameters;
     private List<NamedQuery> namedQueries = null;
+    private List<NumberFormat> numberFormats = null;
 
     public List<Grid> getGrids() {
         return grids;
@@ -38,6 +39,12 @@ public class GridConfiguration {
         }
         return null;
     }
+    public NumberFormat findNumberFormatByName(String formatName){
+        for (NumberFormat numberFormat : numberFormats) {
+            if(numberFormat.getName().equalsIgnoreCase(formatName))return numberFormat;
+        }
+        return null;
+    }
 
     public List<NamedQuery> getNamedQueries() {
         return namedQueries;
@@ -45,5 +52,13 @@ public class GridConfiguration {
 
     public void setNamedQueries(List<NamedQuery> namedQueries) {
         this.namedQueries = namedQueries;
+    }
+
+    public List<NumberFormat> getNumberFormats() {
+        return numberFormats;
+    }
+
+    public void setNumberFormats(List<NumberFormat> numberFormats) {
+        this.numberFormats = numberFormats;
     }
 }

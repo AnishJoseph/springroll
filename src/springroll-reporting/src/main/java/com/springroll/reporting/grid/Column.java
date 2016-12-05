@@ -6,7 +6,7 @@ package com.springroll.reporting.grid;
 public class Column {
     private String title;
     private String type;
-    private String numberType;
+    private String numberFormat;
     private String className;
 
     public String getTitle() {
@@ -25,12 +25,12 @@ public class Column {
         this.type = type;
     }
 
-    public String getNumberType() {
-        return numberType;
+    public String getNumberFormat() {
+        return numberFormat;
     }
 
-    public void setNumberType(String numberType) {
-        this.numberType = numberType;
+    public void setNumberFormat(String numberFormat) {
+        this.numberFormat = numberFormat;
     }
 
     public String getClassName() {

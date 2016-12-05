@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 /**
  * Created by anishjoseph on 05/12/16.
@@ -29,5 +32,9 @@ public class SpringrollUtils {
         }
         Object o = conversionService.convert(paramValue, parameterType);
         return o;
+    }
+
+    public DecimalFormat makeFormatter(Locale locale, String pattern){
+        return new DecimalFormat(pattern, new DecimalFormatSymbols(locale));
     }
 }

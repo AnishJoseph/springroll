@@ -23,6 +23,7 @@ import javax.persistence.Query;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -74,17 +75,27 @@ import java.util.stream.Collectors;
         gridReport.setColumns(grid.getColumns());
 
         for (int i = 0; i < grid.getColumns().size(); i++) {
-            if(grid.getColumns().get(i).getType().equalsIgnoreCase("date")){
+            Column column = grid.getColumns().get(i);
+            if(column.getType().equalsIgnoreCase("date")){
                 for (Object row : data) {
                     Object[] rowData = (Object[])row;
                     LocalDate date = (LocalDate) rowData[i];
                     if(date != null)rowData[i] = date.format(dateFormatter);
                 }
-            } else if(grid.getColumns().get(i).getType().equalsIgnoreCase("datetime")){
+            } else if(column.getType().equalsIgnoreCase("datetime")){
                 for (Object row : data) {
                     Object[] rowData = (Object[])row;
                     LocalDateTime date = (LocalDateTime) rowData[i];
                     if(date != null)rowData[i] = date.format(datetimeFormatter);
+                }
+            } else if(column.getType().equalsIgnoreCase("num") && column.getNumberFormat() != null) {
+                NumberFormat numberFormat = gridConfiguration.findNumberFormatByName(column.getNumberFormat());
+                if(numberFormat == null)continue;
+                DecimalFormat format = springrollUtils.makeFormatter(SpringrollSecurity.getUser().getLocale(), numberFormat.getFormat());
+                for (Object row : data) {
+                    Object[] rowData = (Object[])row;
+                    Number value = (Number) rowData[i];
+                    if(value != null)rowData[i] = format.format(value);
                 }
             }
         }

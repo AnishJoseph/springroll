@@ -12,8 +12,8 @@
           {"title": "stringVariable", "type":"text"},
           {"title": "booleanVariable", "type":"boolean", "className" : "text-center"},
           {"title": "intVariable", "type":"num", "className" : "text-right"},
-          {"title": "floatCVariable", "type":"num", "className" : "text-right"},
-          {"title": "bigDecimalVariable", "type":"num", "className" : "text-right"},
+          {"title": "floatCVariable", "type":"num", "className" : "text-right", "numberFormat" : "currency"},
+          {"title": "bigDecimalVariable", "type":"num", "className" : "text-right", "numberFormat" : "rate"},
           {"title": "bigIntegerVariable", "type":"num", "className" : "text-right"},
           {"title": "enumType", "type":"text"},
           {"title": "localDateVariable", "type":"date", "className" : "text-center" },
@@ -40,6 +40,11 @@
   "namedQueries" : [
     {"name" : "TestGridAllTypes", "query": "SELECT o.stringVariable, o.booleanVariable, o.intVariable, o.floatCVariable, o.bigDecimalVariable, o.bigIntegerVariable, o.enumType, o.localDateVariable, o.localDateTimeVariable  FROM TestTableToCheckMdm o where o.stringVariable = :stringVariable AND  o.booleanVariable = :booleanVariable AND  o.intVariable = :intVariable AND  o.floatCVariable = :floatCVariable AND  o.bigDecimalVariable = :bigDecimalVariable AND  o.bigIntegerVariable = :bigIntegerVariable AND  o.enumType = :enumType"},
     {"name" : "TestGridParamFromSpringrollUser", "query": "SELECT o.id, o.userId, o.service FROM Job o WHERE o.userId = :loggedInUser"}
+  ],
+
+  "numberFormats" : [
+    {"name" : "currency", "format": "###,###.00"},
+    {"name" : "rate", "format": "###,###.0000"}
   ]
 
 }
