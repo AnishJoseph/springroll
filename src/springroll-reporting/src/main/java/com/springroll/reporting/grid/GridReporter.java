@@ -23,6 +23,9 @@ import javax.persistence.Query;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +40,8 @@ import java.util.stream.Collectors;
     private static final Logger logger = LoggerFactory.getLogger(GridReporter.class);
     @PersistenceContext EntityManager em;
     private GridConfiguration gridConfiguration;
+    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
+    private DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); //FIXME take this from properties file
 
     @Autowired SpringrollUtils springrollUtils;
 
@@ -67,6 +72,25 @@ import java.util.stream.Collectors;
         List data = executeQuery(grid.getNamedQuery(), parameters);
         GridReport gridReport = new GridReport();
         gridReport.setColumns(grid.getColumns());
+
+        for (int i = 0; i < grid.getColumns().size(); i++) {
+            if(grid.getColumns().get(i).getType().equalsIgnoreCase("date")){
+                for (Object row : data) {
+                    Object[] rowData = (Object[])row;
+                    LocalDate date = (LocalDate) rowData[i];
+                    if(date != null)rowData[i] = date.format(dateFormatter);
+                }
+            } else if(grid.getColumns().get(i).getType().equalsIgnoreCase("datetime")){
+                for (Object row : data) {
+                    Object[] rowData = (Object[])row;
+                    LocalDateTime date = (LocalDateTime) rowData[i];
+                    if(date != null)rowData[i] = date.format(datetimeFormatter);
+                }
+            }
+        }
+
+
+
         gridReport.setData(data);
         return gridReport;
     }
@@ -90,6 +114,7 @@ import java.util.stream.Collectors;
         return parameters;
     }
     public List<ReportParameter> getParameters(String gridName, Map<String, Object> parameters){
+        init();
         List<ReportParameter> reportParameters = new ArrayList<>();
         Grid grid = gridConfiguration.findGridByName(gridName);
         if(grid == null){
@@ -162,7 +187,6 @@ import java.util.stream.Collectors;
         }
         return query.getResultList();
     }
-    //FIXME - See dup code in MdmBusinessValidator
 
     private Object getContextValue(String bean, String methodName){
         try {
@@ -173,7 +197,7 @@ import java.util.stream.Collectors;
             Object beanInstance = applicationContext.getBean(bean);
             return beanInstance.getClass().getMethod(methodName).invoke(beanInstance);
         }catch (Exception e){
-            logger.error("Exception while invoking method {}", methodName);
+            logger.error("Exception while invoking method {} - error is {}", methodName, e.getMessage());
         }
         return null;
     }
