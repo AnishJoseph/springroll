@@ -101,7 +101,7 @@ import java.util.stream.Collectors;
 
         for (Parameter<?> parameter : grid.getParameters()) {
             GridParameter gridParameter = gridConfiguration.findParameterByName(parameter.getName());
-            if(gridParameter.isHidden())continue;   //Dont send hidden param to the UI
+            if(gridParameter != null && gridParameter.isHidden())continue;   //Dont send hidden param to the UI
             boolean multiSelect = gridParameter == null ? false: gridParameter.isMultiSelect();
             List<Lov> lovs;
             if(gridParameter != null && gridParameter.getNamedQuery() != null) {
