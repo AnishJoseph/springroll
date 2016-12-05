@@ -50,6 +50,10 @@ import java.util.stream.Collectors;
             BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
             ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             gridConfiguration = mapper.readValue(br, GridConfiguration.class);
+            for (NamedQuery namedQuery : gridConfiguration.getNamedQueries()) {
+                em.getEntityManagerFactory().addNamedQuery(namedQuery.getName(), em.createQuery(namedQuery.getQuery()));
+            }
+
         }catch (Exception e){
             throw new RuntimeException(e);
             //FIXME - handle exception

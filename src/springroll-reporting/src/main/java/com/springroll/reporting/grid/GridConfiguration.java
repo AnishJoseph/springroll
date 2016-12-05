@@ -8,6 +8,7 @@ import java.util.List;
 public class GridConfiguration {
     private List<Grid> grids;
     private List<GridParameter> gridParameters;
+    private List<NamedQuery> namedQueries = null;
 
     public List<Grid> getGrids() {
         return grids;
@@ -36,5 +37,13 @@ public class GridConfiguration {
             if(gridParameter.getName().equals(parameterName))return gridParameter;
         }
         return null;
+    }
+
+    public List<NamedQuery> getNamedQueries() {
+        return namedQueries;
+    }
+
+    public void setNamedQueries(List<NamedQuery> namedQueries) {
+        this.namedQueries = namedQueries;
     }
 }
