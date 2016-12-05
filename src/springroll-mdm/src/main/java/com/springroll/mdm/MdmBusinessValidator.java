@@ -1,9 +1,6 @@
 package com.springroll.mdm;
 
-import com.springroll.core.DTO;
-import com.springroll.core.DTOBusinessValidator;
-import com.springroll.core.IBusinessValidationResults;
-import com.springroll.core.SpringrollSecurity;
+import com.springroll.core.*;
 import com.springroll.orm.entities.MdmEntity;
 import com.springroll.orm.entities.ReviewStepMeta;
 import com.springroll.orm.repositories.Repositories;
@@ -41,6 +38,9 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
     @Autowired private MdmManager mdmManager;
 
     @Autowired private DefaultConversionService conversionService;
+
+    @Autowired SpringrollUtils springrollUtils;
+
     @Override
     public void validate(List<? extends DTO> dtos, IBusinessValidationResults businessValidationResults) {
         MdmDTO mdmDTO = (MdmDTO)dtos.get(0);
@@ -94,7 +94,7 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
     private boolean validateConstraintsForNewRecords(MdmDefinition mdmDefinition, Map<String, Object>  newRecord){
         if(mdmDefinition.getQueryForConstraintValidation() == null)return true;
         Query query = em.createNamedQuery(mdmDefinition.getQueryForConstraintValidation());
-        mdmDefinition.getConstraints().forEach(s -> query.setParameter(s, convert(newRecord.get(s), query.getParameter(s))));
+        mdmDefinition.getConstraints().forEach(s -> query.setParameter(s, springrollUtils.convert(newRecord.get(s), query.getParameter(s).getParameterType())));
         List resultList = query.getResultList();
         if(!resultList.isEmpty()) return false;
         List<ReviewStepMeta> reviewStepMetas = repositories.reviewStepMeta.findBySearchId(MdmManager.SEARCH_ID_PREFIX + mdmDefinition.getMasterClass().getSimpleName());
@@ -114,15 +114,6 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
 
         }
         return true;
-    }
-    private Object convert(Object paramValue, Parameter parameter){
-        if(parameter.getParameterType().equals(LocalDateTime.class)){
-            return LocalDateTime.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")); //FIXME - externalize pattern
-        } else if (parameter.getParameterType().equals(LocalDate.class)) {
-            return LocalDate.parse((String) paramValue, DateTimeFormatter.ofPattern("dd/MM/yyyy")); //FIXME - externalize pattern
-        }
-        Object o = conversionService.convert(paramValue, parameter.getParameterType());
-        return o;
     }
 }
 
