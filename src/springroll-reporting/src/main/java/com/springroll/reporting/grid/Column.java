@@ -7,6 +7,7 @@ public class Column {
     private String title;
     private String type;
     private String numberType;
+    private String className;
 
     public String getTitle() {
         return title;
@@ -30,5 +31,13 @@ public class Column {
 
     public void setNumberType(String numberType) {
         this.numberType = numberType;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 }
