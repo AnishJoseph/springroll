@@ -22,6 +22,7 @@ public class Column {
     }
 
     public void setType(String type) {
+        if(numberFormat != null) type = "num-fmt";
         this.type = type;
     }
 
@@ -30,6 +31,7 @@ public class Column {
     }
 
     public void setNumberFormat(String numberFormat) {
+        type = "num-fmt";
         this.numberFormat = numberFormat;
     }
 
