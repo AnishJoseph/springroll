@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springroll.core.Lov;
 import com.springroll.core.SpringrollSecurity;
+import com.springroll.core.SpringrollUtils;
 import com.springroll.core.exceptions.SpringrollException;
 import com.springroll.orm.entities.MdmEntity;
 import com.springroll.orm.entities.ReviewStep;
@@ -45,9 +46,7 @@ import java.util.stream.Collectors;
     @PersistenceContext EntityManager em;
     @Autowired private ApplicationContext applicationContext;
     @Autowired Repositories repositories;
-    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
-    private DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); //FIXME take this from properties file
-
+    @Autowired SpringrollUtils springrollUtils;
     @Value("${mdm.showModifiedRecords}")
     private boolean showModifiedRecords = false;
 
@@ -63,10 +62,10 @@ import java.util.stream.Collectors;
             MdmChangedColumn mdmChangedColumn = mdmChangedRecord.getMdmChangedColumns().get(colName);
             valueMap.put(colName, mdmChangedColumn.getVal());
             if(colDef.getType().equalsIgnoreCase("date")){
-                valueMap.put(colName,LocalDate.parse((String)mdmChangedColumn.getVal(), dateFormatter));
+                valueMap.put(colName,LocalDate.parse((String)mdmChangedColumn.getVal(), springrollUtils.getDateFormatter()));
             }
             if(colDef.getType().equalsIgnoreCase("datetime")){
-                valueMap.put(colName,LocalDateTime.parse((String)mdmChangedColumn.getVal(), datetimeFormatter));
+                valueMap.put(colName,LocalDateTime.parse((String)mdmChangedColumn.getVal(), springrollUtils.getDateTimeFormatter()));
             }
         }
         wrapper.setPropertyValues(valueMap);
@@ -82,9 +81,9 @@ import java.util.stream.Collectors;
             if(newRecord.get(colName) == null)continue;
             valueMap.put(colName, newRecord.get(colName));
             if(colDef.getType().equalsIgnoreCase("date")){
-                valueMap.put(colName,LocalDate.parse((String)newRecord.get(colName), dateFormatter));
+                valueMap.put(colName,LocalDate.parse((String)newRecord.get(colName), springrollUtils.getDateFormatter()));
             } else if (colDef.getType().equalsIgnoreCase("datetime")){
-                valueMap.put(colName,LocalDateTime.parse((String)newRecord.get(colName), datetimeFormatter));
+                valueMap.put(colName,LocalDateTime.parse((String)newRecord.get(colName), springrollUtils.getDateTimeFormatter()));
             }
         }
         BeanWrapper wrapper = new BeanWrapperImpl(mdmDefinition.getMasterClass());
@@ -238,12 +237,12 @@ import java.util.stream.Collectors;
             if(colDefs.get(i).getType().equalsIgnoreCase("date")){
                 for (Object[] data : resultList) {
                     LocalDate date = (LocalDate) data[i];
-                    if(date != null)data[i] = date.format(dateFormatter);
+                    if(date != null)data[i] = date.format(springrollUtils.getDateFormatter());
                 }
             } else if(colDefs.get(i).getType().equalsIgnoreCase("datetime")){
                 for (Object[] data : resultList) {
                     LocalDateTime date = (LocalDateTime) data[i];
-                    if(date != null)data[i] = date.format(datetimeFormatter);
+                    if(date != null)data[i] = date.format(springrollUtils.getDateTimeFormatter());
                 }
             }
         }

@@ -26,7 +26,6 @@ import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,9 +40,6 @@ import java.util.stream.Collectors;
     private static final Logger logger = LoggerFactory.getLogger(GridReporter.class);
     @PersistenceContext EntityManager em;
     private GridConfiguration gridConfiguration;
-    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
-    private DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); //FIXME take this from properties file
-
     @Autowired SpringrollUtils springrollUtils;
 
     @Autowired private ApplicationContext applicationContext;
@@ -80,13 +76,13 @@ import java.util.stream.Collectors;
                 for (Object row : data) {
                     Object[] rowData = (Object[])row;
                     LocalDate date = (LocalDate) rowData[i];
-                    if(date != null)rowData[i] = date.format(dateFormatter);
+                    if(date != null)rowData[i] = date.format(springrollUtils.getDateFormatter());
                 }
             } else if(column.getType().equalsIgnoreCase("datetime")){
                 for (Object row : data) {
                     Object[] rowData = (Object[])row;
                     LocalDateTime date = (LocalDateTime) rowData[i];
-                    if(date != null)rowData[i] = date.format(datetimeFormatter);
+                    if(date != null)rowData[i] = date.format(springrollUtils.getDateTimeFormatter());
                 }
             } else if(column.getType().equalsIgnoreCase("num") && column.getNumberFormat() != null) {
                 NumberFormat numberFormat = gridConfiguration.findNumberFormatByName(column.getNumberFormat());

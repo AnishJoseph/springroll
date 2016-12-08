@@ -1,5 +1,6 @@
 package com.springroll.mdm;
 
+import com.springroll.core.SpringrollUtils;
 import com.springroll.core.notification.INotificationMessage;
 import com.springroll.core.notification.INotificationMeta;
 import com.springroll.core.services.IMdmReviewNotificationMessageFactory;
@@ -26,8 +27,7 @@ import java.util.stream.Collectors;
     @Autowired ReviewManager reviewManager;
     @Autowired MdmManager mdmManager;
     @PersistenceContext EntityManager em;
-    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //FIXME take this from properties file
-    private DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); //FIXME take this from properties file
+    @Autowired SpringrollUtils springrollUtils;
 
     @Override public INotificationMessage makeMessage(INotificationMeta notificationMeta){
         MdmDTO mdmDTO = (MdmDTO) reviewManager.getFirstPayload(notificationMeta.getReviewStepIds().get(0));
@@ -50,10 +50,10 @@ import java.util.stream.Collectors;
                             if (changedCols.contains(colNames.get(j))) continue;
                             unchangedCols.put(colNames.get(j), new MdmChangedColumn(existingValuesForThisRecord[j], existingValuesForThisRecord[j]));
                             if(existingValuesForThisRecord[j] != null && existingValuesForThisRecord[j].getClass().equals(LocalDate.class)){
-                                String formattedDate = ((LocalDate) existingValuesForThisRecord[j]).format(dateFormatter);
+                                String formattedDate = ((LocalDate) existingValuesForThisRecord[j]).format(springrollUtils.getDateFormatter());
                                 unchangedCols.put(colNames.get(j), new MdmChangedColumn(formattedDate, formattedDate));
                             } else if (existingValuesForThisRecord[j] != null && existingValuesForThisRecord[j].getClass().equals(LocalDateTime.class)){
-                                String formattedDate = ((LocalDateTime) existingValuesForThisRecord[j]).format(datetimeFormatter);
+                                String formattedDate = ((LocalDateTime) existingValuesForThisRecord[j]).format(springrollUtils.getDateTimeFormatter());
                                 unchangedCols.put(colNames.get(j), new MdmChangedColumn(formattedDate, formattedDate));
                             }
 
