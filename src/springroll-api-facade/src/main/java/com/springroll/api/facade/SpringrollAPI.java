@@ -1,5 +1,6 @@
 package com.springroll.api.facade;
 
+import com.springroll.core.PropertiesUtil;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.services.ITemplateManager;
 import com.springroll.mdm.MdmDTO;
@@ -30,6 +31,7 @@ public class SpringrollAPI extends AbstractAPI {
     @Autowired private GridReporter gridReporter;
     @Autowired private MdmManager mdmManager;
     @Autowired ReviewManager reviewManager;
+    @Autowired PropertiesUtil  propertiesUtil;
 
     @RequestMapping(value = "/sr/reviewaction", method = RequestMethod.POST)
     public Long reviewAction(@RequestBody ReviewActionDTO reviewActionDTO) {
@@ -86,6 +88,11 @@ public class SpringrollAPI extends AbstractAPI {
     @RequestMapping(value = "/sr/mdm/update", method = RequestMethod.POST)
     public Long updateMDMData(@RequestBody MdmDTO mdmDTO) {
         return route(mdmDTO);
+    }
+
+    @RequestMapping(value = "/sr/properties", method = RequestMethod.GET)
+    public Map<String, String> getUIProperties() {
+        return propertiesUtil.getUIProperties();
     }
 
 }

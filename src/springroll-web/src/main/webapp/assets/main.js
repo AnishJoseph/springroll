@@ -77,6 +77,7 @@ $(function() {
 
     Application.loadTemplates();
     Application.loadUser();
+    Application.loadProperties();
     Application.loadLocaleMessages();
     $.when.apply($, Application.getPromises()).then(function () {
         Application.Alerts.registerAlertSubscriptions();

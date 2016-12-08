@@ -99,10 +99,33 @@ Application.loadUser = function() {
     });
     Application.addPromise(deferred.promise());
 }
+Application.loadProperties = function() {
+    var deferred = $.Deferred();
+    $.ajax({
+        url: 'api//sr/properties',
+        type: 'GET',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (props) {
+            properties = props;
+            deferred.resolve();
+        },
+        error : function (jqXHR, textStatus, errorThrown ){
+            console.error("Unable to load Properties - textStatus is " + textStatus + ' :: errorThrown is ' + errorThrown);
+            deferred.resolve();
+        }
+    });
+    Application.addPromise(deferred.promise());
+}
+
+Application.getProperty = function(propertyName){
+    return properties[propertyName];
+}
+
 Application.loadLocaleMessages = function() {
     var deferred = $.Deferred();
     $.ajax({
-        url: '/api/sr/localeMessages',
+        url: '/api/sr/localeMessages', //FIXME - should not have /
         type: 'GET',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -128,6 +151,7 @@ Application.getSubscribersForAlerts = function (){
 }
 
 var localeMessages = {};
+var properties = {};
 
 /* Call this with arguments to replace {n} parameters */
 var getLocaleMessage = function(messageKey){
