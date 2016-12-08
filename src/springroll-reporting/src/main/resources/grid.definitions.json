@@ -3,8 +3,8 @@
     {"name" : "TestGrid1", "fixedColumns": 2, "namedQuery": "StringListBooleanDateParam",
       "columns":[
           {"title": "ID", "type":"num"},
-          {"title": "User"},
-          {"title": "ServiceName", "type":"string"}
+          {"title": "User", "type" : "text"},
+          {"title": "ServiceName", "type":"text"}
         ]
     },
     {"name" : "TestGridAllTypes", "namedQuery": "TestGridAllTypes",
@@ -23,8 +23,8 @@
     {"name" : "TestGridParamFromSpringrollUser", "namedQuery": "TestGridParamFromSpringrollUser",
       "columns":[
         {"title": "ID", "type":"num", "className" : "text-right"},
-        {"title": "User"},
-        {"title": "ServiceName", "type":"string"}
+        {"title": "User", "type" : "text"},
+        {"title": "ServiceName", "type":"text"}
       ]
     }
   ],
