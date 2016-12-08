@@ -53,7 +53,7 @@ Application.ReviewMoreInfoTableView = Marionette.View.extend({
         if(reviewLog == null || reviewLog.length == 0)return;
         _.each(reviewLog, function(log){
             var str=log.time.dayOfMonth + ":" + log.time.monthValue + ":" + log.time.year + ":" + log.time.hour + ":" + log.time.minute;
-            log['dateAsString'] = moment(str, 'D:M:YYYY:H:m').format("DD MMM HH:mm"); //FIXME - format should be externalized;
+            log['dateAsString'] = moment(str, 'D:M:YYYY:H:m').format(Application.getMomentFormatForDateTime());
         });
         this.showChildView('prevreviews', new PreviousReviewersSection({ collection: new Backbone.Collection(reviewLog)}));
     }
