@@ -81,7 +81,6 @@ public class SpringrollAPI extends AbstractAPI {
 
     @RequestMapping(value = "/sr/mdm/data/{master}", method = RequestMethod.POST)
     public MdmData getMDMData(@PathVariable String master) {
-        mdmManager.init();
         return mdmManager.getData(master);
     }
     @RequestMapping(value = "/sr/mdm/update", method = RequestMethod.POST)
