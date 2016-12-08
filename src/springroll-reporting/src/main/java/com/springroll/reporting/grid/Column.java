@@ -5,7 +5,7 @@ package com.springroll.reporting.grid;
  */
 public class Column {
     private String title;
-    private String type;
+    private String type = "text";
     private String numberFormat;
     private String className;
 
