@@ -5,14 +5,14 @@ var GridData = Backbone.Model.extend({
     url: function () {
         var gridName = this.get('reportName');
         this.unset('reportName');
-        return "/api/sr/getGridData/" + gridName;
+        return "api/sr/getGridData/" + gridName;
     }
 });
 var ReportParams = Backbone.Model.extend({
     url: function () {
         var gridName = this.get('gridName');
         this.unset('gridName');
-        return "/api/sr/gridParams/" + gridName;
+        return "api/sr/gridParams/" + gridName;
     }
 });
 

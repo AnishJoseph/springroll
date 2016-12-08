@@ -64,7 +64,7 @@ Application.loadTemplates = function() {
     var deferred = $.Deferred();
 
     $.ajax({
-        url: '/api/sr/templates',
+        url: 'api/sr/templates',
         type: 'POST',
         data: data,
         contentType: 'application/json; charset=utf-8',
@@ -84,7 +84,7 @@ Application.loadTemplates = function() {
 Application.loadUser = function() {
     var deferred = $.Deferred();
     $.ajax({
-        url: '/api/sr/user',
+        url: 'api/sr/user',
         type: 'GET',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -131,7 +131,7 @@ Application.getMomentFormatForDateTime = function(){
 Application.loadLocaleMessages = function() {
     var deferred = $.Deferred();
     $.ajax({
-        url: '/api/sr/localeMessages', //FIXME - should not have /
+        url: 'api/sr/localeMessages', //FIXME - should not have /
         type: 'GET',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',

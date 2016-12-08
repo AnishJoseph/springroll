@@ -11,7 +11,7 @@ var compare = function(model){
 
 var subscribedAlerts = {};
 
-var AlertItem = Backbone.Model.extend({urlRoot:'/api/sr/notification'});
+var AlertItem = Backbone.Model.extend({urlRoot:'api/sr/notification'});
 
 var AlertCollection = Backbone.Collection.extend({
     initialize: function (models, options) {

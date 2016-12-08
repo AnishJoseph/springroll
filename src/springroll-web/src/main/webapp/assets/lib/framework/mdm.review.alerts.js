@@ -32,7 +32,7 @@ var MdmMoreInfoView = Marionette.View.extend({
 });
 
 
-var ReviewItem = Backbone.Model.extend({urlRoot:'/api/sr/reviewaction'});
+var ReviewItem = Backbone.Model.extend({urlRoot:'api/sr/reviewaction'});
 
 var AlertsView = Marionette.View.extend({
     tagName: 'div',

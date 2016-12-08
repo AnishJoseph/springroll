@@ -4,7 +4,7 @@ var Application =require('Application');
 Application.requiresTemplate("#transactionTestsTemplate");
 
 var SimpleTransaction = Backbone.Model.extend({
-    url : '/api/testPipelineSimple'
+    url : 'api/testPipelineSimple'
 });
 
 var View = Marionette.View.extend({

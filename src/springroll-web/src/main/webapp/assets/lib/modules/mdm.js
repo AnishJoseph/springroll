@@ -8,7 +8,7 @@ var MDMData = Backbone.Model.extend({
     url : function(){
         var master = this.get('master');
         this.unset('master');
-        return "/api/sr/mdm/data/" + master;
+        return "api/sr/mdm/data/" + master;
 
     }
 });
@@ -24,7 +24,7 @@ var MdmController = Marionette.Object.extend({
         var  roles = new MDMData({master:master});
         roles.save(null,{
             success: function(model, masterGridData){
-                var view = new Application.MasterView({masterGridData : masterGridData, url : '/api/sr/mdm/update', master : master});
+                var view = new Application.MasterView({masterGridData : masterGridData, url : 'api/sr/mdm/update', master : master});
                 Application.rootView.showBody(view);
                 Backbone.history.navigate('master/' + master);
             }
