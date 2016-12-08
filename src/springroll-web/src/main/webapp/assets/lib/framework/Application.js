@@ -131,7 +131,7 @@ Application.getMomentFormatForDateTime = function(){
 Application.loadLocaleMessages = function() {
     var deferred = $.Deferred();
     $.ajax({
-        url: 'api/sr/localeMessages', //FIXME - should not have /
+        url: 'api/sr/localeMessages',
         type: 'GET',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
