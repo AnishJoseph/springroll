@@ -5,6 +5,8 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>SpringRoll</title>
@@ -12,18 +14,5 @@
 </head>
 <body>
         <div id="root-element" class="applicationRoot"/>
-<%
-    InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("springroll.properties");
-    Properties props = new Properties();
-    props.load(stream);
-    String uiDateFormatJs = props.getProperty("ui.date.format.js");
-    if(uiDateFormatJs == null)uiDateFormatJs = "dd/mm/yyyy";
-
-%>
-        <script>
-            window.UIProperties = {};
-            window.UIProperties.uiDateFormatJs = '<%=uiDateFormatJs%>';
-            window.acsrfToken = "${_csrf.token}";
-        </script>
 </body>
 </html>

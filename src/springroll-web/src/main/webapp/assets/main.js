@@ -31,8 +31,12 @@ require('mdm.editor.js');
 require('utils.js');
 
 $(function() {
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    var headers = {};
+    headers[header] = token;
     $.ajaxSetup({
-        headers: { 'X-CSRF-TOKEN': acsrfToken},    //FIXME - this seems very inelegant
+        headers: headers,
         cache: false,
         statusCode : {
             406:function(message){   //NOT_ACCEPTABLE
@@ -71,7 +75,6 @@ $(function() {
         }
     });
 
-    //$.fn.datepicker.defaults.format = UIProperties.uiDateFormatJs;
     Application.loadTemplates();
     Application.loadUser();
     Application.loadLocaleMessages();
