@@ -122,6 +122,12 @@ Application.getProperty = function(propertyName){
     return properties[propertyName];
 }
 
+Application.getMomentFormatForDate = function(){
+    return Application.getProperty('ui.moment.date.format.js');
+}
+Application.getMomentFormatForDateTime = function(){
+    return Application.getProperty('ui.moment.datetime.format.js');
+}
 Application.loadLocaleMessages = function() {
     var deferred = $.Deferred();
     $.ajax({

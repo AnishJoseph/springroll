@@ -99,7 +99,7 @@ var MasterRowView = Marionette.View.extend({
             } else {
                 events['dp.change .' + colDef.name] = function(evt){
                     if(evt.oldDate == null)return;
-                    var value = (colDef.type == 'date') ? evt.date.format('DD/MM/YYYY') : evt.date.format('DD/MM/YYYY HH:mm');//FIXME - hardcoded format
+                    var value = (colDef.type == 'date') ? evt.date.format(Application.getMomentFormatForDate()) : evt.date.format(Application.getMomentFormatForDateTime());
                     this.model.set(colDef.name, value);
                 }
             }
@@ -124,8 +124,8 @@ var MasterRowView = Marionette.View.extend({
         }
         this.ui.selectpicker.selectpicker({selectOnTab: true });
         this.ui.selectpickerSearchable.selectpicker({liveSearch:true, liveSearchNormalize : true, selectOnTab: true });
-        this.ui.datepicker.datetimepicker({format : 'DD/MM/YYYY'});
-        this.ui.datetimepicker.datetimepicker({format : 'DD/MM/YYYY HH:mm'});
+        this.ui.datepicker.datetimepicker({format : Application.getMomentFormatForDate()});
+        this.ui.datetimepicker.datetimepicker({format : Application.getMomentFormatForDateTime()});
     }
 });
 
