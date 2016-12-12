@@ -6,6 +6,9 @@ import com.springroll.core.Lov;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.SpringrollUtils;
 import com.springroll.core.exceptions.SpringrollException;
+import com.springroll.core.services.reporting.GridReportingService;
+import com.springroll.core.services.reporting.IGridReport;
+import com.springroll.core.services.reporting.IReportParameter;
 import com.springroll.reporting.ReportParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +39,7 @@ import java.util.stream.Collectors;
 /**
  * Created by anishjoseph on 18/10/16.
  */
-@Component public class GridReporter {
+@Component public class GridReporter implements GridReportingService {
     private static final Logger logger = LoggerFactory.getLogger(GridReporter.class);
     @PersistenceContext EntityManager em;
     private GridConfiguration gridConfiguration;
@@ -59,7 +62,8 @@ import java.util.stream.Collectors;
             //FIXME - handle exception
         }
     }
-    public GridReport getGrid(String gridName, Map<String, Object> parameters) {
+    @Override
+    public IGridReport getGrid(String gridName, Map<String, Object> parameters) {
         Grid grid = gridConfiguration.findGridByName(gridName);
         if(grid == null){
             logger.error("Unable to find grid by name '{}", gridName);
@@ -68,10 +72,10 @@ import java.util.stream.Collectors;
 
         List data = executeQuery(grid.getNamedQuery(), parameters);
         GridReport gridReport = new GridReport();
-        gridReport.setColumns(grid.getColumns());
+        gridReport.setColumns(grid.getGridColumns());
 
-        for (int i = 0; i < grid.getColumns().size(); i++) {
-            Column column = grid.getColumns().get(i);
+        for (int i = 0; i < grid.getGridColumns().size(); i++) {
+            GridColumn column = grid.getGridColumns().get(i);
             if(column.getType().equalsIgnoreCase("date")){
                 for (Object row : data) {
                     Object[] rowData = (Object[])row;
@@ -120,9 +124,9 @@ import java.util.stream.Collectors;
         }
         return parameters;
     }
-    public List<ReportParameter> getParameters(String gridName, Map<String, Object> parameters){
-        init();
-        List<ReportParameter> reportParameters = new ArrayList<>();
+    @Override
+    public List<IReportParameter> getParameters(String gridName, Map<String, Object> parameters){
+        List<IReportParameter> reportParameters = new ArrayList<>();
         Grid grid = gridConfiguration.findGridByName(gridName);
         if(grid == null){
             logger.error("Unable to find grid by name '{}", gridName);

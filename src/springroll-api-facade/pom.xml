@@ -16,10 +16,6 @@
         </dependency>
         <dependency>
             <groupId>com.springroll</groupId>
-            <artifactId>springroll-reporting</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.springroll</groupId>
             <artifactId>springroll-mdm</artifactId>
         </dependency>
 		<dependency>

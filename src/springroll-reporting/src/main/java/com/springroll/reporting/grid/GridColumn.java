@@ -1,14 +1,18 @@
 package com.springroll.reporting.grid;
 
+import com.springroll.core.services.reporting.IGridColumn;
+
 /**
  * Created by anishjoseph on 18/10/16.
+ * Defines a
  */
-public class Column {
+public class GridColumn implements IGridColumn {
     private String title;
     private String type = "text";
     private String numberFormat;
     private String className;
 
+    @Override
     public String getTitle() {
         return title;
     }
@@ -17,6 +21,7 @@ public class Column {
         this.title = title;
     }
 
+    @Override
     public String getType() {
         return type;
     }
@@ -35,6 +40,7 @@ public class Column {
         this.numberFormat = numberFormat;
     }
 
+    @Override
     public String getClassName() {
         return className;
     }

@@ -1,14 +1,14 @@
 {
   "grids" : [
     {"name" : "TestGrid1", "fixedColumns": 2, "namedQuery": "StringListBooleanDateParam",
-      "columns":[
+      "gridColumns":[
           {"title": "ID", "type":"num"},
           {"title": "User", "type" : "text"},
           {"title": "ServiceName", "type":"text"}
         ]
     },
     {"name" : "TestGridAllTypes", "namedQuery": "TestGridAllTypes",
-      "columns":[
+      "gridColumns":[
           {"title": "stringVariable", "type":"text"},
           {"title": "booleanVariable", "type":"boolean", "className" : "text-center"},
           {"title": "intVariable", "type":"num", "className" : "text-right"},
@@ -21,7 +21,7 @@
         ]
     },
     {"name" : "TestGridParamFromSpringrollUser", "namedQuery": "TestGridParamFromSpringrollUser",
-      "columns":[
+      "gridColumns":[
         {"title": "ID", "type":"num", "className" : "text-right"},
         {"title": "User", "type" : "text"},
         {"title": "ServiceName", "type":"text"}

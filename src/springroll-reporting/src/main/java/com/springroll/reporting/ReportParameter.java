@@ -2,6 +2,7 @@ package com.springroll.reporting;
 
 import com.springroll.core.Lov;
 import com.springroll.core.SetTime;
+import com.springroll.core.services.reporting.IReportParameter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 /**
  * Created by anishjoseph on 18/10/16.
  */
-public class ReportParameter {
+public class ReportParameter implements IReportParameter {
     private String name;
     private String javaType;
     private boolean isConstrained = false;
@@ -32,6 +33,7 @@ public class ReportParameter {
         this.setTime = setTime;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -40,6 +42,7 @@ public class ReportParameter {
         this.name = name;
     }
 
+    @Override
     public String getJavaType() {
         return javaType;
     }
@@ -48,6 +51,7 @@ public class ReportParameter {
         this.javaType = javaType;
     }
 
+    @Override
     public boolean isConstrained() {
         return isConstrained;
     }
@@ -56,6 +60,7 @@ public class ReportParameter {
         isConstrained = constrained;
     }
 
+    @Override
     public List<Lov> getLovList() {
         return lovList;
     }
@@ -64,6 +69,7 @@ public class ReportParameter {
         this.lovList = lovList;
     }
 
+    @Override
     public boolean isMandatory() {
         return mandatory;
     }
@@ -72,6 +78,7 @@ public class ReportParameter {
         this.mandatory = mandatory;
     }
 
+    @Override
     public boolean isMultiSelect() {
         return multiSelect;
     }
@@ -80,6 +87,7 @@ public class ReportParameter {
         this.multiSelect = multiSelect;
     }
 
+    @Override
     public boolean isVisible() {
         return visible;
     }
@@ -88,6 +96,7 @@ public class ReportParameter {
         this.visible = visible;
     }
 
+    @Override
     public SetTime getSetTime() {
         return setTime;
     }

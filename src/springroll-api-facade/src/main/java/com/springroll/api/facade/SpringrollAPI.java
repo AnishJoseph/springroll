@@ -3,12 +3,12 @@ package com.springroll.api.facade;
 import com.springroll.core.PropertiesUtil;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.services.ITemplateManager;
+import com.springroll.core.services.reporting.IGridReport;
 import com.springroll.mdm.MdmDTO;
 import com.springroll.mdm.MdmData;
 import com.springroll.mdm.MdmManager;
-import com.springroll.reporting.ReportParameter;
-import com.springroll.reporting.grid.GridReport;
-import com.springroll.reporting.grid.GridReporter;
+import com.springroll.core.services.reporting.IReportParameter;
+import com.springroll.core.services.reporting.GridReportingService;
 import com.springroll.review.ReviewActionDTO;
 import com.springroll.review.ReviewManager;
 import com.springroll.router.notification.NotificationAckDTO;
@@ -28,7 +28,7 @@ public class SpringrollAPI extends AbstractAPI {
     private static final Logger logger = LoggerFactory.getLogger(SpringrollAPI.class);
 
     @Autowired private ITemplateManager templateManager;
-    @Autowired private GridReporter gridReporter;
+    @Autowired private GridReportingService gridReportingService;
     @Autowired private MdmManager mdmManager;
     @Autowired ReviewManager reviewManager;
     @Autowired PropertiesUtil  propertiesUtil;
@@ -66,15 +66,14 @@ public class SpringrollAPI extends AbstractAPI {
     }
 
     @RequestMapping(value = "/sr/gridParams/{gridName}", method = RequestMethod.POST)
-    public List<ReportParameter> getGridParams(@PathVariable String gridName, @RequestBody Map<String, Object> parameters) {
-        List<ReportParameter> params = gridReporter.getParameters(gridName, parameters);
+    public List<IReportParameter> getGridParams(@PathVariable String gridName, @RequestBody Map<String, Object> parameters) {
+        List<IReportParameter> params = gridReportingService.getParameters(gridName, parameters);
         return params;
     }
 
     @RequestMapping(value = "/sr/getGridData/{gridName}", method = RequestMethod.POST)
-    public GridReport getGridData(@PathVariable String gridName, @RequestBody Map<String, Object> parameters) {
-        GridReport grid = gridReporter.getGrid(gridName, parameters);
-        return grid;
+    public IGridReport getGridData(@PathVariable String gridName, @RequestBody Map<String, Object> parameters) {
+        return gridReportingService.getGrid(gridName, parameters);
     }
     @RequestMapping(value = "/sr/mdm/masters", method = RequestMethod.GET)
     public List<String> getMdmMasterNames() {

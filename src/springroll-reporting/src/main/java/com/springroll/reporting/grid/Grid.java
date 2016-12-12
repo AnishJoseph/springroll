@@ -4,13 +4,14 @@ import javax.persistence.Parameter;
 import java.util.List;
 
 /**
- * Created by anishjoseph on 18/10/16.
+ * This defines a single Grid. It is populated from grid definitions expressed in the JSON file
+ *
  */
 public class Grid {
     private String name;
     private int fixedColumns;
     private String  namedQuery;
-    private List<Column> columns;
+    private List<GridColumn> gridColumns;
     private List<Parameter<?>> parameters = null;
 
     public String getName() {
@@ -29,12 +30,12 @@ public class Grid {
         this.fixedColumns = fixedColumns;
     }
 
-    public List<Column> getColumns() {
-        return columns;
+    public List<GridColumn> getGridColumns() {
+        return gridColumns;
     }
 
-    public void setColumns(List<Column> columns) {
-        this.columns = columns;
+    public void setGridColumns(List<GridColumn> gridColumns) {
+        this.gridColumns = gridColumns;
     }
 
     public String getNamedQuery() {
