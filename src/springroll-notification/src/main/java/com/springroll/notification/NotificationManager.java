@@ -21,6 +21,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by anishjoseph on 02/10/16.
@@ -140,47 +141,47 @@ public class NotificationManager implements INotificationManager, ILovProvider {
 
     @Override
     public INotificationChannel nameToEnum(String enumValue){
-        for (Class notificationChannelClass : notificationChannels) {
-            INotificationChannel[] enumConstants = (INotificationChannel[])notificationChannelClass.getEnumConstants();
-            for (INotificationChannel enumConstant : enumConstants) {
-                if(((Enum)enumConstant).name().equals(enumValue))return enumConstant;
-            }
-        }
-        //FIXME - throw exception!!
-        return null;
+        INotificationChannel notificationChannel = notificationChannels.stream()
+                .flatMap(channel -> Arrays.stream(channel.getEnumConstants()))
+                .filter(enumConstant -> ((Enum) enumConstant).name().equals(enumValue))
+                .findFirst()
+                .map(o -> (INotificationChannel)o)
+                .orElse(null);          //FIXME - throw exception!!
+
+        return notificationChannel;
     }
+
     private INotificationChannel serviceUriToEnum(String channel) {
         INotificationChannel notificationChannel = serviceNameToNotificationChannel.get(channel);
         if(notificationChannel != null)return notificationChannel;
 
-        for (Class notificationChannelClass : notificationChannels) {
-            INotificationChannel[] enumConstants = (INotificationChannel[])notificationChannelClass.getEnumConstants();
-            for (INotificationChannel enumConstant : enumConstants) {
-                if(enumConstant.getServiceUri().equals(channel)){
-                    serviceNameToNotificationChannel.put(channel, enumConstant);
-                    return enumConstant;
-                }
-            }
-        }
-        return null;
+        INotificationChannel channelForUri = notificationChannels.stream()
+                .flatMap(notiChannel -> Arrays.stream(notiChannel.getEnumConstants()))
+                .filter(enumConstant -> ((INotificationChannel) enumConstant).getServiceUri().equals(channel))
+                .findFirst()
+                .map(enumConstant -> {
+                    serviceNameToNotificationChannel.put(channel, (INotificationChannel)enumConstant);
+                    return (INotificationChannel) enumConstant;
+                })
+                .orElse(null);         //FIXME - throw exception!!
+
+        return channelForUri;
     }
+
     private void resolveFactories(Class notificationChannelClass){
-        INotificationChannel[] enumConstants = (INotificationChannel[])notificationChannelClass.getEnumConstants();
-        for (INotificationChannel enumConstant : enumConstants) {
-            //FIXME - what if we cant find the bean
-            if(enumConstant.getMessageFactoryClass() != null)
-                enumConstant.setMessageFactory(applicationContext.getBean(enumConstant.getMessageFactoryClass()));
-        }
+        Stream.of((INotificationChannel[])notificationChannelClass.getEnumConstants())
+                .filter(notificationChannel -> notificationChannel.getMessageFactoryClass() != null)
+                .forEach(notificationChannel -> notificationChannel.setMessageFactory(applicationContext.getBean(notificationChannel.getMessageFactoryClass())));
     }
 
     @Override
     public List<Lov> getLovs() {
-        List<Lov> lovs = new ArrayList<>();
-        for (Class notificationChannel : notificationChannels) {
-            for (Object val : notificationChannel.getEnumConstants()) {
-                lovs.add(new Lov(val));
-            }
-        }
+        /* Get the Enum constants and stream it for each Notification channel and create an LOV for each enum */
+        List<Lov> lovs = notificationChannels.stream()
+                .flatMap(notificationChannel -> Arrays.stream(notificationChannel.getEnumConstants()))
+                .map(Lov::new)
+                .collect(Collectors.toList());
+
         return lovs;
     }
 
