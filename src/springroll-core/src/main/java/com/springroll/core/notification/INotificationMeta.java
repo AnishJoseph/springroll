@@ -1,6 +1,7 @@
 package com.springroll.core.notification;
 
 import com.springroll.core.BusinessValidationResult;
+import com.springroll.core.DTO;
 import com.springroll.core.ReviewLog;
 import com.springroll.core.SpringrollUser;
 
@@ -16,4 +17,5 @@ public interface INotificationMeta {
     SpringrollUser getInitiator();
     String getService();
     List<ReviewLog> getReviewLogs();
+    List<DTO> getDtosUnderReview();
 }

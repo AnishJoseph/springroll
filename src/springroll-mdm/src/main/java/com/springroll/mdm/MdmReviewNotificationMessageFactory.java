@@ -5,7 +5,6 @@ import com.springroll.core.notification.INotificationMessage;
 import com.springroll.core.notification.INotificationMeta;
 import com.springroll.core.services.IMdmReviewNotificationMessageFactory;
 import com.springroll.notification.AbstractNotificationMessageFactory;
-import com.springroll.review.ReviewManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,13 +22,12 @@ import java.util.stream.Collectors;
  * Created by anishjoseph on 05/10/16.
  */
 @Component public class MdmReviewNotificationMessageFactory extends AbstractNotificationMessageFactory implements IMdmReviewNotificationMessageFactory {
-    @Autowired ReviewManager reviewManager;
     @Autowired MdmManager mdmManager;
     @PersistenceContext EntityManager em;
     @Autowired SpringrollUtils springrollUtils;
 
     @Override public INotificationMessage makeMessage(INotificationMeta notificationMeta){
-        MdmDTO mdmDTO = (MdmDTO) reviewManager.getFirstPayload(notificationMeta.getReviewStepIds().get(0));
+        MdmDTO mdmDTO = (MdmDTO) notificationMeta.getDtosUnderReview().get(0);
         List<ColDef> colDefs = mdmManager.getDefinition(mdmDTO.getMaster()).getColDefs();
 
         if(!mdmDTO.getChangedRecords().isEmpty()) {
@@ -56,7 +53,6 @@ import java.util.stream.Collectors;
                                 String formattedDate = ((LocalDateTime) existingValuesForThisRecord[j]).format(springrollUtils.getDateTimeFormatter());
                                 unchangedCols.put(colNames.get(j), new MdmChangedColumn(formattedDate, formattedDate));
                             }
-
                             //FIXME - handle date and other types
                         }
                         changedRecord.getMdmChangedColumns().putAll(unchangedCols);

@@ -130,7 +130,7 @@ public class ReviewManager extends SpringrollEndPoint {
             INotificationChannel notificationChannel = notificationManager.nameToEnum(step.getChannel());
 
             String serviceName = ((ServiceDTO)reviewStepMeta.getEvent().getPayload()).getProcessor().name();
-            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new NotificationMeta(approverToNoti.get(approver), approver, businessValidationResults, reviewStepMeta.getEvent().getUser(), serviceName, reviewLog));
+            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new NotificationMeta(approverToNoti.get(approver), approver, businessValidationResults, reviewStepMeta.getEvent().getUser(), serviceName, reviewLog, reviewStepMeta.getEvent().getPayloads()));
             Long notiId = notificationManager.sendNotification(notificationChannel, message, reviewStepMeta.getInitiator());
             for (Long stepId : approverToNoti.get(approver)) {
                 repo.reviewStep.findOne(stepId).setNotificationId(notiId);
@@ -252,15 +252,9 @@ public class ReviewManager extends SpringrollEndPoint {
             INotificationChannel notificationChannel = notificationManager.nameToEnum(step.getChannel());
             String serviceName = ((ServiceDTO)reviewStepMeta.getEvent().getPayload()).getProcessor().name();
             INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new NotificationMeta(approverToNoti.get(approver), approver,
-                    businessValidationResults, reviewStepMeta.getEvent().getUser(), serviceName, reviewStepMeta.getReviewLog()));
+                    businessValidationResults, reviewStepMeta.getEvent().getUser(), serviceName, reviewStepMeta.getReviewLog(), reviewStepMeta.getEvent().getPayloads()));
             notificationManager.sendNotification(notificationChannel, message, reviewStepMeta.getInitiator());
         }
-    }
-
-    public DTO getFirstPayload(Long reviewStepId){
-        ReviewStep reviewStep = repo.reviewStep.findOne(reviewStepId);
-        ReviewStepMeta reviewStepMeta = repo.reviewStepMeta.findOne(reviewStep.getParentId());
-        return reviewStepMeta.getEvent().getPayload();
     }
 
     private class NotificationMeta implements INotificationMeta  {
@@ -270,14 +264,16 @@ public class ReviewManager extends SpringrollEndPoint {
         private SpringrollUser initiator;
         private String service;
         private List<ReviewLog> reviewLogs;
+        private List<DTO> dtosUnderReview;
 
-        public NotificationMeta(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String service, List<ReviewLog> reviewLogs) {
+        public NotificationMeta(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String service, List<ReviewLog> reviewLogs, List<DTO> dtosUnderReview) {
             this.reviewStepIds = reviewStepIds;
             this.approver = approver;
             this.businessValidationResults = businessValidationResults;
             this.initiator = initiator;
             this.service = service;
             this.reviewLogs = reviewLogs;
+            this.dtosUnderReview = dtosUnderReview;
         }
 
         @Override
@@ -308,6 +304,11 @@ public class ReviewManager extends SpringrollEndPoint {
         @Override
         public List<ReviewLog> getReviewLogs() {
             return reviewLogs;
+        }
+
+        @Override
+        public List<DTO> getDtosUnderReview() {
+            return dtosUnderReview;
         }
     }
 
