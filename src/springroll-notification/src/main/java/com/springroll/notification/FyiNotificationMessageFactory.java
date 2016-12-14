@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
     }
 
     @Override
-    public INotificationMessage makeMessage(INotificationMeta notificationMeta) {
+    public INotificationMessage makeMessage(IReviewMeta notificationMeta) {
         //FIXME
         return null;
     }

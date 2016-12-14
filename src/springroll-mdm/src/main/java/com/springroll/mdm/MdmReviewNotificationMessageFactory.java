@@ -2,7 +2,7 @@ package com.springroll.mdm;
 
 import com.springroll.core.SpringrollUtils;
 import com.springroll.core.notification.INotificationMessage;
-import com.springroll.core.notification.INotificationMeta;
+import com.springroll.core.notification.IReviewMeta;
 import com.springroll.core.services.IMdmReviewNotificationMessageFactory;
 import com.springroll.notification.AbstractNotificationMessageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
     @PersistenceContext EntityManager em;
     @Autowired SpringrollUtils springrollUtils;
 
-    @Override public INotificationMessage makeMessage(INotificationMeta notificationMeta){
+    @Override public INotificationMessage makeMessage(IReviewMeta notificationMeta){
         MdmDTO mdmDTO = (MdmDTO) notificationMeta.getDtosUnderReview().get(0);
         List<ColDef> colDefs = mdmManager.getDefinition(mdmDTO.getMaster()).getColDefs();
 

@@ -1,9 +1,5 @@
 package com.springroll.core.notification;
 
-import com.springroll.core.BusinessValidationResult;
-import com.springroll.core.ReviewLog;
-import com.springroll.core.SpringrollUser;
-
 import java.util.List;
 import java.util.Set;
 
@@ -14,5 +10,5 @@ public interface INotificationMessageFactory {
     Set<String> getTargetUsers(INotificationMessage notificationMessage, String initiator);
     List<? extends INotification> getPendingNotificationsForUser(INotificationChannel notificationChannel);
     //FIXME - no reason why we should have a make message - its required only for alerts??
-    INotificationMessage makeMessage(INotificationMeta notificationMeta);
+    INotificationMessage makeMessage(IReviewMeta notificationMeta);
 }

@@ -10,7 +10,6 @@ import com.springroll.mdm.MdmManager;
 import com.springroll.core.services.reporting.IReportParameter;
 import com.springroll.core.services.reporting.GridReportingService;
 import com.springroll.review.ReviewActionDTO;
-import com.springroll.review.ReviewManager;
 import com.springroll.router.notification.NotificationAckDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +29,6 @@ public class SpringrollAPI extends AbstractAPI {
     @Autowired private ITemplateManager templateManager;
     @Autowired private GridReportingService gridReportingService;
     @Autowired private MdmManager mdmManager;
-    @Autowired ReviewManager reviewManager;
     @Autowired PropertiesUtil  propertiesUtil;
 
     @RequestMapping(value = "/sr/reviewaction", method = RequestMethod.POST)

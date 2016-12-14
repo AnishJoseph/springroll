@@ -3,7 +3,7 @@ package com.springroll.review;
 import com.springroll.core.*;
 import com.springroll.core.notification.INotificationChannel;
 import com.springroll.core.notification.INotificationMessage;
-import com.springroll.core.notification.INotificationMeta;
+import com.springroll.core.notification.IReviewMeta;
 import com.springroll.core.services.INotificationManager;
 import com.springroll.orm.entities.Job;
 import com.springroll.orm.entities.ReviewRule;
@@ -130,7 +130,7 @@ public class ReviewManager extends SpringrollEndPoint {
             INotificationChannel notificationChannel = notificationManager.nameToEnum(step.getChannel());
 
             String serviceName = ((ServiceDTO)reviewStepMeta.getEvent().getPayload()).getProcessor().name();
-            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new NotificationMeta(approverToNoti.get(approver), approver, businessValidationResults, reviewStepMeta.getEvent().getUser(), serviceName, reviewLog, reviewStepMeta.getEvent().getPayloads()));
+            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new ReviewMeta(approverToNoti.get(approver), approver, businessValidationResults, reviewStepMeta.getEvent().getUser(), serviceName, reviewLog, reviewStepMeta.getEvent().getPayloads()));
             Long notiId = notificationManager.sendNotification(notificationChannel, message, reviewStepMeta.getInitiator());
             for (Long stepId : approverToNoti.get(approver)) {
                 repo.reviewStep.findOne(stepId).setNotificationId(notiId);
@@ -251,13 +251,13 @@ public class ReviewManager extends SpringrollEndPoint {
             }
             INotificationChannel notificationChannel = notificationManager.nameToEnum(step.getChannel());
             String serviceName = ((ServiceDTO)reviewStepMeta.getEvent().getPayload()).getProcessor().name();
-            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new NotificationMeta(approverToNoti.get(approver), approver,
+            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new ReviewMeta(approverToNoti.get(approver), approver,
                     businessValidationResults, reviewStepMeta.getEvent().getUser(), serviceName, reviewStepMeta.getReviewLog(), reviewStepMeta.getEvent().getPayloads()));
             notificationManager.sendNotification(notificationChannel, message, reviewStepMeta.getInitiator());
         }
     }
 
-    private class NotificationMeta implements INotificationMeta  {
+    private class ReviewMeta implements IReviewMeta {
         private List<Long> reviewStepIds;
         private String approver;
         private List<BusinessValidationResult> businessValidationResults;
@@ -266,7 +266,7 @@ public class ReviewManager extends SpringrollEndPoint {
         private List<ReviewLog> reviewLogs;
         private List<DTO> dtosUnderReview;
 
-        public NotificationMeta(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String service, List<ReviewLog> reviewLogs, List<DTO> dtosUnderReview) {
+        public ReviewMeta(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String service, List<ReviewLog> reviewLogs, List<DTO> dtosUnderReview) {
             this.reviewStepIds = reviewStepIds;
             this.approver = approver;
             this.businessValidationResults = businessValidationResults;
