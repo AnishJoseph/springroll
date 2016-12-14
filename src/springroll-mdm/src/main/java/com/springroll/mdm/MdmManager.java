@@ -6,6 +6,9 @@ import com.springroll.core.Lov;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.SpringrollUtils;
 import com.springroll.core.exceptions.SpringrollException;
+import com.springroll.core.services.mdm.IMdmData;
+import com.springroll.core.services.mdm.MdmColumnDefinition;
+import com.springroll.core.services.mdm.MdmService;
 import com.springroll.orm.entities.MdmEntity;
 import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.entities.ReviewStepMeta;
@@ -32,15 +35,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Created by anishjoseph on 04/11/16.
  */
-@Service public class MdmManager extends SpringrollEndPoint {
-    public static final String SEARCH_ID_PREFIX = "MDM:";
+@Service public class MdmManager extends SpringrollEndPoint implements MdmService {
     private static final Logger logger = LoggerFactory.getLogger(MdmManager.class);
     private MdmDefinitions mdmDefinitions;
     @PersistenceContext EntityManager em;
@@ -191,10 +192,11 @@ import java.util.stream.Collectors;
         }
         return null;
     }
-    public MdmData getData(String master){
+    @Override
+    public IMdmData getData(String master){
         MdmDefinition mdmDefinition = getMdmDefinition(master);
         MdmData mdmData = new MdmData();
-        List<ColDef> colDefs = new ArrayList<>(mdmDefinition.getColDefs().size());
+        List<MdmColumnDefinition> colDefs = new ArrayList<>(mdmDefinition.getColDefs().size());
         for (ColDef colDef : mdmDefinition.getColDefs()) {
             ColDef c = new ColDef(colDef);
             if(colDef.getType().equals("boolean")){
@@ -261,7 +263,7 @@ import java.util.stream.Collectors;
                     resultList.add(newRecData);
                     mdmData.getRecIdsUnderReview().add((long) fakeIndex);
                     int i = 0;
-                    for (ColDef colDef : mdmData.getColDefs()) {
+                    for (MdmColumnDefinition colDef : mdmData.getColDefs()) {
                         newRecData[i++] = colDef.getName().equalsIgnoreCase("id") ? fakeIndex--: newRecord.get(colDef.getName());
                     }
                 }
@@ -283,7 +285,7 @@ import java.util.stream.Collectors;
                     Object[] newRecData = new Object[mdmData.getColDefs().size()];
                     resultList.add(newRecData);
                     int i = 0;
-                    for (ColDef colDef : mdmData.getColDefs()) {
+                    for (MdmColumnDefinition colDef : mdmData.getColDefs()) {
                         newRecData[i++] = mdmChangedRecord.getMdmChangedColumns().get(colDef.getName()).getVal();
                     }
                 }
@@ -294,6 +296,7 @@ import java.util.stream.Collectors;
         return mdmData;
     }
 
+    @Override
     public List<String> getMdmMasterNames(){
         return mdmDefinitions.getMasters().stream().map(MdmDefinition::getMaster).collect(Collectors.toList());
     }

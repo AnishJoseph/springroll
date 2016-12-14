@@ -1,6 +1,7 @@
 package com.springroll.mdm;
 
 import com.springroll.core.Lov;
+import com.springroll.core.services.mdm.MdmColumnDefinition;
 
 import java.io.Serializable;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
  * Created by anishjoseph on 03/11/16.
  */
 
-public class ColDef implements Serializable{
+public class ColDef implements Serializable, MdmColumnDefinition {
     private String name;
     private boolean writeable;
     private String type;
@@ -40,6 +41,7 @@ public class ColDef implements Serializable{
     public ColDef() {
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -48,6 +50,7 @@ public class ColDef implements Serializable{
         this.name = name;
     }
 
+    @Override
     public boolean isWriteable() {
         return writeable;
     }
@@ -56,6 +59,7 @@ public class ColDef implements Serializable{
         this.writeable = writeable;
     }
 
+    @Override
     public String getType() {
         return type;
     }
@@ -64,6 +68,7 @@ public class ColDef implements Serializable{
         this.type = type;
     }
 
+    @Override
     public List<Lov> getLovList() {
         return lovList;
     }
@@ -72,6 +77,7 @@ public class ColDef implements Serializable{
         this.lovList = lovList;
     }
 
+    @Override
     public String getDefVal() {
         return defVal;
     }
@@ -80,6 +86,7 @@ public class ColDef implements Serializable{
         this.defVal = defVal;
     }
 
+    @Override
     public Object getDefaultValue() {
         return defaultValue;
     }
@@ -88,6 +95,7 @@ public class ColDef implements Serializable{
         this.defaultValue = defaultValue;
     }
 
+    @Override
     public String getLovSource() {
         return lovSource;
     }
@@ -96,6 +104,7 @@ public class ColDef implements Serializable{
         this.lovSource = lovSource;
     }
 
+    @Override
     public boolean isMultiSelect() {
         return multiSelect;
     }
@@ -104,6 +113,7 @@ public class ColDef implements Serializable{
         this.multiSelect = multiSelect;
     }
 
+    @Override
     public boolean isNullable() {
         return nullable;
     }

@@ -3,12 +3,12 @@ package com.springroll.api.facade;
 import com.springroll.core.PropertiesUtil;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.services.ITemplateManager;
-import com.springroll.core.services.reporting.IGridReport;
-import com.springroll.mdm.MdmDTO;
-import com.springroll.mdm.MdmData;
-import com.springroll.mdm.MdmManager;
-import com.springroll.core.services.reporting.IReportParameter;
+import com.springroll.core.services.mdm.IMdmData;
+import com.springroll.core.services.mdm.MdmService;
 import com.springroll.core.services.reporting.GridReportingService;
+import com.springroll.core.services.reporting.IGridReport;
+import com.springroll.core.services.reporting.IReportParameter;
+import com.springroll.mdm.MdmDTO;
 import com.springroll.review.ReviewActionDTO;
 import com.springroll.router.notification.NotificationAckDTO;
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ public class SpringrollAPI extends AbstractAPI {
 
     @Autowired private ITemplateManager templateManager;
     @Autowired private GridReportingService gridReportingService;
-    @Autowired private MdmManager mdmManager;
+    @Autowired private MdmService mdmService;
     @Autowired PropertiesUtil  propertiesUtil;
 
     @RequestMapping(value = "/sr/reviewaction", method = RequestMethod.POST)
@@ -75,12 +75,12 @@ public class SpringrollAPI extends AbstractAPI {
     }
     @RequestMapping(value = "/sr/mdm/masters", method = RequestMethod.GET)
     public List<String> getMdmMasterNames() {
-        return mdmManager.getMdmMasterNames();
+        return mdmService.getMdmMasterNames();
     }
 
     @RequestMapping(value = "/sr/mdm/data/{master}", method = RequestMethod.POST)
-    public MdmData getMDMData(@PathVariable String master) {
-        return mdmManager.getData(master);
+    public IMdmData getMDMData(@PathVariable String master) {
+        return mdmService.getData(master);
     }
     @RequestMapping(value = "/sr/mdm/update", method = RequestMethod.POST)
     public Long updateMDMData(@RequestBody MdmDTO mdmDTO) {
