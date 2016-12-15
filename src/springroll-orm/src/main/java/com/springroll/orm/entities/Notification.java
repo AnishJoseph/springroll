@@ -9,7 +9,7 @@ import com.springroll.core.AckLog;
 import com.springroll.core.notification.INotification;
 import com.springroll.core.notification.INotificationMessage;
 import com.springroll.orm.CSVSetConverter;
-import org.hibernate.internal.util.SerializationHelper;
+import com.springroll.orm.JavaSerializationConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,11 +28,9 @@ import java.util.Set;
 public class Notification extends AbstractEntity implements INotification {
     private static final Logger logger = LoggerFactory.getLogger(Notification.class);
 
-    private transient INotificationMessage notificationMessage;
-
     @Column(name = "PAYLOAD", columnDefinition = "BLOB")
-    @Lob
-    private byte[] payloadJson;
+    @Convert(converter = JavaSerializationConverter.class)
+    private INotificationMessage notificationMessage;
 
     @Column(name = "RECEIVERS")
     private String receivers;
@@ -72,13 +70,11 @@ public class Notification extends AbstractEntity implements INotification {
     }
 
     public INotificationMessage getNotificationMessage() {
-        if(this.payloadJson == null) return null;
-        notificationMessage = (INotificationMessage) SerializationHelper.deserialize(this.payloadJson);
         return notificationMessage;
     }
 
-    public void setNotificationMessage(INotificationMessage notification) {
-        this.payloadJson = SerializationHelper.serialize(notification);
+    public void setNotificationMessage(INotificationMessage notificationMessage) {
+        this.notificationMessage = notificationMessage;
     }
 
     public String getReceivers() {
