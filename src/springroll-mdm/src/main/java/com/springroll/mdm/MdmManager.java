@@ -51,8 +51,9 @@ import java.util.stream.Collectors;
     @Value("${mdm.showModifiedRecords}")
     private boolean showModifiedRecords = false;
 
-    public MdmEntity createEntityFromChangedRecords(MdmDefinition mdmDefinition, MdmChangedRecord mdmChangedRecord){
+    public MdmEntity createEntityFromChangedRecords(MdmDefinition mdmDefinition, MdmChangedRecord mdmChangedRecord, boolean detach){
         MdmEntity entity = (MdmEntity) em.find(mdmDefinition.getMasterClass(), mdmChangedRecord.getId());
+        if(detach)em.detach(entity);
         BeanWrapper wrapper = new BeanWrapperImpl(entity);
         Map<String, Object> valueMap = new HashMap<>();
         for (String colName : mdmChangedRecord.getMdmChangedColumns().keySet()) {
@@ -98,7 +99,7 @@ import java.util.stream.Collectors;
         MdmDefinition mdmDefinition = getDefinitionForMaster(mdmDTO.getMaster());
         try {
             for (MdmChangedRecord mdmChangedRecord : mdmDTO.getChangedRecords()) {
-                MdmEntity entity = createEntityFromChangedRecords(mdmDefinition, mdmChangedRecord);
+                MdmEntity entity = createEntityFromChangedRecords(mdmDefinition, mdmChangedRecord, false);
                 entity.setModifiedBy(mdmEvent.getUser().getUsername());
                 entity.setModifiedOn( LocalDateTime.now());
                 List<Reviews> logs = new ArrayList<>(mdmEvent.getReviewLog().size());

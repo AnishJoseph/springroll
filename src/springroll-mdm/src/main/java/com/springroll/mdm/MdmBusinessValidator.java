@@ -50,7 +50,7 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
             String cid = mdmChangedRecord.getMdmChangedColumns().get(CID).getVal().toString();
 
             try {
-                MdmEntity mdmEntity = mdmManager.createEntityFromChangedRecords(mdmDefinition, mdmChangedRecord);
+                MdmEntity mdmEntity = mdmManager.createEntityFromChangedRecords(mdmDefinition, mdmChangedRecord, true);
                 hasNoErrorsInChangedRecords = validate(mdmEntity, businessValidationResults, cid);
             } catch (PropertyBatchUpdateException e) {
                 hasNoErrorsInChangedRecords = false;
