@@ -28,7 +28,7 @@ public class User extends MdmEntity {
     private String userId;
 
     @NotNull
-    @Size(min = 1)
+    @Size(min = 1, message = "user.validation.empty")
     @Column(name = "ROLES")
     @Convert(converter = CSVListConverter.class)
     private List<String> roles;

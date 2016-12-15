@@ -300,8 +300,15 @@ var Control = Marionette.View.extend({
         var newRecord = {};
         _.each(this.masterGridData.colDefs, function(colDef){
             newRecord[colDef.name] = colDef.defaultValue;
-            if(colDef.defaultValue == null && colDef.lovList != null){
-                newRecord[colDef.name] = colDef.lovList[0].value;
+            /* For multiselect, use the default value if there is one, else init to empty array */
+            if(colDef.multiSelect && colDef.lovList != null){
+                newRecord[colDef.name] = [];
+                if(colDef.defaultValue != null) newRecord[colDef.name] = [colDef.defaultValue]
+            } else {
+                /* For LOV dropdowns, which are not multiselect - choose the first option as the selected value */
+                if(!colDef.multiSelect && colDef.defaultValue == null && colDef.lovList != null){
+                    newRecord[colDef.name] = colDef.lovList[0].value;
+                }
             }
         });
         this.collections.add(newRecord);
