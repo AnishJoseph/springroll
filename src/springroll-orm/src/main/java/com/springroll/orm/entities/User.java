@@ -1,13 +1,12 @@
 package com.springroll.orm.entities;
 
 
+import com.springroll.core.CSVList;
 import org.hibernate.envers.Audited;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Collection;
 
 /**
  * Created by anishjoseph on 05/09/16.
@@ -21,17 +20,16 @@ import java.util.Collection;
 @Audited
 public class User extends MdmEntity {
 
-    @NotNull
-    @Size(min = 1)
-    private transient Collection<String> rolesList;
 
     @Column(name = "USER_ID")
     @NotNull
     @Size(max = 32, min = 1)
     private String userId;
 
+    @NotNull
+    @Size(min = 1)
     @Column(name = "ROLES")
-    private String roles;
+    private CSVList roles;
 
     @Column(name = "COUNTRY")
     private String country;
@@ -46,16 +44,6 @@ public class User extends MdmEntity {
     @NotNull
     private boolean active;
 
-
-    public Collection<String> getRoles() {
-        if(rolesList == null)rolesList = StringUtils.commaDelimitedListToSet(roles);
-        return rolesList;
-    }
-
-    public void setRoles(Collection<String> rolesList) {
-        this.roles = StringUtils.collectionToCommaDelimitedString(rolesList);
-        this.rolesList = rolesList;
-    }
 
     public String getUserId() {
         return userId;
@@ -95,5 +83,13 @@ public class User extends MdmEntity {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public CSVList<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(CSVList<String> roles) {
+        this.roles = roles;
     }
 }
