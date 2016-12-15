@@ -7,13 +7,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.DTO;
 import com.springroll.core.ReviewLog;
-import org.hibernate.internal.util.SerializationHelper;
+import com.springroll.orm.JavaSerializationConverter;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 import java.io.IOException;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,6 @@ import java.util.List;
 @Entity
 public class Job extends AbstractEntity {
 
-    private transient List<? extends DTO> payloads;
     private transient List<ReviewLog> reviewLog;
 
     public Job(){
@@ -33,8 +31,8 @@ public class Job extends AbstractEntity {
     }
 
     @Column(name = "PAYLOADS")
-    @Lob
-    private byte[] serializedPayloads;
+    @Convert(converter = JavaSerializationConverter.class)
+    private List<? extends DTO> payloads;
 
     @Column(name = "USER_ID")
     private String userId;
@@ -126,14 +124,11 @@ public class Job extends AbstractEntity {
     }
 
     public List<? extends DTO> getPayloads() {
-        if (this.payloads == null)
-            this.payloads = (List<? extends DTO>) SerializationHelper.deserialize(serializedPayloads);
         return payloads;
     }
 
     public void setPayloads(List<? extends DTO> payloads) {
         this.payloads = payloads;
-        serializedPayloads = SerializationHelper.serialize((Serializable) payloads);
     }
     public List<ReviewLog> getReviewLog() {
         if(reviewLogAsJson.isEmpty())return new ArrayList<>();

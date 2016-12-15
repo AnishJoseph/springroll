@@ -7,11 +7,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.IEvent;
 import com.springroll.core.ReviewLog;
-import org.hibernate.internal.util.SerializationHelper;
+import com.springroll.orm.JavaSerializationConverter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,26 +32,22 @@ public class ReviewStepMeta extends AbstractEntity {
     private String searchId;
 
     @Column(name = "EVENT")
-    @Lob
-    private byte[] serializedEvent;
+    @Convert(converter = JavaSerializationConverter.class)
+    private IEvent event;
 
     @Column(name = "REVIEW_LOG")
     private String reviewLogAsJson = "";
 
     private transient List<ReviewLog> reviewLog;
-    private transient IEvent event;
 
     public ReviewStepMeta(){}
 
     public IEvent getEvent() {
-        if (this.event == null)
-            this.event = (IEvent) SerializationHelper.deserialize(serializedEvent);
         return event;
     }
 
     public void setEvent(IEvent event) {
         this.event = event;
-        serializedEvent = SerializationHelper.serialize((Serializable) event);
     }
 
     public List<ReviewLog> getReviewLog() {
