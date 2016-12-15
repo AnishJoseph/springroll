@@ -13,11 +13,11 @@ public class CSVListConverter implements AttributeConverter<List, String> {
     private static final String separator = ",";
     @Override
     public String convertToDatabaseColumn(List value) {
-        return String.join(separator, value);
+        return value == null ? null :  String.join(separator, value);
     }
 
     @Override
     public List convertToEntityAttribute(String value) {
-        return Arrays.asList(value.split(separator));
+        return value == null ? null : Arrays.asList(value.split(separator));
     }
 }

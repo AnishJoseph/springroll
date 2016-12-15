@@ -8,15 +8,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.AckLog;
 import com.springroll.core.notification.INotification;
 import com.springroll.core.notification.INotificationMessage;
+import com.springroll.orm.CSVSetConverter;
 import org.hibernate.internal.util.SerializationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Version;
+import javax.persistence.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -41,7 +38,8 @@ public class Notification extends AbstractEntity implements INotification {
     private String receivers;
 
     @Column(name = "USERS")
-    private String users;
+    @Convert(converter = CSVSetConverter.class)
+    private Set<String> users;
 
     @Column(name = "CHANNEL_NAME")
     private String channelName;
@@ -63,17 +61,14 @@ public class Notification extends AbstractEntity implements INotification {
     private Long version;
 
     private transient List<AckLog> ackLog;
-    private transient Set<String> userList;
 
 
     public Set<String> getUsers() {
-        if(userList == null)userList = StringUtils.commaDelimitedListToSet(users);
-        return userList;
+        return users;
     }
 
     public void setUsers(Set<String> users) {
-        this.users = StringUtils.collectionToCommaDelimitedString(users);
-        this.userList = users;
+        this.users = users;
     }
 
     public INotificationMessage getNotificationMessage() {
