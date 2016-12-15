@@ -1,12 +1,13 @@
 package com.springroll.orm.entities;
 
 
-import com.springroll.core.CSVList;
+import com.springroll.orm.CSVListConverter;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 /**
  * Created by anishjoseph on 05/09/16.
@@ -29,7 +30,8 @@ public class User extends MdmEntity {
     @NotNull
     @Size(min = 1)
     @Column(name = "ROLES")
-    private CSVList roles;
+    @Convert(converter = CSVListConverter.class)
+    private List<String> roles;
 
     @Column(name = "COUNTRY")
     private String country;
@@ -85,11 +87,11 @@ public class User extends MdmEntity {
         this.active = active;
     }
 
-    public CSVList<String> getRoles() {
+    public List<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(CSVList<String> roles) {
+    public void setRoles(List<String> roles) {
         this.roles = roles;
     }
 }

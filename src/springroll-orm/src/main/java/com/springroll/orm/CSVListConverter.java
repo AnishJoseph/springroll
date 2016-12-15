@@ -1,28 +1,23 @@
 package com.springroll.orm;
 
-import com.springroll.core.CSVList;
-
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by anishjoseph on 31/10/16.
  */
 @Converter(autoApply = true)
-public class CSVListConverter implements AttributeConverter<CSVList, String> {
+public class CSVListConverter implements AttributeConverter<List, String> {
+    private static final String separator = ",";
     @Override
-    public String convertToDatabaseColumn(CSVList value) {
-        String s = String.join(CSVList.getSeparator(), value);
-        return s;
+    public String convertToDatabaseColumn(List value) {
+        return String.join(separator, value);
     }
 
     @Override
-    public CSVList convertToEntityAttribute(String value) {
-        CSVList<String> csvList = new CSVList<>();
-        String[] split = value.split(CSVList.getSeparator());
-        for (String s : split) {
-            csvList.add(s);
-        }
-        return csvList;
+    public List convertToEntityAttribute(String value) {
+        return Arrays.asList(value.split(separator));
     }
 }
