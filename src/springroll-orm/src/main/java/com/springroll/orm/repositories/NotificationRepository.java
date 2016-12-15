@@ -11,9 +11,9 @@ import java.util.List;
  */
 public interface NotificationRepository extends AbstractEntityRepository<Notification>{
 
-    List<Notification> findByChannelNameAndAckLogAsJsonNotLikeAndReceiversIn(String channelName, String quotedUserId, Collection<String> roles);
+    List<Notification> findByChannelNameAndReceiversIn(String channelName, Collection<String> roles);
 
-    List<Notification> findByChannelNameAndInitiatorNotLikeAndAckLogAsJsonNotLikeAndReceiversIn(String channelName, String userId, String quotedUserId, Collection<String> roles);
+    List<Notification> findByChannelNameAndInitiatorNotAndReceiversIn(String channelName, String userId, Collection<String> roles);
     List<Notification> findByChannelNameAndReceivers(String channelName, String userId);
 
 }

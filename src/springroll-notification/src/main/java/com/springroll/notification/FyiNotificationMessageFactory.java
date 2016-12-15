@@ -1,5 +1,6 @@
 package com.springroll.notification;
 
+import com.springroll.core.AckLog;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.notification.*;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,8 +43,19 @@ import java.util.stream.Collectors;
         SpringrollUser user = SpringrollSecurity.getUser();
         List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String userId = user.getUsername();
-        String pattern = "%\"" + userId + "\"%";
-        List<Notification> notifications = repositories.notification.findByChannelNameAndAckLogAsJsonNotLikeAndReceiversIn(notificationChannel.getChannelName(), pattern, roles);
+        List<Notification> notis = repositories.notification.findByChannelNameAndReceiversIn(notificationChannel.getChannelName(), roles);
+        List<Notification> notifications = new ArrayList<>();
+        for (Notification notification : notis) {
+            boolean alreadyAcked = false;
+            for (AckLog ackLog : notification.getAckLog()) {
+                if(ackLog.getReviewer().equals(userId)){
+                    alreadyAcked = true;
+                    break;
+                }
+            }
+            if(!alreadyAcked)notifications.add(notification);
+        }
+
         return notifications;
     }
 

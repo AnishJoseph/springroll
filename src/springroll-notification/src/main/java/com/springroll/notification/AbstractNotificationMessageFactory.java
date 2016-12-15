@@ -1,5 +1,6 @@
 package com.springroll.notification;
 
+import com.springroll.core.AckLog;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.notification.INotification;
@@ -12,6 +13,7 @@ import com.springroll.orm.repositories.Repositories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,9 +47,22 @@ public abstract class AbstractNotificationMessageFactory implements INotificatio
         List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String userId = user.getUsername();
         roles.add(userId);
-        String pattern = "%\"" + userId + "\"%";
 
-        List<Notification> notifications = repositories.notification.findByChannelNameAndInitiatorNotLikeAndAckLogAsJsonNotLikeAndReceiversIn(notificationChannel.getChannelName(), userId, pattern, roles);
+        List<Notification> notis = repositories.notification.findByChannelNameAndInitiatorNotAndReceiversIn(notificationChannel.getChannelName(), userId, roles);
+
+        List<Notification> notifications = new ArrayList<>();
+        for (Notification notification : notis) {
+            boolean alreadyAcked = false;
+            for (AckLog ackLog : notification.getAckLog()) {
+                if(ackLog.getReviewer().equals(userId)){
+                    alreadyAcked = true;
+                    break;
+                }
+            }
+            if(!alreadyAcked)notifications.add(notification);
+        }
+
+        // FIXME - dup code in FYI message factory
         notifications.addAll(repositories.notification.findByChannelNameAndReceivers(notificationChannel.getChannelName(), userId));
         return notifications;
     }

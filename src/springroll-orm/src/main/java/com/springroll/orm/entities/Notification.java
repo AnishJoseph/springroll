@@ -1,20 +1,19 @@
 package com.springroll.orm.entities;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.AckLog;
 import com.springroll.core.notification.INotification;
 import com.springroll.core.notification.INotificationMessage;
+import com.springroll.orm.AckLogConverter;
 import com.springroll.orm.CSVSetConverter;
 import com.springroll.orm.JavaSerializationConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
-import java.io.IOException;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.Version;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,8 @@ public class Notification extends AbstractEntity implements INotification {
     private String channelName;
 
     @Column(name = "ACK_LOG")
-    private String ackLogAsJson = "";
+    @Convert(converter = AckLogConverter.class)
+    private List<AckLog> ackLog = new ArrayList<>();
 
     @Column(name = "CREATION_TIME")
     private LocalDateTime creationTime;
@@ -57,8 +57,6 @@ public class Notification extends AbstractEntity implements INotification {
     @Version
     @Column(name = "VERSION")
     private Long version;
-
-    private transient List<AckLog> ackLog;
 
 
     public Set<String> getUsers() {
@@ -93,35 +91,16 @@ public class Notification extends AbstractEntity implements INotification {
         this.channelName = channelName;
     }
 
-    public List<AckLog> getAckLog() {
-        if(ackLogAsJson.isEmpty()){
-            ackLog = new ArrayList<>();
-            return ackLog;
-        }
+    public void addAck(AckLog ackLog){
+        this.ackLog.add(ackLog);
+    }
 
-        if (this.ackLog == null) {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.registerModule(new JavaTimeModule());
-            try {
-                this.ackLog = mapper.readValue(ackLogAsJson, new TypeReference<List<AckLog>>(){});
-            } catch (IOException e) {
-                logger.debug("Exception {}" + e.getMessage());
-                return new ArrayList<>();
-            }
-        }
+    public List<AckLog> getAckLog() {
         return ackLog;
     }
 
-    public void addAck(AckLog ackLog){
-        getAckLog();
-        this.ackLog.add(ackLog);
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        try {
-            ackLogAsJson = mapper.writeValueAsString(this.ackLog);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+    public void setAckLog(List<AckLog> ackLog) {
+        this.ackLog = ackLog;
     }
 
     public LocalDateTime getCreationTime() {

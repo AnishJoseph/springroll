@@ -2,11 +2,11 @@ package com.springroll.orm.entities;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.BusinessValidationResult;
 import com.springroll.core.ReviewLog;
+import com.springroll.orm.ReviewLogConverter;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -43,7 +43,8 @@ public class ReviewStep extends AbstractEntity {
     private Boolean completed = false;
 
     @Column(name = "REVIEW_LOG")
-    private String reviewLogAsJson = "";
+    @Convert(converter = ReviewLogConverter.class)
+    private List<ReviewLog> reviewLog = new ArrayList<>();
 
     @Column(name = "VIOLATION_FOR_THIS_STEP")
     private String violationForThisStepJson = "";
@@ -76,8 +77,6 @@ public class ReviewStep extends AbstractEntity {
         }
     }
 
-    private transient List<ReviewLog> reviewLog;
-
     public ReviewStep() {
     }
 
@@ -90,37 +89,9 @@ public class ReviewStep extends AbstractEntity {
         this.setViolationForThisStep(violationForThisStep);
     }
 
-    public List<ReviewLog> getReviewLog() {
-        if (reviewLogAsJson.isEmpty()) {
-            reviewLog = new ArrayList<>();
-            return reviewLog;
-        }
 
-        if (this.reviewLog == null) {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.registerModule(new JavaTimeModule());
-            try {
-                this.reviewLog = mapper.readValue(reviewLogAsJson, new TypeReference<List<ReviewLog>>() {
-                });
-            } catch (IOException e) {
-                //FIXME
-                throw new RuntimeException(e);
-            }
-        }
-        return reviewLog;
-    }
-
-    public void addReviewLog(ReviewLog reviewLog) {
-        getReviewLog();
+    public void addReviewLog(ReviewLog reviewLog){
         this.reviewLog.add(reviewLog);
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        try {
-            reviewLogAsJson = mapper.writeValueAsString(this.reviewLog);
-        } catch (JsonProcessingException e) {
-            //FIXME
-            throw new RuntimeException(e);
-        }
     }
 
     public Long getRuleId() {
@@ -149,8 +120,6 @@ public class ReviewStep extends AbstractEntity {
 
 
     public Boolean hasThisUserAlreadyReviewedThisStep(String userId) {
-        List<ReviewLog> reviewLog = getReviewLog();
-        if (reviewLog == null) return false;
         for (ReviewLog data : reviewLog) {
             if (data.getReviewer().equals(userId)) return true;
         }
@@ -182,4 +151,11 @@ public class ReviewStep extends AbstractEntity {
         this.channel = channel;
     }
 
+    public List<ReviewLog> getReviewLog() {
+        return reviewLog;
+    }
+
+    public void setReviewLog(List<ReviewLog> reviewLog) {
+        this.reviewLog = reviewLog;
+    }
 }

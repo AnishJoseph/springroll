@@ -1,18 +1,14 @@
 package com.springroll.orm.entities;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.DTO;
 import com.springroll.core.ReviewLog;
 import com.springroll.orm.JavaSerializationConverter;
+import com.springroll.orm.ReviewLogConverter;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +19,6 @@ import java.util.List;
 
 @Entity
 public class Job extends AbstractEntity {
-
-    private transient List<ReviewLog> reviewLog;
 
     public Job(){
         this.setStartTime(LocalDateTime.now());
@@ -54,7 +48,8 @@ public class Job extends AbstractEntity {
     private String service;
 
     @Column(name = "REVIEW_LOG")
-    private String reviewLogAsJson = "";
+    @Convert(converter = ReviewLogConverter.class)
+    private List<ReviewLog> reviewLog = new ArrayList<>();
 
 
     public Job(Long parentId, Boolean underReview, String service, String userId, List<? extends DTO> payloads) {
@@ -130,31 +125,12 @@ public class Job extends AbstractEntity {
     public void setPayloads(List<? extends DTO> payloads) {
         this.payloads = payloads;
     }
-    public List<ReviewLog> getReviewLog() {
-        if(reviewLogAsJson.isEmpty())return new ArrayList<>();
 
-        if (this.reviewLog == null) {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.registerModule(new JavaTimeModule());
-            try {
-                this.reviewLog = mapper.readValue(reviewLogAsJson, new TypeReference<List<ReviewLog>>(){});
-            } catch (IOException e) {
-                return null;
-            }
-        }
+    public List<ReviewLog> getReviewLog() {
         return reviewLog;
     }
 
     public void setReviewLog(List<ReviewLog> reviewLog) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
         this.reviewLog = reviewLog;
-        try {
-            reviewLogAsJson = mapper.writeValueAsString(reviewLog);
-        } catch (JsonProcessingException e) {
-            //FIXME
-            throw new RuntimeException(e);
-        }
     }
-
 }
