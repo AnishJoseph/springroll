@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 /**
  * Created by anishjoseph on 31/10/16.
  */
-@Converter(autoApply = true)
+@Converter(autoApply = false)
 public class CSVSetConverter implements AttributeConverter<Set, String> {
     private static final String separator = ",";
     @Override

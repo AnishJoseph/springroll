@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by anishjoseph on 31/10/16.
  */
-@Converter(autoApply = true)
+@Converter(autoApply = false)
 public class CSVListConverter implements AttributeConverter<List, String> {
     private static final String separator = ",";
     @Override
