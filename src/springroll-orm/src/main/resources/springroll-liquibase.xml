@@ -75,7 +75,7 @@
             <column name="NOTIFICATION_ID" type="bigint"/>
             <column name="COMPLETED" type="varchar(1)" />
             <column name="REVIEW_LOG" type="VARCHAR2(2048)"/>
-            <column name="VIOLATION_FOR_THIS_STEP" type="VARCHAR2(256)"/>
+            <column name="VIOLATION_FOR_THIS_STEP" type="BLOB"/>
         </createTable>
         <createTable tableName="REVIEW_STEP_META">
             <column name="ID" type="bigint" autoIncrement="false">

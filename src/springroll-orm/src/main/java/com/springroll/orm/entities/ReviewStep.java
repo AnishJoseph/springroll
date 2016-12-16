@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springroll.core.BusinessValidationResult;
 import com.springroll.core.ReviewLog;
+import com.springroll.orm.JavaSerializationConverter;
 import com.springroll.orm.ReviewLogConverter;
 
 import javax.persistence.*;
@@ -46,35 +47,16 @@ public class ReviewStep extends AbstractEntity {
     @Convert(converter = ReviewLogConverter.class)
     private List<ReviewLog> reviewLog = new ArrayList<>();
 
-    @Column(name = "VIOLATION_FOR_THIS_STEP")
-    private String violationForThisStepJson = "";
-
-    private transient BusinessValidationResult violationForThisStep;
-
+    @Column(name = "VIOLATION_FOR_THIS_STEP", columnDefinition = "BLOB")
+    @Convert(converter = JavaSerializationConverter.class)
+    private BusinessValidationResult violationForThisStep;
 
     public BusinessValidationResult getViolationForThisStep() {
-        if (this.violationForThisStepJson.isEmpty()) return null;
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        try {
-            violationForThisStep = mapper.readValue(violationForThisStepJson, BusinessValidationResult.class);
-            return violationForThisStep;
-        } catch (IOException e) {
-            //FIXME
-            throw new RuntimeException(e);
-        }
+        return violationForThisStep;
     }
 
     public void setViolationForThisStep(BusinessValidationResult violationForThisStep) {
         this.violationForThisStep = violationForThisStep;
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        try {
-            violationForThisStepJson = mapper.writeValueAsString(violationForThisStep);
-        } catch (JsonProcessingException e) {
-            //FIXME
-            throw new RuntimeException(e);
-        }
     }
 
     public ReviewStep() {
