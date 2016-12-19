@@ -25,11 +25,11 @@ public abstract class SpringrollEndPoint {
     }
 
     public Long routeToSynchronousSideFromAsynchronousSide(List<? extends ServiceDTO> payloads){
-        JobMeta jobMeta = new JobMeta(payloads, ContextStore.getUser(), ContextStore.getJobId(), ContextStore.getLegId(), null, false, false);
+        JobMeta jobMeta = new JobMeta(payloads, null, false, false);
         return synchEndPoint.route(jobMeta);
     }
     public Long routeAgainToSynchronousSideFromAsynchronousSide(List<? extends ServiceDTO> payloads){
-        JobMeta jobMeta = new JobMeta(payloads, ContextStore.getUser(), ContextStore.getJobId(), ContextStore.getLegId(), null, true, false);
+        JobMeta jobMeta = new JobMeta(payloads, null, true, false);
         return synchEndPoint.route(jobMeta);
     }
 }

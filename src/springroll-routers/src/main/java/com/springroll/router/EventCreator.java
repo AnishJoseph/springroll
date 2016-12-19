@@ -59,20 +59,18 @@ public class EventCreator {
         boolean needsReview =   jobMeta.getBusinessValidationResults() != null &&
                                 !jobMeta.getBusinessValidationResults().getReviewNeededViolations().isEmpty();
 
-        if(jobMeta.getJobId() == null) {
+        if(ContextStore.getJobId() == null) {
             comingDirectlyFromSyncSide = true;
-            job = new Job(jobMeta.getParentJobId(), needsReview, ((ServiceDTO)event.getPayload()).getServiceDefinition().name(), jobMeta.getUser().getUsername(), jobMeta.getPayloads());
+            job = new Job(jobMeta.getParentJobId(), needsReview, ((ServiceDTO)event.getPayload()).getServiceDefinition().name(), SpringrollSecurity.getUser().getUsername(), jobMeta.getPayloads());
             repo.job.save(job);
-            jobMeta.setJobId(job.getID());
             if(!needsReview){
                 publisher.publishEvent(event);
             }
-            ContextStore.put(jobMeta.getUser(), jobMeta.getJobId(), jobManager.registerNewTransactionLeg(jobMeta.getJobId(), 0L));
-            jobMeta.setLegId(ContextStore.getLegId());
+            ContextStore.put(SpringrollSecurity.getUser(), job.getID(), jobManager.registerNewTransactionLeg(job.getID(), 0L));
         }
-        event.setJobId(jobMeta.getJobId());
-        event.setUser(jobMeta.getUser());
-        event.setLegId(jobMeta.getLegId());
+        event.setJobId(ContextStore.getJobId());
+        event.setUser(ContextStore.getUser());
+        event.setLegId(ContextStore.getLegId());
         if(!needsReview){
             if (jobMeta.isAsynchronous()) {
                 asynchSideEndPoints.routeToJms(event);
@@ -89,8 +87,7 @@ public class EventCreator {
             job.setUnderReview(true);
         }
 
-        ReviewNeededEvent reviewNeededEvent = new ReviewNeededEvent(event, jobMeta.getBusinessValidationResults().getReviewNeededViolations());
-        reviewNeededEvent.setUser(jobMeta.getUser());
+        ReviewNeededEvent reviewNeededEvent = new ReviewNeededEvent(event, jobMeta.getBusinessValidationResults().getReviewNeededViolations(), SpringrollSecurity.getUser());
         asynchSideEndPoints.routeToJms(reviewNeededEvent);
         return event.getJobId();
     }

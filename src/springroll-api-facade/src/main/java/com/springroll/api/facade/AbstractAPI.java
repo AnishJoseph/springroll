@@ -71,7 +71,7 @@ public abstract class AbstractAPI {
         return route(payloads);
     }
     public Long route(List<? extends ServiceDTO> payloads){
-        JobMeta jobMeta = new JobMeta(payloads, getUser(), null, null, null, false, true);
+        JobMeta jobMeta = new JobMeta(payloads, null, false, true);
         return sendItDownTheSynchronousRoute(jobMeta);
     }
 
@@ -82,13 +82,11 @@ public abstract class AbstractAPI {
     }
 
     public Long routeSynchronouslyToAsynchronousSideFromSynchronousSide(List<? extends ServiceDTO> payloads){
-        JobMeta jobMeta = new JobMeta(payloads, getUser(), null, null, null, false, false);
+        JobMeta jobMeta = new JobMeta(payloads, null, false, false);
         return sendItDownTheSynchronousRoute(jobMeta);
     }
 
     private Long sendItDownTheSynchronousRoute(JobMeta jobMeta){
-        /* This point, at the start of the flow, we only have the principal to store - the jobId and legId is created in EventCreator */
-        ContextStore.put(jobMeta.getUser(), null, null);
         return synchEndPoint.route(jobMeta);
     }
 
