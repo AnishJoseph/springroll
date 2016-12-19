@@ -25,7 +25,7 @@ public class NotificationAckDTO implements ServiceDTO {
     }
 
     @Override
-    public IServiceDefinition getProcessor() {
+    public IServiceDefinition getServiceDefinition() {
         return CoreServiceDefinitions.NOTIFICATION_ACK;
     }
 

@@ -29,9 +29,22 @@ public class EventCreator {
     @Autowired
     ApplicationEventPublisher publisher;
 
+    /**
+     * Assumption : If there are multiple payloads, it is assumed that all payloads belong to the same Service
+     * This is the last processor in the route 'Synchronous Route'. This processor is where the pupa becomes a
+     * butterfly - the DTO morphs into an Event. The following happens here
+     * 1) Based on the service definition of the DTO, an appropriate Event is created and the DTO is encapsulated in the event
+     * 2) If the DTO is coming directly from Synchronous Route then there a Job is yet to be created, so create a Job
+     * 3) In the newly created event, set the JobId, user, LegId etc
+     * 4) If no review is needed for the event route it either via JMS or directly to DynamicROuter (depending on the flag in JobMeta)
+     * 5) If the service needs to be reviewed then create a  ReviewNeededEvent and route it via JMS
+     *
+     * @param jobMeta
+     * @return
+     */
     public Long on(JobMeta jobMeta){
         boolean comingDirectlyFromSyncSide = false;
-        Class<? extends IEvent> eventClass = jobMeta.getPayloads().get(0).getProcessor().getServiceFactory().getServiceEvent();
+        Class<? extends IEvent> eventClass = jobMeta.getPayloads().get(0).getServiceDefinition().getServiceFactory().getServiceEvent();
         AbstractEvent event;
         try {
             event = (AbstractEvent) eventClass.newInstance();
@@ -48,7 +61,7 @@ public class EventCreator {
 
         if(jobMeta.getJobId() == null) {
             comingDirectlyFromSyncSide = true;
-            job = new Job(jobMeta.getParentJobId(), needsReview, ((ServiceDTO)event.getPayload()).getProcessor().name(), jobMeta.getUser().getUsername(), jobMeta.getPayloads());
+            job = new Job(jobMeta.getParentJobId(), needsReview, ((ServiceDTO)event.getPayload()).getServiceDefinition().name(), jobMeta.getUser().getUsername(), jobMeta.getPayloads());
             repo.job.save(job);
             jobMeta.setJobId(job.getID());
             if(!needsReview){

@@ -33,7 +33,7 @@ public class ReviewActionDTO implements ServiceDTO {
     }
 
     @Override
-    public IServiceDefinition getProcessor() {
+    public IServiceDefinition getServiceDefinition() {
         return CoreServiceDefinitions.REVIEW;
     }
 

@@ -26,10 +26,10 @@ public class Enricher {
      * @return
      */
     public JobMeta on(JobMeta jobMeta){
-        IServiceFactory serviceFactory = jobMeta.getPayloads().get(0).getProcessor().getServiceFactory();
+        IServiceFactory serviceFactory = jobMeta.getPayloads().get(0).getServiceDefinition().getServiceFactory();
         if(serviceFactory == null){
-            serviceFactory = applicationContext.getBean(jobMeta.getPayloads().get(0).getProcessor().getServiceFactoryClass());
-            jobMeta.getPayloads().get(0).getProcessor().setServiceFactory(serviceFactory);
+            serviceFactory = applicationContext.getBean(jobMeta.getPayloads().get(0).getServiceDefinition().getServiceFactoryClass());
+            jobMeta.getPayloads().get(0).getServiceDefinition().setServiceFactory(serviceFactory);
         }
         DTOEnricher enricher = serviceFactory.getServiceEnricher();
         if(enricher == null){

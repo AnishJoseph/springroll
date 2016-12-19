@@ -10,7 +10,7 @@ public class SynchToAsynchDTO extends TestServiceDTO {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public IServiceDefinition getProcessor() {
+    public IServiceDefinition getServiceDefinition() {
         return ApplicationServiceDefinitions.SYNCH_TO_ASYNCH;
     }
 

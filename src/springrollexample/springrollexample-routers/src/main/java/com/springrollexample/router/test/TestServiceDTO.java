@@ -9,7 +9,7 @@ import com.springrollexample.router.ApplicationServiceDefinitions;
  */
 public class TestServiceDTO extends TestDTO implements ServiceDTO {
     @Override
-    public IServiceDefinition getProcessor() {
+    public IServiceDefinition getServiceDefinition() {
         return ApplicationServiceDefinitions.TEST_ROOT;
     }
 }

@@ -41,7 +41,7 @@ public class MdmDTO implements ServiceDTO, Searchable {
     }
 
     @Override
-    public IServiceDefinition getProcessor() {
+    public IServiceDefinition getServiceDefinition() {
         return CoreServiceDefinitions.MDM;
     }
 
