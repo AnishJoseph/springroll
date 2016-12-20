@@ -36,7 +36,6 @@ public abstract class AbstractNotificationMessageFactory implements INotificatio
         }
         Set<String> usersThatBelongToRole = repositories.users.findUsersThatBelongToRole(notificationMessage.getNotificationReceivers());
 
-        /* Remove the initiator from the set of users to be notified */
         return usersThatBelongToRole;
     }
 
