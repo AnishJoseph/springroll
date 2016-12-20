@@ -43,7 +43,7 @@ public class EventCreator {
      * @return
      */
     public Long on(JobMeta jobMeta){
-        boolean comingDirectlyFromSyncSide = false;
+        boolean newJobCreated = false;
         Class<? extends IEvent> eventClass = jobMeta.getPayloads().get(0).getServiceDefinition().getServiceFactory().getServiceEvent();
         AbstractEvent event;
         try {
@@ -60,7 +60,7 @@ public class EventCreator {
                                 !jobMeta.getBusinessValidationResults().getReviewNeededViolations().isEmpty();
 
         if(ContextStore.getJobId() == null) {
-            comingDirectlyFromSyncSide = true;
+            newJobCreated = true;
             job = new Job(jobMeta.getParentJobId(), needsReview, ((ServiceDTO)event.getPayload()).getServiceDefinition().name(), SpringrollSecurity.getUser().getUsername(), jobMeta.getPayloads());
             repo.job.save(job);
             if(!needsReview){
@@ -82,7 +82,11 @@ public class EventCreator {
 
         /* If we reach here it means that the event needs to be reviewed */
 
-        if(!comingDirectlyFromSyncSide){
+        if(!newJobCreated){
+            /*  If a new job was not created above then mark the existing job as 'Under review'.
+                This happens when asynch side sends stuff down the sync route
+                (see SpringrollEndPoint - method routeToSynchronousSideFromAsynchronousSide
+             */
             job = repo.job.findOne(event.getJobId());
             job.setUnderReview(true);
         }
