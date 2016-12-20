@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
             users.add(user.getUserId());
             return users;
         }
-        Set<String> usersThatBelongToRole = repositories.users.findUsersThatBelongToRole("%" + message.getNotificationReceivers() + "%");
+        Set<String> usersThatBelongToRole = repositories.users.findUsersThatBelongToRole(message.getNotificationReceivers());
         return usersThatBelongToRole;
     }
 
