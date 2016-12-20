@@ -2,6 +2,7 @@ package com.springroll.review;
 
 import com.springroll.core.BusinessValidationResult;
 import com.springroll.core.ReviewLog;
+import com.springroll.core.notification.IReviewMeta;
 import com.springroll.notification.AbstractNotificationMessage;
 
 import java.util.List;
@@ -18,13 +19,13 @@ public class FyiReviewNotificationMessage extends AbstractNotificationMessage {
 
     public FyiReviewNotificationMessage(){}
 
-    public FyiReviewNotificationMessage(String approver, List<BusinessValidationResult> businessValidationResult, String messageKey, String[] args, List<ReviewLog> reviewLog, String initiator) {
-        setNotificationReceivers(approver);
-        this.businessValidationResult = businessValidationResult;
+    public FyiReviewNotificationMessage(IReviewMeta reviewMeta, String messageKey, String[] args) {
+        setNotificationReceivers(reviewMeta.getApprover());
+        this.businessValidationResult = reviewMeta.getBusinessValidationResults();
         this.messageKey = messageKey;
         if(args != null)this.args = args;
-        this.reviewLog = reviewLog;
-        setInitiator(initiator);
+        this.reviewLog = reviewMeta.getReviewLogs();
+        setInitiator(reviewMeta.getInitiator());
     }
 
     public List<BusinessValidationResult> getBusinessValidationResult() {

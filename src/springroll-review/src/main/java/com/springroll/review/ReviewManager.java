@@ -130,7 +130,7 @@ public class ReviewManager extends SpringrollEndPoint {
             INotificationChannel notificationChannel = notificationManager.nameToEnum(step.getChannel());
 
             String serviceName = ((ServiceDTO)reviewStepMeta.getEvent().getPayload()).getServiceDefinition().name();
-            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new ReviewMeta(approverToNoti.get(approver), approver, businessValidationResults, reviewStepMeta.getEvent().getUser(), serviceName, reviewLog, reviewStepMeta.getEvent().getPayloads()));
+            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new ReviewMeta(approverToNoti.get(approver), approver, businessValidationResults, reviewStepMeta.getEvent().getUser().getUsername(), serviceName, reviewLog, reviewStepMeta.getEvent().getPayloads()));
             Long notiId = notificationManager.sendNotification(notificationChannel, message);
             for (Long stepId : approverToNoti.get(approver)) {
                 repo.reviewStep.findOne(stepId).setNotificationId(notiId);
@@ -252,7 +252,7 @@ public class ReviewManager extends SpringrollEndPoint {
             INotificationChannel notificationChannel = notificationManager.nameToEnum(step.getChannel());
             String serviceName = ((ServiceDTO)reviewStepMeta.getEvent().getPayload()).getServiceDefinition().name();
             INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new ReviewMeta(approverToNoti.get(approver), approver,
-                    businessValidationResults, reviewStepMeta.getEvent().getUser(), serviceName, reviewStepMeta.getReviewLog(), reviewStepMeta.getEvent().getPayloads()));
+                    businessValidationResults, reviewStepMeta.getEvent().getUser().getUsername(), serviceName, reviewStepMeta.getReviewLog(), reviewStepMeta.getEvent().getPayloads()));
             notificationManager.sendNotification(notificationChannel, message);
         }
     }
@@ -261,12 +261,12 @@ public class ReviewManager extends SpringrollEndPoint {
         private List<Long> reviewStepIds;
         private String approver;
         private List<BusinessValidationResult> businessValidationResults;
-        private SpringrollUser initiator;
+        private String initiator;
         private String service;
         private List<ReviewLog> reviewLogs;
         private List<DTO> dtosUnderReview;
 
-        public ReviewMeta(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, SpringrollUser initiator, String service, List<ReviewLog> reviewLogs, List<DTO> dtosUnderReview) {
+        public ReviewMeta(List<Long> reviewStepIds, String approver, List<BusinessValidationResult> businessValidationResults, String initiator, String service, List<ReviewLog> reviewLogs, List<DTO> dtosUnderReview) {
             this.reviewStepIds = reviewStepIds;
             this.approver = approver;
             this.businessValidationResults = businessValidationResults;
@@ -292,7 +292,7 @@ public class ReviewManager extends SpringrollEndPoint {
         }
 
         @Override
-        public SpringrollUser getInitiator() {
+        public String getInitiator() {
             return initiator;
         }
 

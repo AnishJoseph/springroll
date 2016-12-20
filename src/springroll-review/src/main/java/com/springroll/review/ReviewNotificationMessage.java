@@ -1,7 +1,6 @@
 package com.springroll.review;
 
-import com.springroll.core.BusinessValidationResult;
-import com.springroll.core.ReviewLog;
+import com.springroll.core.notification.IReviewMeta;
 
 import java.util.List;
 
@@ -13,9 +12,9 @@ public class ReviewNotificationMessage extends FyiReviewNotificationMessage{
 
     public ReviewNotificationMessage(){}
 
-    public ReviewNotificationMessage(List<Long> reviewStepId, String approver, List<BusinessValidationResult> businessValidationResult, String messageKey, String[] args, List<ReviewLog> reviewLog, String initiator) {
-        super(approver, businessValidationResult, messageKey, args, reviewLog, initiator);
-        this.reviewStepId = reviewStepId;
+    public ReviewNotificationMessage(IReviewMeta reviewMeta, String messageKey, String[] args) {
+        super(reviewMeta, messageKey, args);
+        this.reviewStepId = reviewMeta.getReviewStepIds();
     }
 
     public List<Long> getReviewStepId() {

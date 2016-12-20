@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
     @Autowired MdmManager mdmManager;
     @Autowired SpringrollUtils springrollUtils;
 
-    @Override public INotificationMessage makeMessage(IReviewMeta notificationMeta){
-        MdmDTO mdmDTO = (MdmDTO) notificationMeta.getDtosUnderReview().get(0);
+    @Override public INotificationMessage makeMessage(IReviewMeta reviewMeta){
+        MdmDTO mdmDTO = (MdmDTO) reviewMeta.getDtosUnderReview().get(0);
         List<ColDef> colDefs = mdmManager.getDefinition(mdmDTO.getMaster()).getColDefs();
 
         if(!mdmDTO.getChangedRecords().isEmpty()) {
@@ -62,6 +62,6 @@ import java.util.stream.Collectors;
 
         MdmChangesForReview mdmChangesForReview = new MdmChangesForReview(mdmDTO, colDefs);
 
-        return new MdmReviewNotificationMessage(notificationMeta.getReviewStepIds(), notificationMeta.getApprover(), "ui.mdm.review.noti.msg", notificationMeta.getBusinessValidationResults().get(0).getArgs(), mdmChangesForReview, notificationMeta.getInitiator().getUsername());
+        return new MdmReviewNotificationMessage(reviewMeta, reviewMeta.getBusinessValidationResults().get(0).getArgs(), mdmChangesForReview);
     }
 }

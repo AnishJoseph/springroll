@@ -1,5 +1,6 @@
 package com.springroll.mdm;
 
+import com.springroll.core.notification.IReviewMeta;
 import com.springroll.notification.AbstractNotificationMessage;
 
 import java.util.List;
@@ -9,18 +10,17 @@ import java.util.List;
  */
 public class MdmReviewNotificationMessage extends AbstractNotificationMessage {
     private List<Long> reviewStepId;
-    private String messageKey;
+    private String messageKey = "ui.mdm.review.noti.msg";
     private String[] args = new String[]{};
     private MdmChangesForReview mdmChangesForReview;
     public MdmReviewNotificationMessage(){}
 
-    public MdmReviewNotificationMessage(List<Long> reviewStepId, String approver, String messageKey, String[] args, MdmChangesForReview mdmChangesForReview, String initiator) {
-        setNotificationReceivers(approver);
-        this.reviewStepId = reviewStepId;
-        this.messageKey = messageKey;
+    public MdmReviewNotificationMessage(IReviewMeta reviewMeta, String[] args, MdmChangesForReview mdmChangesForReview) {
+        setNotificationReceivers(reviewMeta.getApprover());
+        this.reviewStepId = reviewMeta.getReviewStepIds();
         this.args = args;
         this.mdmChangesForReview = mdmChangesForReview;
-        setInitiator(initiator);
+        setInitiator(reviewMeta.getInitiator());
     }
 
     public List<Long> getReviewStepId() {
