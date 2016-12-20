@@ -12,6 +12,7 @@ public class AbstractNotificationMessage implements INotificationMessage {
     private String notificationReceivers;
     private String channel;
     private NotificationChannelType channelType;
+    private String initiator;
 
     public String getNotificationReceivers() {
         return notificationReceivers;
@@ -19,6 +20,16 @@ public class AbstractNotificationMessage implements INotificationMessage {
 
     public void setNotificationReceivers(String notificationReceivers) {
         this.notificationReceivers = notificationReceivers;
+    }
+
+    @Override
+    public String getInitiator() {
+        return initiator;
+    }
+
+    @Override
+    public void setInitiator(String initiator) {
+        this.initiator = initiator;
     }
 
     @Override public long getCreationTime() {

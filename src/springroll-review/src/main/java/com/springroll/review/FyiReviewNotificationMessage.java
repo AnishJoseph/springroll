@@ -18,12 +18,13 @@ public class FyiReviewNotificationMessage extends AbstractNotificationMessage {
 
     public FyiReviewNotificationMessage(){}
 
-    public FyiReviewNotificationMessage(String approver, List<BusinessValidationResult> businessValidationResult, String messageKey, String[] args, List<ReviewLog> reviewLog) {
+    public FyiReviewNotificationMessage(String approver, List<BusinessValidationResult> businessValidationResult, String messageKey, String[] args, List<ReviewLog> reviewLog, String initiator) {
         setNotificationReceivers(approver);
         this.businessValidationResult = businessValidationResult;
         this.messageKey = messageKey;
         if(args != null)this.args = args;
         this.reviewLog = reviewLog;
+        setInitiator(initiator);
     }
 
     public List<BusinessValidationResult> getBusinessValidationResult() {

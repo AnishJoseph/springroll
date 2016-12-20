@@ -13,8 +13,8 @@ public class ReviewNotificationMessage extends FyiReviewNotificationMessage{
 
     public ReviewNotificationMessage(){}
 
-    public ReviewNotificationMessage(List<Long> reviewStepId, String approver, List<BusinessValidationResult> businessValidationResult, String messageKey, String[] args, List<ReviewLog> reviewLog) {
-        super(approver, businessValidationResult, messageKey, args, reviewLog);
+    public ReviewNotificationMessage(List<Long> reviewStepId, String approver, List<BusinessValidationResult> businessValidationResult, String messageKey, String[] args, List<ReviewLog> reviewLog, String initiator) {
+        super(approver, businessValidationResult, messageKey, args, reviewLog, initiator);
         this.reviewStepId = reviewStepId;
     }
 

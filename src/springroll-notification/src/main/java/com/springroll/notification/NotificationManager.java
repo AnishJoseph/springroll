@@ -44,8 +44,8 @@ public class NotificationManager implements INotificationManager, ILovProvider {
         this.addNotificationChannels(CoreNotificationChannels.class);
     }
 
-    @Override public Long sendNotification(INotificationChannel notificationChannel, INotificationMessage notificationMessage, String initiator) {
-        Set<String> targetUsers = notificationChannel.getMessageFactory().getTargetUsers(notificationMessage, initiator);
+    @Override public Long sendNotification(INotificationChannel notificationChannel, INotificationMessage notificationMessage) {
+        Set<String> targetUsers = notificationChannel.getMessageFactory().getTargetUsers(notificationMessage);
         /* Use spring to publish - spring will deliver this on a successful commit of the transaction.
            This ensures that the notification is pushed to the user ONLY after the current transaction commits.
            If we don't have this, then the event is pushed to the user even if the transaction rolls back
@@ -60,7 +60,7 @@ public class NotificationManager implements INotificationManager, ILovProvider {
         notification.setChannelName(notificationChannel.getChannelName());
         notification.setUsers(targetUsers);
         notification.setCreationTime(LocalDateTime.now());
-        notification.setInitiator(initiator);
+        notification.setInitiator(notificationMessage.getInitiator());
         notification.setAutoClean(notificationChannel.isAutoClean());
 
         notificationMessage.setCreationTime(System.currentTimeMillis());
@@ -111,7 +111,7 @@ public class NotificationManager implements INotificationManager, ILovProvider {
             logger.error("Unable to find notification with id {}", notificationId);
             return;
         }
-        NotificationCancellationMessage msg = new NotificationCancellationMessage(notification.getNotificationMessage().getChannelType(), notificationId);
+        NotificationCancellationMessage msg = new NotificationCancellationMessage(notification.getNotificationMessage().getChannelType(), notificationId, notification.getInitiator());
         List<INotificationMessage> msgs = new ArrayList<>();
         msgs.add(msg);
         pushNotification(new PushData(notification.getUsers(), msgs, CoreNotificationChannels.NOTIFICATION_CANCEL.getServiceUri()));

@@ -7,9 +7,10 @@ import com.springroll.core.notification.NotificationChannelType;
  */
 public class NotificationCancellationMessage extends AbstractNotificationMessage {
     public NotificationCancellationMessage(){}
-    public NotificationCancellationMessage(NotificationChannelType notificationChannelType, Long id ){
+    public NotificationCancellationMessage(NotificationChannelType notificationChannelType, Long id, String initiator ){
         this.setChannelType(notificationChannelType);
         this.setChannel(CoreNotificationChannels.NOTIFICATION_CANCEL.getChannelName());
         this.setId(id);
+        setInitiator(initiator);
     }
 }

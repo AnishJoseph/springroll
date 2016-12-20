@@ -14,12 +14,13 @@ public class MdmReviewNotificationMessage extends AbstractNotificationMessage {
     private MdmChangesForReview mdmChangesForReview;
     public MdmReviewNotificationMessage(){}
 
-    public MdmReviewNotificationMessage(List<Long> reviewStepId, String approver, String messageKey, String[] args, MdmChangesForReview mdmChangesForReview) {
+    public MdmReviewNotificationMessage(List<Long> reviewStepId, String approver, String messageKey, String[] args, MdmChangesForReview mdmChangesForReview, String initiator) {
         setNotificationReceivers(approver);
         this.reviewStepId = reviewStepId;
         this.messageKey = messageKey;
         this.args = args;
         this.mdmChangesForReview = mdmChangesForReview;
+        setInitiator(initiator);
     }
 
     public List<Long> getReviewStepId() {

@@ -131,7 +131,7 @@ public class ReviewManager extends SpringrollEndPoint {
 
             String serviceName = ((ServiceDTO)reviewStepMeta.getEvent().getPayload()).getServiceDefinition().name();
             INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new ReviewMeta(approverToNoti.get(approver), approver, businessValidationResults, reviewStepMeta.getEvent().getUser(), serviceName, reviewLog, reviewStepMeta.getEvent().getPayloads()));
-            Long notiId = notificationManager.sendNotification(notificationChannel, message, reviewStepMeta.getInitiator());
+            Long notiId = notificationManager.sendNotification(notificationChannel, message);
             for (Long stepId : approverToNoti.get(approver)) {
                 repo.reviewStep.findOne(stepId).setNotificationId(notiId);
             }
@@ -253,7 +253,7 @@ public class ReviewManager extends SpringrollEndPoint {
             String serviceName = ((ServiceDTO)reviewStepMeta.getEvent().getPayload()).getServiceDefinition().name();
             INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new ReviewMeta(approverToNoti.get(approver), approver,
                     businessValidationResults, reviewStepMeta.getEvent().getUser(), serviceName, reviewStepMeta.getReviewLog(), reviewStepMeta.getEvent().getPayloads()));
-            notificationManager.sendNotification(notificationChannel, message, reviewStepMeta.getInitiator());
+            notificationManager.sendNotification(notificationChannel, message);
         }
     }
 

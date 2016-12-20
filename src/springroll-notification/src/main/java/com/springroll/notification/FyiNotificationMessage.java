@@ -1,6 +1,6 @@
 package com.springroll.notification;
 
-import java.util.List;
+import com.springroll.core.SpringrollSecurity;
 
 /**
  * Created by anishjoseph on 05/10/16.
@@ -16,6 +16,7 @@ public class FyiNotificationMessage extends AbstractNotificationMessage {
         this.messageKey = messageKey;
         this.args = args;
         setNotificationReceivers(notificationReceivers);
+        setInitiator(SpringrollSecurity.getUser().getUsername());
     }
 
     public String getMessageKey() {

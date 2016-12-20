@@ -26,7 +26,7 @@ public abstract class AbstractNotificationMessageFactory implements INotificatio
     @Autowired protected Repositories repositories;
 
     @Override
-    public Set<String> getTargetUsers(INotificationMessage notificationMessage, String initiator) {
+    public Set<String> getTargetUsers(INotificationMessage notificationMessage) {
         // The notificationReceiver can either be a user or a role
         User user = repositories.users.findByUserIdIgnoreCase(notificationMessage.getNotificationReceivers());
         if(user != null){
@@ -37,7 +37,6 @@ public abstract class AbstractNotificationMessageFactory implements INotificatio
         Set<String> usersThatBelongToRole = repositories.users.findUsersThatBelongToRole(notificationMessage.getNotificationReceivers());
 
         /* Remove the initiator from the set of users to be notified */
-        usersThatBelongToRole.remove(initiator);
         return usersThatBelongToRole;
     }
 
@@ -45,13 +44,13 @@ public abstract class AbstractNotificationMessageFactory implements INotificatio
     public List<? extends INotification> getPendingNotificationsForUser(INotificationChannel notificationChannel) {
         SpringrollUser user = SpringrollSecurity.getUser();
         List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-        String userId = user.getUsername();
-        roles.add(userId);
+        List<Notification> notis = repositories.notification.findByChannelNameAndReceiversIn(notificationChannel.getChannelName(), roles);
+        return filterAckedNotifications(notis, user.getUsername());
+    }
 
-        List<Notification> notis = repositories.notification.findByChannelNameAndInitiatorNotAndReceiversIn(notificationChannel.getChannelName(), userId, roles);
-
-        List<Notification> notifications = new ArrayList<>();
-        for (Notification notification : notis) {
+    protected List<Notification> filterAckedNotifications(List<Notification> notifications, String userId){
+        List<Notification> pendingNotifications = new ArrayList<>();
+        for (Notification notification : notifications) {
             boolean alreadyAcked = false;
             for (AckLog ackLog : notification.getAckLog()) {
                 if(ackLog.getReviewer().equals(userId)){
@@ -59,11 +58,8 @@ public abstract class AbstractNotificationMessageFactory implements INotificatio
                     break;
                 }
             }
-            if(!alreadyAcked)notifications.add(notification);
+            if(!alreadyAcked)pendingNotifications.add(notification);
         }
-
-        // FIXME - dup code in FYI message factory
-        notifications.addAll(repositories.notification.findByChannelNameAndReceivers(notificationChannel.getChannelName(), userId));
-        return notifications;
+        return  notifications;
     }
 }

@@ -4,7 +4,7 @@ import com.springroll.core.SpringrollUtils;
 import com.springroll.core.notification.INotificationMessage;
 import com.springroll.core.notification.IReviewMeta;
 import com.springroll.core.services.IMdmReviewNotificationMessageFactory;
-import com.springroll.notification.AbstractNotificationMessageFactory;
+import com.springroll.notification.AbstractReviewNotificationMessageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Created by anishjoseph on 05/10/16.
  */
-@Component public class MdmReviewNotificationMessageFactory extends AbstractNotificationMessageFactory implements IMdmReviewNotificationMessageFactory {
+@Component public class MdmReviewNotificationMessageFactory extends AbstractReviewNotificationMessageFactory implements IMdmReviewNotificationMessageFactory {
     @Autowired MdmManager mdmManager;
     @PersistenceContext EntityManager em;
     @Autowired SpringrollUtils springrollUtils;
@@ -65,6 +65,6 @@ import java.util.stream.Collectors;
 
         MdmChangesForReview mdmChangesForReview = new MdmChangesForReview(mdmDTO, colDefs);
 
-        return new MdmReviewNotificationMessage(notificationMeta.getReviewStepIds(), notificationMeta.getApprover(), "ui.mdm.review.noti.msg", notificationMeta.getBusinessValidationResults().get(0).getArgs(), mdmChangesForReview);
+        return new MdmReviewNotificationMessage(notificationMeta.getReviewStepIds(), notificationMeta.getApprover(), "ui.mdm.review.noti.msg", notificationMeta.getBusinessValidationResults().get(0).getArgs(), mdmChangesForReview, notificationMeta.getInitiator().getUsername());
     }
 }
