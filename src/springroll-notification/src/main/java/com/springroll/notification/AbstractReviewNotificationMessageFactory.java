@@ -6,8 +6,6 @@ import com.springroll.core.notification.INotification;
 import com.springroll.core.notification.INotificationChannel;
 import com.springroll.core.notification.INotificationMessage;
 import com.springroll.orm.entities.Notification;
-import com.springroll.orm.repositories.Repositories;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
@@ -18,7 +16,6 @@ import java.util.stream.Collectors;
  * Created by anishjoseph on 05/10/16.
  */
 public abstract class AbstractReviewNotificationMessageFactory extends AbstractNotificationMessageFactory {
-    @Autowired protected Repositories repositories;
 
     @Override
     public Set<String> getTargetUsers(INotificationMessage notificationMessage) {

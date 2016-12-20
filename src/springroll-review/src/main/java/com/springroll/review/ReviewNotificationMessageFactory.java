@@ -4,11 +4,8 @@ import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.notification.INotificationMessage;
 import com.springroll.core.notification.IReviewMeta;
 import com.springroll.core.services.IReviewNotificationMessageFactory;
-import com.springroll.notification.AbstractNotificationMessageFactory;
 import com.springroll.notification.AbstractReviewNotificationMessageFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.Set;
 
 /**
  * Created by anishjoseph on 05/10/16.

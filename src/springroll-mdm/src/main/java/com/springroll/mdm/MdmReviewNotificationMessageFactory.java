@@ -8,8 +8,6 @@ import com.springroll.notification.AbstractReviewNotificationMessageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -23,7 +21,6 @@ import java.util.stream.Collectors;
  */
 @Component public class MdmReviewNotificationMessageFactory extends AbstractReviewNotificationMessageFactory implements IMdmReviewNotificationMessageFactory {
     @Autowired MdmManager mdmManager;
-    @PersistenceContext EntityManager em;
     @Autowired SpringrollUtils springrollUtils;
 
     @Override public INotificationMessage makeMessage(IReviewMeta notificationMeta){
