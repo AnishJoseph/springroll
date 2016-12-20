@@ -1,6 +1,5 @@
 package com.springroll.notification;
 
-import com.springroll.core.AckLog;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.notification.INotification;
@@ -13,7 +12,6 @@ import com.springroll.orm.repositories.Repositories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,17 +46,11 @@ public abstract class AbstractNotificationMessageFactory implements INotificatio
     }
 
     protected List<Notification> filterAckedNotifications(List<Notification> notifications, String userId){
-        List<Notification> pendingNotifications = new ArrayList<>();
-        for (Notification notification : notifications) {
-            boolean alreadyAcked = false;
-            for (AckLog ackLog : notification.getAckLog()) {
-                if(ackLog.getReviewer().equals(userId)){
-                    alreadyAcked = true;
-                    break;
-                }
-            }
-            if(!alreadyAcked)pendingNotifications.add(notification);
-        }
-        return  notifications;
+        /* Go thru all the notifications and filter out the ones already acked by this user */
+        List<Notification> pendingNotifications = notifications.stream()
+                .filter(notification -> notification.getAckLog().stream()
+                        .noneMatch(ackLog -> ackLog.getReviewer().equals(userId)))
+                .collect(Collectors.toList());
+        return  pendingNotifications;
     }
 }
