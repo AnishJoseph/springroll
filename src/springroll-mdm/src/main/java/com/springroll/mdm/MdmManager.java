@@ -97,28 +97,24 @@ import java.util.stream.Collectors;
     public void on(MdmEvent mdmEvent) {
         MdmDTO mdmDTO = mdmEvent.getPayload();
         MdmDefinition mdmDefinition = getDefinitionForMaster(mdmDTO.getMaster());
-        try {
-            for (MdmChangedRecord mdmChangedRecord : mdmDTO.getChangedRecords()) {
-                MdmEntity entity = createEntityFromChangedRecords(mdmDefinition, mdmChangedRecord, false);
-                entity.setModifiedBy(mdmEvent.getUser().getUsername());
-                entity.setModifiedOn( LocalDateTime.now());
-                List<Reviews> logs = new ArrayList<>(mdmEvent.getReviewLog().size());
-                logs.addAll(mdmEvent.getReviewLog().stream().map(reviewLog -> new Reviews(reviewLog.isApproved(), reviewLog.getReviewer(), reviewLog.getReviewComment(), reviewLog.getTime(), entity.getClass().getSimpleName(), entity.getID())).collect(Collectors.toList()));
-                repositories.reviews.save(logs);
-            }
-            for (Map<String, Object> newRecord : mdmDTO.getNewRecords()) {
-                MdmEntity entity = createEntityFromNewRecord(mdmDefinition, newRecord);
-                List<Reviews> logs = new ArrayList<>(mdmEvent.getReviewLog().size());
-                entity.setCreatedBy(mdmEvent.getUser().getUsername());
-                entity.setCreatedAt( LocalDateTime.now());
-                em.persist(entity);
-                logs.addAll(mdmEvent.getReviewLog().stream().map(reviewLog -> new Reviews(reviewLog.isApproved(), reviewLog.getReviewer(), reviewLog.getReviewComment(), reviewLog.getTime(), entity.getClass().getSimpleName(), entity.getID())).collect(Collectors.toList()));
-                repositories.reviews.save(logs);
-            }
-            logger.debug("{} row(s) updated and {} row(s) created in Master {} via MDM by {}", mdmDTO.getChangedRecords().size(),mdmDTO.getNewRecords().size(), mdmDTO.getMaster(), SpringrollSecurity.getUser().getUsername());
-        }catch (Exception e){
-            e.printStackTrace();         //FIXME
+        for (MdmChangedRecord mdmChangedRecord : mdmDTO.getChangedRecords()) {
+            MdmEntity entity = createEntityFromChangedRecords(mdmDefinition, mdmChangedRecord, false);
+            entity.setModifiedBy(mdmEvent.getUser().getUsername());
+            entity.setModifiedOn( LocalDateTime.now());
+            List<Reviews> logs = new ArrayList<>(mdmEvent.getReviewLog().size());
+            logs.addAll(mdmEvent.getReviewLog().stream().map(reviewLog -> new Reviews(reviewLog.isApproved(), reviewLog.getReviewer(), reviewLog.getReviewComment(), reviewLog.getTime(), entity.getClass().getSimpleName(), entity.getID())).collect(Collectors.toList()));
+            repositories.reviews.save(logs);
         }
+        for (Map<String, Object> newRecord : mdmDTO.getNewRecords()) {
+            MdmEntity entity = createEntityFromNewRecord(mdmDefinition, newRecord);
+            List<Reviews> logs = new ArrayList<>(mdmEvent.getReviewLog().size());
+            entity.setCreatedBy(mdmEvent.getUser().getUsername());
+            entity.setCreatedAt( LocalDateTime.now());
+            em.persist(entity);
+            logs.addAll(mdmEvent.getReviewLog().stream().map(reviewLog -> new Reviews(reviewLog.isApproved(), reviewLog.getReviewer(), reviewLog.getReviewComment(), reviewLog.getTime(), entity.getClass().getSimpleName(), entity.getID())).collect(Collectors.toList()));
+            repositories.reviews.save(logs);
+        }
+        logger.debug("{} row(s) updated and {} row(s) created in Master {} via MDM by {}", mdmDTO.getChangedRecords().size(),mdmDTO.getNewRecords().size(), mdmDTO.getMaster(), SpringrollSecurity.getUser().getUsername());
     }
     @PostConstruct public void init(){
         try {
