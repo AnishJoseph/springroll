@@ -2,9 +2,9 @@ package com.springroll.router;
 
 import com.springroll.core.IServiceDefinition;
 import com.springroll.core.IServiceFactory;
-import com.springroll.core.services.IMdmServiceFactory;
+import com.springroll.core.services.mdm.IMdmServiceFactory;
 import com.springroll.core.services.notification.INotificationServiceFactory;
-import com.springroll.core.services.IReviewServiceFactory;
+import com.springroll.core.services.review.IReviewServiceFactory;
 
 /**
  * Created by anishjoseph on 07/10/16.

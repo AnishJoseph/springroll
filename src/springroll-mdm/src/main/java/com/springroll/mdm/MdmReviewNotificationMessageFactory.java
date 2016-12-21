@@ -3,7 +3,7 @@ package com.springroll.mdm;
 import com.springroll.core.SpringrollUtils;
 import com.springroll.core.notification.INotificationMessage;
 import com.springroll.core.notification.IReviewMeta;
-import com.springroll.core.services.IMdmReviewNotificationMessageFactory;
+import com.springroll.core.services.mdm.IMdmReviewNotificationMessageFactory;
 import com.springroll.notification.AbstractReviewNotificationMessageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

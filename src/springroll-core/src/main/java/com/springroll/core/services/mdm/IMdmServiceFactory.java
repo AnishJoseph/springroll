@@ -1,4 +1,4 @@
-package com.springroll.core.services;
+package com.springroll.core.services.mdm;
 
 import com.springroll.core.IServiceFactory;
 

@@ -3,7 +3,7 @@ package com.springroll.mdm;
 import com.springroll.core.DTOBusinessValidator;
 import com.springroll.core.DTOEnricher;
 import com.springroll.core.IEvent;
-import com.springroll.core.services.IMdmServiceFactory;
+import com.springroll.core.services.mdm.IMdmServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

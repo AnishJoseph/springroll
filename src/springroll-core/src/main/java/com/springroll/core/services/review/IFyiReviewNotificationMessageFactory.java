@@ -1,4 +1,4 @@
-package com.springroll.core.services;
+package com.springroll.core.services.review;
 
 import com.springroll.core.notification.INotificationMessageFactory;
 
