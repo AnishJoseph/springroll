@@ -3,7 +3,7 @@ package com.springroll.core.notification;
 /**
  * Created by anishjoseph on 03/10/16.
  */
-public interface INotificationChannel {
+public interface NotificationChannel {
 
     INotificationMessageFactory getMessageFactory();
 

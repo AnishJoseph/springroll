@@ -3,7 +3,7 @@ package com.springroll.notification;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.notification.INotification;
-import com.springroll.core.notification.INotificationChannel;
+import com.springroll.core.notification.NotificationChannel;
 import com.springroll.core.notification.INotificationMessage;
 import com.springroll.orm.entities.Notification;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,7 +27,7 @@ public abstract class AbstractReviewNotificationMessageFactory extends AbstractN
     }
 
     @Override
-    public List<? extends INotification> getPendingNotificationsForUser(INotificationChannel notificationChannel) {
+    public List<? extends INotification> getPendingNotificationsForUser(NotificationChannel notificationChannel) {
         SpringrollUser user = SpringrollSecurity.getUser();
         List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String userId = user.getUsername();

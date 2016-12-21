@@ -1,7 +1,7 @@
 package com.springroll.review;
 
 import com.springroll.core.*;
-import com.springroll.core.notification.INotificationChannel;
+import com.springroll.core.notification.NotificationChannel;
 import com.springroll.core.notification.INotificationMessage;
 import com.springroll.core.notification.IReviewMeta;
 import com.springroll.core.services.notification.NotificationService;
@@ -127,7 +127,7 @@ public class ReviewManager extends SpringrollEndPoint {
                 businessValidationResults.add(repo.reviewStep.findOne(stepId).getViolationForThisStep());
             }
             /* Create the notification payload, send it down the REVIEW channel, and store the review id returned in the step */
-            INotificationChannel notificationChannel = notificationService.nameToEnum(step.getChannel());
+            NotificationChannel notificationChannel = notificationService.nameToEnum(step.getChannel());
 
             String serviceName = ((ServiceDTO)reviewStepMeta.getEvent().getPayload()).getServiceDefinition().name();
             INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new ReviewMeta(approverToNoti.get(approver), approver, businessValidationResults, reviewStepMeta.getEvent().getUser().getUsername(), serviceName, reviewLog, reviewStepMeta.getEvent().getPayloads()));
@@ -249,7 +249,7 @@ public class ReviewManager extends SpringrollEndPoint {
             for (Long stepId : approverToNoti.get(approver)) {
                 businessValidationResults.add(repo.reviewStep.findOne(stepId).getViolationForThisStep());
             }
-            INotificationChannel notificationChannel = notificationService.nameToEnum(step.getChannel());
+            NotificationChannel notificationChannel = notificationService.nameToEnum(step.getChannel());
             String serviceName = ((ServiceDTO)reviewStepMeta.getEvent().getPayload()).getServiceDefinition().name();
             INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new ReviewMeta(approverToNoti.get(approver), approver,
                     businessValidationResults, reviewStepMeta.getEvent().getUser().getUsername(), serviceName, reviewStepMeta.getReviewLog(), reviewStepMeta.getEvent().getPayloads()));

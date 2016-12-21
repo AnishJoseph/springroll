@@ -1,6 +1,6 @@
 package com.springroll.notification;
 
-import com.springroll.core.notification.INotificationChannel;
+import com.springroll.core.notification.NotificationChannel;
 import com.springroll.core.notification.INotificationMessageFactory;
 import com.springroll.core.notification.NotificationChannelType;
 import com.springroll.core.services.review.IFyiReviewNotificationMessageFactory;
@@ -10,7 +10,7 @@ import com.springroll.core.services.review.IReviewNotificationMessageFactory;
 /**
  * Created by anishjoseph on 03/10/16.
  */
-public enum CoreNotificationChannels implements INotificationChannel {
+public enum CoreNotificationChannels implements NotificationChannel {
     REVIEW("/core/review", IReviewNotificationMessageFactory.class, true, false, NotificationChannelType.ACTION),
     FYI("/core/fyi", FyiNotificationMessageFactory.class, true, true, NotificationChannelType.INFO),
     REVIEW_FYI("/core/reviewfyi", IFyiReviewNotificationMessageFactory.class, true, true, NotificationChannelType.INFO),

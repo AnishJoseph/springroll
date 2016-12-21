@@ -36,7 +36,7 @@ public class NotificationManager implements NotificationService, ILovProvider {
     private static final Logger logger = LoggerFactory.getLogger(NotificationManager.class);
 
 
-    private Map<String, INotificationChannel> serviceNameToNotificationChannel = new HashMap<>();
+    private Map<String, NotificationChannel> serviceNameToNotificationChannel = new HashMap<>();
 
     private List<Class> notificationChannels = new ArrayList<>();
 
@@ -44,7 +44,7 @@ public class NotificationManager implements NotificationService, ILovProvider {
         this.addNotificationChannels(CoreNotificationChannels.class);
     }
 
-    @Override public Long sendNotification(INotificationChannel notificationChannel, INotificationMessage notificationMessage) {
+    @Override public Long sendNotification(NotificationChannel notificationChannel, INotificationMessage notificationMessage) {
         Set<String> targetUsers = notificationChannel.getMessageFactory().getTargetUsers(notificationMessage);
         /* Use spring to publish - spring will deliver this on a successful commit of the transaction.
            This ensures that the notification is pushed to the user ONLY after the current transaction commits.
@@ -80,7 +80,7 @@ public class NotificationManager implements NotificationService, ILovProvider {
     @Override
     public void pushPendingNotifications(String serviceUri) {
         try {
-            INotificationChannel notificationChannel = serviceUriToEnum(serviceUri);
+            NotificationChannel notificationChannel = serviceUriToEnum(serviceUri);
             if (notificationChannel == null) {
                 logger.error("Unable to find NotificationChannel for channel '{}' - probably does not exist in the Enums", serviceUri);
                 return;
@@ -99,7 +99,7 @@ public class NotificationManager implements NotificationService, ILovProvider {
     }
 
     @Override
-    public void addNotificationChannels(Class<? extends INotificationChannel> clazz) {
+    public void addNotificationChannels(Class<? extends NotificationChannel> clazz) {
         notificationChannels.add(clazz);
         resolveFactories(clazz);
     }
@@ -140,28 +140,28 @@ public class NotificationManager implements NotificationService, ILovProvider {
     }
 
     @Override
-    public INotificationChannel nameToEnum(String enumValue){
-        INotificationChannel notificationChannel = notificationChannels.stream()
+    public NotificationChannel nameToEnum(String enumValue){
+        NotificationChannel notificationChannel = notificationChannels.stream()
                 .flatMap(channel -> Arrays.stream(channel.getEnumConstants()))
                 .filter(enumConstant -> ((Enum) enumConstant).name().equals(enumValue))
                 .findFirst()
-                .map(o -> (INotificationChannel)o)
+                .map(o -> (NotificationChannel)o)
                 .orElse(null);          //FIXME - throw exception!!
 
         return notificationChannel;
     }
 
-    private INotificationChannel serviceUriToEnum(String channel) {
-        INotificationChannel notificationChannel = serviceNameToNotificationChannel.get(channel);
+    private NotificationChannel serviceUriToEnum(String channel) {
+        NotificationChannel notificationChannel = serviceNameToNotificationChannel.get(channel);
         if(notificationChannel != null)return notificationChannel;
 
-        INotificationChannel channelForUri = notificationChannels.stream()
+        NotificationChannel channelForUri = notificationChannels.stream()
                 .flatMap(notiChannel -> Arrays.stream(notiChannel.getEnumConstants()))
-                .filter(enumConstant -> ((INotificationChannel) enumConstant).getServiceUri().equals(channel))
+                .filter(enumConstant -> ((NotificationChannel) enumConstant).getServiceUri().equals(channel))
                 .findFirst()
                 .map(enumConstant -> {
-                    serviceNameToNotificationChannel.put(channel, (INotificationChannel)enumConstant);
-                    return (INotificationChannel) enumConstant;
+                    serviceNameToNotificationChannel.put(channel, (NotificationChannel)enumConstant);
+                    return (NotificationChannel) enumConstant;
                 })
                 .orElse(null);         //FIXME - throw exception!!
 
@@ -169,7 +169,7 @@ public class NotificationManager implements NotificationService, ILovProvider {
     }
 
     private void resolveFactories(Class notificationChannelClass){
-        Stream.of((INotificationChannel[])notificationChannelClass.getEnumConstants())
+        Stream.of((NotificationChannel[])notificationChannelClass.getEnumConstants())
                 .filter(notificationChannel -> notificationChannel.getMessageFactoryClass() != null)
                 .forEach(notificationChannel -> notificationChannel.setMessageFactory(applicationContext.getBean(notificationChannel.getMessageFactoryClass())));
     }

@@ -8,7 +8,7 @@ import java.util.Set;
  */
 public interface INotificationMessageFactory {
     Set<String> getTargetUsers(INotificationMessage notificationMessage);
-    List<? extends INotification> getPendingNotificationsForUser(INotificationChannel notificationChannel);
+    List<? extends INotification> getPendingNotificationsForUser(NotificationChannel notificationChannel);
     //FIXME - no reason why we should have a make message - its required only for alerts??
     INotificationMessage makeMessage(IReviewMeta notificationMeta);
 }
