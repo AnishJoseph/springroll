@@ -1,9 +1,9 @@
 package com.springrollexample.router;
 
-import com.springroll.core.IServiceFactory;
+import com.springroll.core.ServiceFactory;
 
 /**
  * Created by anishjoseph on 09/11/16.
  */
-public interface ITestSynchFromAsynchServiceFactory extends IServiceFactory {
+public interface ITestSynchFromAsynchServiceFactory extends ServiceFactory {
 }

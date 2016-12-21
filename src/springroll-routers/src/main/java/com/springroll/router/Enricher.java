@@ -26,7 +26,7 @@ public class Enricher {
      * @return
      */
     public JobMeta on(JobMeta jobMeta){
-        IServiceFactory serviceFactory = jobMeta.getPayloads().get(0).getServiceDefinition().getServiceFactory();
+        ServiceFactory serviceFactory = jobMeta.getPayloads().get(0).getServiceDefinition().getServiceFactory();
         if(serviceFactory == null){
             serviceFactory = applicationContext.getBean(jobMeta.getPayloads().get(0).getServiceDefinition().getServiceFactoryClass());
             jobMeta.getPayloads().get(0).getServiceDefinition().setServiceFactory(serviceFactory);

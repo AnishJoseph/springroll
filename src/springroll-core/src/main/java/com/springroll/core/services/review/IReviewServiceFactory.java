@@ -1,9 +1,9 @@
 package com.springroll.core.services.review;
 
-import com.springroll.core.IServiceFactory;
+import com.springroll.core.ServiceFactory;
 
 /**
  * Created by anishjoseph on 09/11/16.
  */
-public interface IReviewServiceFactory extends IServiceFactory {
+public interface IReviewServiceFactory extends ServiceFactory {
 }

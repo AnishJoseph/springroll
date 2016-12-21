@@ -1,7 +1,7 @@
 package com.springrollexample.router;
 
 import com.springroll.core.ServiceDefinition;
-import com.springroll.core.IServiceFactory;
+import com.springroll.core.ServiceFactory;
 
 /**
  * Created by anishjoseph on 07/10/16.
@@ -11,26 +11,26 @@ public enum ApplicationServiceDefinitions implements ServiceDefinition {
     TEST_ROOT(ITestRootServiceFactory.class),
     SYNCH_TO_ASYNCH(ITestSynchFromAsynchServiceFactory.class);
 
-    private Class<? extends IServiceFactory> serviceFactoryClass;
-    private IServiceFactory serviceFactory;
+    private Class<? extends ServiceFactory> serviceFactoryClass;
+    private ServiceFactory serviceFactory;
 
-    ApplicationServiceDefinitions(Class<? extends IServiceFactory> serviceFactoryClass){
+    ApplicationServiceDefinitions(Class<? extends ServiceFactory> serviceFactoryClass){
         this.serviceFactoryClass = serviceFactoryClass;
     }
 
-    public Class<? extends IServiceFactory> getServiceFactoryClass() {
+    public Class<? extends ServiceFactory> getServiceFactoryClass() {
         return serviceFactoryClass;
     }
 
-    public void setServiceFactoryClass(Class<? extends IServiceFactory> serviceFactoryClass) {
+    public void setServiceFactoryClass(Class<? extends ServiceFactory> serviceFactoryClass) {
         this.serviceFactoryClass = serviceFactoryClass;
     }
 
-    public IServiceFactory getServiceFactory() {
+    public ServiceFactory getServiceFactory() {
         return serviceFactory;
     }
 
-    public void setServiceFactory(IServiceFactory serviceFactory) {
+    public void setServiceFactory(ServiceFactory serviceFactory) {
         this.serviceFactory = serviceFactory;
     }
 

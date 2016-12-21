@@ -1,7 +1,7 @@
 package com.springroll.router;
 
 import com.springroll.core.ServiceDefinition;
-import com.springroll.core.IServiceFactory;
+import com.springroll.core.ServiceFactory;
 import com.springroll.core.services.mdm.IMdmServiceFactory;
 import com.springroll.core.services.notification.INotificationServiceFactory;
 import com.springroll.core.services.review.IReviewServiceFactory;
@@ -14,26 +14,26 @@ public enum CoreServiceDefinitions implements ServiceDefinition {
     NOTIFICATION_ACK(INotificationServiceFactory.class),
     MDM(IMdmServiceFactory.class);
 
-    private Class<? extends IServiceFactory> serviceFactoryClass;
-    private IServiceFactory serviceFactory;
+    private Class<? extends ServiceFactory> serviceFactoryClass;
+    private ServiceFactory serviceFactory;
 
-    CoreServiceDefinitions(Class<? extends IServiceFactory> serviceFactoryClass){
+    CoreServiceDefinitions(Class<? extends ServiceFactory> serviceFactoryClass){
         this.serviceFactoryClass = serviceFactoryClass;
     }
 
-    public Class<? extends IServiceFactory> getServiceFactoryClass() {
+    public Class<? extends ServiceFactory> getServiceFactoryClass() {
         return serviceFactoryClass;
     }
 
-    public void setServiceFactoryClass(Class<? extends IServiceFactory> serviceFactoryClass) {
+    public void setServiceFactoryClass(Class<? extends ServiceFactory> serviceFactoryClass) {
         this.serviceFactoryClass = serviceFactoryClass;
     }
 
-    public IServiceFactory getServiceFactory() {
+    public ServiceFactory getServiceFactory() {
         return serviceFactory;
     }
 
-    public void setServiceFactory(IServiceFactory serviceFactory) {
+    public void setServiceFactory(ServiceFactory serviceFactory) {
         this.serviceFactory = serviceFactory;
     }
 }

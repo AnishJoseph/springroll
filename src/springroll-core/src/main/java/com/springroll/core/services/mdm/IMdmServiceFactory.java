@@ -1,9 +1,9 @@
 package com.springroll.core.services.mdm;
 
-import com.springroll.core.IServiceFactory;
+import com.springroll.core.ServiceFactory;
 
 /**
  * Created by anishjoseph on 09/11/16.
  */
-public interface IMdmServiceFactory extends IServiceFactory {
+public interface IMdmServiceFactory extends ServiceFactory {
 }
