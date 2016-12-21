@@ -5,5 +5,5 @@ import com.springroll.core.ServiceFactory;
 /**
  * Created by anishjoseph on 09/11/16.
  */
-public interface ITestRootServiceFactory extends ServiceFactory {
+public interface TestRootServiceFactory extends ServiceFactory {
 }

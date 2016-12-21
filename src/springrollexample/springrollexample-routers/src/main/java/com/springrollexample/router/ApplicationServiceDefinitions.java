@@ -8,8 +8,8 @@ import com.springroll.core.ServiceFactory;
  */
 public enum ApplicationServiceDefinitions implements ServiceDefinition {
 
-    TEST_ROOT(ITestRootServiceFactory.class),
-    SYNCH_TO_ASYNCH(ITestSynchFromAsynchServiceFactory.class);
+    TEST_ROOT(TestRootServiceFactory.class),
+    SYNCH_TO_ASYNCH(TestSynchFromAsynchServiceFactory.class);
 
     private Class<? extends ServiceFactory> serviceFactoryClass;
     private ServiceFactory serviceFactory;

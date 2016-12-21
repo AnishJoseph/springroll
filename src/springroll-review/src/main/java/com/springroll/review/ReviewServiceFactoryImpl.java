@@ -3,14 +3,14 @@ package com.springroll.review;
 import com.springroll.core.DTOBusinessValidator;
 import com.springroll.core.DTOEnricher;
 import com.springroll.core.IEvent;
-import com.springroll.core.services.review.IReviewServiceFactory;
+import com.springroll.core.services.review.ReviewServiceFactory;
 import org.springframework.stereotype.Service;
 
 /**
  * Created by anishjoseph on 09/11/16.
  */
 @Service
-public class ReviewServiceFactoryImpl implements IReviewServiceFactory {
+public class ReviewServiceFactoryImpl implements ReviewServiceFactory {
 
     @Override
     public DTOEnricher getServiceEnricher() {
