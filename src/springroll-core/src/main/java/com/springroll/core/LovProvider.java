@@ -5,6 +5,6 @@ import java.util.List;
 /**
  * Created by anishjoseph on 04/11/16.
  */
-public interface ILovProvider {
+public interface LovProvider {
     List<Lov> getLovs();
 }

@@ -1,8 +1,8 @@
 package com.springroll.notification;
 
 import com.springroll.core.AckLog;
-import com.springroll.core.ILovProvider;
 import com.springroll.core.Lov;
+import com.springroll.core.LovProvider;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.services.notification.*;
 import com.springroll.core.services.notification.NotificationService;
@@ -27,7 +27,7 @@ import java.util.stream.Stream;
  * Created by anishjoseph on 02/10/16.
  */
 @Service
-public class NotificationManager implements NotificationService, ILovProvider {
+public class NotificationManager implements NotificationService, LovProvider {
     @Autowired private PushServices pushServices;
     @Autowired private Repositories repositories;
     @Autowired private ApplicationContext applicationContext;

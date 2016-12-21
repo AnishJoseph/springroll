@@ -1,6 +1,6 @@
 package com.springroll.mdm;
 
-import com.springroll.core.ILovProvider;
+import com.springroll.core.LovProvider;
 import com.springroll.core.Lov;
 import com.springroll.core.exceptions.SpringrollException;
 import org.slf4j.Logger;
@@ -18,7 +18,7 @@ import java.util.List;
     private static final Logger logger = LoggerFactory.getLogger(JavaLovSource.class);
     private String name;
     private String source;
-    private ILovProvider provider;
+    private LovProvider provider;
     @Autowired private ApplicationContext applicationContext;
 
 
@@ -42,7 +42,7 @@ import java.util.List;
     public void setSource(String source) {
         this.source = source;
         try {
-            provider = (ILovProvider) applicationContext.getBean(source);
+            provider = (LovProvider) applicationContext.getBean(source);
         }catch (Exception e ){
             logger.error("Unable to find Spring Bean  with name {}. This was configured as a LOV source in {}", source, name);
             throw new SpringrollException("lov.source.missingbean", source, name);
