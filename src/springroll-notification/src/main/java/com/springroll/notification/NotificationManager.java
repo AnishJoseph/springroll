@@ -5,7 +5,7 @@ import com.springroll.core.ILovProvider;
 import com.springroll.core.Lov;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.notification.*;
-import com.springroll.core.services.INotificationManager;
+import com.springroll.core.services.notification.NotificationService;
 import com.springroll.orm.entities.Notification;
 import com.springroll.orm.repositories.Repositories;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ import java.util.stream.Stream;
  * Created by anishjoseph on 02/10/16.
  */
 @Service
-public class NotificationManager implements INotificationManager, ILovProvider {
+public class NotificationManager implements NotificationService, ILovProvider {
     @Autowired private PushServices pushServices;
     @Autowired private Repositories repositories;
     @Autowired private ApplicationContext applicationContext;

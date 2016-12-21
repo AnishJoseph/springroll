@@ -3,7 +3,7 @@ package com.springroll.router.notification;
 import com.springroll.core.DTOBusinessValidator;
 import com.springroll.core.DTOEnricher;
 import com.springroll.core.IEvent;
-import com.springroll.core.services.INotificationServiceFactory;
+import com.springroll.core.services.notification.INotificationServiceFactory;
 import org.springframework.stereotype.Service;
 
 /**

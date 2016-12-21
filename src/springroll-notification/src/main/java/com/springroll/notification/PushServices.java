@@ -1,7 +1,7 @@
 package com.springroll.notification;
 
 import com.springroll.core.SpringrollSecurity;
-import com.springroll.core.services.INotificationManager;
+import com.springroll.core.services.notification.NotificationService;
 import org.cometd.annotation.Listener;
 import org.cometd.annotation.Service;
 import org.cometd.annotation.Session;
@@ -25,7 +25,8 @@ public class PushServices
 {
     @Inject private BayeuxServer bayeux;
     @Session private ServerSession serverSession;
-    @Autowired INotificationManager notificationManager;
+    @Autowired
+    NotificationService notificationService;
 
     Map<String, Map<String, Set<String>>> channel2User = new HashMap<>();
 
@@ -76,7 +77,7 @@ public class PushServices
         Set<String> remoteIdsOfUser = channelSubscribers.get(userId);
         remoteIdsOfUser.add(clientId);
 
-        notificationManager.pushPendingNotifications(serviceUri);
+        notificationService.pushPendingNotifications(serviceUri);
 
     }
 }

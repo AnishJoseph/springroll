@@ -1,6 +1,6 @@
 package com.springroll.notification;
 
-import com.springroll.core.services.INotificationManager;
+import com.springroll.core.services.notification.NotificationService;
 import com.springroll.core.services.notification.PushService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,10 +10,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PushManager implements PushService {
-    @Autowired INotificationManager notificationManager;
+    @Autowired
+    NotificationService notificationService;
     @Override
     public Long pushFYINotification(String messageKey, String[] messageArguments, String notificationReceivers) {
         FyiNotificationMessage message = new FyiNotificationMessage(messageKey, messageArguments, notificationReceivers);
-        return notificationManager.sendNotification(CoreNotificationChannels.FYI, message);
+        return notificationService.sendNotification(CoreNotificationChannels.FYI, message);
     }
 }

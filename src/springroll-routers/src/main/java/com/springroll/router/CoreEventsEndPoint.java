@@ -1,6 +1,6 @@
 package com.springroll.router;
 
-import com.springroll.core.services.INotificationManager;
+import com.springroll.core.services.notification.NotificationService;
 import com.springroll.router.notification.NotificationAckEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
  */
 @Component public class CoreEventsEndPoint extends SpringrollEndPoint {
     @Autowired
-    INotificationManager notificationManager;
+    NotificationService notificationService;
 
     public void on(NotificationAckEvent event) {
         //FIXME - check if this user allowed to ack this notification??
-        notificationManager.addNotificationAcknowledgement(event.getPayload().getNotificationId());
+        notificationService.addNotificationAcknowledgement(event.getPayload().getNotificationId());
     }
 }

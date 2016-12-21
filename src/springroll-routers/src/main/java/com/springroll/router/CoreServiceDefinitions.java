@@ -3,7 +3,7 @@ package com.springroll.router;
 import com.springroll.core.IServiceDefinition;
 import com.springroll.core.IServiceFactory;
 import com.springroll.core.services.IMdmServiceFactory;
-import com.springroll.core.services.INotificationServiceFactory;
+import com.springroll.core.services.notification.INotificationServiceFactory;
 import com.springroll.core.services.IReviewServiceFactory;
 
 /**

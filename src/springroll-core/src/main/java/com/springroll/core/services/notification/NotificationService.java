@@ -1,4 +1,4 @@
-package com.springroll.core.services;
+package com.springroll.core.services.notification;
 
 import com.springroll.core.notification.INotificationChannel;
 import com.springroll.core.notification.INotificationMessage;
@@ -6,7 +6,7 @@ import com.springroll.core.notification.INotificationMessage;
 /**
  * Created by anishjoseph on 02/10/16.
  */
-public interface INotificationManager {
+public interface NotificationService {
     Long sendNotification(INotificationChannel notificationChannel, INotificationMessage notificationPayload);
 
     void pushPendingNotifications(String serviceUri);
