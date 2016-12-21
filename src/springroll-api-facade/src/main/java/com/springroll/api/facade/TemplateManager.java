@@ -1,6 +1,6 @@
 package com.springroll.api.facade;
 
-import com.springroll.core.services.ITemplateManager;
+import com.springroll.core.services.TemplateService;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ import java.util.Map;
  * Created by anishjoseph on 13/10/16.
  */
 @Component
-public class TemplateManager implements ITemplateManager{
+public class TemplateManager implements TemplateService{
     private static final Logger logger = LoggerFactory.getLogger(TemplateManager.class);
 
     @Autowired

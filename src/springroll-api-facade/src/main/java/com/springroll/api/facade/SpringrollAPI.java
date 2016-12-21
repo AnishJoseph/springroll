@@ -2,7 +2,7 @@ package com.springroll.api.facade;
 
 import com.springroll.core.PropertiesUtil;
 import com.springroll.core.SpringrollSecurity;
-import com.springroll.core.services.ITemplateManager;
+import com.springroll.core.services.TemplateService;
 import com.springroll.core.services.mdm.IMdmData;
 import com.springroll.core.services.mdm.MdmService;
 import com.springroll.core.services.reporting.GridReportingService;
@@ -26,7 +26,7 @@ import java.util.Map;
 public class SpringrollAPI extends AbstractAPI {
     private static final Logger logger = LoggerFactory.getLogger(SpringrollAPI.class);
 
-    @Autowired private ITemplateManager templateManager;
+    @Autowired private TemplateService templateService;
     @Autowired private GridReportingService gridReportingService;
     @Autowired private MdmService mdmService;
     @Autowired PropertiesUtil  propertiesUtil;
@@ -51,7 +51,7 @@ public class SpringrollAPI extends AbstractAPI {
 
     @RequestMapping(value = "/sr/templates", method = RequestMethod.POST)
     public Map<String,String> getTemplates(@RequestBody String[] templates) {
-        return templateManager.getTemplates(Arrays.asList(templates));
+        return templateService.getTemplates(Arrays.asList(templates));
     }
     @RequestMapping(value = "/sr/user", method = RequestMethod.GET)
     public Object getUser() {
