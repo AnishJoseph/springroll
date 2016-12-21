@@ -1,12 +1,12 @@
 package com.springrollexample.router;
 
-import com.springroll.core.IServiceDefinition;
+import com.springroll.core.ServiceDefinition;
 import com.springroll.core.IServiceFactory;
 
 /**
  * Created by anishjoseph on 07/10/16.
  */
-public enum ApplicationServiceDefinitions implements IServiceDefinition {
+public enum ApplicationServiceDefinitions implements ServiceDefinition {
 
     TEST_ROOT(ITestRootServiceFactory.class),
     SYNCH_TO_ASYNCH(ITestSynchFromAsynchServiceFactory.class);

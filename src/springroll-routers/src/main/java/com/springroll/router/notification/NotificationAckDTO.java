@@ -1,6 +1,6 @@
 package com.springroll.router.notification;
 
-import com.springroll.core.IServiceDefinition;
+import com.springroll.core.ServiceDefinition;
 import com.springroll.core.ServiceDTO;
 import com.springroll.router.CoreServiceDefinitions;
 
@@ -25,7 +25,7 @@ public class NotificationAckDTO implements ServiceDTO {
     }
 
     @Override
-    public IServiceDefinition getServiceDefinition() {
+    public ServiceDefinition getServiceDefinition() {
         return CoreServiceDefinitions.NOTIFICATION_ACK;
     }
 

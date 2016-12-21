@@ -1,6 +1,6 @@
 package com.springroll.mdm;
 
-import com.springroll.core.IServiceDefinition;
+import com.springroll.core.ServiceDefinition;
 import com.springroll.core.Searchable;
 import com.springroll.core.ServiceDTO;
 import com.springroll.router.CoreServiceDefinitions;
@@ -41,7 +41,7 @@ public class MdmDTO implements ServiceDTO, Searchable {
     }
 
     @Override
-    public IServiceDefinition getServiceDefinition() {
+    public ServiceDefinition getServiceDefinition() {
         return CoreServiceDefinitions.MDM;
     }
 

@@ -1,6 +1,6 @@
 package com.springroll.router;
 
-import com.springroll.core.IServiceDefinition;
+import com.springroll.core.ServiceDefinition;
 import com.springroll.core.IServiceFactory;
 import com.springroll.core.services.mdm.IMdmServiceFactory;
 import com.springroll.core.services.notification.INotificationServiceFactory;
@@ -9,7 +9,7 @@ import com.springroll.core.services.review.IReviewServiceFactory;
 /**
  * Created by anishjoseph on 07/10/16.
  */
-public enum CoreServiceDefinitions implements IServiceDefinition {
+public enum CoreServiceDefinitions implements ServiceDefinition {
     REVIEW(IReviewServiceFactory.class),
     NOTIFICATION_ACK(INotificationServiceFactory.class),
     MDM(IMdmServiceFactory.class);

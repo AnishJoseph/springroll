@@ -1,6 +1,6 @@
 package com.springrollexample.router.test;
 
-import com.springroll.core.IServiceDefinition;
+import com.springroll.core.ServiceDefinition;
 import com.springrollexample.router.ApplicationServiceDefinitions;
 
 /**
@@ -10,7 +10,7 @@ public class SynchToAsynchDTO extends TestServiceDTO {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public IServiceDefinition getServiceDefinition() {
+    public ServiceDefinition getServiceDefinition() {
         return ApplicationServiceDefinitions.SYNCH_TO_ASYNCH;
     }
 

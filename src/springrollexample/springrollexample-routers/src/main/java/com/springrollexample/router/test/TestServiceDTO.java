@@ -1,6 +1,6 @@
 package com.springrollexample.router.test;
 
-import com.springroll.core.IServiceDefinition;
+import com.springroll.core.ServiceDefinition;
 import com.springroll.core.ServiceDTO;
 import com.springrollexample.router.ApplicationServiceDefinitions;
 
@@ -9,7 +9,7 @@ import com.springrollexample.router.ApplicationServiceDefinitions;
  */
 public class TestServiceDTO extends TestDTO implements ServiceDTO {
     @Override
-    public IServiceDefinition getServiceDefinition() {
+    public ServiceDefinition getServiceDefinition() {
         return ApplicationServiceDefinitions.TEST_ROOT;
     }
 }

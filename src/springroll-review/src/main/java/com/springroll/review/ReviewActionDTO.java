@@ -1,6 +1,6 @@
 package com.springroll.review;
 
-import com.springroll.core.IServiceDefinition;
+import com.springroll.core.ServiceDefinition;
 import com.springroll.core.ServiceDTO;
 import com.springroll.router.CoreServiceDefinitions;
 
@@ -33,7 +33,7 @@ public class ReviewActionDTO implements ServiceDTO {
     }
 
     @Override
-    public IServiceDefinition getServiceDefinition() {
+    public ServiceDefinition getServiceDefinition() {
         return CoreServiceDefinitions.REVIEW;
     }
 
