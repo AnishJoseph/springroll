@@ -1,6 +1,6 @@
 package com.springroll.notification;
 
-import com.springroll.core.notification.NotificationChannelType;
+import com.springroll.core.services.notification.NotificationChannelType;
 
 /**
  * Created by anishjoseph on 15/10/16.

@@ -1,6 +1,6 @@
 package com.springroll.review;
 
-import com.springroll.core.notification.IReviewMeta;
+import com.springroll.core.services.notification.IReviewMeta;
 
 import java.util.List;
 

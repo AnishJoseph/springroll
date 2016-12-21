@@ -1,6 +1,6 @@
 package com.springroll.mdm;
 
-import com.springroll.core.notification.IReviewMeta;
+import com.springroll.core.services.notification.IReviewMeta;
 import com.springroll.notification.AbstractNotificationMessage;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.springroll.core.notification;
+package com.springroll.core.services.notification;
 
 import java.util.List;
 import java.util.Set;

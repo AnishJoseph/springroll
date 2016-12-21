@@ -1,8 +1,5 @@
 package com.springroll.core.services.notification;
 
-import com.springroll.core.notification.NotificationChannel;
-import com.springroll.core.notification.INotificationMessage;
-
 /**
  * Created by anishjoseph on 02/10/16.
  */

@@ -1,7 +1,7 @@
 package com.springroll.review;
 
-import com.springroll.core.notification.INotificationMessage;
-import com.springroll.core.notification.IReviewMeta;
+import com.springroll.core.services.notification.INotificationMessage;
+import com.springroll.core.services.notification.IReviewMeta;
 import com.springroll.core.services.review.IFyiReviewNotificationMessageFactory;
 import com.springroll.notification.AbstractReviewNotificationMessageFactory;
 import org.springframework.stereotype.Component;

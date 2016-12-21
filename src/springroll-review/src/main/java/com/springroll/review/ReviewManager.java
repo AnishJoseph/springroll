@@ -1,9 +1,9 @@
 package com.springroll.review;
 
 import com.springroll.core.*;
-import com.springroll.core.notification.NotificationChannel;
-import com.springroll.core.notification.INotificationMessage;
-import com.springroll.core.notification.IReviewMeta;
+import com.springroll.core.services.notification.NotificationChannel;
+import com.springroll.core.services.notification.INotificationMessage;
+import com.springroll.core.services.notification.IReviewMeta;
 import com.springroll.core.services.notification.NotificationService;
 import com.springroll.orm.entities.Job;
 import com.springroll.orm.entities.ReviewRule;

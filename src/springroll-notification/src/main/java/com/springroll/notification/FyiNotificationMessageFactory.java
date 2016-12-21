@@ -1,7 +1,7 @@
 package com.springroll.notification;
 
-import com.springroll.core.notification.INotificationMessage;
-import com.springroll.core.notification.IReviewMeta;
+import com.springroll.core.services.notification.INotificationMessage;
+import com.springroll.core.services.notification.IReviewMeta;
 import org.springframework.stereotype.Component;
 
 /**

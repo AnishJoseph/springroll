@@ -1,8 +1,8 @@
 package com.springroll.notification;
 
-import com.springroll.core.notification.NotificationChannel;
-import com.springroll.core.notification.INotificationMessageFactory;
-import com.springroll.core.notification.NotificationChannelType;
+import com.springroll.core.services.notification.NotificationChannel;
+import com.springroll.core.services.notification.INotificationMessageFactory;
+import com.springroll.core.services.notification.NotificationChannelType;
 import com.springroll.core.services.review.IFyiReviewNotificationMessageFactory;
 import com.springroll.core.services.mdm.IMdmReviewNotificationMessageFactory;
 import com.springroll.core.services.review.IReviewNotificationMessageFactory;

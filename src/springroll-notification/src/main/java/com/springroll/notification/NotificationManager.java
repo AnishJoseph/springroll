@@ -4,7 +4,7 @@ import com.springroll.core.AckLog;
 import com.springroll.core.ILovProvider;
 import com.springroll.core.Lov;
 import com.springroll.core.SpringrollSecurity;
-import com.springroll.core.notification.*;
+import com.springroll.core.services.notification.*;
 import com.springroll.core.services.notification.NotificationService;
 import com.springroll.orm.entities.Notification;
 import com.springroll.orm.repositories.Repositories;

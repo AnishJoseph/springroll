@@ -2,8 +2,8 @@ package com.springroll.orm.entities;
 
 
 import com.springroll.core.AckLog;
-import com.springroll.core.notification.INotification;
-import com.springroll.core.notification.INotificationMessage;
+import com.springroll.core.services.notification.INotification;
+import com.springroll.core.services.notification.INotificationMessage;
 import com.springroll.orm.AckLogConverter;
 import com.springroll.orm.CSVSetConverter;
 import com.springroll.orm.JavaSerializationConverter;

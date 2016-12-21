@@ -1,9 +1,8 @@
-package com.springroll.core.notification;
+package com.springroll.core.services.notification;
 
 import com.springroll.core.BusinessValidationResult;
 import com.springroll.core.DTO;
 import com.springroll.core.ReviewLog;
-import com.springroll.core.SpringrollUser;
 
 import java.util.List;
 

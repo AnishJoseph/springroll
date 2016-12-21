@@ -1,4 +1,4 @@
-package com.springroll.core.notification;
+package com.springroll.core.services.notification;
 
 /**
  * Created by anishjoseph on 05/10/16.

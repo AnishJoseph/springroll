@@ -2,9 +2,9 @@ package com.springroll.notification;
 
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.SpringrollUser;
-import com.springroll.core.notification.INotification;
-import com.springroll.core.notification.NotificationChannel;
-import com.springroll.core.notification.INotificationMessage;
+import com.springroll.core.services.notification.INotification;
+import com.springroll.core.services.notification.NotificationChannel;
+import com.springroll.core.services.notification.INotificationMessage;
 import com.springroll.orm.entities.Notification;
 import org.springframework.security.core.GrantedAuthority;
 
