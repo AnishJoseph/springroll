@@ -1,11 +1,7 @@
 package com.springrollexample.router.test;
 
-import com.springroll.core.DTO;
 import com.springroll.core.ServiceDTO;
-import com.springroll.core.SpringrollSecurity;
-import com.springroll.core.services.INotificationManager;
-import com.springroll.notification.CoreNotificationChannels;
-import com.springroll.notification.FyiNotificationMessage;
+import com.springroll.core.services.notification.PushService;
 import com.springroll.router.ReceiveInNewTransaction;
 import com.springroll.router.SpringrollEndPoint;
 import com.springrollexample.orm.entities.TestTableWithLocking;
@@ -26,6 +22,8 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class TestEndPoint extends SpringrollEndPoint {
     private static final Logger logger = LoggerFactory.getLogger(TestEndPoint.class);
+    @Autowired
+    PushService pushService;
 
     @PersistenceContext
     EntityManager entityManager;
@@ -70,12 +68,10 @@ public class TestEndPoint extends SpringrollEndPoint {
         }
     }
 
-    @Autowired INotificationManager notificationManager;
 
     public void on(TE1_1 event){
 
-        FyiNotificationMessage payload = new FyiNotificationMessage("messageKEY", new String[]{"Arg1", "Arg2"}, "BOM");
-        notificationManager.sendNotification(CoreNotificationChannels.FYI, payload);
+        pushService.pushFYINotification("messageKEY", new String[]{"Arg1", "Arg2"}, "BOM");
         checkAndRunTest(event);
         TE1_2 te2 = new TE1_2();
         te2.setPayload(event.getPayload());
