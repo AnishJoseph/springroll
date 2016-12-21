@@ -1,17 +1,20 @@
-package com.springroll.review;
+package com.springrollexample.router;
 
 import com.springroll.core.DTOBusinessValidator;
 import com.springroll.core.DTOEnricher;
 import com.springroll.core.IEvent;
-import com.springroll.core.services.review.IReviewServiceFactory;
+import com.springrollexample.router.businessvalidators.TestBusinessValidator;
+import com.springrollexample.router.test.TestRootEvent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  * Created by anishjoseph on 09/11/16.
  */
 @Service
-public class ReviewServiceFactory implements IReviewServiceFactory {
-
+public class TestRootServiceFactoryImpl implements ITestRootServiceFactory {
+    @Autowired
+    TestBusinessValidator testBusinessValidator;
     @Override
     public DTOEnricher getServiceEnricher() {
         return null;
@@ -19,11 +22,11 @@ public class ReviewServiceFactory implements IReviewServiceFactory {
 
     @Override
     public DTOBusinessValidator getBusinessValidator() {
-        return null;
+        return testBusinessValidator;
     }
 
     @Override
     public Class<? extends IEvent> getServiceEvent() {
-        return ReviewActionEvent.class;
+        return TestRootEvent.class;
     }
 }

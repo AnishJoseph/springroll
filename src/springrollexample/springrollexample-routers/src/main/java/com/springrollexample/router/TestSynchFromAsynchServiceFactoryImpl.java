@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 /**
  * Created by anishjoseph on 09/11/16.
  */
-@Service public class TestSynchFromAsynchServiceFactory implements ITestSynchFromAsynchServiceFactory {
+@Service public class TestSynchFromAsynchServiceFactoryImpl implements ITestSynchFromAsynchServiceFactory {
     @Override
     public DTOEnricher getServiceEnricher() {
         return null;

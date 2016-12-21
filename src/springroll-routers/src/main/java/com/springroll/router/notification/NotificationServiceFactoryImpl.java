@@ -1,20 +1,17 @@
-package com.springrollexample.router;
+package com.springroll.router.notification;
 
 import com.springroll.core.DTOBusinessValidator;
 import com.springroll.core.DTOEnricher;
 import com.springroll.core.IEvent;
-import com.springrollexample.router.businessvalidators.TestBusinessValidator;
-import com.springrollexample.router.test.TestRootEvent;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.springroll.core.services.notification.INotificationServiceFactory;
 import org.springframework.stereotype.Service;
 
 /**
  * Created by anishjoseph on 09/11/16.
  */
 @Service
-public class TestRootServiceFactory implements ITestRootServiceFactory {
-    @Autowired
-    TestBusinessValidator testBusinessValidator;
+public class NotificationServiceFactoryImpl implements INotificationServiceFactory {
+
     @Override
     public DTOEnricher getServiceEnricher() {
         return null;
@@ -22,11 +19,11 @@ public class TestRootServiceFactory implements ITestRootServiceFactory {
 
     @Override
     public DTOBusinessValidator getBusinessValidator() {
-        return testBusinessValidator;
+        return null;
     }
 
     @Override
     public Class<? extends IEvent> getServiceEvent() {
-        return TestRootEvent.class;
+        return NotificationAckEvent.class;
     }
 }

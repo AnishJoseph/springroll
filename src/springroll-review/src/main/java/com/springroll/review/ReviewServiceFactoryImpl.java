@@ -1,32 +1,29 @@
-package com.springroll.mdm;
+package com.springroll.review;
 
 import com.springroll.core.DTOBusinessValidator;
 import com.springroll.core.DTOEnricher;
 import com.springroll.core.IEvent;
-import com.springroll.core.services.mdm.IMdmServiceFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.springroll.core.services.review.IReviewServiceFactory;
 import org.springframework.stereotype.Service;
 
 /**
  * Created by anishjoseph on 09/11/16.
  */
 @Service
-public class MdmServiceFactory implements IMdmServiceFactory {
-    @Autowired MdmServiceEnricher enricher;
-    @Autowired MdmBusinessValidator businessValidator;
+public class ReviewServiceFactoryImpl implements IReviewServiceFactory {
 
     @Override
     public DTOEnricher getServiceEnricher() {
-        return enricher;
+        return null;
     }
 
     @Override
     public DTOBusinessValidator getBusinessValidator() {
-        return businessValidator;
+        return null;
     }
 
     @Override
     public Class<? extends IEvent> getServiceEvent() {
-        return MdmEvent.class;
+        return ReviewActionEvent.class;
     }
 }
