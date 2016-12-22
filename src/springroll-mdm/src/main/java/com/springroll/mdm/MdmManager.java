@@ -60,8 +60,10 @@ import java.util.stream.Collectors;
             ColDef colDef = mdmDefinition.getColDefByName(colName);
             if(colDef == null)
                 continue;
-            if(!colDef.isWriteable())throw new SpringrollException("mdm.notwritable", colDef.getName(), mdmDefinition.getMasterClass().getSimpleName() );
+
             MdmChangedColumn mdmChangedColumn = mdmChangedRecord.getMdmChangedColumns().get(colName);
+            if(!mdmChangedColumn.isChanged())continue;
+            if(!colDef.isWriteable())throw new SpringrollException("mdm.notwritable", colDef.getName(), mdmDefinition.getMasterClass().getSimpleName() );
             valueMap.put(colName, mdmChangedColumn.getVal());
             if(colDef.getType().equalsIgnoreCase("date")){
                 valueMap.put(colName,LocalDate.parse((String)mdmChangedColumn.getVal(), springrollUtils.getDateFormatter()));

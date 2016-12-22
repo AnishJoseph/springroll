@@ -8,13 +8,15 @@ import java.io.Serializable;
 public class MdmChangedColumn implements Serializable {
     private Object val;
     private Object prevVal;
+    private boolean changed = true;
 
     public MdmChangedColumn() {
     }
 
-    public MdmChangedColumn(Object val, Object prevVal) {
+    public MdmChangedColumn(Object val, Object prevVal, boolean changed) {
         this.val = val;
         this.prevVal = prevVal;
+        this.changed = changed;
     }
 
     public Object getVal() {
@@ -31,5 +33,13 @@ public class MdmChangedColumn implements Serializable {
 
     public void setPrevVal(Object prevVal) {
         this.prevVal = prevVal;
+    }
+
+    public boolean isChanged() {
+        return changed;
+    }
+
+    public void setChanged(boolean changed) {
+        this.changed = changed;
     }
 }

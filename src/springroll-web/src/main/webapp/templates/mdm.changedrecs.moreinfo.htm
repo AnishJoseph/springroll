@@ -19,9 +19,11 @@
         %>
         <td>
             <%
+                var changed = record['mdmChangedColumns'][colDef.name]['changed'];
                 var newVal = record['mdmChangedColumns'][colDef.name]['val'];
                 var prevVal = record['mdmChangedColumns'][colDef.name]['prevVal'];
-                if(newVal == prevVal){
+                if(prevVal == undefined || prevVal == null) prevVal = "null";
+                if(!changed){
                     %><%-newVal%><%
                 } else {
                     %><div style="border-bottom: 1px solid #ccc;"><%-newVal%></div><div class="text-muted"><%-prevVal%></div><%

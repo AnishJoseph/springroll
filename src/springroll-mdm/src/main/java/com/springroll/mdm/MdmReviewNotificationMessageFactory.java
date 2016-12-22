@@ -42,13 +42,13 @@ import java.util.stream.Collectors;
                         Set<String> changedCols = changedRecord.getMdmChangedColumns().keySet();
                         for (int j = 0; j < colNames.size(); j++) {
                             if (changedCols.contains(colNames.get(j))) continue;
-                            unchangedCols.put(colNames.get(j), new MdmChangedColumn(existingValuesForThisRecord[j], existingValuesForThisRecord[j]));
+                            unchangedCols.put(colNames.get(j), new MdmChangedColumn(existingValuesForThisRecord[j], existingValuesForThisRecord[j], false));
                             if(existingValuesForThisRecord[j] != null && existingValuesForThisRecord[j].getClass().equals(LocalDate.class)){
                                 String formattedDate = ((LocalDate) existingValuesForThisRecord[j]).format(springrollUtils.getDateFormatter());
-                                unchangedCols.put(colNames.get(j), new MdmChangedColumn(formattedDate, formattedDate));
+                                unchangedCols.put(colNames.get(j), new MdmChangedColumn(formattedDate, formattedDate, false));
                             } else if (existingValuesForThisRecord[j] != null && existingValuesForThisRecord[j].getClass().equals(LocalDateTime.class)){
                                 String formattedDate = ((LocalDateTime) existingValuesForThisRecord[j]).format(springrollUtils.getDateTimeFormatter());
-                                unchangedCols.put(colNames.get(j), new MdmChangedColumn(formattedDate, formattedDate));
+                                unchangedCols.put(colNames.get(j), new MdmChangedColumn(formattedDate, formattedDate, false));
                             }
                             //FIXME - handle date and other types
                         }
