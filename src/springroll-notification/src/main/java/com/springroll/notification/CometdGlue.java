@@ -2,6 +2,7 @@ package com.springroll.notification;
 
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.services.notification.NotificationService;
+import com.springroll.core.services.push.WebPushService;
 import org.cometd.annotation.Listener;
 import org.cometd.annotation.Service;
 import org.cometd.annotation.Session;
@@ -21,7 +22,7 @@ import java.util.*;
 @Named
 @Singleton
 @Service("pushServices")
-public class PushServices
+public class CometdGlue implements WebPushService
 {
     @Inject private BayeuxServer bayeux;
     @Session private ServerSession serverSession;

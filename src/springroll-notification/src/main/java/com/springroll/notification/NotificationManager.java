@@ -4,8 +4,10 @@ import com.springroll.core.AckLog;
 import com.springroll.core.Lov;
 import com.springroll.core.LovProvider;
 import com.springroll.core.SpringrollSecurity;
-import com.springroll.core.services.notification.*;
+import com.springroll.core.services.notification.INotificationMessage;
+import com.springroll.core.services.notification.NotificationChannel;
 import com.springroll.core.services.notification.NotificationService;
+import com.springroll.core.services.push.WebPushService;
 import com.springroll.orm.entities.Notification;
 import com.springroll.orm.repositories.Repositories;
 import org.slf4j.Logger;
@@ -28,7 +30,7 @@ import java.util.stream.Stream;
  */
 @Service
 public class NotificationManager implements NotificationService, LovProvider {
-    @Autowired private PushServices pushServices;
+    @Autowired private WebPushService pushServices;
     @Autowired private Repositories repositories;
     @Autowired private ApplicationContext applicationContext;
     @Autowired ApplicationEventPublisher publisher;
