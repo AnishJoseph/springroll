@@ -41,7 +41,8 @@ import java.util.List;
         }catch (Exception e ){
             logger.error("Exception while running named query {} to get the LOVs for LOV source {}. Exception is - {}", source, name, e.getMessage());
             throw new SpringrollException( "lov.source.namedQuery", source, name, e.getMessage());
-        }    }
+        }
+    }
 
     public void setName(String name) {
         this.name = name;
