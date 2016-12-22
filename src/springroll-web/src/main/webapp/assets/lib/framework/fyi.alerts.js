@@ -17,3 +17,10 @@ Application.subscribeForAlert('/core/fyi', {
     showAccept: false,
     showReject: false,
 });
+Application.subscribeForAlert('/core/springrollexception', {
+    view: AlertsView,
+    showDismiss: true,
+    showInfo: false,
+    showAccept: false,
+    showReject: false,
+});

@@ -1,6 +1,10 @@
 package com.springroll.router;
 
 import com.springroll.core.IEvent;
+import com.springroll.core.LocaleFactory;
+import com.springroll.core.SpringrollUser;
+import com.springroll.core.exceptions.SpringrollException;
+import com.springroll.core.services.notification.PushService;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +14,9 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.OptimisticLockException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,7 +30,8 @@ public class DeadLetterQueueHandler {
     JobManager jobManager;
     @Autowired
     AsynchSideEndPoints asynchSideEndPoints;
-
+    @Autowired
+    PushService pushService;
     public void on(Exchange exchange, IEvent event){
         ExceptionCauses causedExceptionDetails = getCausedExceptionDetails(event);
         if(causedExceptionDetails == null)return;//FIXME - what to do here?
@@ -43,7 +50,27 @@ public class DeadLetterQueueHandler {
         }
 
         jobManager.handleExceptionInTransactionLeg(event.getJobId(), event.getLegId(), caused.getClass().getSimpleName());
-        logger.debug("Unkown error");caused.printStackTrace();
+        while(caused.getCause() != null)caused = caused.getCause();
+        SpringrollUser user = causedExceptionDetails.causingEvent.getUser();
+        if(caused instanceof SpringrollException){
+            String messageKey = ((SpringrollException) caused).getMessageKey();
+            String[] messageArguments = ((SpringrollException) caused).getMessageArguments();
+            String localizedServerMessage = LocaleFactory.getLocalizedServerMessage(user.getLocale(), messageKey, messageArguments);
+            logger.error(localizedServerMessage);
+            pushService.pushSpringrollExceptionNotification(messageKey, messageArguments, user.getUsername(), user.getUsername());
+            return;
+        }
+        caused = causedExceptionDetails.caused;
+        List<String> causes = new ArrayList<>();
+        causes.add(caused.getMessage());
+        while(caused.getCause() != null){
+            caused = caused.getCause();
+            causes.add(caused.getMessage());
+        }
+        String allCauses = String.join("::", causes);
+        pushService.pushSpringrollExceptionNotification(allCauses, new String[]{}, user.getUsername(), user.getUsername());
+        logger.error(allCauses);
+        caused.printStackTrace();
     }
 
     public void setExceptionCauses(Throwable caused, IEvent causingEvent){

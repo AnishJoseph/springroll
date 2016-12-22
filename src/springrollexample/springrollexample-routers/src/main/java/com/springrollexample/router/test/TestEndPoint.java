@@ -1,6 +1,8 @@
 package com.springrollexample.router.test;
 
+import com.springroll.core.Lov;
 import com.springroll.core.ServiceDTO;
+import com.springroll.core.exceptions.SpringrollException;
 import com.springroll.core.services.notification.PushService;
 import com.springroll.router.ReceiveInNewTransaction;
 import com.springroll.router.SpringrollEndPoint;
@@ -13,8 +15,11 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Created by anishjoseph on 11/09/16.
@@ -347,7 +352,7 @@ public class TestEndPoint extends SpringrollEndPoint {
                     testDO.getTestType().equals(TestDTO.TestType.OPTIMISTIC_LOCKING_DB_DEADLOCK))
                 lockTest(testDO);
             else if (testDO.getTestType().equals(TestDTO.TestType.EXCEPTION))
-                blowup();
+                blowup(testDO.getTestCase(), testDO.getTestLocation());
         logger.debug("-------------------Received Test Event {} - Job - {} XA - {} -------------------",event.getClass().getSimpleName(), event.getJobId(), event.getLegId());
     }
     private void waitAWhile(long seconds){
@@ -357,7 +362,8 @@ public class TestEndPoint extends SpringrollEndPoint {
             e.printStackTrace();
         }
     }
-    private void blowup(){
-        throw new RuntimeException("Deliberately blowing up for Tests");
+    private void blowup(int testCase, int testLocation){
+        throw new SpringrollException("Blowup", testCase+"", testLocation+"");
+//        throw new RuntimeException("Deliberately blowing up for Tests");
     }
 }

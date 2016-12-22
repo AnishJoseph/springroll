@@ -1,10 +1,7 @@
 package com.springroll.review;
 
 import com.springroll.core.*;
-import com.springroll.core.services.notification.NotificationChannel;
-import com.springroll.core.services.notification.INotificationMessage;
-import com.springroll.core.services.notification.IReviewMeta;
-import com.springroll.core.services.notification.NotificationService;
+import com.springroll.core.services.notification.*;
 import com.springroll.orm.entities.Job;
 import com.springroll.orm.entities.ReviewRule;
 import com.springroll.orm.entities.ReviewStep;
@@ -130,7 +127,7 @@ public class ReviewManager extends SpringrollEndPoint {
             NotificationChannel notificationChannel = notificationService.nameToEnum(step.getChannel());
 
             String serviceName = ((ServiceDTO)reviewStepMeta.getEvent().getPayload()).getServiceDefinition().name();
-            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new ReviewMeta(approverToNoti.get(approver), approver, businessValidationResults, reviewStepMeta.getEvent().getUser().getUsername(), serviceName, reviewLog, reviewStepMeta.getEvent().getPayloads()));
+            INotificationMessage message = ((IReviewableNotificationMessageFactory)notificationChannel.getMessageFactory()).makeMessage(new ReviewMeta(approverToNoti.get(approver), approver, businessValidationResults, reviewStepMeta.getEvent().getUser().getUsername(), serviceName, reviewLog, reviewStepMeta.getEvent().getPayloads()));
             Long notiId = notificationService.sendNotification(notificationChannel, message);
             for (Long stepId : approverToNoti.get(approver)) {
                 repo.reviewStep.findOne(stepId).setNotificationId(notiId);
@@ -251,7 +248,7 @@ public class ReviewManager extends SpringrollEndPoint {
             }
             NotificationChannel notificationChannel = notificationService.nameToEnum(step.getChannel());
             String serviceName = ((ServiceDTO)reviewStepMeta.getEvent().getPayload()).getServiceDefinition().name();
-            INotificationMessage message = notificationChannel.getMessageFactory().makeMessage(new ReviewMeta(approverToNoti.get(approver), approver,
+            INotificationMessage message = ((IReviewableNotificationMessageFactory)notificationChannel.getMessageFactory()).makeMessage(new ReviewMeta(approverToNoti.get(approver), approver,
                     businessValidationResults, reviewStepMeta.getEvent().getUser().getUsername(), serviceName, reviewStepMeta.getReviewLog(), reviewStepMeta.getEvent().getPayloads()));
             notificationService.sendNotification(notificationChannel, message);
         }

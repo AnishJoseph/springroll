@@ -18,7 +18,7 @@ var View = Marionette.View.extend({
     simplePipeLine : function(){
         var simpleTransaction = new SimpleTransaction();
         simpleTransaction.set('testCase', 1);
-        simpleTransaction.set('testLocation', 0);
+        simpleTransaction.set('testLocation', 1);
         simpleTransaction.save({},{});
     }
 

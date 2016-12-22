@@ -14,4 +14,5 @@ public interface PushService {
      * @return the notification ID
      */
     Long pushFYINotification(String messageKey, String[] messageArguments, String notificationReceivers);
+    Long pushSpringrollExceptionNotification(String messageKey, String[] messageArguments, String notificationReceivers, String initiator);
 }

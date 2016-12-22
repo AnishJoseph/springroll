@@ -17,4 +17,8 @@ public class PushManager implements PushService {
         FyiNotificationMessage message = new FyiNotificationMessage(messageKey, messageArguments, notificationReceivers);
         return notificationService.sendNotification(CoreNotificationChannels.FYI, message);
     }
+    public Long pushSpringrollExceptionNotification(String messageKey, String[] messageArguments, String notificationReceivers, String initiator) {
+        SpringrollExceptionNotificationMessage message = new SpringrollExceptionNotificationMessage(messageKey, messageArguments, notificationReceivers, initiator);
+        return notificationService.sendNotification(CoreNotificationChannels.SPRINGROLL_EXCEPTION, message);
+    }
 }
