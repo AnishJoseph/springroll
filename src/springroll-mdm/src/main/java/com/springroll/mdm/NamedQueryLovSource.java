@@ -40,7 +40,7 @@ import java.util.List;
             return lovs;
         }catch (Exception e ){
             logger.error("Exception while running named query {} to get the LOVs for LOV source {}. Exception is - {}", source, name, e.getMessage());
-            throw new SpringrollException( "lov.source.namedQuery", source, name, e.getMessage());
+            throw new SpringrollException(e, "lov.source.namedQuery", source, name, e.getMessage());
         }
     }
 

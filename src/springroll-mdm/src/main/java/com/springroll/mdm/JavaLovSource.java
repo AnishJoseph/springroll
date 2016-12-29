@@ -45,7 +45,7 @@ import java.util.List;
             provider = (LovProvider) applicationContext.getBean(source);
         }catch (Exception e ){
             logger.error("Unable to find Spring Bean  with name {}. This was configured as a LOV source in {}", source, name);
-            throw new SpringrollException("lov.source.missingbean", source, name);
+            throw new SpringrollException(e, "lov.source.missingbean", source, name);
         }
 
     }

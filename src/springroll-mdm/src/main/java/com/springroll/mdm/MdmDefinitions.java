@@ -53,7 +53,7 @@ public class MdmDefinitions {
     public ILovSource getLovSource(String sourceName){
         ILovSource source = nameToSourceMap.get(sourceName);
         if(source != null) return source;
-        throw new SpringrollException("lov.source.missingdefinition", sourceName);
+        throw new SpringrollException(null, "lov.source.missingdefinition", sourceName);
     }
 
     public String getReviewChannelName() {

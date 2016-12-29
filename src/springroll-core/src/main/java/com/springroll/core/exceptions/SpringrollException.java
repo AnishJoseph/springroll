@@ -12,8 +12,8 @@ public class SpringrollException extends RuntimeException {
     private String[] messageArguments;
     private String messageKey;
     public SpringrollException(){}
-    public SpringrollException(String messageKey, String... messageArguments){
-        super(LocaleFactory.getLocalizedServerMessage(Locale.getDefault(), messageKey, (Object[])messageArguments));
+    public SpringrollException(Throwable e, String messageKey, String... messageArguments){
+        super(LocaleFactory.getLocalizedServerMessage(Locale.getDefault(), messageKey, (Object[])messageArguments), e);
         this.messageArguments = messageArguments;
         this.messageKey = messageKey;
     }

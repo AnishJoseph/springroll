@@ -63,7 +63,7 @@ import java.util.stream.Collectors;
 
             MdmChangedColumn mdmChangedColumn = mdmChangedRecord.getMdmChangedColumns().get(colName);
             if(!mdmChangedColumn.isChanged())continue;
-            if(!colDef.isWriteable())throw new SpringrollException("mdm.notwritable", colDef.getName(), mdmDefinition.getMasterClass().getSimpleName() );
+            if(!colDef.isWriteable())throw new SpringrollException(null, "mdm.notwritable", colDef.getName(), mdmDefinition.getMasterClass().getSimpleName() );
             valueMap.put(colName, mdmChangedColumn.getVal());
             if(colDef.getType().equalsIgnoreCase("date")){
                 valueMap.put(colName,LocalDate.parse((String)mdmChangedColumn.getVal(), springrollUtils.getDateFormatter()));
@@ -307,12 +307,12 @@ import java.util.stream.Collectors;
     private MdmDefinition getMdmDefinition(String master){
         if(mdmDefinitions == null){
             logger.debug("MdmDefinitions is empty");
-            throw new SpringrollException("MdmDefinitions is empty");
+            throw new SpringrollException(null, "MdmDefinitions is empty");
         }
         MdmDefinition mdmDefinition = getDefinitionForMaster(master);
         if(mdmDefinition == null){
             logger.error("Unable to find MdmDefinition for Master {}", master);
-            throw new SpringrollException( "mdm.missingdefinition", master);
+            throw new SpringrollException(null, "mdm.missingdefinition", master);
         }
         return mdmDefinition;
     }

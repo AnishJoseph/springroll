@@ -1,0 +1,30 @@
+<h4 class="text-info"><%-Localize('Exception Summary')%></h4>
+<table class="table table-striped table-bordered table-hover">
+    <tr><td><%-Localize('Service Name')%></td><td><%-serviceMessageArgs[0]%></td></tr>
+    <tr><td><%-Localize('1st Event in Transaction')%></td><td><%-serviceEventName%></td></tr>
+    <tr><td><%-Localize('Exception Event Context')%></td><td><%-eventThatCausedException%></td></tr>
+    <tr><td><%-Localize('Root Transaction Committed?')%></td><td><%-!rootTransaction%></td></tr>
+</table>
+<h4 class="text-info"><%-Localize('Stack Summary')%></h4>
+<table class="table table-striped table-bordered">
+    <thead><tr>
+        <th>Message</th>
+        <th>Exception</th>
+        <th>File</th>
+        <th>Method</th>
+        <th>Line</th>
+    </tr></thead>
+    <%
+        _.each(springrollExceptionDebugInfoList, function(springrollExceptionDebugInfo) {
+    %>
+        <tr>
+            <td><%-springrollExceptionDebugInfo.message%></td>
+            <td><%-springrollExceptionDebugInfo.exception%></td>
+            <td><%-springrollExceptionDebugInfo.fileName%></td>
+            <td><%-springrollExceptionDebugInfo.methodName%></td>
+            <td><%-springrollExceptionDebugInfo.lineNumber%></td>
+        </tr>
+    <%
+        });
+    %>
+</table>

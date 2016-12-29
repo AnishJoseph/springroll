@@ -1,10 +1,11 @@
 package com.springroll.router;
 
-import com.springroll.core.IEvent;
-import com.springroll.core.LocaleFactory;
-import com.springroll.core.SpringrollUser;
+import com.springroll.core.*;
+import com.springroll.core.exceptions.DebugInfo;
 import com.springroll.core.exceptions.SpringrollException;
 import com.springroll.core.services.notification.PushService;
+import com.springroll.orm.entities.Job;
+import com.springroll.orm.repositories.Repositories;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +27,12 @@ import java.util.Map;
 public class DeadLetterQueueHandler {
     private static final Logger logger = LoggerFactory.getLogger(DeadLetterQueueHandler.class);
     private Map<String, ExceptionCauses> causesMap = new HashMap<>();
-    @Autowired
-    JobManager jobManager;
-    @Autowired
-    AsynchSideEndPoints asynchSideEndPoints;
-    @Autowired
-    PushService pushService;
+
+    @Autowired JobManager jobManager;
+    @Autowired AsynchSideEndPoints asynchSideEndPoints;
+    @Autowired PushService pushService;
+    @Autowired Repositories repositories;
+
     public void on(Exchange exchange, IEvent event){
         ExceptionCauses causedExceptionDetails = getCausedExceptionDetails(event);
         if(causedExceptionDetails == null)return;//FIXME - what to do here?
@@ -50,27 +51,47 @@ public class DeadLetterQueueHandler {
         }
 
         jobManager.handleExceptionInTransactionLeg(event.getJobId(), event.getLegId(), caused.getClass().getSimpleName());
-        while(caused.getCause() != null)caused = caused.getCause();
+        DebugInfo debugInfo = getDebugInfo(caused, event, causedExceptionDetails);
         SpringrollUser user = causedExceptionDetails.causingEvent.getUser();
-        if(caused instanceof SpringrollException){
-            String messageKey = ((SpringrollException) caused).getMessageKey();
-            String[] messageArguments = ((SpringrollException) caused).getMessageArguments();
+        if(debugInfo.getSpringrollException() != null){
+            String messageKey = debugInfo.getSpringrollException().getMessageKey();
+            String[] messageArguments = debugInfo.getSpringrollException().getMessageArguments();
             String localizedServerMessage = LocaleFactory.getLocalizedServerMessage(user.getLocale(), messageKey, messageArguments);
             logger.error(localizedServerMessage);
-            pushService.pushSpringrollExceptionNotification(messageKey, messageArguments, user.getUsername(), user.getUsername());
+            pushService.pushSpringrollExceptionNotification(debugInfo, user.getUsername(), user.getUsername());
             return;
         }
-        caused = causedExceptionDetails.caused;
-        List<String> causes = new ArrayList<>();
-        causes.add(caused.getMessage());
-        while(caused.getCause() != null){
-            caused = caused.getCause();
-            causes.add(caused.getMessage());
-        }
-        String allCauses = String.join("::", causes);
-        pushService.pushSpringrollExceptionNotification(allCauses, new String[]{}, user.getUsername(), user.getUsername());
-        logger.error(allCauses);
+        pushService.pushSpringrollExceptionNotification(debugInfo, user.getUsername(), user.getUsername());
         caused.printStackTrace();
+    }
+
+    private DebugInfo getDebugInfo(Throwable cause, IEvent event, ExceptionCauses exceptionCauses){
+        List<String> exceptions = new ArrayList<>();
+        List<String> causes = new ArrayList<>();
+        List<StackTraceElement> stackTraceElements = new ArrayList<>();
+        SpringrollException springrollException = null;
+        Throwable rootCause = cause;
+
+        exceptions.add(cause.getClass().getSimpleName());
+        causes.add(cause.getMessage());
+        stackTraceElements.add(cause.getStackTrace()[0]);
+
+        if(rootCause instanceof SpringrollException)springrollException = (SpringrollException)rootCause;
+
+        while(rootCause.getCause() != null){
+            rootCause = rootCause.getCause();
+            if(rootCause instanceof SpringrollException)springrollException = (SpringrollException)rootCause;
+            causes.add(rootCause.getMessage());
+            exceptions.add(rootCause.getClass().getSimpleName());
+            stackTraceElements.add(rootCause.getStackTrace()[0]);
+        }
+        DTO payload = event.getPayload();
+        if(payload instanceof ServiceDTO)
+            return new DebugInfo(springrollException, causes, exceptions, stackTraceElements, ((ServiceDTO)event.getPayload()).getServiceDefinition().name(), event.getClass().getSimpleName(), exceptionCauses.causingEvent.getClass().getSimpleName(),true);
+
+        Job originalJob = repositories.job.findOne(event.getJobId());
+        //FIXME - handle case where original job is NULL
+        return new DebugInfo(springrollException, causes, exceptions, stackTraceElements, ((ServiceDTO) originalJob.getPayloads().get(0)).getServiceDefinition().name(), event.getClass().getSimpleName(), exceptionCauses.causingEvent.getClass().getSimpleName(), false);
     }
 
     public void setExceptionCauses(Throwable caused, IEvent causingEvent){
@@ -116,4 +137,5 @@ public class DeadLetterQueueHandler {
                         (caused.getCause() != null && caused.getCause().getMessage() != null && caused.getCause().getMessage().contains("LockAcquisitionException"))
         );
     }
+
 }

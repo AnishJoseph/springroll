@@ -63,7 +63,7 @@ public class MdmDefinition {
             master = masterClassName.substring(masterClassName.lastIndexOf(".")+1);
         } catch (ClassNotFoundException e) {
             logger.error("Exception while getting finding MDM class with name   '{}'. Exceptions is {} ", masterClassName, e.getMessage());
-            throw new SpringrollException("lov.source.missingenum", masterClassName, e.getMessage());
+            throw new SpringrollException(e, "lov.source.missingenum", masterClassName, e.getMessage());
         }
     }
 

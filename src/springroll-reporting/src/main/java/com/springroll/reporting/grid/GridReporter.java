@@ -186,7 +186,7 @@ import java.util.stream.Collectors;
             if(gridParameter != null && gridParameter.isHidden()) paramValue = getContextValue(gridParameter.getBean(), gridParameter.getMethod());
             if(paramValue == null){
                 logger.error("The named query '{}' is missing a parameter called '{}'", namedQuery, parameter.getName());
-                throw new SpringrollException("missing.namedquery.parameter", parameter.getName());
+                throw new SpringrollException(null, "missing.namedquery.parameter", parameter.getName());
             }
             try {
                 Object o = springrollUtils.convert(paramValue, parameter.getParameterType());
