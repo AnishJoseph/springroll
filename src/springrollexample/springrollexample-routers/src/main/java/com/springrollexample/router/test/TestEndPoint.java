@@ -363,7 +363,6 @@ public class TestEndPoint extends SpringrollEndPoint {
         }
     }
     private void blowup(int testCase, int testLocation){
-        throw new SpringrollException("Blowup", testCase+"", testLocation+"");
-//        throw new RuntimeException("Deliberately blowing up for Tests");
+        throw new SpringrollException(null, "Blowup", testCase+"", testLocation+"");
     }
 }
