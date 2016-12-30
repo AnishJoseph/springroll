@@ -92,7 +92,6 @@ public class JobManager {
                         legMonitor.jobStatus = job.getStatus();
                     }
                     logger.debug("Job Completed: Transaction leg {} completed for job {}: Status {}", legId, jobId, job.getStatus());
-                    repo.job.flush();
                     break;
                 case REMOVED:
                     if (legMonitor.jobStatus.length() < 3950) {
