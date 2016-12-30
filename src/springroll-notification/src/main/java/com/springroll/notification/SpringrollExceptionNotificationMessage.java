@@ -17,7 +17,8 @@ public class SpringrollExceptionNotificationMessage extends AbstractNotification
     private String[] args = new String[]{};
     private String serviceEventName;
     private String eventThatCausedException;
-    private boolean rootTransaction;
+    private Long jobId;
+    private Long transactionLegId;
     private List<SpringrollExceptionDebugInfo> springrollExceptionDebugInfoList = new ArrayList<>();
 
     public SpringrollExceptionNotificationMessage() {
@@ -29,7 +30,8 @@ public class SpringrollExceptionNotificationMessage extends AbstractNotification
         this.eventThatCausedException = debugInfo.getEventThatCausedException();
         this.messageKey = debugInfo.getSpringrollException() == null ? debugInfo.getCauses().get(0): debugInfo.getSpringrollException().getMessageKey();
         this.args = debugInfo.getSpringrollException() == null ? null : debugInfo.getSpringrollException().getMessageArguments();
-        this.rootTransaction = debugInfo.isRootTransaction();
+        this.jobId = debugInfo.getJobId();
+        this.transactionLegId = debugInfo.getTransactionLegId();
         setNotificationReceivers(notificationReceivers);
         setInitiator(initiator);
         for (int i = 0; i < debugInfo.getExceptions().size(); i++) {
@@ -86,12 +88,20 @@ public class SpringrollExceptionNotificationMessage extends AbstractNotification
         this.eventThatCausedException = eventThatCausedException;
     }
 
-    public boolean isRootTransaction() {
-        return rootTransaction;
+    public Long getJobId() {
+        return jobId;
     }
 
-    public void setRootTransaction(boolean rootTransaction) {
-        this.rootTransaction = rootTransaction;
+    public void setJobId(Long jobId) {
+        this.jobId = jobId;
+    }
+
+    public Long getTransactionLegId() {
+        return transactionLegId;
+    }
+
+    public void setTransactionLegId(Long transactionLegId) {
+        this.transactionLegId = transactionLegId;
     }
 
     public List<SpringrollExceptionDebugInfo> getSpringrollExceptionDebugInfoList() {

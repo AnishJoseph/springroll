@@ -1,7 +1,12 @@
 package com.springroll.router;
 
-import com.springroll.core.*;
+import com.springroll.core.IEvent;
+import com.springroll.core.LocaleFactory;
+import com.springroll.core.ServiceDTO;
+import com.springroll.core.SpringrollUser;
 import com.springroll.core.exceptions.DebugInfo;
+import com.springroll.core.exceptions.ExceptionCauses;
+import com.springroll.core.exceptions.ExceptionStore;
 import com.springroll.core.exceptions.SpringrollException;
 import com.springroll.core.services.notification.PushService;
 import com.springroll.orm.entities.Job;
@@ -16,9 +21,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.OptimisticLockException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by anishjoseph on 09/09/16.
@@ -26,7 +29,6 @@ import java.util.Map;
 @Component
 public class DeadLetterQueueHandler {
     private static final Logger logger = LoggerFactory.getLogger(DeadLetterQueueHandler.class);
-    private Map<String, ExceptionCauses> causesMap = new HashMap<>();
 
     @Autowired JobManager jobManager;
     @Autowired AsynchSideEndPoints asynchSideEndPoints;
@@ -34,8 +36,20 @@ public class DeadLetterQueueHandler {
     @Autowired Repositories repositories;
 
     public void on(Exchange exchange, IEvent event){
-        ExceptionCauses causedExceptionDetails = getCausedExceptionDetails(event);
-        if(causedExceptionDetails == null)return;//FIXME - what to do here?
+        ExceptionCauses causedExceptionDetails = ExceptionStore.getCausedExceptionDetails(event);
+
+        if(causedExceptionDetails == null)
+            return;//FIXME - what to do here?
+        Job originalJob = repositories.job.findOne(event.getJobId());
+        String serviceName = ((ServiceDTO) originalJob.getPayloads().get(0)).getServiceDefinition().name();
+        String firstEventInThisTransaction = event.getClass().getSimpleName();
+        String eventThatCausedException = null;
+        if(causedExceptionDetails.causingEvent == null) {
+            causedExceptionDetails.causingEvent = event;
+            eventThatCausedException = "Indeterminate";
+        } else {
+            eventThatCausedException = causedExceptionDetails.causingEvent.getClass().getSimpleName();
+        }
         Throwable caused = causedExceptionDetails.caused;
         if(isLockingIssue(caused)){
             jobManager.handleOptimisticLockFailure(event.getJobId(), event.getLegId());
@@ -51,7 +65,7 @@ public class DeadLetterQueueHandler {
         }
 
         jobManager.handleExceptionInTransactionLeg(event.getJobId(), event.getLegId(), caused.getClass().getSimpleName());
-        DebugInfo debugInfo = getDebugInfo(caused, event, causedExceptionDetails);
+        DebugInfo debugInfo = getDebugInfo(caused, eventThatCausedException, event.getJobId(), event.getLegId(), serviceName, firstEventInThisTransaction);
         SpringrollUser user = causedExceptionDetails.causingEvent.getUser();
         if(debugInfo.getSpringrollException() != null){
             String messageKey = debugInfo.getSpringrollException().getMessageKey();
@@ -65,7 +79,7 @@ public class DeadLetterQueueHandler {
         caused.printStackTrace();
     }
 
-    private DebugInfo getDebugInfo(Throwable cause, IEvent event, ExceptionCauses exceptionCauses){
+    private DebugInfo getDebugInfo(Throwable cause, String eventThatCausedException, Long jobId, Long transactionLegId, String serviceName, String firstEventInThisTransaction){
         List<String> exceptions = new ArrayList<>();
         List<String> causes = new ArrayList<>();
         List<StackTraceElement> stackTraceElements = new ArrayList<>();
@@ -85,41 +99,11 @@ public class DeadLetterQueueHandler {
             exceptions.add(rootCause.getClass().getSimpleName());
             stackTraceElements.add(rootCause.getStackTrace()[0]);
         }
-        DTO payload = event.getPayload();
-        if(payload instanceof ServiceDTO)
-            return new DebugInfo(springrollException, causes, exceptions, stackTraceElements, ((ServiceDTO)event.getPayload()).getServiceDefinition().name(), event.getClass().getSimpleName(), exceptionCauses.causingEvent.getClass().getSimpleName(),true);
-
-        Job originalJob = repositories.job.findOne(event.getJobId());
-        //FIXME - handle case where original job is NULL
-        return new DebugInfo(springrollException, causes, exceptions, stackTraceElements, ((ServiceDTO) originalJob.getPayloads().get(0)).getServiceDefinition().name(), event.getClass().getSimpleName(), exceptionCauses.causingEvent.getClass().getSimpleName(), false);
+        return new DebugInfo(springrollException, causes, exceptions, stackTraceElements, serviceName, firstEventInThisTransaction, eventThatCausedException, jobId, transactionLegId);
     }
 
-    public void setExceptionCauses(Throwable caused, IEvent causingEvent){
-        String key =  makeKey(causingEvent);
-        if(causesMap.containsKey(key))return;
-        synchronized (causesMap){
-            causesMap.put(key, new ExceptionCauses(causingEvent,caused));
-        }
-    }
-    private ExceptionCauses getCausedExceptionDetails(IEvent event){
-        String key =  makeKey(event);
-        synchronized (causesMap){
-            return causesMap.remove(key);
-        }
-    }
 
-    private class ExceptionCauses{
-        IEvent causingEvent;
-        Throwable caused;
-        public ExceptionCauses(IEvent causingEvent, Throwable caused){
-            this.caused = caused;
-            this.causingEvent = causingEvent;
-        }
-    }
 
-    private String makeKey(IEvent event){
-        return "" + event.getJobId() + ":" + event.getLegId();
-    }
 
     /**
      * Give a Throwable this method attempts to determine if this was caused by optimistic locking (See JPA)

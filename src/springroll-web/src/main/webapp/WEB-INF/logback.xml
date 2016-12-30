@@ -37,6 +37,7 @@
     <logger name="org.springframework.web" level="WARN"/>
     <logger name="org.apache.camel" level="WARN"/>
     <logger name="com.atomikos" level="WARN"/>
+    <logger name="com.springroll.orm.SpringrollJtaTransactionManager" level="ERROR"/>
 
 
     <root level="WARN">

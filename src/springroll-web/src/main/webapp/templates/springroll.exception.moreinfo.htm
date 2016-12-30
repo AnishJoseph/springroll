@@ -1,9 +1,10 @@
 <h4 class="text-info"><%-Localize('Exception Summary')%></h4>
 <table class="table table-striped table-bordered table-hover">
     <tr><td><%-Localize('Service Name')%></td><td><%-serviceMessageArgs[0]%></td></tr>
-    <tr><td><%-Localize('1st Event in Transaction')%></td><td><%-serviceEventName%></td></tr>
+    <tr><td><%-Localize('1st event in this Transaction')%></td><td><%-serviceEventName%></td></tr>
     <tr><td><%-Localize('Exception Event Context')%></td><td><%-eventThatCausedException%></td></tr>
-    <tr><td><%-Localize('Root Transaction Committed?')%></td><td><%-!rootTransaction%></td></tr>
+    <tr><td><%-Localize('Job ID')%></td><td><%-jobId%></td></tr>
+    <tr><td><%-Localize('Transaction Leg ID')%></td><td><%-transactionLegId%></td></tr>
 </table>
 <h4 class="text-info"><%-Localize('Stack Summary')%></h4>
 <table class="table table-striped table-bordered">

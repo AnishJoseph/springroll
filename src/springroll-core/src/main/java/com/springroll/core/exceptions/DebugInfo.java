@@ -14,17 +14,19 @@ public class DebugInfo implements Serializable {
     private String serviceName;
     private String serviceEventName;
     private String eventThatCausedException;
-    private boolean rootTransaction;
+    private Long jobId;
+    private Long transactionLegId;
 
-    public DebugInfo(SpringrollException springrollException, List<String> causes, List<String> exceptions, List<StackTraceElement> stackTraceElements, String serviceName, String serviceEventName, String eventThatCausedException, boolean rootTransaction) {
+    public DebugInfo(SpringrollException springrollException, List<String> causes, List<String> exceptions, List<StackTraceElement> stackTraceElements, String serviceName, String serviceEventName, String eventThatCausedException, long jobId, Long transactionLegId) {
         this.springrollException = springrollException;
         this.causes = causes;
         this.stackTraceElements = stackTraceElements;
         this.serviceName = serviceName;
         this.serviceEventName = serviceEventName;
-        this.rootTransaction = rootTransaction;
         this.eventThatCausedException = eventThatCausedException;
         this.exceptions = exceptions;
+        this.transactionLegId = transactionLegId;
+        this.jobId = jobId;
     }
 
     public SpringrollException getSpringrollException() {
@@ -75,12 +77,20 @@ public class DebugInfo implements Serializable {
         this.eventThatCausedException = eventThatCausedException;
     }
 
-    public boolean isRootTransaction() {
-        return rootTransaction;
+    public Long getJobId() {
+        return jobId;
     }
 
-    public void setRootTransaction(boolean rootTransaction) {
-        rootTransaction = rootTransaction;
+    public void setJobId(Long jobId) {
+        this.jobId = jobId;
+    }
+
+    public Long getTransactionLegId() {
+        return transactionLegId;
+    }
+
+    public void setTransactionLegId(Long transactionLegId) {
+        this.transactionLegId = transactionLegId;
     }
 
     public List<String> getExceptions() {

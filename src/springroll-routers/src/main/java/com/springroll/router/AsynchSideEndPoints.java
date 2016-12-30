@@ -6,6 +6,9 @@ import org.apache.camel.ExchangePattern;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 /**
  * This bean holds the endpoints for the asynchronous side of Springroll.
  * Use this bean to send IEvents either<p>
@@ -24,6 +27,9 @@ public class AsynchSideEndPoints {
     @EndpointInject(ref = "dynamicRouterEndPoint")
     private ProducerTemplate dynamicRouterEndPoint;
 
+    @PersistenceContext
+    EntityManager entityManager;
+
     /**
      * Route an event (IEvent) to JMS. This endpoint is InOnly - i.e there is no return value
      * Since the event is delivered via JMS, it will be processed in another thread (and another transaction)<p></p>
@@ -31,6 +37,7 @@ public class AsynchSideEndPoints {
      * @param event - Object of type IEvent
      */
     public void routeToJms(IEvent event){
+        entityManager.flush();
         jmsEndPoint.sendBody(jmsEndPoint.getDefaultEndpoint(), ExchangePattern.InOnly, event);
     }
 
@@ -40,6 +47,7 @@ public class AsynchSideEndPoints {
      * @param event - Object of type IEvent
      */
     public void routeToDynamicRouter(IEvent event){
+        entityManager.flush();
         dynamicRouterEndPoint.sendBody(dynamicRouterEndPoint.getDefaultEndpoint(), ExchangePattern.InOnly, event);
     }
 }
