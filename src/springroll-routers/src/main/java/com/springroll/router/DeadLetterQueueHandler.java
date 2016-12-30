@@ -45,7 +45,10 @@ public class DeadLetterQueueHandler {
         String firstEventInThisTransaction = event.getClass().getSimpleName();
         String eventThatCausedException = null;
         if(causedExceptionDetails.causingEvent == null) {
-            causedExceptionDetails.causingEvent = event;
+            /*  If the exception occurs during the JTA commit (after the camel route is complete) there will be no
+                specific event that can be pointed to as the event that caused the rollback. In this case the event
+                is marked as indeterminate
+             */
             eventThatCausedException = "Indeterminate";
         } else {
             eventThatCausedException = causedExceptionDetails.causingEvent.getClass().getSimpleName();
@@ -55,7 +58,7 @@ public class DeadLetterQueueHandler {
             jobManager.handleOptimisticLockFailure(event.getJobId(), event.getLegId());
             logger.debug("Deadlock detected - will sleep awhile and restart");
             try {
-                Thread.sleep(10000);
+                Thread.sleep(10000);    //FIXME
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -66,7 +69,7 @@ public class DeadLetterQueueHandler {
 
         jobManager.handleExceptionInTransactionLeg(event.getJobId(), event.getLegId(), caused.getClass().getSimpleName());
         DebugInfo debugInfo = getDebugInfo(caused, eventThatCausedException, event.getJobId(), event.getLegId(), serviceName, firstEventInThisTransaction);
-        SpringrollUser user = causedExceptionDetails.causingEvent.getUser();
+        SpringrollUser user = event.getUser();
         if(debugInfo.getSpringrollException() != null){
             String messageKey = debugInfo.getSpringrollException().getMessageKey();
             String[] messageArguments = debugInfo.getSpringrollException().getMessageArguments();
