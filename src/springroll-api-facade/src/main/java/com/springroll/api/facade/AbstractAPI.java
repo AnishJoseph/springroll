@@ -71,7 +71,7 @@ public abstract class AbstractAPI {
         return route(payloads);
     }
     public Long route(List<? extends ServiceDTO> payloads){
-        JobMeta jobMeta = new JobMeta(payloads, null, false, true);
+        JobMeta jobMeta = new JobMeta(payloads, null, true);
         return sendItDownTheSynchronousRoute(jobMeta);
     }
 
@@ -82,7 +82,7 @@ public abstract class AbstractAPI {
     }
 
     public Long routeSynchronouslyToAsynchronousSideFromSynchronousSide(List<? extends ServiceDTO> payloads){
-        JobMeta jobMeta = new JobMeta(payloads, null, false, false);
+        JobMeta jobMeta = new JobMeta(payloads, null, false);
         return sendItDownTheSynchronousRoute(jobMeta);
     }
 

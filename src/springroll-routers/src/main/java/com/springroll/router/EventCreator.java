@@ -39,8 +39,14 @@ public class EventCreator {
      * 4) If no review is needed for the event route it either via JMS or directly to DynamicROuter (depending on the flag in JobMeta)
      * 5) If the service needs to be reviewed then create a  ReviewNeededEvent and route it via JMS
      *
+     *
      * @param jobMeta
-     * @return
+     * @return the jobId created for the job
+     *
+     * There are 3 entry points
+     * 1) From the UI->Down the Synch route (with asynch flag set)
+     * 2) From the UI->Down the Synch route (with asynch flag NOT set)
+     * 3) From the asynch side when it wants to send down something the synch route - in this case a new job is NOT created
      */
     public Long on(JobMeta jobMeta){
         boolean newJobCreated = false;
@@ -63,9 +69,6 @@ public class EventCreator {
             newJobCreated = true;
             job = new Job(jobMeta.getParentJobId(), needsReview, ((ServiceDTO)event.getPayload()).getServiceDefinition().name(), SpringrollSecurity.getUser().getUsername(), jobMeta.getPayloads());
             repo.job.save(job);
-            if(!needsReview){
-                publisher.publishEvent(event);
-            }
             ContextStore.put(SpringrollSecurity.getUser(), job.getID(), jobManager.registerNewTransactionLeg(job.getID(), 0L));
         }
         event.setJobId(ContextStore.getJobId());
@@ -75,6 +78,12 @@ public class EventCreator {
             if (jobMeta.isAsynchronous()) {
                 asynchSideEndPoints.routeToJms(event);
             } else {
+                if(newJobCreated) {
+                    /*  This is coming down the synch side (from the UI) and needs the asynch side processing to be done synchronously
+                        We need to therefore publish an event so that the Job housekeeping is done
+                     */
+                    publisher.publishEvent(event);
+                }
                 asynchSideEndPoints.routeToDynamicRouter(event);
             }
             return event.getJobId();

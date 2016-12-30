@@ -16,8 +16,7 @@ public class JobMeta {
     private BusinessValidationResults businessValidationResults;
 
 
-
-    public JobMeta(List<? extends ServiceDTO> payloads, Long parentJobId, boolean businessValidationAlreadyDoneOnce, boolean isAsynchronous) {
+    public JobMeta(List<? extends ServiceDTO> payloads, Long parentJobId, boolean isAsynchronous) {
         this.payloads = payloads;
         this.parentJobId = parentJobId;
         this.isAsynchronous = isAsynchronous;
