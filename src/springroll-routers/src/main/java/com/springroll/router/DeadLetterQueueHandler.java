@@ -16,12 +16,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.CannotAcquireLockException;
+import org.springframework.data.convert.JodaTimeConverters;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.OptimisticLockException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by anishjoseph on 09/09/16.
@@ -69,6 +73,7 @@ public class DeadLetterQueueHandler {
 
         jobManager.handleExceptionInTransactionLeg(event.getJobId(), event.getLegId(), caused.getClass().getSimpleName());
         DebugInfo debugInfo = getDebugInfo(caused, eventThatCausedException, event.getJobId(), event.getLegId(), serviceName, firstEventInThisTransaction);
+        printStack(caused, debugInfo);
         SpringrollUser user = event.getUser();
         if(debugInfo.getSpringrollException() != null){
             String messageKey = debugInfo.getSpringrollException().getMessageKey();
@@ -79,7 +84,6 @@ public class DeadLetterQueueHandler {
             return;
         }
         pushService.pushSpringrollExceptionNotification(debugInfo, user.getUsername(), user.getUsername());
-        caused.printStackTrace();
     }
 
     private DebugInfo getDebugInfo(Throwable cause, String eventThatCausedException, Long jobId, Long transactionLegId, String serviceName, String firstEventInThisTransaction){
@@ -123,6 +127,29 @@ public class DeadLetterQueueHandler {
                         (caused.getCause() != null && caused.getCause() instanceof OptimisticLockException) ||
                         (caused.getCause() != null && caused.getCause().getMessage() != null && caused.getCause().getMessage().contains("LockAcquisitionException"))
         );
+    }
+
+    public void printStack(Throwable caused, DebugInfo debugInfo){
+        StringWriter errors = new StringWriter();
+        if(debugInfo.getSpringrollException() == null)
+            caused.printStackTrace(new PrintWriter(errors));
+        long id = System.currentTimeMillis();
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n------------------- Start of exception - AS:" + id + " -------------------");
+        sb.append("\nService Name : " + debugInfo.getServiceName());
+        sb.append("\n1st event in this Transaction : " + debugInfo.getServiceEventName());
+        sb.append("\nException Event Context : " + debugInfo.getEventThatCausedException());
+        sb.append("\nJob ID : " + debugInfo.getJobId());
+        sb.append("\nTransaction Leg ID : " + debugInfo.getTransactionLegId());
+        if(debugInfo.getSpringrollException() != null){
+            String localizedServerMessage = LocaleFactory.getLocalizedServerMessage(Locale.getDefault(), debugInfo.getSpringrollException().getMessageKey(), debugInfo.getSpringrollException().getMessageArguments());
+            sb.append("\nException Message : " + localizedServerMessage);
+        }
+        if(debugInfo.getSpringrollException() == null)
+            sb.append("\nStack trace is \n" + errors);
+        sb.append("\n------------------- End of exception - AS:" + id + " -------------------");
+        logger.error(sb.toString());
+
     }
 
 }
