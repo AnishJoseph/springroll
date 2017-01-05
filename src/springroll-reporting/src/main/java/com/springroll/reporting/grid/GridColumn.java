@@ -11,6 +11,7 @@ public class GridColumn implements IGridColumn {
     private String type = "text";
     private String numberFormat;
     private String className;
+    private boolean visible = true;
 
     @Override
     public String getTitle() {
@@ -47,5 +48,14 @@ public class GridColumn implements IGridColumn {
 
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

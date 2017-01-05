@@ -7,4 +7,5 @@ public interface IGridColumn {
     String getTitle();
     String getType();
     String getClassName();
+    boolean isVisible();
 }
