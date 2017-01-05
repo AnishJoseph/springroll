@@ -54,6 +54,10 @@ public class NotificationManager implements NotificationService, LovProvider {
          */
         publisher.publishEvent(new PushData(targetUsers, new Object[]{notificationMessage}, notificationChannel.getServiceUri()));
 
+        notificationMessage.setCreationTime(System.currentTimeMillis());
+        notificationMessage.setChannel(notificationChannel.getServiceUri());
+        notificationMessage.setChannelType(notificationChannel.getChannelType());
+
         if(!notificationChannel.isPersist())return null;
 
         Notification notification = new Notification();
@@ -65,10 +69,7 @@ public class NotificationManager implements NotificationService, LovProvider {
         notification.setInitiator(notificationMessage.getInitiator());
         notification.setAutoClean(notificationChannel.isAutoClean());
 
-        notificationMessage.setCreationTime(System.currentTimeMillis());
         notificationMessage.setId(notification.getID());
-        notificationMessage.setChannel(notificationChannel.getServiceUri());
-        notificationMessage.setChannelType(notificationChannel.getChannelType());
         /* This MUST be last as we are setting stuff in the notification message before this */
         notification.setNotificationMessage(notificationMessage);
         return notification.getID();

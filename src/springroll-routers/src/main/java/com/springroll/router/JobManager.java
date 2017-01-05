@@ -1,6 +1,8 @@
 package com.springroll.router;
 
 import com.springroll.core.IEvent;
+import com.springroll.core.services.notification.NotificationService;
+import com.springroll.notification.CoreNotificationChannels;
 import com.springroll.orm.entities.Job;
 import com.springroll.orm.repositories.Repositories;
 import org.slf4j.Logger;
@@ -21,8 +23,8 @@ public class JobManager {
     private Map<Long, LegMonitor> legMonitorMap = new HashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(JobManager.class);
 
-    @Autowired
-    Repositories repo;
+    @Autowired Repositories repo;
+    @Autowired NotificationService notificationService;
 
     public Long registerNewTransactionLeg(Long jobId, Long parentLegId){
         Long newLegId = 1l;
@@ -92,6 +94,7 @@ public class JobManager {
                         legMonitor.jobStatus = job.getStatus();
                     }
                     logger.debug("Job Completed: Transaction leg {} completed for job {}: Status {}", legId, jobId, job.getStatus());
+                    notificationService.sendNotification(CoreNotificationChannels.JOB_STATUS_UPDATE, new JobStatusMessage(job));
                     break;
                 case REMOVED:
                     if (legMonitor.jobStatus.length() < 3950) {
