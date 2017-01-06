@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 /**
  * Created by anishjoseph on 30/09/16.
  */
+@SuppressWarnings({"SpringJavaAutowiringInspection"})
+
 @Component public class Repositories {
     @Autowired public UserRepository users;
 
