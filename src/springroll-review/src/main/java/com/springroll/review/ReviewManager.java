@@ -214,6 +214,9 @@ public class ReviewManager extends SpringrollEndPoint {
                 ContextStore.put(reviewedEvent.getUser(), reviewedEvent.getJobId(), reviewedEvent.getLegId());
                 jobManager.reRegisterNewTransactionLeg(reviewedEvent.getJobId());
                 publisher.publishEvent(reviewStepMeta.getEvent());
+                /*  FIXME - should the reviewed event be processed in the context of the approve event or should we push this to JMS
+                    so that the revieed event is run in a sperate transaction
+                */
                 route(reviewStepMeta.getEvent());
 
                 /* Now that the review is complete and approved, send out  FYI notifications, if any */
