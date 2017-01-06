@@ -26,6 +26,15 @@ public class JobManager {
     @Autowired Repositories repo;
     @Autowired NotificationService notificationService;
 
+    public void reRegisterNewTransactionLeg(Long jobId){
+        LegMonitor legMonitor = legMonitorMap.get(jobId);
+        if(legMonitor == null){
+            legMonitor = new LegMonitor();
+            synchronized (legMonitorMap){
+                legMonitorMap.put(jobId, legMonitor);
+            }
+        }
+    }
     public Long registerNewTransactionLeg(Long jobId, Long parentLegId){
         Long newLegId = 1l;
         LegMonitor legMonitor = legMonitorMap.get(jobId);

@@ -7,6 +7,7 @@ import com.springroll.orm.entities.ReviewRule;
 import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.entities.ReviewStepMeta;
 import com.springroll.orm.repositories.Repositories;
+import com.springroll.router.JobManager;
 import com.springroll.router.SpringrollEndPoint;
 import com.springroll.router.review.ReviewNeededEvent;
 import org.slf4j.Logger;
@@ -30,14 +31,13 @@ import java.util.*;
 public class ReviewManager extends SpringrollEndPoint {
     private static final Logger logger = LoggerFactory.getLogger(ReviewManager.class);
     private static int REVIEW_STAGE_FOR_FYI = 1000;
-    @Autowired
-    ApplicationEventPublisher publisher;
+    @Autowired ApplicationEventPublisher publisher;
 
-    @Autowired
-    Repositories repo;
+    @Autowired Repositories repo;
 
-    @Autowired
-    NotificationService notificationService;
+    @Autowired NotificationService notificationService;
+
+    @Autowired JobManager jobManager;
 
     public void on(ReviewNeededEvent reviewNeededEvent){
         ReviewStepMeta reviewStepMeta = createReviewSteps(reviewNeededEvent.getPayload().getReviewNeededViolations(), reviewNeededEvent.getPayload().getEventForReview().getJobId(), reviewNeededEvent);
@@ -212,12 +212,12 @@ public class ReviewManager extends SpringrollEndPoint {
                 // The context at this point is that of the user that made the approval.  However as we push the event that was under
                 // review back into the system we need to change the context to that event
                 ContextStore.put(reviewedEvent.getUser(), reviewedEvent.getJobId(), reviewedEvent.getLegId());
+                jobManager.reRegisterNewTransactionLeg(reviewedEvent.getJobId());
                 publisher.publishEvent(reviewStepMeta.getEvent());
                 route(reviewStepMeta.getEvent());
 
                 /* Now that the review is complete and approved, send out  FYI notifications, if any */
                 if (!reviewSteps.isEmpty()) sendFyiNotification(reviewSteps);
-                //FIXME - should we notify the initiator that his transaction has been fully approved and is under processing
             } else {
                 job.setEndTime(LocalDateTime.now());
                 String prevStatus = job.getStatus() == null ? "" : job.getStatus();
