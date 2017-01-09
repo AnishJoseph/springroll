@@ -76,22 +76,22 @@ var GridView  = Marionette.View.extend({
     },
 
     onDataChanged : function(updatedDataArray, indexOfIdCol){
-        var datetimecols = [2,3];
         var changedIds = [];
         _.each(updatedDataArray, function(updatedData){
             changedIds.push(updatedData[indexOfIdCol]);
         });
 
         var that = this;
-        var indexes = this.gridtable.rows().eq( 0 ).filter( function (rowIdx) {
-            var id = that.gridtable.cell( rowIdx, indexOfIdCol ).data();
-            return _.contains(changedIds, id);
-        } );
-
-        this.gridtable.rows(indexes).every( function ( rowIdx, tableLoop, rowLoop ) {
-                //this.invalidate();
-                this.data(updatedDataArray[rowLoop]);
-        } );
+        /* FIXME - this is very inefficient. For example if only one row has a status change
+           we still go thru all the rows in the grid. Ideally we should stop the moment all
+           rows that have changed are identified
+         */
+        this.gridtable.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
+            var index = _.indexOf(changedIds, this.data()[indexOfIdCol]);
+            if(index != -1){
+                this.data(updatedDataArray[index]);
+            }
+        });
         this.gridtable.draw();
     }
 });
@@ -155,7 +155,6 @@ Application.GridView = Marionette.View.extend({
     },
 
     updateData : function(updatedData, indexOfIdCol){
-        //this.data;
         this.gridView.onDataChanged(updatedData, indexOfIdCol);
     }
 
