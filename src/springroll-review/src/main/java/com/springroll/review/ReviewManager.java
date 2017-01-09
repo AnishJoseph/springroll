@@ -7,6 +7,7 @@ import com.springroll.orm.entities.ReviewRule;
 import com.springroll.orm.entities.ReviewStep;
 import com.springroll.orm.entities.ReviewStepMeta;
 import com.springroll.orm.repositories.Repositories;
+import com.springroll.router.AsynchSideEndPoints;
 import com.springroll.router.JobManager;
 import com.springroll.router.SpringrollEndPoint;
 import com.springroll.router.review.ReviewNeededEvent;
@@ -38,6 +39,8 @@ public class ReviewManager extends SpringrollEndPoint {
     @Autowired NotificationService notificationService;
 
     @Autowired JobManager jobManager;
+
+    @Autowired AsynchSideEndPoints asynchEndPoint;
 
     public void on(ReviewNeededEvent reviewNeededEvent){
         ReviewStepMeta reviewStepMeta = createReviewSteps(reviewNeededEvent.getPayload().getReviewNeededViolations(), reviewNeededEvent.getPayload().getEventForReview().getJobId(), reviewNeededEvent);
@@ -209,17 +212,12 @@ public class ReviewManager extends SpringrollEndPoint {
                     ((ReviewableEvent) reviewedEvent).setReviewLog(reviewStepMeta.getReviewLog());
                     ((ReviewableEvent) reviewedEvent).setApproved(reviewActionDTO.isApproved());
                 }
-                // The context at this point is that of the user that made the approval.  However as we push the event that was under
-                // review back into the system we need to change the context to that event
-                ContextStore.put(reviewedEvent.getUser(), reviewedEvent.getJobId(), reviewedEvent.getLegId());
-                jobManager.reRegisterNewTransactionLeg(reviewedEvent.getJobId());
-                publisher.publishEvent(reviewStepMeta.getEvent());
-                /*  FIXME - should the reviewed event be processed in the context of the approve event or should we push this to JMS
-                    so that the revieed event is run in a sperate transaction
-                */
-                route(reviewStepMeta.getEvent());
-
-                /* Now that the review is complete and approved, send out  FYI notifications, if any */
+                /*  The event is now fully reviewed - send the event down the JMS bus so that the reviewed
+                    event will be evaluated in its own thread and context (separate from this thread which
+                    is handling the review approval.
+                 */
+                asynchEndPoint.routeToJms(reviewStepMeta.getEvent());
+                /* Now that the review is complete and approved, send out FYI notifications, if any */
                 if (!reviewSteps.isEmpty()) sendFyiNotification(reviewSteps);
             } else {
                 job.setEndTime(LocalDateTime.now());
