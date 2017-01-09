@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
 var Application =require('Application');
+var moment = require('moment');
 
 var GridData = Backbone.Model.extend({
     url: function () {
@@ -29,8 +30,31 @@ var GridView  = Marionette.View.extend({
         this.myParent = options.myParent;
     },
 
+    dateRenderer : function(data, type, full, meta) {
+        if(type == 'display' || type == 'filter'){
+            if(data == undefined || data == null) return '';
+            return moment(data).format(Application.getMomentFormatForDate());
+        }
+        return data;
+    },
+    datetimeRenderer : function(data, type, full, meta) {
+        if(type == 'display' || type == 'filter'){
+            if(data == undefined || data == null) return '';
+            return moment(data).format(Application.getMomentFormatForDateTime());
+        }
+        return data;
+    },
+
     onRender : function(){
         var ht = (window.innerHeight - 220) + "px"; //FIXME - we need a better soln
+        var that = this;
+        _.each(this.columnDefinitions, function(columnDefinition){
+            if(columnDefinition.type == 'datetime'){
+                columnDefinition['render'] = that.datetimeRenderer;
+            } else if(columnDefinition.type == 'date'){
+                columnDefinition['render'] = that.dateRenderer;
+            }
+        });
         this.gridtable = this.ui.griddiv.DataTable( {
             "dom": 'flrtip',
             data: this.gridata,
@@ -49,6 +73,26 @@ var GridView  = Marionette.View.extend({
          */
 
         this.gridtable.columns.adjust().draw();
+    },
+
+    onDataChanged : function(updatedDataArray, indexOfIdCol){
+        var datetimecols = [2,3];
+        var changedIds = [];
+        _.each(updatedDataArray, function(updatedData){
+            changedIds.push(updatedData[indexOfIdCol]);
+        });
+
+        var that = this;
+        var indexes = this.gridtable.rows().eq( 0 ).filter( function (rowIdx) {
+            var id = that.gridtable.cell( rowIdx, indexOfIdCol ).data();
+            return _.contains(changedIds, id);
+        } );
+
+        this.gridtable.rows(indexes).every( function ( rowIdx, tableLoop, rowLoop ) {
+                //this.invalidate();
+                this.data(updatedDataArray[rowLoop]);
+        } );
+        this.gridtable.draw();
     }
 });
 
@@ -102,9 +146,17 @@ Application.GridView = Marionette.View.extend({
         var that = this;
         gridData.save(null, {
             success : function(model, data){
+                that.data = data.data;
                 data.myParent = that;
-                that.showChildView('gridRegion', new GridView(data));
+                that.gridView = new GridView(data);
+                that.showChildView('gridRegion', that.gridView);
             }
         });
     },
+
+    updateData : function(updatedData, indexOfIdCol){
+        //this.data;
+        this.gridView.onDataChanged(updatedData, indexOfIdCol);
+    }
+
 });

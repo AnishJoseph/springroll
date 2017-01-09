@@ -76,19 +76,7 @@ import java.util.stream.Collectors;
 
         for (int i = 0; i < grid.getGridColumns().size(); i++) {
             GridColumn column = grid.getGridColumns().get(i);
-            if(column.getType().equalsIgnoreCase("date")){
-                for (Object row : data) {
-                    Object[] rowData = (Object[])row;
-                    LocalDate date = (LocalDate) rowData[i];
-                    if(date != null)rowData[i] = date.format(springrollUtils.getDateFormatter());
-                }
-            } else if(column.getType().equalsIgnoreCase("datetime")){
-                for (Object row : data) {
-                    Object[] rowData = (Object[])row;
-                    LocalDateTime date = (LocalDateTime) rowData[i];
-                    if(date != null)rowData[i] = date.format(springrollUtils.getDateTimeFormatter());
-                }
-            } else if(column.getType().equalsIgnoreCase("num") && column.getNumberFormat() != null) {
+            if(column.getType().equalsIgnoreCase("num") && column.getNumberFormat() != null) {
                 NumberFormat numberFormat = gridConfiguration.findNumberFormatByName(column.getNumberFormat());
                 if(numberFormat == null)continue;
                 DecimalFormat format = springrollUtils.makeFormatter(SpringrollSecurity.getUser().getLocale(), numberFormat.getFormat());
