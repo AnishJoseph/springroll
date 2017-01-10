@@ -38,7 +38,7 @@ var MasterRowView = Marionette.View.extend({
                     template.push('</td>');
                 } else if (colDefs[index].type === 'datetime') {
                     template.push('<td style="vertical-align: middle">');
-                    Application.Utils.addDatePickerToTemplate(template, colDefs[index], data.model[colName], 'datetimepicker');
+                    Application.Utils.addDatePickerToTemplate(template, colDefs[index], data.model[colName], colDefs[index].name + ' datetimepicker');
                     template.push('<div class="bg-danger err' + colDefs[index].name + '"></div>');
                     template.push('</td>');
                 } else if (colDefs[index].type === 'text') {
