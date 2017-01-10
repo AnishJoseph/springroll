@@ -51,7 +51,7 @@ Application.ReportParamsView  = Marionette.View.extend({
 
         template.push('<div class="clearfix " style="clear: both;">');
         template.push('<div  class="formSubmit">');
-        template.push('<button type="submit">Submit</button>');
+        template.push('<span title="' + Localize('Apply') + '" class="form-control submit glyphicon glyphicon-ok"</span>');
         template.push('</div>');
         template.push('</div>');
 
@@ -83,7 +83,7 @@ Application.ReportParamsView  = Marionette.View.extend({
         this.model = new Backbone.Model(this.parameters);
         var that = this;
         var events = {};
-        events['submit'] =  'submit';
+        events['click .submit'] =  'submit';
         /* For each parameter setup a changeHandler and also set the default value for that parameter */
         _.each(this.parameters, function(parameter){
 
