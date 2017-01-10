@@ -26,7 +26,7 @@ public class JmsEntryPoint {
             will have nothing related to this job. To ensure this we re-register the job. Reregistering will ensure that the job will
             be registered only if its not yet registered
          */
-        jobManager.reRegisterNewTransactionLeg(event.getJobId());
+        if(!(event instanceof  ISignallingEvent)) jobManager.reRegisterNewTransactionLeg(event.getJobId(), event.getLegId());
         ContextStore.put(event.getUser(), event.getJobId(), event.getLegId());
         publisher.publishEvent(event);
 
