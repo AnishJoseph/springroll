@@ -20,18 +20,27 @@ import java.util.*;
  */
 @Service
 public class JobManager {
-    private Map<Long, LegMonitor> legMonitorMap = new HashMap<>();
+    private final Map<Long, LegMonitor> legMonitorMap = new HashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(JobManager.class);
 
     @Autowired Repositories repo;
     @Autowired NotificationService notificationService;
 
-    public void reRegisterNewTransactionLeg(Long jobId){
+    public void reRegisterNewTransactionLeg(Long jobId, Long legId){
         LegMonitor legMonitor = legMonitorMap.get(jobId);
-        if(legMonitor == null){
-            legMonitor = new LegMonitor();
-            synchronized (legMonitorMap){
+        if(legMonitor != null && legMonitor.refs.get(legId) != null)
+            return;
+
+        synchronized (legMonitorMap) {
+            legMonitor = legMonitorMap.get(jobId);
+            if (legMonitor == null) {
+                Job job = repo.job.findOne(jobId);
+                legMonitor = new LegMonitor(legId, 0l, job.getStatus());
                 legMonitorMap.put(jobId, legMonitor);
+            } else {
+                Long ref = legMonitor.refs.get(legId);
+                if (ref != null) return;
+                legMonitor.reAddRef(legId, 0l);
             }
         }
     }
@@ -131,12 +140,22 @@ public class JobManager {
         public LegMonitor(){
             refs.put(legId, 0L);
         }
+        public LegMonitor(Long legId, Long parentLegId, String jobStatus){
+            refs.put(legId, parentLegId);
+            this.legId = legId;
+            this.jobStatus = jobStatus;
+        }
 
         public Long addRef(Long parentLegId){
             legId = legId + 1;
             refs.put(legId, parentLegId);
             return legId;
         }
+        public void reAddRef(Long legId, Long parentLegId){
+            if(this.legId < legId) this.legId = legId;
+            refs.put(legId, parentLegId);
+        }
+
         public LegStatus removeRef(Long legId){
             Long removedId = refs.remove(legId);
             boolean removed = removedId != null;
