@@ -7,6 +7,8 @@ import com.springroll.router.JobMeta;
 import com.springroll.router.SynchEndPoint;
 import com.springroll.router.exceptions.BusinessValidationException;
 import com.springroll.router.exceptions.PropertyValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,6 +33,8 @@ public abstract class AbstractAPI {
     protected static Locale _locale = Locale.getDefault();
     @Autowired Repositories repositories;
     @PersistenceContext EntityManager em;
+    private static final Logger logger = LoggerFactory.getLogger(AbstractAPI.class);
+
 
 
     @ExceptionHandler(PropertyValidationException.class)
@@ -53,6 +57,7 @@ public abstract class AbstractAPI {
     @ExceptionHandler(SpringrollException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public  String handleSpringrollException(SpringrollException ex) {
+        logger.error(LocaleFactory.getLocalizedServerMessage(_locale, ex.getMessageKey(), ex.getMessageArguments()));
         return LocaleFactory.getLocalizedServerMessage(getUser().getLocale(), ex.getMessageKey(), ex.getMessageArguments());
     }
 
