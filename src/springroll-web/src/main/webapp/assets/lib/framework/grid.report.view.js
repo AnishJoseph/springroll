@@ -108,6 +108,21 @@ var GridView  = Marionette.View.extend({
         });
         /* Redraw ONLY after all rows have either been updated/added */
         this.gridtable.draw();
+    },
+
+    onDataDelete : function(deletedIds, indexOfIdCol){
+        /* The default for the index of the ID col is 0 */
+        if(indexOfIdCol == undefined) indexOfIdCol = 0;
+
+        this.gridtable.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
+            var index = _.indexOf(deletedIds, this.data()[indexOfIdCol]);
+            if(index != -1){
+                /* We have found the row that has been deleted */
+                this.remove();
+            }
+        });
+        /* Redraw ONLY after all rows have either been updated/added */
+        this.gridtable.draw();
     }
 });
 
@@ -168,9 +183,14 @@ Application.GridView = Marionette.View.extend({
             }
         });
     },
-
+    /* Use this method to add/update rows in the grid */
     updateData : function(updatedData, indexOfIdCol){
         this.gridView.onDataChanged(updatedData, indexOfIdCol);
+    },
+
+    /* Use this method to delete rows in the grid */
+    deleteData : function(deletedIds, indexOfIdCol){
+        this.gridView.onDataDelete(deletedIds, indexOfIdCol);
     }
 
 });
