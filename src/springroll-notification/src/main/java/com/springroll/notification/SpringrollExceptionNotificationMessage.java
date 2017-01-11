@@ -1,5 +1,7 @@
 package com.springroll.notification;
 
+import com.springroll.core.LocaleFactory;
+import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.exceptions.DebugInfo;
 
 import java.io.Serializable;
@@ -110,6 +112,11 @@ public class SpringrollExceptionNotificationMessage extends AbstractNotification
 
     public void setSpringrollExceptionDebugInfoList(List<SpringrollExceptionDebugInfo> springrollExceptionDebugInfoList) {
         this.springrollExceptionDebugInfoList = springrollExceptionDebugInfoList;
+    }
+
+    @Override
+    public String getMessage() {
+        return LocaleFactory.getLocalizedServerMessage(SpringrollSecurity.getUser().getLocale(), messageKey, args);
     }
 
     public class SpringrollExceptionDebugInfo implements Serializable {

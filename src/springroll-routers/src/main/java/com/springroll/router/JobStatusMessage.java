@@ -1,5 +1,7 @@
 package com.springroll.router;
 
+import com.springroll.core.LocaleFactory;
+import com.springroll.core.SpringrollSecurity;
 import com.springroll.notification.AbstractNotificationMessage;
 import com.springroll.orm.entities.Job;
 
@@ -43,5 +45,9 @@ public class JobStatusMessage extends AbstractNotificationMessage {
 
     public void setUpdatedData(List<Object> updatedData) {
         this.updatedData = updatedData;
+    }
+    @Override
+    public String getMessage() {
+        return "Huh!";
     }
 }

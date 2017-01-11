@@ -6,7 +6,7 @@ import com.springroll.core.services.notification.NotificationChannelType;
 /**
  * Created by anishjoseph on 05/10/16.
  */
-public class AbstractNotificationMessage implements INotificationMessage {
+public abstract class AbstractNotificationMessage implements INotificationMessage {
     private long creationTime;
     private Long id;
     private String notificationReceivers;

@@ -1,7 +1,9 @@
 package com.springroll.review;
 
 import com.springroll.core.BusinessValidationResult;
+import com.springroll.core.LocaleFactory;
 import com.springroll.core.ReviewLog;
+import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.services.notification.IReviewMeta;
 import com.springroll.notification.AbstractNotificationMessage;
 
@@ -58,5 +60,9 @@ public class FyiReviewNotificationMessage extends AbstractNotificationMessage {
 
     public void setReviewLog(List<ReviewLog> reviewLog) {
         this.reviewLog = reviewLog;
+    }
+    @Override
+    public String getMessage() {
+        return LocaleFactory.getLocalizedServerMessage(SpringrollSecurity.getUser().getLocale(), messageKey, args);
     }
 }

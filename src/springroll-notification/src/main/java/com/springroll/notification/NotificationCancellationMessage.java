@@ -1,5 +1,7 @@
 package com.springroll.notification;
 
+import com.springroll.core.LocaleFactory;
+import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.services.notification.NotificationChannelType;
 
 /**
@@ -12,5 +14,9 @@ public class NotificationCancellationMessage extends AbstractNotificationMessage
         this.setChannel(CoreNotificationChannels.NOTIFICATION_CANCEL.getChannelName());
         this.setId(id);
         setInitiator(initiator);
+    }
+    @Override
+    public String getMessage() {
+        return "Huh!!!";
     }
 }

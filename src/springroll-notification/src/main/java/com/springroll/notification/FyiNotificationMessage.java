@@ -1,5 +1,6 @@
 package com.springroll.notification;
 
+import com.springroll.core.LocaleFactory;
 import com.springroll.core.SpringrollSecurity;
 
 /**
@@ -33,5 +34,10 @@ public class FyiNotificationMessage extends AbstractNotificationMessage {
 
     public void setArgs(String[] args) {
         this.args = args;
+    }
+
+    @Override
+    public String getMessage() {
+        return LocaleFactory.getLocalizedServerMessage(SpringrollSecurity.getUser().getLocale(), messageKey, args);
     }
 }

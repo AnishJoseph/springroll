@@ -161,7 +161,7 @@ public class NotificationManager implements NotificationService, LovProvider {
             logger.error("Unable to find notification with id {}", notificationId);
             return "Unknown";
         }
-        return  notification.getChannelName();
+        return notification.getNotificationMessage().getMessage();
     }
 
     private NotificationChannel serviceUriToEnum(String channel) {

@@ -1,5 +1,7 @@
 package com.springroll.mdm;
 
+import com.springroll.core.LocaleFactory;
+import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.services.notification.IReviewMeta;
 import com.springroll.notification.AbstractNotificationMessage;
 
@@ -53,6 +55,10 @@ public class MdmReviewNotificationMessage extends AbstractNotificationMessage {
 
     public void setMdmChangesForReview(MdmChangesForReview mdmChangesForReview) {
         this.mdmChangesForReview = mdmChangesForReview;
+    }
+    @Override
+    public String getMessage() {
+        return LocaleFactory.getLocalizedServerMessage(SpringrollSecurity.getUser().getLocale(), messageKey, args);
     }
 
 }
