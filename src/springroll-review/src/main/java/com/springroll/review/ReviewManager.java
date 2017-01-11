@@ -2,6 +2,7 @@ package com.springroll.review;
 
 import com.springroll.core.*;
 import com.springroll.core.services.notification.*;
+import com.springroll.core.services.review.ReviewService;
 import com.springroll.orm.entities.Job;
 import com.springroll.orm.entities.ReviewRule;
 import com.springroll.orm.entities.ReviewStep;
@@ -29,7 +30,7 @@ import java.util.*;
  *
  */
 @Service
-public class ReviewManager extends SpringrollEndPoint {
+public class ReviewManager extends SpringrollEndPoint implements ReviewService {
     private static final Logger logger = LoggerFactory.getLogger(ReviewManager.class);
     private static int REVIEW_STAGE_FOR_FYI = 1000;
     @Autowired ApplicationEventPublisher publisher;
@@ -253,6 +254,14 @@ public class ReviewManager extends SpringrollEndPoint {
                     businessValidationResults, reviewStepMeta.getEvent().getUser().getUsername(), serviceName, reviewStepMeta.getReviewLog(), reviewStepMeta.getEvent().getPayloads()));
             notificationService.sendNotification(notificationChannel, message);
         }
+    }
+
+    @Override
+    public String getServiceInstanceForReviewId(Long reviewStepId) {
+        ReviewStep reviewStep = repo.reviewStep.findOne(reviewStepId);
+        ReviewStepMeta reviewStepMeta = repo.reviewStepMeta.findOne(reviewStep.getParentId());
+        Job job = repo.job.findOne(reviewStepMeta.getParentId());
+        return "Review of " + job.getService() + " (" + job.getServiceInstance() + ") - Initiated by " + job.getUserId();
     }
 
     private class ReviewMeta implements IReviewMeta {

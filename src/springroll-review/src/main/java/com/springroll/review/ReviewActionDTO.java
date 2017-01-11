@@ -13,6 +13,7 @@ public class ReviewActionDTO implements ServiceDTO {
     private List<Long> reviewStepId;
     private boolean approved;
     private String reviewComment;
+    private String serviceInstance;
 
     public ReviewActionDTO(){}
 
@@ -35,6 +36,15 @@ public class ReviewActionDTO implements ServiceDTO {
     @Override
     public ServiceDefinition getServiceDefinition() {
         return CoreServiceDefinitions.REVIEW;
+    }
+
+    @Override
+    public String getServiceInstance() {
+        return serviceInstance;
+    }
+
+    public void setServiceInstance(String serviceInstance) {
+        this.serviceInstance = serviceInstance;
     }
 
     public String getReviewComment() {

@@ -154,6 +154,16 @@ public class NotificationManager implements NotificationService, LovProvider {
         return notificationChannel;
     }
 
+    @Override
+    public String getServiceInstanceForNotificationId(Long notificationId) {
+        Notification notification = repositories.notification.findOne(notificationId);
+        if(notification == null){
+            logger.error("Unable to find notification with id {}", notificationId);
+            return "Unknown";
+        }
+        return  notification.getChannelName();
+    }
+
     private NotificationChannel serviceUriToEnum(String channel) {
         NotificationChannel notificationChannel = serviceNameToNotificationChannel.get(channel);
         if(notificationChannel != null)return notificationChannel;

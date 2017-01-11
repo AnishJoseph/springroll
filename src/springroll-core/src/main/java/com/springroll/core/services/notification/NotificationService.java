@@ -16,4 +16,7 @@ public interface NotificationService {
 
     NotificationChannel nameToEnum(String enumValue);
 
+    String getServiceInstanceForNotificationId(Long notificationId);
+
+
 }

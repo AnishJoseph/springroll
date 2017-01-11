@@ -46,6 +46,11 @@ public class MdmDTO implements ServiceDTO, Searchable {
     }
 
     @Override
+    public String getServiceInstance() {
+        return master;
+    }
+
+    @Override
     public String getSearchId() {
         return MdmManager.SEARCH_ID_PREFIX + master;
     }

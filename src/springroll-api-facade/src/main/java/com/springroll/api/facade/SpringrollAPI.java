@@ -5,9 +5,11 @@ import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.services.TemplateService;
 import com.springroll.core.services.mdm.IMdmData;
 import com.springroll.core.services.mdm.MdmService;
+import com.springroll.core.services.notification.NotificationService;
 import com.springroll.core.services.reporting.GridReportingService;
 import com.springroll.core.services.reporting.IGridReport;
 import com.springroll.core.services.reporting.IReportParameter;
+import com.springroll.core.services.review.ReviewService;
 import com.springroll.mdm.MdmDTO;
 import com.springroll.review.ReviewActionDTO;
 import com.springroll.router.notification.NotificationAckDTO;
@@ -30,6 +32,8 @@ public class SpringrollAPI extends AbstractAPI {
     @Autowired private GridReportingService gridReportingService;
     @Autowired private MdmService mdmService;
     @Autowired PropertiesUtil  propertiesUtil;
+    @Autowired ReviewService reviewService;
+    @Autowired NotificationService notificationService;
 
     @RequestMapping(value = "/sr/reviewaction", method = RequestMethod.POST)
     public Long reviewAction(@RequestBody ReviewActionDTO reviewActionDTO) {
@@ -37,6 +41,8 @@ public class SpringrollAPI extends AbstractAPI {
             logger.error("Received ReviewStep ID as NULL");
             return -1l;
         }
+        String serviceInstanceForReviewId = reviewService.getServiceInstanceForReviewId(reviewActionDTO.getReviewStepId().get(0));
+        reviewActionDTO.setServiceInstance(serviceInstanceForReviewId);
         return route(reviewActionDTO);
     }
 
@@ -46,7 +52,7 @@ public class SpringrollAPI extends AbstractAPI {
             logger.error("Received Notification ID as NULL");
             return 1l;
         }
-        return route(new NotificationAckDTO(id));
+        return route(new NotificationAckDTO(id, notificationService.getServiceInstanceForNotificationId(id)));
     }
 
     @RequestMapping(value = "/sr/templates", method = RequestMethod.POST)

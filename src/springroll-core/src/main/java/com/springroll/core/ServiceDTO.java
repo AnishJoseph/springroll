@@ -6,4 +6,5 @@ package com.springroll.core;
  */
 public interface ServiceDTO extends DTO {
     ServiceDefinition getServiceDefinition();
+    String getServiceInstance();
 }

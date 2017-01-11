@@ -12,4 +12,9 @@ public class TestServiceDTO extends TestDTO implements ServiceDTO {
     public ServiceDefinition getServiceDefinition() {
         return ApplicationServiceDefinitions.TEST_ROOT;
     }
+
+    @Override
+    public String getServiceInstance() {
+        return "Test : " + this.getTestCase() + " Location : " + this.getTestLocation();
+    }
 }

@@ -9,10 +9,12 @@ import com.springroll.router.CoreServiceDefinitions;
  */
 public class NotificationAckDTO implements ServiceDTO {
     private Long notificationId;
+    private String serviceInstance;
 
     public NotificationAckDTO(){}
 
-    public NotificationAckDTO(Long notificationId) {
+    public NotificationAckDTO(Long notificationId, String serviceInstance) {
+        this.serviceInstance = serviceInstance;
         this.notificationId = notificationId;
     }
 
@@ -27,6 +29,11 @@ public class NotificationAckDTO implements ServiceDTO {
     @Override
     public ServiceDefinition getServiceDefinition() {
         return CoreServiceDefinitions.NOTIFICATION_ACK;
+    }
+
+    @Override
+    public String getServiceInstance() {
+        return serviceInstance;
     }
 
 
