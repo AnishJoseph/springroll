@@ -166,7 +166,7 @@ public class NotificationManager implements NotificationService, LovProvider {
         if(notification.getNotificationMessage() instanceof DismissibleNotificationMessage){
             return ((DismissibleNotificationMessage)notification.getNotificationMessage()).getMessage();
         }
-        throw new SpringrollException(null, "notification.notdismissible", notification.getChannelName());
+        throw new SpringrollException(null, "notification.notdismissible", notification.getChannelName(), notification.getNotificationMessage().getClass().getSimpleName());
 
     }
 
