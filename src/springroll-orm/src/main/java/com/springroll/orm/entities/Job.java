@@ -48,22 +48,22 @@ public class Job extends AbstractEntity {
     @Column(name = "SERVICE")
     private String service;
 
-    @Column(name = "SERVICE_INSTANCE")
-    private String serviceInstance;
+    @Column(name = "SERVICE_DESCRIPTION")
+    private String serviceDescription;
 
     @Column(name = "REVIEW_LOG")
     @Convert(converter = ReviewLogConverter.class)
     private List<ReviewLog> reviewLog = new ArrayList<>();
 
 
-    public Job(Long parentId, Boolean underReview, String service, String userId, List<? extends DTO> payloads, String serviceInstance) {
+    public Job(Long parentId, Boolean underReview, String service, String userId, List<? extends DTO> payloads, String serviceDescription) {
         this.setParentId(parentId);
         this.underReview = underReview;
         this.service = service;
         this.userId = userId;
         this.setPayloads(payloads);
         this.setStartTime(LocalDateTime.now());
-        this.serviceInstance = serviceInstance;
+        this.serviceDescription = serviceDescription;
     }
 
 
@@ -139,11 +139,11 @@ public class Job extends AbstractEntity {
         this.reviewLog = reviewLog;
     }
 
-    public String getServiceInstance() {
-        return serviceInstance;
+    public String getServiceDescription() {
+        return serviceDescription;
     }
 
-    public void setServiceInstance(String serviceInstance) {
-        this.serviceInstance = serviceInstance;
+    public void setServiceDescription(String serviceInstance) {
+        this.serviceDescription = serviceInstance;
     }
 }

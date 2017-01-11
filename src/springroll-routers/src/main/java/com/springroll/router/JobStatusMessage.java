@@ -1,7 +1,5 @@
 package com.springroll.router;
 
-import com.springroll.core.LocaleFactory;
-import com.springroll.core.SpringrollSecurity;
 import com.springroll.notification.AbstractNotificationMessage;
 import com.springroll.orm.entities.Job;
 
@@ -21,7 +19,7 @@ public class JobStatusMessage extends AbstractNotificationMessage {
         /* This should match the named query in sr.named.queries.xml and the grid defn in the json file */
         updatedData.add(job.getID());
         updatedData.add(job.getService());
-        updatedData.add(job.getServiceInstance());
+        updatedData.add(job.getServiceDescription());
         updatedData.add(job.getStartTime());
         updatedData.add(job.getEndTime());
         updatedData.add(job.isCompleted());

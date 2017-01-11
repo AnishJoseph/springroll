@@ -13,7 +13,7 @@
             <column name="PARENT_ID" type="bigint"/>
             <column name="USER_ID" type="varchar(128)"/>
             <column name="SERVICE" type="VARCHAR2(64)" />
-            <column name="SERVICE_INSTANCE" type="VARCHAR2(64)" />
+            <column name="SERVICE_DESCRIPTION" type="VARCHAR2(1024)" />
             <column name="UNDER_REVIEW" type="varchar(1)" />
             <column name="STATUS" type="VARCHAR2(4000)" />
             <column name="COMPLETED" type="varchar(1)" />
