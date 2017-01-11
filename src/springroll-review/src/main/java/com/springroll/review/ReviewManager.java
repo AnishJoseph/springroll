@@ -3,6 +3,7 @@ package com.springroll.review;
 import com.springroll.core.*;
 import com.springroll.core.services.notification.*;
 import com.springroll.core.services.review.ReviewService;
+import com.springroll.notification.CoreNotificationChannels;
 import com.springroll.orm.entities.Job;
 import com.springroll.orm.entities.ReviewRule;
 import com.springroll.orm.entities.ReviewStep;
@@ -10,6 +11,7 @@ import com.springroll.orm.entities.ReviewStepMeta;
 import com.springroll.orm.repositories.Repositories;
 import com.springroll.router.AsynchSideEndPoints;
 import com.springroll.router.JobManager;
+import com.springroll.router.JobStatusMessage;
 import com.springroll.router.SpringrollEndPoint;
 import com.springroll.router.review.ReviewNeededEvent;
 import org.slf4j.Logger;
@@ -206,9 +208,9 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
             job.setReviewLog(reviewStepMeta.getReviewLog());
             job.setUnderReview(false);
 
-            if (reviewActionDTO.isApproved()) {
+            IEvent reviewedEvent = reviewStepMeta.getEvent();
+            if (reviewedEvent instanceof ReviewableEvent || reviewActionDTO.isApproved()) {
                 // find the step with the payload so that we can deserialize it and send it for processing
-                IEvent reviewedEvent = reviewStepMeta.getEvent();
                 if (reviewedEvent instanceof ReviewableEvent) {
                     ((ReviewableEvent) reviewedEvent).setReviewLog(reviewStepMeta.getReviewLog());
                     ((ReviewableEvent) reviewedEvent).setApproved(reviewActionDTO.isApproved());
@@ -221,10 +223,13 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
                 /* Now that the review is complete and approved, send out FYI notifications, if any */
                 if (!reviewSteps.isEmpty()) sendFyiNotification(reviewSteps);
             } else {
+                /* This is not a ReviewableEvent AND it has been rejected */
+                //FIXME - send out a new event instead of marking it done here
                 job.setEndTime(LocalDateTime.now());
                 String prevStatus = job.getStatus() == null ? "" : job.getStatus();
                 job.setStatus(prevStatus + " Review Rejected by " + SpringrollSecurity.getUser().getUsername());
                 job.setCompleted(true);
+                notificationService.sendNotification(CoreNotificationChannels.JOB_STATUS_UPDATE, new JobStatusMessage(job));
             }
             repo.reviewStep.delete(allReviewSteps);
             repo.reviewStepMeta.delete(reviewStepMeta.getID());

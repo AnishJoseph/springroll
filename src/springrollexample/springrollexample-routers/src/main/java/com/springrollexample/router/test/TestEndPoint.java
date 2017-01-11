@@ -123,6 +123,7 @@ public class TestEndPoint extends SpringrollEndPoint {
         System.out.println("Othrside odne");
     }
     public void on(TestRootEvent event) {
+        if(!event.isApproved())return;
         int testCase = event.getPayload().getTestCase();
         int testCaseIndex = event.getPayload().getTestLocation();
 
