@@ -257,11 +257,14 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
     }
 
     @Override
-    public String getServiceInstanceForReviewId(Long reviewStepId) {
+    public String getServiceInstanceForReviewId(boolean approved, Long reviewStepId) {
         ReviewStep reviewStep = repo.reviewStep.findOne(reviewStepId);
         ReviewStepMeta reviewStepMeta = repo.reviewStepMeta.findOne(reviewStep.getParentId());
         Job job = repo.job.findOne(reviewStepMeta.getParentId());
-        return "Review of " + job.getService() + " (" + job.getServiceInstance() + ") - Initiated by " + job.getUserId();
+        if(approved){
+            return LocaleFactory.getLocalizedServerMessage(SpringrollSecurity.getUser().getLocale(), "serviceinstance.review.approve", job.getService(), job.getServiceInstance(), job.getUserId());
+        }
+        return LocaleFactory.getLocalizedServerMessage(SpringrollSecurity.getUser().getLocale(), "serviceinstance.review.reject", job.getService(), job.getServiceInstance(), job.getUserId());
     }
 
     private class ReviewMeta implements IReviewMeta {

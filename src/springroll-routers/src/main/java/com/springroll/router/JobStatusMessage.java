@@ -16,8 +16,10 @@ public class JobStatusMessage extends AbstractNotificationMessage {
     private String userId;
 
     public JobStatusMessage(Job job) {
+        /* This should match the named query in sr.named.queries.xml and the grid defn in the json file */
         updatedData.add(job.getID());
         updatedData.add(job.getService());
+        updatedData.add(job.getServiceInstance());
         updatedData.add(job.getStartTime());
         updatedData.add(job.getEndTime());
         updatedData.add(job.isCompleted());

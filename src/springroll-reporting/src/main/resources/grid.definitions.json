@@ -11,6 +11,7 @@
       "gridColumns":[
           {"title": "ID", "type":"text", "visible" : false},
           {"title": "ServiceName", "type":"text"},
+          {"title": "Description", "type":"text"},
           {"title": "Start Time", "type":"datetime", "className" : "text-center"},
           {"title": "End Time", "type":"datetime", "className" : "text-center"},
           {"title": "Is Complete", "type":"boolean", "className" : "text-center"},

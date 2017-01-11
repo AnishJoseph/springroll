@@ -41,7 +41,7 @@ public class SpringrollAPI extends AbstractAPI {
             logger.error("Received ReviewStep ID as NULL");
             return -1l;
         }
-        String serviceInstanceForReviewId = reviewService.getServiceInstanceForReviewId(reviewActionDTO.getReviewStepId().get(0));
+        String serviceInstanceForReviewId = reviewService.getServiceInstanceForReviewId(reviewActionDTO.isApproved(), reviewActionDTO.getReviewStepId().get(0));
         reviewActionDTO.setServiceInstance(serviceInstanceForReviewId);
         return route(reviewActionDTO);
     }
