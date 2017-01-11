@@ -33,5 +33,5 @@ Application.subscribe('/core/jobstatusupdate', function(message){
     if(dashboardView == undefined || dashboardView.isDestroyed())return;
 
     /* The dashboard is currently active - send the updated data to the GridView (which expects an array of changes) */
-    dashboardView.updateData([message.data[0].updatedData], 0);
+    dashboardView.updateData([message.data[0].updatedData]);
 });

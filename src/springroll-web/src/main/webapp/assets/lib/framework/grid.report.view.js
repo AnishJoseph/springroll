@@ -76,22 +76,37 @@ var GridView  = Marionette.View.extend({
     },
 
     onDataChanged : function(updatedDataArray, indexOfIdCol){
-        var changedIds = [];
+        var that = this;
+        /* The default for the index of the ID col is 0 */
+        if(indexOfIdCol == undefined) indexOfIdCol = 0;
+        var existingRows = [];  /* An array to store ids of rows that are already displayed in the grid */
+        var updatedIds = [];
+        /* Go thru all the update and get the ids of the rows */
         _.each(updatedDataArray, function(updatedData){
-            changedIds.push(updatedData[indexOfIdCol]);
+            updatedIds.push(updatedData[indexOfIdCol]);
         });
 
-        var that = this;
         /* FIXME - this is very inefficient. For example if only one row has a status change
            we still go thru all the rows in the grid. Ideally we should stop the moment all
            rows that have changed are identified
          */
         this.gridtable.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
-            var index = _.indexOf(changedIds, this.data()[indexOfIdCol]);
+            var index = _.indexOf(updatedIds, this.data()[indexOfIdCol]);
             if(index != -1){
+                /* We have found the row that has changed */
                 this.data(updatedDataArray[index]);
+                existingRows.push(this.data()[indexOfIdCol]); /* Store the value of the index col */
             }
         });
+        /* Now determine if there are any new rows */
+        _.each(updatedDataArray, function(updatedData){
+            var index = _.indexOf(existingRows, updatedData[indexOfIdCol]);
+            if(index == -1){
+                /* The index for this updatedData does not exist in the grid - it MUST be a new row */
+                that.gridtable.row.add(updatedData);
+            }
+        });
+        /* Redraw ONLY after all rows have either been updated/added */
         this.gridtable.draw();
     }
 });
