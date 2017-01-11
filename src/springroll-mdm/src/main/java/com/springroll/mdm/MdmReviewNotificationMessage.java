@@ -56,9 +56,4 @@ public class MdmReviewNotificationMessage extends AbstractNotificationMessage {
     public void setMdmChangesForReview(MdmChangesForReview mdmChangesForReview) {
         this.mdmChangesForReview = mdmChangesForReview;
     }
-    @Override
-    public String getMessage() {
-        return LocaleFactory.getLocalizedServerMessage(SpringrollSecurity.getUser().getLocale(), messageKey, args);
-    }
-
 }

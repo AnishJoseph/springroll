@@ -4,6 +4,8 @@ import com.springroll.core.AckLog;
 import com.springroll.core.Lov;
 import com.springroll.core.LovProvider;
 import com.springroll.core.SpringrollSecurity;
+import com.springroll.core.exceptions.SpringrollException;
+import com.springroll.core.services.notification.DismissibleNotificationMessage;
 import com.springroll.core.services.notification.INotificationMessage;
 import com.springroll.core.services.notification.NotificationChannel;
 import com.springroll.core.services.notification.NotificationService;
@@ -161,7 +163,11 @@ public class NotificationManager implements NotificationService, LovProvider {
             logger.error("Unable to find notification with id {}", notificationId);
             return "Unknown";
         }
-        return notification.getNotificationMessage().getMessage();
+        if(notification.getNotificationMessage() instanceof DismissibleNotificationMessage){
+            return ((DismissibleNotificationMessage)notification.getNotificationMessage()).getMessage();
+        }
+        throw new SpringrollException(null, "notification.notdismissible", notification.getChannelName());
+
     }
 
     private NotificationChannel serviceUriToEnum(String channel) {

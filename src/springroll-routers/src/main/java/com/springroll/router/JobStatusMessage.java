@@ -46,8 +46,4 @@ public class JobStatusMessage extends AbstractNotificationMessage {
     public void setUpdatedData(List<Object> updatedData) {
         this.updatedData = updatedData;
     }
-    @Override
-    public String getMessage() {
-        return "Huh!";
-    }
 }

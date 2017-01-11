@@ -2,11 +2,12 @@ package com.springroll.notification;
 
 import com.springroll.core.LocaleFactory;
 import com.springroll.core.SpringrollSecurity;
+import com.springroll.core.services.notification.DismissibleNotificationMessage;
 
 /**
  * Created by anishjoseph on 05/10/16.
  */
-public class FyiNotificationMessage extends AbstractNotificationMessage {
+public class FyiNotificationMessage extends AbstractNotificationMessage implements DismissibleNotificationMessage {
     private String messageKey;
     private String[] args = new String[]{};
 

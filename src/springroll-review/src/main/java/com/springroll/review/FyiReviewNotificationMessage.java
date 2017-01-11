@@ -4,6 +4,7 @@ import com.springroll.core.BusinessValidationResult;
 import com.springroll.core.LocaleFactory;
 import com.springroll.core.ReviewLog;
 import com.springroll.core.SpringrollSecurity;
+import com.springroll.core.services.notification.DismissibleNotificationMessage;
 import com.springroll.core.services.notification.IReviewMeta;
 import com.springroll.notification.AbstractNotificationMessage;
 
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Created by anishjoseph on 02/10/16.
  */
-public class FyiReviewNotificationMessage extends AbstractNotificationMessage {
+public class FyiReviewNotificationMessage extends AbstractNotificationMessage implements DismissibleNotificationMessage {
     private List<BusinessValidationResult> businessValidationResult;
     private String messageKey;
     private String[] args = new String[]{};

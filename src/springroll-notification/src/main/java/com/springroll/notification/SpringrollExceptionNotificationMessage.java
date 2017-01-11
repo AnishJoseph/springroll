@@ -3,16 +3,16 @@ package com.springroll.notification;
 import com.springroll.core.LocaleFactory;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.exceptions.DebugInfo;
+import com.springroll.core.services.notification.DismissibleNotificationMessage;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by anishjoseph on 05/10/16.
  */
-public class SpringrollExceptionNotificationMessage extends AbstractNotificationMessage {
+public class SpringrollExceptionNotificationMessage extends AbstractNotificationMessage implements DismissibleNotificationMessage {
     private String serviceMessageKey = "exception.service.msg";
     private String[] serviceMessageArgs = new String[1];
     private String messageKey;
