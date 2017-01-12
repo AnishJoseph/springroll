@@ -4,14 +4,14 @@ import com.springroll.core.LocaleFactory;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.services.notification.DismissibleNotificationMessage;
 import com.springroll.core.services.notification.IReviewMeta;
-import com.springroll.core.services.notification.NotificationChannelType;
+import com.springroll.core.services.notification.AlertType;
 
 /**
  * Created by anishjoseph on 02/10/16.
  */
 public class FyiReviewNotificationMessage extends AbstractReviewNotificationMessage implements DismissibleNotificationMessage {
     {
-        channelType = NotificationChannelType.INFO;
+        channelType = AlertType.INFO;
     }
     public  FyiReviewNotificationMessage(){
     }

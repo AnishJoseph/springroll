@@ -1,7 +1,7 @@
 package com.springroll.mdm;
 
 import com.springroll.core.services.notification.IReviewMeta;
-import com.springroll.core.services.notification.NotificationChannelType;
+import com.springroll.core.services.notification.AlertType;
 import com.springroll.notification.AbstractAlertNotificationMessage;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public class MdmReviewNotificationMessage extends AbstractAlertNotificationMessa
     private String[] args = new String[]{};
     private MdmChangesForReview mdmChangesForReview;
     {
-        channelType = NotificationChannelType.ACTION;
+        channelType = AlertType.ACTION;
     }
     public MdmReviewNotificationMessage(){
     }

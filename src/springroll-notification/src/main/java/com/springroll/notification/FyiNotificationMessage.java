@@ -3,7 +3,7 @@ package com.springroll.notification;
 import com.springroll.core.LocaleFactory;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.services.notification.DismissibleNotificationMessage;
-import com.springroll.core.services.notification.NotificationChannelType;
+import com.springroll.core.services.notification.AlertType;
 
 /**
  * Created by anishjoseph on 05/10/16.
@@ -13,7 +13,7 @@ public class FyiNotificationMessage extends AbstractAlertNotificationMessage imp
     private String[] args = new String[]{};
 
     {
-        channelType = NotificationChannelType.INFO;
+        channelType = AlertType.INFO;
     }
 
     public FyiNotificationMessage() {

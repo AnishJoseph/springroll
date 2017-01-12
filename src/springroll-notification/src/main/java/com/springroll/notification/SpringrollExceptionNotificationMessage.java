@@ -4,7 +4,7 @@ import com.springroll.core.LocaleFactory;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.exceptions.DebugInfo;
 import com.springroll.core.services.notification.DismissibleNotificationMessage;
-import com.springroll.core.services.notification.NotificationChannelType;
+import com.springroll.core.services.notification.AlertType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class SpringrollExceptionNotificationMessage extends AbstractAlertNotific
     private Long transactionLegId;
     private List<SpringrollExceptionDebugInfo> springrollExceptionDebugInfoList = new ArrayList<>();
     {
-        channelType = NotificationChannelType.ERROR;
+        channelType = AlertType.ERROR;
     }
 
     public SpringrollExceptionNotificationMessage() {

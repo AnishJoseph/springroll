@@ -1,7 +1,7 @@
 package com.springroll.review;
 
 import com.springroll.core.services.notification.IReviewMeta;
-import com.springroll.core.services.notification.NotificationChannelType;
+import com.springroll.core.services.notification.AlertType;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class ReviewNotificationMessage extends AbstractReviewNotificationMessage{
     private List<Long> reviewStepId;
     {
-        channelType = NotificationChannelType.ACTION;
+        channelType = AlertType.ACTION;
     }
 
     public ReviewNotificationMessage(){
