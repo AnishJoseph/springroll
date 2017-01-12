@@ -76,7 +76,7 @@ public class TestEndPoint extends SpringrollEndPoint {
 
     public void on(TE1_1 event){
 
-        pushService.pushFYINotification("messageKEY", new String[]{"Arg1", "Arg2"}, "BOM");
+        pushService.pushFYINotification("ui.messageKEY", new String[]{"Arg1", "Arg2"}, "BOM");
         checkAndRunTest(event);
         TE1_2 te2 = new TE1_2();
         te2.setPayload(event.getPayload());
@@ -364,6 +364,6 @@ public class TestEndPoint extends SpringrollEndPoint {
         }
     }
     private void blowup(int testCase, int testLocation){
-        throw new SpringrollException(null, "Blowup", testCase+"", testLocation+"");
+        throw new SpringrollException(null, "ui.Blowup", testCase+"", testLocation+"");
     }
 }

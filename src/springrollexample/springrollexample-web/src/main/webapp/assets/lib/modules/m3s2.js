@@ -17,8 +17,8 @@ var M3S2Controller = Marionette.Object.extend({
 var m3s2Controller = new M3S2Controller();
 
 Application.addMenuItem({
-    parent: 'Item3',
-    name: 'SubItem2',
+    parent: 'ui.Item3',
+    name: 'ui.SubItem2',
     controller : m3s2Controller,
     index : 3,
     subIndex : 2

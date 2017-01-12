@@ -14,9 +14,9 @@ import java.util.List;
 public class TestBusinessValidator implements DTOBusinessValidator {
     @Override
     public void validate(List<? extends DTO> dtos, IBusinessValidationResults businessValidationResults) {
-        businessValidationResults.addReviewNeeded(null, 0, "fld", "rule1", new String[]{"Hello1", "World1"}, "Rule1");
-//        businessValidationResults.addReviewNeeded(null, 0, "fld", "rule2", new String[]{"Hello2", "World2"}, "Rule2");
-//        businessValidationResults.addReviewNeeded(null, 0, "fld", "rule3", new String[]{"Hello3", "World3"}, "Rule3");
-        businessValidationResults.addReviewNeeded(null, 0, "fld", "rule4", new String[]{"Hello4", "World4"}, "Rule4");
+        businessValidationResults.addReviewNeeded(null, 0, "fld", "ui.rule1.msgkey", new String[]{"Hello1", "World1"}, "Rule1");
+//        businessValidationResults.addReviewNeeded(null, 0, "fld", "ui.rule2.msgkey", new String[]{"Hello2", "World2"}, "Rule2");
+//        businessValidationResults.addReviewNeeded(null, 0, "fld", "ui.rule3.msgkey", new String[]{"Hello3", "World3"}, "Rule3");
+        businessValidationResults.addReviewNeeded(null, 0, "fld", "ui.rule4.msgkey", new String[]{"Hello4", "World4"}, "Rule4");
     }
 }
