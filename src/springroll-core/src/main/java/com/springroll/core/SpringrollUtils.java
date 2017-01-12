@@ -21,11 +21,11 @@ public class SpringrollUtils {
     private DateTimeFormatter dateFormatter;
     private DateTimeFormatter dateTimeFormatter;
 
-    @Value("${ui.datetime.format.java}")
-    private String dateTimeFormat = "dd/MM/yyyy HH:mm";
+    @Value("${datetime.format.java}")
+    private String dateTimeFormat = "dd-MM-yyyy HH:mm";
 
-    @Value("${ui.date.format.java}")
-    private String dateFormat = "dd/MM/yyyy";
+    @Value("${date.format.java}")
+    private String dateFormat = "dd-MM-yyyy";
 
     /**
      * Helper method to convert (typically a String) into an appropriate type

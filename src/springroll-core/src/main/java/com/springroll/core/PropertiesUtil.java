@@ -10,6 +10,8 @@ import java.util.Properties;
 
 /**
  * Created by anishjoseph on 08/12/16.
+ * In the properties file (default being springroll.properties) and property that starts with "ui." will
+ * be made available to javascript via Application.getProperty (see Application.js)
  */
 public class PropertiesUtil extends PropertyPlaceholderConfigurer {
     private static Map<String, String> uiPropertiesMap = new HashMap();;
