@@ -14,7 +14,7 @@ import java.util.List;
  * Created by anishjoseph on 05/10/16.
  */
 public class SpringrollExceptionNotificationMessage extends AbstractAlertNotificationMessage implements DismissibleNotificationMessage {
-    private String serviceMessageKey = "exception.service.msg";
+    private String serviceMessageKey = "ui.exception.service.msg";
     private String[] serviceMessageArgs = new String[1];
     private String messageKey;
     private String[] args = new String[]{};

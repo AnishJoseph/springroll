@@ -101,7 +101,7 @@ Application.ReportParamsView  = Marionette.View.extend({
             }
             /* Set the default values for each of the parameters */
             if(parameter.javaType == "java.lang.Boolean") {
-                parameter.lovList = [{name: 'true', value: true}, {name: 'false', value: false}];
+                parameter.lovList = [{name: 'ui.true', value: true}, {name: 'ui.false', value: false}];
                 that.params[parameter.name] = "true";
             } else if (parameter.lovList != null){
                 that.params[parameter.name] = (parameter.multiSelect === true) ? [parameter.lovList[0].value] : parameter.lovList[0].value;

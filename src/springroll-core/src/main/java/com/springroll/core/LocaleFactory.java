@@ -1,5 +1,7 @@
 package com.springroll.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Service;
 
@@ -13,47 +15,34 @@ import java.util.Properties;
  */
 @Service
 public class LocaleFactory {
+    private static final Logger logger = LoggerFactory.getLogger(LocaleFactory.class);
     private static boolean cache = false;
-    private static SpringrollResourceMessageBundleSource uiMessages;
-    private static SpringrollResourceMessageBundleSource serverMessages;
+    private static SpringrollResourceMessageBundleSource coreMessages;
 
     static {
-        serverMessages = new SpringrollResourceMessageBundleSource();
-        serverMessages.setBasename("server.messages");
-        serverMessages.setCacheSeconds(cache ? -1 : 5);
-
-        uiMessages = new SpringrollResourceMessageBundleSource();
-        uiMessages.setBasename("ui.messages");
-        uiMessages.setCacheSeconds(cache ? -1 : 5);
+        coreMessages = new SpringrollResourceMessageBundleSource();
+        coreMessages.setBasename("server.messages");
+        coreMessages.setCacheSeconds(cache ? -1 : 5);
     }
-    private Map<String, String> resourceBundleToMap(SpringrollResourceMessageBundleSource bundleSource, Locale locale) {
-        if(!cache)bundleSource.clearCache();
+
+    public Map<String, String> getUIMessagesAsMap(Locale locale) {
+        if(!cache) coreMessages.clearCache();
         Map<String, String> map = new HashMap();
 
-        Properties properties = bundleSource.getMessages(locale);
+        Properties properties = coreMessages.getMessages(locale);
         for(Map.Entry<Object,Object> entry: properties.entrySet()){
-            if(entry.getKey() != null && entry.getValue() != null) {
+            if(entry.getKey() != null && entry.getValue() != null && entry.getKey().toString().startsWith("ui.")) {
                 map.put(entry.getKey().toString(), entry.getValue().toString());
             }
         }
         return map;
     }
-    public Map<String, String> getUIMessagesAsMap(Locale locale) {
-        return resourceBundleToMap(uiMessages, locale);
-    }
 
-    public String getUILocaleMessage(String message, String defaultMessage, Locale locale) {
-        try {
-            return uiMessages.getMessage(message, null, locale);
-        }catch (Exception e){
-            return defaultMessage != null? defaultMessage: message;
-        }
-    }
     public static String  getLocalizedServerMessage(Locale locale, String messageKey, Object... args) {
         try {
-            return serverMessages.getMessage(messageKey, args, locale);
+            return coreMessages.getMessage(messageKey, args, locale);
         }catch (NoSuchMessageException exception){
-            //FIXME - add a logger message here
+            logger.info("Message key '{}' has no entry in the resource bundle", messageKey);
             return messageKey;
         }
     }
