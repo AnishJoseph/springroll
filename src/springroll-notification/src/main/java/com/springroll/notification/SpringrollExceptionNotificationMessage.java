@@ -120,7 +120,7 @@ public class SpringrollExceptionNotificationMessage extends AbstractAlertNotific
 
     @Override
     public String getMessage() {
-        return LocaleFactory.getLocalizedServerMessage(SpringrollSecurity.getUser().getLocale(), messageKey, args);
+        return LocaleFactory.getLocalizedMessage(SpringrollSecurity.getUser().getLocale(), messageKey, args);
     }
 
     public class SpringrollExceptionDebugInfo implements Serializable {

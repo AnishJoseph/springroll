@@ -49,7 +49,7 @@ public abstract class AbstractAPI {
         List<BusinessValidationViolations> violations =
                 ex.getViolations().stream()
                         .map(businessValidationResult -> new BusinessValidationViolations(businessValidationResult.getCookie(), businessValidationResult.getDtoIndex(), businessValidationResult.getField(),
-                                                                LocaleFactory.getLocalizedServerMessage(getUser().getLocale(), businessValidationResult.getMessageKey(), businessValidationResult.getArgs())))
+                                                                LocaleFactory.getLocalizedMessage(getUser().getLocale(), businessValidationResult.getMessageKey(), businessValidationResult.getArgs())))
                         .collect(Collectors.toList());
 
         return violations;
@@ -57,8 +57,8 @@ public abstract class AbstractAPI {
     @ExceptionHandler(SpringrollException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public  String handleSpringrollException(SpringrollException ex) {
-        logger.error(LocaleFactory.getLocalizedServerMessage(_locale, ex.getMessageKey(), ex.getMessageArguments()));
-        return LocaleFactory.getLocalizedServerMessage(getUser().getLocale(), ex.getMessageKey(), ex.getMessageArguments());
+        logger.error(LocaleFactory.getLocalizedMessage(_locale, ex.getMessageKey(), ex.getMessageArguments()));
+        return LocaleFactory.getLocalizedMessage(getUser().getLocale(), ex.getMessageKey(), ex.getMessageArguments());
     }
 
     @ExceptionHandler(RuntimeException.class)

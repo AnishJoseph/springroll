@@ -21,7 +21,7 @@ public class LocaleFactory {
 
     static {
         coreMessages = new SpringrollResourceMessageBundleSource();
-        coreMessages.setBasename("server.messages");
+        coreMessages.setBasename("core.springroll.messages");
         coreMessages.setCacheSeconds(cache ? -1 : 5);
     }
 
@@ -38,7 +38,7 @@ public class LocaleFactory {
         return map;
     }
 
-    public static String  getLocalizedServerMessage(Locale locale, String messageKey, Object... args) {
+    public static String getLocalizedMessage(Locale locale, String messageKey, Object... args) {
         try {
             return coreMessages.getMessage(messageKey, args, locale);
         }catch (NoSuchMessageException exception){

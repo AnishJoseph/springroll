@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.CannotAcquireLockException;
-import org.springframework.data.convert.JodaTimeConverters;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 
@@ -78,7 +77,7 @@ public class DeadLetterQueueHandler {
         if(debugInfo.getSpringrollException() != null){
             String messageKey = debugInfo.getSpringrollException().getMessageKey();
             String[] messageArguments = debugInfo.getSpringrollException().getMessageArguments();
-            String localizedServerMessage = LocaleFactory.getLocalizedServerMessage(user.getLocale(), messageKey, messageArguments);
+            String localizedServerMessage = LocaleFactory.getLocalizedMessage(user.getLocale(), messageKey, messageArguments);
             logger.error(localizedServerMessage);
             pushService.pushSpringrollExceptionNotification(debugInfo, user.getUsername(), user.getUsername());
             return;
@@ -142,7 +141,7 @@ public class DeadLetterQueueHandler {
         sb.append("\nJob ID : " + debugInfo.getJobId());
         sb.append("\nTransaction Leg ID : " + debugInfo.getTransactionLegId());
         if(debugInfo.getSpringrollException() != null){
-            String localizedServerMessage = LocaleFactory.getLocalizedServerMessage(Locale.getDefault(), debugInfo.getSpringrollException().getMessageKey(), debugInfo.getSpringrollException().getMessageArguments());
+            String localizedServerMessage = LocaleFactory.getLocalizedMessage(Locale.getDefault(), debugInfo.getSpringrollException().getMessageKey(), debugInfo.getSpringrollException().getMessageArguments());
             sb.append("\nException Message : " + localizedServerMessage);
         }
         if(debugInfo.getSpringrollException() == null)

@@ -13,7 +13,7 @@ public class SpringrollException extends RuntimeException {
     private String messageKey;
     public SpringrollException(){}
     public SpringrollException(Throwable e, String messageKey, String... messageArguments){
-        super(LocaleFactory.getLocalizedServerMessage(Locale.getDefault(), messageKey, (Object[])messageArguments), e);
+        super(LocaleFactory.getLocalizedMessage(Locale.getDefault(), messageKey, (Object[])messageArguments), e);
         this.messageArguments = messageArguments;
         this.messageKey = messageKey;
     }

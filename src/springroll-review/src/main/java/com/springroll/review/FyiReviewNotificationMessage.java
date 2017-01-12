@@ -20,7 +20,7 @@ public class FyiReviewNotificationMessage extends AbstractReviewNotificationMess
     }
     @Override
     public String getMessage() {
-        return LocaleFactory.getLocalizedServerMessage(SpringrollSecurity.getUser().getLocale(), getMessageKey(), getArgs());
+        return LocaleFactory.getLocalizedMessage(SpringrollSecurity.getUser().getLocale(), getMessageKey(), getArgs());
     }
 
 }

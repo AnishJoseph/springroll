@@ -44,6 +44,6 @@ public class FyiNotificationMessage extends AbstractAlertNotificationMessage imp
 
     @Override
     public String getMessage() {
-        return LocaleFactory.getLocalizedServerMessage(SpringrollSecurity.getUser().getLocale(), messageKey, args);
+        return LocaleFactory.getLocalizedMessage(SpringrollSecurity.getUser().getLocale(), messageKey, args);
     }
 }
