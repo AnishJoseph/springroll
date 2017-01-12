@@ -4,6 +4,7 @@ import com.springroll.core.LocaleFactory;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.exceptions.DebugInfo;
 import com.springroll.core.services.notification.DismissibleNotificationMessage;
+import com.springroll.core.services.notification.NotificationChannelType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Created by anishjoseph on 05/10/16.
  */
-public class SpringrollExceptionNotificationMessage extends AbstractNotificationMessage implements DismissibleNotificationMessage {
+public class SpringrollExceptionNotificationMessage extends AbstractAlertNotificationMessage implements DismissibleNotificationMessage {
     private String serviceMessageKey = "exception.service.msg";
     private String[] serviceMessageArgs = new String[1];
     private String messageKey;
@@ -22,6 +23,9 @@ public class SpringrollExceptionNotificationMessage extends AbstractNotification
     private Long jobId;
     private Long transactionLegId;
     private List<SpringrollExceptionDebugInfo> springrollExceptionDebugInfoList = new ArrayList<>();
+    {
+        channelType = NotificationChannelType.ERROR;
+    }
 
     public SpringrollExceptionNotificationMessage() {
     }

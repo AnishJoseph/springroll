@@ -1,7 +1,6 @@
 package com.springroll.notification;
 
 import com.springroll.core.services.notification.INotificationMessage;
-import com.springroll.core.services.notification.NotificationChannelType;
 
 /**
  * Created by anishjoseph on 05/10/16.
@@ -11,7 +10,6 @@ public abstract class AbstractNotificationMessage implements INotificationMessag
     private Long id;
     private String notificationReceivers;
     private String channel;
-    private NotificationChannelType channelType;
     private String initiator;
 
     public String getNotificationReceivers() {
@@ -56,11 +54,4 @@ public abstract class AbstractNotificationMessage implements INotificationMessag
         this.channel = channel;
     }
 
-    @Override public NotificationChannelType getChannelType() {
-        return channelType;
-    }
-
-    public void setChannelType(NotificationChannelType channelType) {
-        this.channelType = channelType;
-    }
 }

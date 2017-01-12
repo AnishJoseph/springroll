@@ -3,13 +3,18 @@ package com.springroll.notification;
 import com.springroll.core.LocaleFactory;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.services.notification.DismissibleNotificationMessage;
+import com.springroll.core.services.notification.NotificationChannelType;
 
 /**
  * Created by anishjoseph on 05/10/16.
  */
-public class FyiNotificationMessage extends AbstractNotificationMessage implements DismissibleNotificationMessage {
+public class FyiNotificationMessage extends AbstractAlertNotificationMessage implements DismissibleNotificationMessage {
     private String messageKey;
     private String[] args = new String[]{};
+
+    {
+        channelType = NotificationChannelType.INFO;
+    }
 
     public FyiNotificationMessage() {
     }

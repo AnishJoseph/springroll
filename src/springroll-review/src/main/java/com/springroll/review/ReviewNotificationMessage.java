@@ -1,16 +1,21 @@
 package com.springroll.review;
 
 import com.springroll.core.services.notification.IReviewMeta;
+import com.springroll.core.services.notification.NotificationChannelType;
 
 import java.util.List;
 
 /**
  * Created by anishjoseph on 02/10/16.
  */
-public class ReviewNotificationMessage extends FyiReviewNotificationMessage{
+public class ReviewNotificationMessage extends AbstractReviewNotificationMessage{
     private List<Long> reviewStepId;
+    {
+        channelType = NotificationChannelType.ACTION;
+    }
 
-    public ReviewNotificationMessage(){}
+    public ReviewNotificationMessage(){
+    }
 
     public ReviewNotificationMessage(IReviewMeta reviewMeta, String messageKey, String[] args) {
         super(reviewMeta, messageKey, args);

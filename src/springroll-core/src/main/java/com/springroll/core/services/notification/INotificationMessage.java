@@ -12,8 +12,6 @@ public interface INotificationMessage extends Serializable{
     void setCreationTime(long creationTime);
     String getNotificationReceivers();
     void setChannel(String channel);
-    NotificationChannelType getChannelType();
-    void setChannelType(NotificationChannelType channelType);
     void setInitiator(String initiator);
     String getInitiator();
 }

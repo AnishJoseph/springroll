@@ -31,6 +31,4 @@ public interface NotificationChannel {
      * @return
      */
     boolean isAutoClean();
-
-    NotificationChannelType getChannelType();
 }

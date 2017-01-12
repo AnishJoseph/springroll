@@ -1,21 +1,24 @@
 package com.springroll.mdm;
 
-import com.springroll.core.LocaleFactory;
-import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.services.notification.IReviewMeta;
-import com.springroll.notification.AbstractNotificationMessage;
+import com.springroll.core.services.notification.NotificationChannelType;
+import com.springroll.notification.AbstractAlertNotificationMessage;
 
 import java.util.List;
 
 /**
  * Created by anishjoseph on 02/10/16.
  */
-public class MdmReviewNotificationMessage extends AbstractNotificationMessage {
+public class MdmReviewNotificationMessage extends AbstractAlertNotificationMessage {
     private List<Long> reviewStepId;
     private String messageKey = "ui.mdm.review.noti.msg";
     private String[] args = new String[]{};
     private MdmChangesForReview mdmChangesForReview;
-    public MdmReviewNotificationMessage(){}
+    {
+        channelType = NotificationChannelType.ACTION;
+    }
+    public MdmReviewNotificationMessage(){
+    }
 
     public MdmReviewNotificationMessage(IReviewMeta reviewMeta, String[] args, MdmChangesForReview mdmChangesForReview) {
         setNotificationReceivers(reviewMeta.getApprover());

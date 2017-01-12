@@ -2,10 +2,7 @@ package com.springroll.notification;
 
 import com.springroll.core.*;
 import com.springroll.core.exceptions.SpringrollException;
-import com.springroll.core.services.notification.DismissibleNotificationMessage;
-import com.springroll.core.services.notification.INotificationMessage;
-import com.springroll.core.services.notification.NotificationChannel;
-import com.springroll.core.services.notification.NotificationService;
+import com.springroll.core.services.notification.*;
 import com.springroll.core.services.push.WebPushService;
 import com.springroll.orm.entities.Notification;
 import com.springroll.orm.repositories.Repositories;
@@ -58,7 +55,6 @@ public class NotificationManager implements NotificationService, LovProvider {
 
         notificationMessage.setCreationTime(System.currentTimeMillis());
         notificationMessage.setChannel(notificationChannel.getServiceUri());
-        notificationMessage.setChannelType(notificationChannel.getChannelType());
 
         if(!notificationChannel.isPersist())return null;
 
@@ -116,7 +112,7 @@ public class NotificationManager implements NotificationService, LovProvider {
             logger.error("Unable to find notification with id {}", notificationId);
             return;
         }
-        NotificationCancellationMessage msg = new NotificationCancellationMessage(notification.getNotificationMessage().getChannelType(), notificationId, notification.getInitiator());
+        NotificationCancellationMessage msg = new NotificationCancellationMessage(((AlertNotificationMessage)notification.getNotificationMessage()).getChannelType(), notificationId, notification.getInitiator());
         List<INotificationMessage> msgs = new ArrayList<>();
         msgs.add(msg);
         pushNotification(new PushData(notification.getUsers(), msgs, CoreNotificationChannels.NOTIFICATION_CANCEL.getServiceUri()));
