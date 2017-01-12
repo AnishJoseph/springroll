@@ -1,9 +1,6 @@
 package com.springroll.notification;
 
-import com.springroll.core.AckLog;
-import com.springroll.core.Lov;
-import com.springroll.core.LovProvider;
-import com.springroll.core.SpringrollSecurity;
+import com.springroll.core.*;
 import com.springroll.core.exceptions.SpringrollException;
 import com.springroll.core.services.notification.DismissibleNotificationMessage;
 import com.springroll.core.services.notification.INotificationMessage;
@@ -22,7 +19,9 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import javax.annotation.PostConstruct;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,6 +35,7 @@ public class NotificationManager implements NotificationService, LovProvider {
     @Autowired private Repositories repositories;
     @Autowired private ApplicationContext applicationContext;
     @Autowired ApplicationEventPublisher publisher;
+    @Autowired SpringrollUtils springrollUtils;
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationManager.class);
 
@@ -164,7 +164,8 @@ public class NotificationManager implements NotificationService, LovProvider {
             return "Unknown";
         }
         if(notification.getNotificationMessage() instanceof DismissibleNotificationMessage){
-            return ((DismissibleNotificationMessage)notification.getNotificationMessage()).getMessage();
+            LocalDateTime date = Instant.ofEpochMilli(notification.getNotificationMessage().getCreationTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+            return ((DismissibleNotificationMessage)notification.getNotificationMessage()).getMessage() + " at " + date.format(springrollUtils.getDateTimeFormatter());
         }
         throw new SpringrollException(null, "notification.notdismissible", notification.getChannelName(), notification.getNotificationMessage().getClass().getSimpleName());
 
