@@ -204,9 +204,9 @@ Application.Alerts = {
             Application.subscribe(notificationChannel, function(message){
                 var newAlerts = [];
                 var alertCollection;
-                if(message.data[0].channelType == 'ACTION') {alertCollection = actionCollection;alertsPanel.toggleAlertContainer(null, true);}
-                if(message.data[0].channelType == 'ERROR') alertCollection = errorCollection;
-                if(message.data[0].channelType == 'INFO') alertCollection = infoCollection;
+                if(message.data[0].alertType == 'ACTION') {alertCollection = actionCollection;alertsPanel.toggleAlertContainer(null, true);}
+                if(message.data[0].alertType == 'ERROR') alertCollection = errorCollection;
+                if(message.data[0].alertType == 'INFO') alertCollection = infoCollection;
                 _.each(message.data, function(notification){
 
                     if(_.isUndefined(alertCollection.get(notification.id))){
@@ -226,9 +226,9 @@ Application.Alerts = {
 }
 Application.subscribe('/core/notificationCancel', function(message){
     var alertCollection;
-    if(message.data[0].channelType == 'ACTION') alertCollection = actionCollection;
-    if(message.data[0].channelType == 'ERROR') alertCollection = errorCollection;
-    if(message.data[0].channelType == 'INFO') alertCollection = infoCollection;
+    if(message.data[0].alertType == 'ACTION') alertCollection = actionCollection;
+    if(message.data[0].alertType == 'ERROR') alertCollection = errorCollection;
+    if(message.data[0].alertType == 'INFO') alertCollection = infoCollection;
     alertCollection.remove(message.data[0].id);
 
 });
