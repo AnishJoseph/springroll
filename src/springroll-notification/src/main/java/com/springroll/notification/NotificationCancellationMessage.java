@@ -6,20 +6,20 @@ import com.springroll.core.services.notification.AlertType;
  * Created by anishjoseph on 15/10/16.
  */
 public class NotificationCancellationMessage extends AbstractNotificationMessage {
-    protected AlertType channelType;
+    protected AlertType alertType;
     public NotificationCancellationMessage(){}
-    public NotificationCancellationMessage(AlertType channelType, Long id, String initiator ){
-        this.channelType = channelType;
+    public NotificationCancellationMessage(AlertType alertType, Long id, String initiator ){
+        this.alertType = alertType;
         this.setChannel(CoreNotificationChannels.NOTIFICATION_CANCEL.getChannelName());
         this.setId(id);
         setInitiator(initiator);
     }
 
-    public AlertType getChannelType() {
-        return channelType;
+    public AlertType getAlertType() {
+        return alertType;
     }
 
-    public void setChannelType(AlertType channelType) {
-        this.channelType = channelType;
+    public void setAlertType(AlertType alertType) {
+        this.alertType = alertType;
     }
 }

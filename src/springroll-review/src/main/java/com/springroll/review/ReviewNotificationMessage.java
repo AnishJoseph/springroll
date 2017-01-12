@@ -11,7 +11,7 @@ import java.util.List;
 public class ReviewNotificationMessage extends AbstractReviewNotificationMessage{
     private List<Long> reviewStepId;
     {
-        channelType = AlertType.ACTION;
+        alertType = AlertType.ACTION;
     }
 
     public ReviewNotificationMessage(){

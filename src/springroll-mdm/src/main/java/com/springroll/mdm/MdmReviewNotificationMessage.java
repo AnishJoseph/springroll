@@ -15,7 +15,7 @@ public class MdmReviewNotificationMessage extends AbstractAlertNotificationMessa
     private String[] args = new String[]{};
     private MdmChangesForReview mdmChangesForReview;
     {
-        channelType = AlertType.ACTION;
+        alertType = AlertType.ACTION;
     }
     public MdmReviewNotificationMessage(){
     }

@@ -13,7 +13,7 @@ public class FyiNotificationMessage extends AbstractAlertNotificationMessage imp
     private String[] args = new String[]{};
 
     {
-        channelType = AlertType.INFO;
+        alertType = AlertType.INFO;
     }
 
     public FyiNotificationMessage() {

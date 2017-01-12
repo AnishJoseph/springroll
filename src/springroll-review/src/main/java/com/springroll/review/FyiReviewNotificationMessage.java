@@ -11,7 +11,7 @@ import com.springroll.core.services.notification.AlertType;
  */
 public class FyiReviewNotificationMessage extends AbstractReviewNotificationMessage implements DismissibleNotificationMessage {
     {
-        channelType = AlertType.INFO;
+        alertType = AlertType.INFO;
     }
     public  FyiReviewNotificationMessage(){
     }

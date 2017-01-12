@@ -7,15 +7,13 @@ import com.springroll.core.services.notification.AlertType;
  * Created by anishjoseph on 05/10/16.
  */
 public abstract class AbstractAlertNotificationMessage  extends AbstractNotificationMessage implements AlertNotificationMessage {
-    protected AlertType channelType;
+    protected AlertType alertType;
 
-    @Override
-    public AlertType getChannelType() {
-        return channelType;
+    public AlertType getAlertType() {
+        return alertType;
     }
 
-    @Override
-    public void setChannelType(AlertType channelType) {
-        this.channelType = channelType;
+    public void setAlertType(AlertType alertType) {
+        this.alertType = alertType;
     }
 }

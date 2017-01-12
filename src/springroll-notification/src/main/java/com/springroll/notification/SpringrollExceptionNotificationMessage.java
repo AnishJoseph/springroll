@@ -24,7 +24,7 @@ public class SpringrollExceptionNotificationMessage extends AbstractAlertNotific
     private Long transactionLegId;
     private List<SpringrollExceptionDebugInfo> springrollExceptionDebugInfoList = new ArrayList<>();
     {
-        channelType = AlertType.ERROR;
+        alertType = AlertType.ERROR;
     }
 
     public SpringrollExceptionNotificationMessage() {
