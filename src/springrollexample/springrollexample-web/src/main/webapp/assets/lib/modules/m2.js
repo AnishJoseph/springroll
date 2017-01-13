@@ -12,7 +12,8 @@ var M2Controller = Marionette.Object.extend({
 var m2Controller = new M2Controller();
 
 Application.addMenuItem({
-    name: 'ui.menu.second',
+    name: 'menuSecond',
+    title: 'ui.menu.second',
     controller : m2Controller,
     index : 2
 });

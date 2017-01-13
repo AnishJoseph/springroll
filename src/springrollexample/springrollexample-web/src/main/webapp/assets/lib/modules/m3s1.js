@@ -18,7 +18,8 @@ var m3s1Controller = new M3S1Controller();
 
 Application.addMenuItem({
     parent: 'ui.Item3',
-    name: 'ui.SubItem1',
+    name: 'subItem1',
+    title: 'ui.SubItem1',
     controller : m3s1Controller,
     index : 3,
     subIndex : 1

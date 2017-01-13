@@ -14,6 +14,7 @@ var controller = new TestGridParamFromSpringrollUserController();
 Application.addMenuItem({
     parent: 'GridTests',
     name: 'ParamFromSpringrollUser',
+    title: 'ui.ParamFromSpringrollUser',
     controller : controller,
     index : 5,
     subIndex : 2

@@ -17,8 +17,8 @@ var View = Marionette.View.extend({
 
     simplePipeLine : function(){
         var simpleTransaction = new SimpleTransaction();
-        simpleTransaction.set('testCase', 2);
-        simpleTransaction.set('testLocation', 4);
+        simpleTransaction.set('testCase', 1);
+        simpleTransaction.set('testLocation', 0);
         simpleTransaction.save({},{});
     }
 
@@ -36,6 +36,7 @@ var m1Controller = new M1Controller();
 
 Application.addMenuItem({
     name: 'TransactionTests',
+    title: 'ui.TransactionTests',
     controller : m1Controller,
     index : 1
 });

@@ -14,6 +14,7 @@ var jobDashboardController = new JobDashboardController();
 
 Application.addMenuItem({
     name: 'JobDashboard',
+    title: 'ui.JobDashboard',
     controller : jobDashboardController,
     index : 5
 });

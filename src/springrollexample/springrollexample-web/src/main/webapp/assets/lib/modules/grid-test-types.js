@@ -14,6 +14,7 @@ var testGridAllTypesController = new TestGridAllTypesController();
 Application.addMenuItem({
     parent: 'GridTests',
     name: 'AllTypes',
+    title: 'ui.AllTypes',
     controller : testGridAllTypesController,
     index : 5,
     subIndex : 1

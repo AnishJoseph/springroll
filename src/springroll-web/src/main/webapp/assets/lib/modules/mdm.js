@@ -49,7 +49,8 @@ $.ajax({
         var routes = {};
         _.each(masters, function(masterName, index){
             Application.addMenuItem({
-                parent: 'Masters',
+                parent: 'ui.Masters',
+                title: "ui." + masterName,
                 name: masterName,
                 controller : mdmController,
                 index : 4,

@@ -19,14 +19,14 @@ Application.MenuView = Marionette.View.extend({
                 template.push('<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">' + Localize(item.items[0].parent) + '<span class="caret"></span></a> ');
                 template.push('<ul class="dropdown-menu">');
                 _.each(_.sortBy(item.items, 'subIndex'), function (menuItem) {
-                    var id = 'menuId' + menuItem.name.replace(/\./g,'');
-                    template.push('<li role="presentation"><a id="' + id + '">' + Localize(menuItem.name) + '</a></li>');
+                    var id = 'menuId' + menuItem.name;
+                    template.push('<li role="presentation"><a id="' + id + '">' + Localize(menuItem.title) + '</a></li>');
                 });
                 template.push(' </ul> </li>');
             } else {
                 var menuItem = item.items;
-                var id = 'menuId' + menuItem.name.replace(/\./g,'');
-                template.push('<li role="presentation"><a id="' + id + '">' + Localize(menuItem.name) + '</a></li>');
+                var id = 'menuId' + menuItem.name;
+                template.push('<li role="presentation"><a id="' + id + '">' + Localize(menuItem.title) + '</a></li>');
             }
         });
         template.push('</ul>');
@@ -56,14 +56,14 @@ Application.MenuView = Marionette.View.extend({
         _.each(Application.getMenuItems(), function(item){
             if($.isArray(item.items)){
                 _.forEach(item.items, function(menuItem){
-                    var id = 'click #menuId' + menuItem.name.replace(/\./g,'');
+                    var id = 'click #menuId' + menuItem.name;
                     events[id] = function () {
                         menuItem.controller.activate(menuItem.name);
                     }
                 });
             } else {
                 var menuItem = item.items;
-                var id = 'click #menuId' + menuItem.name.replace(/\./g,'');
+                var id = 'click #menuId' + menuItem.name;
                 events[id] = function () {
                     menuItem.controller.activate(menuItem.name);
                 }
