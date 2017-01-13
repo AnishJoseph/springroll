@@ -67,7 +67,9 @@ public class EventCreator {
 
         if(ContextStore.getJobId() == null) {
             newJobCreated = true;
-            job = new Job(jobMeta.getParentJobId(), needsReview, ((ServiceDTO)event.getPayload()).getServiceDefinition().name(), SpringrollSecurity.getUser().getUsername(), jobMeta.getPayloads(), jobMeta.getPayloads().get(0).getServiceInstance());
+            job = new Job(jobMeta.getParentJobId(), needsReview,
+                    LocaleFactory.getLocalizedMessage(SpringrollSecurity.getUser().getLocale(), ((ServiceDTO)event.getPayload()).getServiceDefinition().name()),
+                    SpringrollSecurity.getUser().getUsername(), jobMeta.getPayloads(), jobMeta.getPayloads().get(0).getServiceInstance());
             repo.job.save(job);
             ContextStore.put(SpringrollSecurity.getUser(), job.getID(), jobManager.registerNewTransactionLeg(job.getID(), 0L));
         }

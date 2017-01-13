@@ -21,20 +21,21 @@ public class LocaleFactory {
     private static SpringrollResourceMessageBundleSource coreMessages;
     private static SpringrollResourceMessageBundleSource applicationMessages = null;
 
-    @Value("${application.resource.bundle.name}")
-    private String applicationResourceBundleName;
-
-    private void setApplicationResourceBundle() {
-        applicationMessages = new SpringrollResourceMessageBundleSource();
-        applicationMessages.setBasename(applicationResourceBundleName);
-        applicationMessages.setCacheSeconds(cache ? -1 : 5);
-    }
-
     static {
         coreMessages = new SpringrollResourceMessageBundleSource();
         coreMessages.setBasename("core.springroll.messages");
         coreMessages.setCacheSeconds(cache ? -1 : 5);
+
+        applicationMessages = new SpringrollResourceMessageBundleSource();
+        applicationMessages.setBasename("sr.application.messages");
+        applicationMessages.setCacheSeconds(cache ? -1 : 5);
     }
+
+    /**
+     * Extracts all property keys that start with 'ui.'
+     * @param properties
+     * @return - a map of the property key and values that start with 'ui.'
+     */
     private Map<String, String> getUIProperties(Properties properties){
         Map<String, String> map = new HashMap();
         for(Map.Entry<Object,Object> entry: properties.entrySet()){
@@ -46,9 +47,6 @@ public class LocaleFactory {
 
     }
     public Map<String, String> getUIMessagesAsMap(Locale locale) {
-        if(applicationResourceBundleName != null && applicationMessages == null){
-            setApplicationResourceBundle();
-        }
         if(!cache) {
             coreMessages.clearCache();
             if(applicationMessages != null)applicationMessages.clearCache();
@@ -65,9 +63,13 @@ public class LocaleFactory {
     public static String getLocalizedMessage(Locale locale, String messageKey, Object... args) {
         try {
             return coreMessages.getMessage(messageKey, args, locale);
-        }catch (NoSuchMessageException exception){
-            logger.info("Message key '{}' has no entry in the resource bundle", messageKey);
-            return messageKey;
+        } catch (NoSuchMessageException exception){
+            try {
+                return applicationMessages.getMessage(messageKey, args, locale);
+            } catch (NoSuchMessageException e) {
+                logger.info("Message key '{}' has no entry in the resource bundle", messageKey);
+                return messageKey;
+            }
         }
     }
 }
