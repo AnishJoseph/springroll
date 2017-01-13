@@ -10,12 +10,12 @@
     {"name" : "JobDashboard", "namedQuery": "JobDashboardQuery",
       "gridColumns":[
           {"title": "ID", "type":"text", "visible" : false},
-          {"title": "ServiceName", "type":"text"},
+          {"title": "Action", "type":"text"},
           {"title": "Description", "type":"text"},
           {"title": "Start Time", "type":"datetime", "className" : "text-center"},
           {"title": "End Time", "type":"datetime", "className" : "text-center"},
-          {"title": "Is Complete", "type":"boolean", "className" : "text-center"},
-          {"title": "Is Under Review", "type":"boolean", "className" : "text-center"},
+          {"title": "Failed?", "type":"boolean", "className" : "text-center"},
+          {"title": "Under Review?", "type":"boolean", "className" : "text-center"},
           {"title": "Status", "type":"text"}
       ]
     },

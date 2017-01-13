@@ -70,7 +70,7 @@ public class DeadLetterQueueHandler {
             return;
         }
 
-        jobManager.handleExceptionInTransactionLeg(event.getJobId(), event.getLegId(), caused.getClass().getSimpleName());
+        jobManager.handleExceptionInTransactionLeg(event.getJobId(), event.getLegId(), event.getClass().getSimpleName() + ":" + caused.getClass().getSimpleName());
         DebugInfo debugInfo = getDebugInfo(caused, eventThatCausedException, event.getJobId(), event.getLegId(), serviceName, firstEventInThisTransaction);
         printStack(caused, debugInfo);
         SpringrollUser user = event.getUser();

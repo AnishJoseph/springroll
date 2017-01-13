@@ -17,6 +17,7 @@
             <column name="UNDER_REVIEW" type="varchar(1)" />
             <column name="STATUS" type="VARCHAR2(4000)" />
             <column name="COMPLETED" type="varchar(1)" />
+            <column name="FAILED" type="varchar(1)" />
             <column name="START_TIME" type="datetime"/>
             <column name="END_TIME" type="datetime"/>
             <column name="REVIEW_LOG" type="VARCHAR2(2048)"/>

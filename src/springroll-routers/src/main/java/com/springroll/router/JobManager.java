@@ -70,12 +70,16 @@ public class JobManager {
         removeLegsWithParentId(legId, legMonitor, job);
     }
 
+    /*
+        When a event is process it may route new events - if any of them are to be delivered in a new
+        transaction, then a reference is added in the context of the original event (the new event itself
+        will be processed later - after the commit of the current event is done. However if an exception
+        occurs before the commit happens, any references registered earlier needs to be cleaned up
+     */
     private void removeLegsWithParentId(Long legId, LegMonitor legMonitor, Job job){
         for(Iterator<Map.Entry<Long, Long>> it = legMonitor.refs.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<Long, Long> entry = it.next();
             if(entry.getValue().equals(legId)) {
-                job.setStatus(legMonitor.jobStatus + "Leg" + entry.getKey() + "-Cancelled ");
-                legMonitor.jobStatus = job.getStatus();
                 it.remove();
             }
         }
@@ -88,6 +92,7 @@ public class JobManager {
         }
         LegMonitor legMonitor = legMonitorMap.get(jobId);
         Job job = repo.job.findOne(jobId);
+        job.setFailed(true);
         removeLegsWithParentId(legId, legMonitor, job);
         removeTransactionLegReference(jobId, legId, status);
     }
@@ -108,7 +113,7 @@ public class JobManager {
                     job.setCompleted(true);
                     job.setEndTime(LocalDateTime.now());
                     if (legMonitor.jobStatus.length() < 3950) {
-                        job.setStatus(legMonitor.jobStatus + "Leg" + legId + "-" + status + "  ");
+                        job.setStatus(legMonitor.jobStatus + status + "  ");
                         legMonitor.jobStatus = job.getStatus();
                     }
                     logger.debug("Job Completed: Transaction leg {} completed for job {}: Status {}", legId, jobId, job.getStatus());
@@ -116,7 +121,7 @@ public class JobManager {
                     break;
                 case REMOVED:
                     if (legMonitor.jobStatus.length() < 3950) {
-                        job.setStatus(legMonitor.jobStatus + "Leg" + legId + "-" + status + "  ");
+                        job.setStatus(legMonitor.jobStatus + status + "  ");
                         legMonitor.jobStatus = job.getStatus();
                     }
                     logger.debug("Transaction leg {} completed for job {}: Status {}", legId, jobId, job.getStatus());
@@ -130,7 +135,7 @@ public class JobManager {
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void handleBeforeCommitEvent(IEvent event) {
-        removeTransactionLegReference(event.getJobId(), event.getLegId(), "OK");
+        removeTransactionLegReference(event.getJobId(), event.getLegId(), event.getClass().getSimpleName());
     }
 
     private class LegMonitor {

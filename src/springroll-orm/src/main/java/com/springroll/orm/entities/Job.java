@@ -40,6 +40,9 @@ public class Job extends AbstractEntity {
     @Column(name = "COMPLETED")
     private Boolean completed;
 
+    @Column(name = "FAILED")
+    private Boolean failed = false;
+
     @Column(name = "UNDER_REVIEW")
     private Boolean underReview;
 
@@ -145,5 +148,13 @@ public class Job extends AbstractEntity {
 
     public void setServiceDescription(String serviceInstance) {
         this.serviceDescription = serviceInstance;
+    }
+
+    public Boolean getFailed() {
+        return failed;
+    }
+
+    public void setFailed(Boolean failed) {
+        this.failed = failed;
     }
 }
