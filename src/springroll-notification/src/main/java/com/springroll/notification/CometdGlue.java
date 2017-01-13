@@ -9,6 +9,8 @@ import org.cometd.annotation.Session;
 import org.cometd.bayeux.Message;
 import org.cometd.bayeux.server.BayeuxServer;
 import org.cometd.bayeux.server.ServerSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.inject.Inject;
@@ -28,6 +30,7 @@ public class CometdGlue implements WebPushService
     @Session private ServerSession serverSession;
     @Autowired
     NotificationService notificationService;
+    private static final Logger logger = LoggerFactory.getLogger(CometdGlue.class);
 
     Map<String, Map<String, Set<String>>> channel2User = new HashMap<>();
 
@@ -67,7 +70,8 @@ public class CometdGlue implements WebPushService
                 }
             }
         }catch (Exception e){
-            //FIXME - log message here abou the failure to deliver
+            logger.error("Unable to deliver messages over channel {}. Exception message is {}", channel, e.getMessage());
+            e.printStackTrace();
         }
     }
 
