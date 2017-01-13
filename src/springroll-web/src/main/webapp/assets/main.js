@@ -29,6 +29,7 @@ require('review.moreinfo.js');
 require('mdm.js');
 require('mdm.editor.js');
 require('utils.js');
+require('jobdashboard.js');
 
 $(function() {
     var token = $("meta[name='_csrf']").attr("content");
