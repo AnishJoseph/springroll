@@ -1,9 +1,6 @@
 package com.springroll.router;
 
-import com.springroll.core.IEvent;
-import com.springroll.core.LocaleFactory;
-import com.springroll.core.ServiceDTO;
-import com.springroll.core.SpringrollUser;
+import com.springroll.core.*;
 import com.springroll.core.exceptions.DebugInfo;
 import com.springroll.core.exceptions.ExceptionCauses;
 import com.springroll.core.exceptions.ExceptionStore;
@@ -39,6 +36,9 @@ public class DeadLetterQueueHandler {
     @Autowired Repositories repositories;
 
     public void on(Exchange exchange, IEvent event){
+        /* The DLQ in on a new thread - set the user context */
+        if(event != null)ContextStore.put( event.getUser(), null, null);
+
         ExceptionCauses causedExceptionDetails = ExceptionStore.getCausedExceptionDetails(event);
 
         if(causedExceptionDetails == null)
