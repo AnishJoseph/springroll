@@ -161,7 +161,8 @@ public class NotificationManager implements NotificationService, LovProvider {
         }
         if(notification.getNotificationMessage() instanceof DismissibleNotificationMessage){
             LocalDateTime date = Instant.ofEpochMilli(notification.getNotificationMessage().getCreationTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-            return ((DismissibleNotificationMessage)notification.getNotificationMessage()).getMessage() + " at " + date.format(springrollUtils.getDateTimeFormatter());
+            return LocaleFactory.getLocalizedMessage(SpringrollSecurity.getUser().getLocale(), notification.getChannelName()) + " : " +
+                    ((DismissibleNotificationMessage)notification.getNotificationMessage()).getMessage() + " at " + date.format(springrollUtils.getDateTimeFormatter());
         }
         throw new SpringrollException(null, "notification.notdismissible", notification.getChannelName(), notification.getNotificationMessage().getClass().getSimpleName());
 

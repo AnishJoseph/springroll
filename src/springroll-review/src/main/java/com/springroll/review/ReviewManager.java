@@ -44,6 +44,7 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
     @Autowired JobManager jobManager;
 
     @Autowired AsynchSideEndPoints asynchEndPoint;
+    @Autowired SpringrollUtils springrollUtils;
 
     public void on(ReviewNeededEvent reviewNeededEvent){
         ReviewStepMeta reviewStepMeta = createReviewSteps(reviewNeededEvent.getPayload().getReviewNeededViolations(), reviewNeededEvent.getPayload().getEventForReview().getJobId(), reviewNeededEvent);
@@ -267,9 +268,9 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
         ReviewStepMeta reviewStepMeta = repo.reviewStepMeta.findOne(reviewStep.getParentId());
         Job job = repo.job.findOne(reviewStepMeta.getParentId());
         if(approved){
-            return LocaleFactory.getLocalizedMessage(SpringrollSecurity.getUser().getLocale(), "serviceinstance.review.approve", job.getService(), job.getServiceDescription(), job.getUserId());
+            return LocaleFactory.getLocalizedMessage(SpringrollSecurity.getUser().getLocale(), "serviceinstance.review.approve", job.getService(), job.getServiceDescription(), job.getUserId())  + " at " + job.getStartTime().format(springrollUtils.getDateTimeFormatter());
         }
-        return LocaleFactory.getLocalizedMessage(SpringrollSecurity.getUser().getLocale(), "serviceinstance.review.reject", job.getService(), job.getServiceDescription(), job.getUserId());
+        return LocaleFactory.getLocalizedMessage(SpringrollSecurity.getUser().getLocale(), "serviceinstance.review.reject", job.getService(), job.getServiceDescription(), job.getUserId()) + " at " + job.getStartTime().format(springrollUtils.getDateTimeFormatter());
     }
 
     private class ReviewMeta implements IReviewMeta {
