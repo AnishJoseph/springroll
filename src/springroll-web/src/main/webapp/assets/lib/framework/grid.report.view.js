@@ -55,6 +55,9 @@ var GridView  = Marionette.View.extend({
                 columnDefinition['render'] = that.dateRenderer;
             }
         });
+        _.each(this.columnDefinitions, function(columnDefinition){
+            columnDefinition.title = Localize(columnDefinition.title);
+        });
         this.gridtable = this.ui.griddiv.DataTable( {
             "dom": 'flrtip',
             data: this.gridata,
