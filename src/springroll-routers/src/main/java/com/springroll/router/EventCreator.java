@@ -99,7 +99,7 @@ public class EventCreator {
                 (see SpringrollEndPoint - method routeToSynchronousSideFromAsynchronousSide
              */
             job = repo.job.findOne(event.getJobId());
-            job.setUnderReview(true);
+            job.setJobStatus(JobStatus.UnderReview);
         }
 
         ReviewNeededEvent reviewNeededEvent = new ReviewNeededEvent(event, jobMeta.getBusinessValidationResults().getReviewNeededViolations(), SpringrollSecurity.getUser());

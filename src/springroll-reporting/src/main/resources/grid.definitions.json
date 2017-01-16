@@ -14,9 +14,8 @@
           {"title": "Description", "type":"text"},
           {"title": "Start Time", "type":"datetime", "className" : "text-center"},
           {"title": "End Time", "type":"datetime", "className" : "text-center"},
-          {"title": "Failed?", "type":"boolean", "className" : "text-center"},
-          {"title": "Under Review?", "type":"boolean", "className" : "text-center"},
-          {"title": "Status", "type":"text"}
+          {"title": "Job Status", "type":"boolean", "className" : "text-center"},
+          {"title": "Status Message", "type":"text"}
       ]
     },
     {"name" : "TestGridAllTypes", "namedQuery": "TestGridAllTypes",

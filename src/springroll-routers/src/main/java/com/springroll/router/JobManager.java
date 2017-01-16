@@ -1,6 +1,7 @@
 package com.springroll.router;
 
 import com.springroll.core.IEvent;
+import com.springroll.core.JobStatus;
 import com.springroll.core.services.notification.NotificationService;
 import com.springroll.notification.CoreNotificationChannels;
 import com.springroll.orm.entities.Job;
@@ -92,7 +93,7 @@ public class JobManager {
         }
         LegMonitor legMonitor = legMonitorMap.get(jobId);
         Job job = repo.job.findOne(jobId);
-        job.setFailed(true);
+        job.setJobStatus(legId == 1 ? JobStatus.FailedInRootTransaction : JobStatus.FailedInSecondaryTransaction);
         removeLegsWithParentId(legId, legMonitor, job);
         removeTransactionLegReference(jobId, legId, status);
     }
@@ -112,6 +113,7 @@ public class JobManager {
                 case EMPTIED:
                     job.setCompleted(true);
                     job.setEndTime(LocalDateTime.now());
+                    if(job.getJobStatus().equals(JobStatus.InProgress))job.setJobStatus(JobStatus.Success);
                     if (legMonitor.jobStatus.length() < 3950) {
                         job.setStatus(legMonitor.jobStatus + status + "  ");
                         legMonitor.jobStatus = job.getStatus();

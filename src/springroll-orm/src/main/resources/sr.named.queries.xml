@@ -4,8 +4,7 @@
                  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd " >
     <named-query name="JobDashboardQuery">
         <!--When you change this please change grid.definitions.json AND JobStatusMessage constructor - the # of fields should match -->
-        <query>SELECT o.id, o.service, o.serviceDescription, o.startTime, o.endTime, o.failed, o.underReview,
-            o.status FROM Job o WHERE o.userId = :loggedInUser
+        <query>SELECT o.id, o.service, o.serviceDescription, o.startTime, o.endTime, o.jobStatus, o.status FROM Job o WHERE o.userId = :loggedInUser
         </query>
     </named-query>
 </entity-mappings>

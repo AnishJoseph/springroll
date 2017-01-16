@@ -2,6 +2,7 @@ package com.springroll.orm.entities;
 
 
 import com.springroll.core.DTO;
+import com.springroll.core.JobStatus;
 import com.springroll.core.ReviewLog;
 import com.springroll.orm.JavaSerializationConverter;
 import com.springroll.orm.ReviewLogConverter;
@@ -40,11 +41,8 @@ public class Job extends AbstractEntity {
     @Column(name = "COMPLETED")
     private Boolean completed;
 
-    @Column(name = "FAILED")
-    private Boolean failed = false;
-
-    @Column(name = "UNDER_REVIEW")
-    private Boolean underReview;
+    @Column(name = "JOB_STATUS")
+    private JobStatus jobStatus = JobStatus.InProgress;
 
     private String status;
 
@@ -61,7 +59,7 @@ public class Job extends AbstractEntity {
 
     public Job(Long parentId, Boolean underReview, String service, String userId, List<? extends DTO> payloads, String serviceDescription) {
         this.setParentId(parentId);
-        this.underReview = underReview;
+        if(underReview)this.jobStatus = JobStatus.UnderReview;
         this.service = service;
         this.userId = userId;
         this.setPayloads(payloads);
@@ -69,14 +67,6 @@ public class Job extends AbstractEntity {
         this.serviceDescription = serviceDescription;
     }
 
-
-    public Boolean isUnderReview() {
-        return underReview;
-    }
-
-    public void setUnderReview(Boolean underReview) {
-        this.underReview = underReview;
-    }
 
     public Boolean isCompleted() {
         return completed;
@@ -150,11 +140,11 @@ public class Job extends AbstractEntity {
         this.serviceDescription = serviceInstance;
     }
 
-    public Boolean getFailed() {
-        return failed;
+    public JobStatus getJobStatus() {
+        return jobStatus;
     }
 
-    public void setFailed(Boolean failed) {
-        this.failed = failed;
+    public void setJobStatus(JobStatus jobStatus) {
+        this.jobStatus = jobStatus;
     }
 }

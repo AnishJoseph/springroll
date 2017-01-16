@@ -207,7 +207,11 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
             // All reviews are complete or someone has rejected this or the remaining steps are just FYI
             Job job = repo.job.findOne(reviewStepMeta.getParentId());
             job.setReviewLog(reviewStepMeta.getReviewLog());
-            job.setUnderReview(false);
+            if(reviewActionDTO.isApproved()){
+                job.setJobStatus(JobStatus.InProgress);
+            } else {
+                job.setJobStatus(JobStatus.RejectedAndForwarded);
+            }
 
             IEvent reviewedEvent = reviewStepMeta.getEvent();
             if (reviewedEvent instanceof ReviewableEvent || reviewActionDTO.isApproved()) {
@@ -230,6 +234,7 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
                 String prevStatus = job.getStatus() == null ? "" : job.getStatus();
                 job.setStatus(prevStatus + " Review Rejected by " + SpringrollSecurity.getUser().getUsername());
                 job.setCompleted(true);
+                job.setJobStatus(JobStatus.RejectedAndDiscarded);
                 notificationService.sendNotification(CoreNotificationChannels.JOB_STATUS_UPDATE, new JobStatusMessage(job));
             }
             repo.reviewStep.delete(allReviewSteps);
