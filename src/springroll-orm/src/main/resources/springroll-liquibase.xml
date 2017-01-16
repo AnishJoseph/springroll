@@ -20,6 +20,7 @@
             <column name="START_TIME" type="datetime"/>
             <column name="END_TIME" type="datetime"/>
             <column name="REVIEW_LOG" type="VARCHAR2(2048)"/>
+            <column name="PENDING_REVIEWERS" type="VARCHAR2(512)"/>
             <column name="PAYLOADS" type="longblob" />
         </createTable>
         <createTable tableName="SEQUENCE_TABLE">

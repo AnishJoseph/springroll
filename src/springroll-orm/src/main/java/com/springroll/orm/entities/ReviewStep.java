@@ -21,7 +21,7 @@ import java.util.List;
 @Entity
 @Table(name = "REVIEW_STEP")
 @NamedQueries({
-        @NamedQuery(name="ReviewStep.findByParentIds", query = "SELECT o FROM ReviewStep o where o.parentId  in :parentIds"),
+        @NamedQuery(name="ReviewStep.getReviewers", query = "SELECT o.approver FROM ReviewStep o where o.parentId  = ?1 and o.completed = false and o.reviewStage <> 1000 order by o.reviewStage"),
 })
 public class ReviewStep extends AbstractEntity {
 

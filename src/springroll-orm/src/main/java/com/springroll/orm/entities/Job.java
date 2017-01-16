@@ -52,6 +52,9 @@ public class Job extends AbstractEntity {
     @Column(name = "SERVICE_DESCRIPTION")
     private String serviceDescription;
 
+    @Column(name = "PENDING_REVIEWERS")
+    private String pendingReviewers;
+
     @Column(name = "REVIEW_LOG")
     @Convert(converter = ReviewLogConverter.class)
     private List<ReviewLog> reviewLog = new ArrayList<>();
@@ -146,5 +149,13 @@ public class Job extends AbstractEntity {
 
     public void setJobStatus(JobStatus jobStatus) {
         this.jobStatus = jobStatus;
+    }
+
+    public String getPendingReviewers() {
+        return pendingReviewers;
+    }
+
+    public void setPendingReviewers(String pendingReviewers) {
+        this.pendingReviewers = pendingReviewers;
     }
 }

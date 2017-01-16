@@ -49,9 +49,13 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
     public void on(ReviewNeededEvent reviewNeededEvent){
         ReviewStepMeta reviewStepMeta = createReviewSteps(reviewNeededEvent.getPayload().getReviewNeededViolations(), reviewNeededEvent.getPayload().getEventForReview().getJobId(), reviewNeededEvent);
         if(reviewStepMeta == null){
+            //FIXME - if there are no review steps we may need to mark the job as InProgress (its likely to be UnderReview at this point )
             route(reviewNeededEvent.getPayload().getEventForReview());
             return;
         }
+        Job job = repo.job.findOne(reviewNeededEvent.getPayload().getEventForReview().getJobId());
+        List<String> yetToReview = repo.reviewStep.getReviewers(reviewStepMeta.getID());
+        job.setPendingReviewers(String.join(", ", yetToReview));
         List<ReviewStep> nextReviewSteps = findNextReviewStep(reviewStepMeta, -1);
         createReviewNotifications(nextReviewSteps,  null);
     }
@@ -193,6 +197,10 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
             notificationService.addNotificationAcknowledgement(reviewStep.getNotificationId());
         }
         ReviewStepMeta reviewStepMeta = repo.reviewStepMeta.findOne(reviewStep.getParentId());
+        Job job = repo.job.findOne(reviewStepMeta.getParentId());
+        List<String> yetToReview = repo.reviewStep.getReviewers(reviewStepMeta.getID());
+        job.setPendingReviewers(String.join(", ", yetToReview));
+
         reviewStepMeta.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionDTO.isApproved(), reviewActionDTO.getReviewComment()));
         if(!areAllStepsComplete) return;
 
@@ -205,7 +213,6 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
         List<ReviewStep> allReviewSteps = repo.reviewStep.findByParentId(reviewStep.getParentId());
         if (reviewSteps.isEmpty() || !reviewActionDTO.isApproved() || reviewSteps.get(0).getReviewStage() == REVIEW_STAGE_FOR_FYI) {
             // All reviews are complete or someone has rejected this or the remaining steps are just FYI
-            Job job = repo.job.findOne(reviewStepMeta.getParentId());
             job.setReviewLog(reviewStepMeta.getReviewLog());
             if(reviewActionDTO.isApproved()){
                 job.setJobStatus(JobStatus.InProgress);
