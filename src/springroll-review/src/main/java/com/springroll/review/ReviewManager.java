@@ -229,7 +229,6 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
                 if (!reviewSteps.isEmpty()) sendFyiNotification(reviewSteps);
             } else {
                 /* This is not a ReviewableEvent AND it has been rejected */
-                //FIXME - send out a new event instead of marking it done here
                 job.setEndTime(LocalDateTime.now());
                 String prevStatus = job.getStatus() == null ? "" : job.getStatus();
                 job.setStatus(prevStatus + " Review Rejected by " + SpringrollSecurity.getUser().getUsername());
