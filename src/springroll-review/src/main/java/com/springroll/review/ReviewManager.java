@@ -202,6 +202,7 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
         job.setPendingReviewers(String.join(", ", yetToReview));
 
         reviewStepMeta.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionDTO.isApproved(), reviewActionDTO.getReviewComment()));
+        notificationService.sendNotification(CoreNotificationChannels.JOB_STATUS_UPDATE, new JobStatusMessage(job));
         if(!areAllStepsComplete) return;
 
         for (Long notificationId : notificationIds) {
