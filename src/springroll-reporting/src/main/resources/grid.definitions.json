@@ -15,7 +15,7 @@
           {"title": "Start Time", "type":"datetime", "className" : "text-center"},
           {"title": "End Time", "type":"datetime", "className" : "text-center"},
           {"title": "Job Status", "type":"boolean", "className" : "text-center"},
-          {"title": "Status Message", "type":"text"}
+          {"title": "Pending Review With", "type":"text"}
       ]
     },
     {"name" : "TestGridAllTypes", "namedQuery": "TestGridAllTypes",
