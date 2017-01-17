@@ -54,7 +54,7 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
             return;
         }
         Job job = repo.job.findOne(reviewNeededEvent.getPayload().getEventForReview().getJobId());
-        List<String> yetToReview = repo.reviewStep.getReviewers(reviewStepMeta.getID());
+        Set<String> yetToReview = repo.reviewStep.getReviewers(reviewStepMeta.getID());
         job.setPendingReviewers(String.join(", ", yetToReview));
         List<ReviewStep> nextReviewSteps = findNextReviewStep(reviewStepMeta, -1);
         createReviewNotifications(nextReviewSteps,  null);
@@ -198,7 +198,7 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
         }
         ReviewStepMeta reviewStepMeta = repo.reviewStepMeta.findOne(reviewStep.getParentId());
         Job job = repo.job.findOne(reviewStepMeta.getParentId());
-        List<String> yetToReview = repo.reviewStep.getReviewers(reviewStepMeta.getID());
+        Set<String> yetToReview = repo.reviewStep.getReviewers(reviewStepMeta.getID());
         job.setPendingReviewers(String.join(", ", yetToReview));
 
         job.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionDTO.isApproved(), reviewActionDTO.getReviewComment()));
