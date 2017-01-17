@@ -14,6 +14,6 @@ public class CustomJacksonObjectMapper extends ObjectMapper {
         this.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
         this.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         this.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, true);
-        this.registerModule(new DateTimeModule());
+        this.registerModule(new CustomSpringrollJSONSerializers());
     }
 }

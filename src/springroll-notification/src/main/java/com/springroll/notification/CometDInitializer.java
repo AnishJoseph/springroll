@@ -1,6 +1,6 @@
 package com.springroll.notification;
 
-import com.springroll.core.DateTimeModule;
+import com.springroll.core.CustomSpringrollJSONSerializers;
 import org.cometd.annotation.ServerAnnotationProcessor;
 import org.cometd.bayeux.server.BayeuxServer;
 import org.cometd.common.JSONContext;
@@ -36,7 +36,7 @@ public class CometDInitializer implements ServletContextAware
         bean.setTransports(new WebSocketTransport(bean), new JSONTransport(bean), new JSONPTransport(bean));
         servletContext.setAttribute(BayeuxServer.ATTRIBUTE, bean);
         JSONContext.Server jsonContext = new Jackson2JSONContextServer();
-        ((Jackson2JSONContextServer)jsonContext).getObjectMapper().registerModule(new DateTimeModule());
+        ((Jackson2JSONContextServer)jsonContext).getObjectMapper().registerModule(new CustomSpringrollJSONSerializers());
         bean.setOption(AbstractServerTransport.JSON_CONTEXT_OPTION, jsonContext);
 
         bean.setOption(ServletContext.class.getName(), servletContext);
