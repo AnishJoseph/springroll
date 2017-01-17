@@ -16,7 +16,7 @@
           {"title": "ui.grid.EndTime", "type":"datetime", "className" : "text-center"},
           {"title": "ui.grid.JobStatus", "type":"boolean", "className" : "text-center"},
           {"title": "ui.grid.PendingWith", "type":"text"},
-          {"title": "ui.grid.Reviewers", "type":"text"}
+          {"title": "ui.grid.Reviewers", "type":"reviewlog"}
       ]
     },
     {"name" : "TestGridAllTypes", "namedQuery": "TestGridAllTypes",
