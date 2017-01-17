@@ -49,7 +49,7 @@ var JobDashboardRouter = new Marionette.AppRouter({
 function convertReviewLogToStr(reviewLogs){
     var reviewStr = [];
     _.each(reviewLogs, function(reviewLog){
-        reviewStr.push(reviewLog.reviewer + ":" + (reviewLog.approved == true ? "Approved" : "Rejected"));
+        reviewStr.push(reviewLog.reviewer + ":" + (reviewLog.approved == true ? Localize("ui.Approved") : Localize("ui.Rejected")));
     });
     return reviewStr.join(", ");
 }
