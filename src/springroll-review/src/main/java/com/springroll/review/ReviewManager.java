@@ -201,7 +201,7 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
         List<String> yetToReview = repo.reviewStep.getReviewers(reviewStepMeta.getID());
         job.setPendingReviewers(String.join(", ", yetToReview));
 
-        reviewStepMeta.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionDTO.isApproved(), reviewActionDTO.getReviewComment()));
+        job.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionDTO.isApproved(), reviewActionDTO.getReviewComment()));
         notificationService.sendNotification(CoreNotificationChannels.JOB_STATUS_UPDATE, new JobStatusMessage(job));
         if(!areAllStepsComplete) return;
 
@@ -214,7 +214,6 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
         List<ReviewStep> allReviewSteps = repo.reviewStep.findByParentId(reviewStep.getParentId());
         if (reviewSteps.isEmpty() || !reviewActionDTO.isApproved() || reviewSteps.get(0).getReviewStage() == REVIEW_STAGE_FOR_FYI) {
             // All reviews are complete or someone has rejected this or the remaining steps are just FYI
-            job.setReviewLog(reviewStepMeta.getReviewLog());
             if(reviewActionDTO.isApproved()){
                 job.setJobStatus(JobStatus.InProgress);
             } else {
@@ -225,7 +224,7 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
             if (reviewedEvent instanceof ReviewableEvent || reviewActionDTO.isApproved()) {
                 // find the step with the payload so that we can deserialize it and send it for processing
                 if (reviewedEvent instanceof ReviewableEvent) {
-                    ((ReviewableEvent) reviewedEvent).setReviewLog(reviewStepMeta.getReviewLog());
+                    ((ReviewableEvent) reviewedEvent).setReviewLog(job.getReviewLog());
                     ((ReviewableEvent) reviewedEvent).setApproved(reviewActionDTO.isApproved());
                 }
                 /*  The event is now fully reviewed - send the event down the JMS bus so that the reviewed
@@ -248,11 +247,12 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
             repo.reviewStepMeta.delete(reviewStepMeta.getID());
             return;
         }
-        createReviewNotifications(reviewSteps, reviewStepMeta.getReviewLog());
+        createReviewNotifications(reviewSteps, job.getReviewLog());
     }
 
     private void sendFyiNotification(List<ReviewStep> reviewSteps){
         ReviewStepMeta reviewStepMeta = repo.reviewStepMeta.findOne(reviewSteps.get(0).getParentId());
+        Job job = repo.job.findOne(reviewStepMeta.getParentId());
 
         Map<String, List<Long>> approverToNoti = new HashMap<>();
         for (ReviewStep reviewStep : reviewSteps) {
@@ -269,7 +269,7 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
             NotificationChannel notificationChannel = notificationService.nameToEnum(step.getChannel());
             String serviceName = ((ServiceDTO)reviewStepMeta.getEvent().getPayload()).getServiceDefinition().name();
             INotificationMessage message = ((IReviewableNotificationMessageFactory)notificationChannel.getMessageFactory()).makeMessage(new ReviewMeta(approverToNoti.get(approver), approver,
-                    businessValidationResults, reviewStepMeta.getEvent().getUser().getUsername(), serviceName, reviewStepMeta.getReviewLog(), reviewStepMeta.getEvent().getPayloads()));
+                    businessValidationResults, reviewStepMeta.getEvent().getUser().getUsername(), serviceName, job.getReviewLog(), reviewStepMeta.getEvent().getPayloads()));
             notificationService.sendNotification(notificationChannel, message);
         }
     }

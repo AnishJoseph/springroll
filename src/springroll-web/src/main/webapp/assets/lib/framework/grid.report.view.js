@@ -140,6 +140,7 @@ Application.GridView = Marionette.View.extend({
         this.gridName = options.gridName;
         this.fixedParameters = options.parameters;
         this.model = new Backbone.Model({title:this.gridName, filter : Localize('Filter')});
+        this.datamassager = options.datamassager;
     },
 
     events : {
@@ -179,7 +180,7 @@ Application.GridView = Marionette.View.extend({
         var that = this;
         gridData.save(null, {
             success : function(model, data){
-                that.data = data.data;
+                that.data = that.datamassager == undefined ? data.data : that.datamassager(data);
                 data.myParent = that;
                 that.gridView = new GridView(data);
                 that.showChildView('gridRegion', that.gridView);

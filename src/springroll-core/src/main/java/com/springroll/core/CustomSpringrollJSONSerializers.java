@@ -16,6 +16,5 @@ public class CustomSpringrollJSONSerializers extends SimpleModule {
         super();
         addSerializer(LocalDateTime.class, new DateTimeSerializer());
         addSerializer(LocalDate.class, new DateSerializer());
-        addSerializer(ReviewLog.class, new ReviewLogSerializer());
     }
 }

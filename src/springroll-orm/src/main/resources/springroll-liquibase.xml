@@ -86,7 +86,6 @@
             <column name="PARENT_ID" type="bigint"/>
             <column name="INITIATOR" type="VARCHAR2(32)"/>
             <column name="SEARCH_ID" type="VARCHAR2(48)" />
-            <column name="REVIEW_LOG" type="VARCHAR2(2048)"/>
             <column name="EVENT" type="longblob" />
         </createTable>
         <createTable tableName="ROLE">

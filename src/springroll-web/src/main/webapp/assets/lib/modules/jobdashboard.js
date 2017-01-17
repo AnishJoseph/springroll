@@ -4,9 +4,22 @@ var Application = require('Application');
 var dashboardView;
 var JobDashboardController = Marionette.Object.extend({
     activate: function() {
-        dashboardView = new Application.GridView({"gridName":"JobDashboard" });
+        dashboardView = new Application.GridView({"gridName":"JobDashboard", "datamassager" : this.dataMassager });
         Application.rootView.showBody(dashboardView);
         Backbone.history.navigate('jobDashboard');
+    },
+    dataMassager : function(gridReport){
+        _.each(gridReport.data, function(row){
+            var reviewLogs = row[7];
+            var reviewStr = [];
+            if(reviewLogs != undefined){
+                _.each(reviewLogs, function(reviewLog){
+                    reviewStr.push(reviewLog.reviewer + ":" + (reviewLog.approved == true ? "Approved" : "Rejected"));
+                });
+                row[7] = reviewStr.join(", ");
+            }
+        });
+        return gridReport;
     }
 });
 
@@ -34,5 +47,12 @@ Application.subscribe('/core/jobstatusupdate', function(message){
     if(dashboardView == undefined || dashboardView.isDestroyed())return;
 
     /* The dashboard is currently active - send the updated data to the GridView (which expects an array of changes) */
+    /* First convert the reviewlog object into a string */
+    var reviewStr = [];
+    _.each(message.data[0].updatedData[7], function(reviewLog){
+        reviewStr.push(reviewLog.reviewer + ":" + (reviewLog.approved == true ? "Approved" : "Rejected"));
+
+    });
+    message.data[0].updatedData[7] = reviewStr.join(", ");
     dashboardView.updateData([message.data[0].updatedData]);
 });

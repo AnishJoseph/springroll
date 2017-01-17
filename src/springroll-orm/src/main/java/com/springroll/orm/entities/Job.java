@@ -158,4 +158,7 @@ public class Job extends AbstractEntity {
     public void setPendingReviewers(String pendingReviewers) {
         this.pendingReviewers = pendingReviewers;
     }
+    public void addReviewLog(ReviewLog reviewLog){
+        this.reviewLog.add(reviewLog);
+    }
 }

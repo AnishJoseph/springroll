@@ -31,10 +31,6 @@ public class ReviewStepMeta extends AbstractEntity {
     @Convert(converter = JavaSerializationConverter.class)
     private IEvent event;
 
-    @Column(name = "REVIEW_LOG")
-    @Convert(converter = ReviewLogConverter.class)
-    private List<ReviewLog> reviewLog = new ArrayList<>();
-
     public ReviewStepMeta(){}
 
     public IEvent getEvent() {
@@ -43,14 +39,6 @@ public class ReviewStepMeta extends AbstractEntity {
 
     public void setEvent(IEvent event) {
         this.event = event;
-    }
-
-    public List<ReviewLog> getReviewLog() {
-        return reviewLog;
-    }
-
-    public void addReviewLog(ReviewLog reviewLog){
-        this.reviewLog.add(reviewLog);
     }
 
     public String getInitiator() {
@@ -69,7 +57,4 @@ public class ReviewStepMeta extends AbstractEntity {
         this.searchId = searchId;
     }
 
-    public void setReviewLog(List<ReviewLog> reviewLog) {
-        this.reviewLog = reviewLog;
-    }
 }
