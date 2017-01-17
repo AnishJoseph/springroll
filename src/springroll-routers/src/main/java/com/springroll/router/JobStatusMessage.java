@@ -24,6 +24,7 @@ public class JobStatusMessage extends AbstractNotificationMessage {
         updatedData.add(job.getEndTime());
         updatedData.add(job.getJobStatus());
         updatedData.add(job.getPendingReviewers());
+        updatedData.add(job.getReviewLog());
         this.userId = job.getUserId();
 
     }
