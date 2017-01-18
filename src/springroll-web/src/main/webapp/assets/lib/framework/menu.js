@@ -50,20 +50,20 @@ Application.MenuView = Marionette.View.extend({
             });
             template.push('</ul></li> </ul>');
         }
-        //template.push('<div class="form-group">');
-            template.push('<p class="alertInfoCount alertCount navbar-right">0</p>');
-            template.push('<p data-toggle="tooltip" title="' + Localize('ui.view.info') + '" class="alertInfo navbar-text navbar-right glyphicon glyphicon-info-sign" aria-hidden="true"/>');
-        //template.push('</div>');
+        template.push('<div class="alertInfo navbar-right" data-toggle="tooltip" title="' + Localize('ui.view.info') + '">');
+            template.push('<span class="alertLabel  glyphicon glyphicon-info-sign" aria-hidden="true"></span>');
+            template.push('<span class="alertInfoCount alertCount">0</span>');
+        template.push('</div>');
 
-        //template.push('<div class="form-group">');
-            template.push('<p class="alertErrorCount alertCount navbar-right">0</p>');
-            template.push('<p data-toggle="tooltip" title="' + Localize('ui.view.errors') + '" class="alertError navbar-text navbar-right glyphicon glyphicon-warning-sign" aria-hidden="true"/>');
-        //template.push('</div>');
+        template.push('<div class="alertError navbar-right" data-toggle="tooltip" title="' + Localize('ui.view.errors') + '">');
+            template.push('<span class="alertLabel  glyphicon glyphicon-warning-sign" aria-hidden="true"/>');
+            template.push('<span class="alertErrorCount alertCount">0</span>');
+        template.push('</div>');
 
-        //template.push('<div class="form-group">');
-            template.push('<p class="alertActionCount alertCount navbar-right">0</p>');
-            template.push('<p data-toggle="tooltip" title="' + Localize('ui.view.approvals') + '" class="alertAction navbar-text navbar-right glyphicon glyphicon-ok-sign" aria-hidden="true"/>');
-        //template.push('</div>');
+        template.push('<div class="alertAction navbar-right" data-toggle="tooltip" title="' + Localize('ui.view.approvals') + '">');
+            template.push('<span  class="alertLabel   glyphicon glyphicon-ok-sign" aria-hidden="true"/>');
+            template.push('<span class="alertActionCount alertCount">0</span>');
+        template.push('</div>');
 
         template.push('</div></div></nav>');
         var  menuTemplate = template.join("");
@@ -81,12 +81,27 @@ Application.MenuView = Marionette.View.extend({
         var that = this;
         this.alertChannel.on('alert:action:count:changed', function(count) {
             that.ui.alertActionCount.html(count);
+            if(count > 0){
+                if(!that.ui.alertActionCount.hasClass('alertPresent')) that.ui.alertActionCount.addClass('alertPresent');
+            } else {
+                that.ui.alertActionCount.removeClass('alertPresent');
+            }
         });
         this.alertChannel.on('alert:error:count:changed', function(count) {
             that.ui.alertErrorCount.html(count);
+            if(count > 0){
+                if(!that.ui.alertErrorCount.hasClass('alertPresent')) that.ui.alertErrorCount.addClass('alertPresent');
+            } else {
+                that.ui.alertErrorCount.removeClass('alertPresent');
+            }
         });
         this.alertChannel.on('alert:info:count:changed', function(count) {
             that.ui.alertInfoCount.html(count);
+            if(count > 0){
+                if(!that.ui.alertInfoCount.hasClass('alertPresent')) that.ui.alertInfoCount.addClass('alertPresent');
+            } else {
+                that.ui.alertInfoCount.removeClass('alertPresent');
+            }
         });
     },
 
