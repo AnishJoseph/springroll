@@ -2,6 +2,8 @@ var Marionette = require('backbone.marionette');
 var Backbone = require('backbone');
 var Application =require('Application');
 var moment = require('moment');
+var Radio = require('backbone.radio');
+var alertChannel = Radio.channel('AlertChannel');
 
 Application.requiresTemplate('#alerts.view');
 Application.requiresTemplate('#alert.item.template');
@@ -14,12 +16,14 @@ var subscribedAlerts = {};
 var AlertItem = Backbone.Model.extend({urlRoot:'api/sr/notification'});
 
 var AlertCollection = Backbone.Collection.extend({
+
     initialize: function (models, options) {
+        var that = this;
         this.bind("add", function (item) {
-            Application.Alerts.getAlertPanelView().triggerMethod(options.channel + ":count:changed", this.length);
+            alertChannel.trigger('alert:' + options.channel + ':count:changed', this.length);
         });
         this.bind("remove", function (item) {
-            Application.Alerts.getAlertPanelView().triggerMethod(options.channel + ":count:changed", this.length);
+            alertChannel.trigger('alert:' + options.channel + ':count:changed', this.length);
         });
     },
 });
@@ -109,7 +113,11 @@ var AlertsView = Marionette.View.extend({
         this.model = new Backbone.Model();
         this.model.set("title", options.title);
     },
-    template : _.template('<div style="margin: 10px"> <%-title%></div><div style="border-bottom: 1px solid #ccc;"/><div id ="col"></div> '),
+    template : _.template(  '<div><div style="float: left;margin: 10px"> <%-title%></div>' +
+                            '<span id="alerts-handle" style="float:right; padding:5px;font-size: 13px;" class="glyphicon glyphicon-eye-close"></span></div>' +
+                            '<div style="clear:both; border-bottom: 1px solid #ccc;"/>' +
+                            '<div id ="col"></div>'
+                        ),
 
     regions : {
         col : '#col'
@@ -128,26 +136,37 @@ var AlertCollectionView = Marionette.CollectionView.extend({
 var AlertsPanel = Marionette.View.extend({
     tagName: 'div',
     template: '#alerts.view',
+
+    initialize : function(){
+        var that = this;
+        alertChannel.on('alert:action:clicked', function() {
+            that.showAction();
+        });
+        alertChannel.on('alert:error:clicked', function() {
+            that.showError();
+        });
+        alertChannel.on('alert:info:clicked', function() {
+            that.showInfo();
+        });
+    },
     events: {
         "click #alerts-handle": "toggleAlertContainer",
-        "click #actionHandle": "showAction",
-        "click #errorHandle": "showError",
-        "click #infoHandle": "showInfo",
     },
 
-    showAction : function(evt){
+    showAction : function(){
+        //FIXME - Localize title
         this.showChildView('alertsContainer', new AlertsView({alerts: actionCollection, title:"Alerts", collectionView : AlertCollectionView}));
-        this.toggleAlertContainer(evt, true);
+        this.toggleAlertContainer(true);
     },
-    showError : function(evt){
+    showError : function(){
         this.showChildView('alertsContainer', new AlertsView({alerts: errorCollection, title:"Errors", collectionView : AlertCollectionView}));
-        this.toggleAlertContainer(evt, true);
+        this.toggleAlertContainer(true);
     },
-    showInfo : function(evt){
+    showInfo : function(){
         this.showChildView('alertsContainer', new AlertsView({alerts: infoCollection, title:"Informational Alerts", collectionView : AlertCollectionView}));
-        this.toggleAlertContainer(evt, true);
+        this.toggleAlertContainer(true);
     },
-    toggleAlertContainer : function(evt, show){
+    toggleAlertContainer : function(show){
         if(show == undefined) {
             //Called when the toggle is clicked (i.e not called when a specific collection is requested
             if ($(this.ui.alertsContainer).is(':visible')) {
@@ -168,10 +187,6 @@ var AlertsPanel = Marionette.View.extend({
 
     ui: {
         alertsContainer: "#alerts-container",
-        alertsHandle: "#alerts-handle",
-        actionCount: "#action",
-        errorCount : "#error",
-        infoCount  : "#info"
     },
 
     regions: {
@@ -181,15 +196,6 @@ var AlertsPanel = Marionette.View.extend({
     onRender : function(){
         this.showChildView('alertsContainer', new AlertsView({alerts: actionCollection, title:"Alerts", collectionView : AlertCollectionView}));
     },
-    onActionCountChanged : function(count){
-        this.ui.actionCount.html(count);
-    },
-    onErrorCountChanged : function(count){
-        this.ui.errorCount.html(count);
-    },
-    onInfoCountChanged : function(count){
-        this.ui.infoCount.html(count);
-    }
 });
 var alertsPanel = new AlertsPanel();
 
@@ -204,7 +210,7 @@ Application.Alerts = {
             Application.subscribe(notificationChannel, function(message){
                 var newAlerts = [];
                 var alertCollection;
-                if(message.data[0].alertType == 'ACTION') {alertCollection = actionCollection;alertsPanel.toggleAlertContainer(null, true);}
+                if(message.data[0].alertType == 'ACTION') {alertCollection = actionCollection;alertsPanel.toggleAlertContainer(true);}
                 if(message.data[0].alertType == 'ERROR') alertCollection = errorCollection;
                 if(message.data[0].alertType == 'INFO') alertCollection = infoCollection;
                 _.each(message.data, function(notification){

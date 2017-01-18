@@ -2,7 +2,10 @@ $rootMenuHeight : 50px;
 $offsetFromBottomForBodyContent : 10px;
 $marginOnSideForSPA : 5px;
 $marginOnTopAndBottomForBody : 1px;
-$topOfAlertsPanel : 100px;
+$topOfAlertsPanel : $rootMenuHeight + 2 ;
+$widthOfAlertsContainer : 300px;
+//$heightOfAlertsContainer : 800px;
+$heightOfAlertsContainer : calc(100vh - 200px);
 
 .spaRootElement {
   margin-left: $marginOnSideForSPA;
@@ -49,7 +52,20 @@ table.nowrap {
   top: $topOfAlertsPanel;
   right: 0;
   z-index: 50;
+  border-color: #2aabd2;
 }
+.alertsContainer {
+  display: none;
+  overflow: auto;
+  background-color: white;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  width: $widthOfAlertsContainer;
+  height: calc(100vh - 70px);
+  border: solid thin;
+  float: left
+}
+
 .alertsIndicator {
   position: fixed;
   top: 0;
@@ -78,4 +94,9 @@ table.nowrap {
 .grid-title-panel {
   display: flex;
   align-items: center;
+}
+
+.alertCount {
+  margin-top: 15px;
+  margin-left: 5px;
 }

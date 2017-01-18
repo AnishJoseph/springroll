@@ -1,9 +1,14 @@
 require('bootstrap-loader');
 var Marionette = require('backbone.marionette');
 var Application =require('Application');
+var Radio = require('backbone.radio');
 
 Application.MenuView = Marionette.View.extend({
     tagName: 'div',
+    initialize :  function(){
+        this.alertChannel = Radio.channel('AlertChannel');
+    },
+
     template: function() {
         var template = [];
 
@@ -45,12 +50,46 @@ Application.MenuView = Marionette.View.extend({
             });
             template.push('</ul></li> </ul>');
         }
+        //template.push('<div class="form-group">');
+            template.push('<p class="alertInfoCount alertCount navbar-right">0</p>');
+            template.push('<p data-toggle="tooltip" title="' + Localize('ui.view.info') + '" class="alertInfo navbar-text navbar-right glyphicon glyphicon-info-sign" aria-hidden="true"/>');
+        //template.push('</div>');
+
+        //template.push('<div class="form-group">');
+            template.push('<p class="alertErrorCount alertCount navbar-right">0</p>');
+            template.push('<p data-toggle="tooltip" title="' + Localize('ui.view.errors') + '" class="alertError navbar-text navbar-right glyphicon glyphicon-warning-sign" aria-hidden="true"/>');
+        //template.push('</div>');
+
+        //template.push('<div class="form-group">');
+            template.push('<p class="alertActionCount alertCount navbar-right">0</p>');
+            template.push('<p data-toggle="tooltip" title="' + Localize('ui.view.approvals') + '" class="alertAction navbar-text navbar-right glyphicon glyphicon-ok-sign" aria-hidden="true"/>');
+        //template.push('</div>');
 
         template.push('</div></div></nav>');
         var  menuTemplate = template.join("");
         return menuTemplate;
 
     },
+
+    ui : {
+        alertInfoCount    : ".alertInfoCount",
+        alertErrorCount : ".alertErrorCount",
+        alertActionCount  : ".alertActionCount"
+    },
+
+    onRender : function(){
+        var that = this;
+        this.alertChannel.on('alert:action:count:changed', function(count) {
+            that.ui.alertActionCount.html(count);
+        });
+        this.alertChannel.on('alert:error:count:changed', function(count) {
+            that.ui.alertErrorCount.html(count);
+        });
+        this.alertChannel.on('alert:info:count:changed', function(count) {
+            that.ui.alertInfoCount.html(count);
+        });
+    },
+
     events : function(){
         var events = {};
         _.each(Application.getMenuItems(), function(item){
@@ -71,13 +110,23 @@ Application.MenuView = Marionette.View.extend({
 
 
         });
+
+        events['click .alertInfo'] = function(){
+            this.alertChannel.trigger('alert:info:clicked');
+        };
+        events['click .alertError'] = function(){
+            this.alertChannel.trigger('alert:error:clicked');
+        };
+        events['click .alertAction'] = function(){
+            this.alertChannel.trigger('alert:action:clicked');
+        };
         events['click #logout'] = function(){
             $.ajax({
                 type: "POST",
                 url: "/logout",
             });
             window.location.href = '/';
-        }
+        };
         _.each(Application.user.delegators, function(delegator){
             var id = 'click #delegator' + delegator;
             events[id] = function(){
@@ -90,7 +139,7 @@ Application.MenuView = Marionette.View.extend({
         });
 
         return events;
-    },
+    }
 
 });
 
