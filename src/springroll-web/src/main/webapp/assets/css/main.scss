@@ -61,7 +61,7 @@ table.nowrap {
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   width: $widthOfAlertsContainer;
-  height: calc(100vh - 70px);
+  max-height: calc(100vh - 70px);
   border: solid thin;
   float: left
 }
@@ -99,4 +99,16 @@ table.nowrap {
 .alertCount {
   margin-top: 15px;
   margin-left: 5px;
+}
+
+.alertHandle{
+  padding:5px;
+  margin: 5px;
+  font-size: 13px;
+  float: right;
+  padding-right: 30px;
+}
+.alertTitle {
+  margin: 5px;
+  padding: 5px;
 }

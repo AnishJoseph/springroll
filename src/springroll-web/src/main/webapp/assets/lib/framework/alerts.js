@@ -9,7 +9,7 @@ Application.requiresTemplate('#alerts.view');
 Application.requiresTemplate('#alert.item.template');
 var compare = function(model){
     return -(model.get('creationTime'));//Latest alerts show on top
-}
+};
 
 var subscribedAlerts = {};
 
@@ -18,14 +18,13 @@ var AlertItem = Backbone.Model.extend({urlRoot:'api/sr/notification'});
 var AlertCollection = Backbone.Collection.extend({
 
     initialize: function (models, options) {
-        var that = this;
         this.bind("add", function (item) {
             alertChannel.trigger('alert:' + options.channel + ':count:changed', this.length);
         });
         this.bind("remove", function (item) {
             alertChannel.trigger('alert:' + options.channel + ':count:changed', this.length);
         });
-    },
+    }
 });
 
 var actionCollection = new AlertCollection(null, {model: AlertItem, comparator: compare, channel:'action'});
@@ -38,7 +37,7 @@ var AlertsItemView = Marionette.View.extend({
     subscribedAlerts : subscribedAlerts,
 
     regions: {
-        messageRegion: '#message',
+        messageRegion: '#message'
     },
 
     dismissClicked : function(destroyModel){
@@ -113,8 +112,11 @@ var AlertsView = Marionette.View.extend({
         this.model = new Backbone.Model();
         this.model.set("title", options.title);
     },
-    template : _.template(  '<div><div style="float: left;margin: 10px"> <%-title%></div>' +
-                            '<span id="alerts-handle" style="float:right; padding:5px;font-size: 13px;" class="glyphicon glyphicon-eye-close"></span></div>' +
+    template : _.template(
+                            '<div>' +
+                                '<div id="alerts-handle" class="alertHandle glyphicon glyphicon-eye-close"></div>' +
+                                '<div class="alertTitle"><p> <%-title%></p></div>' +
+                            '</div>' +
                             '<div style="clear:both; border-bottom: 1px solid #ccc;"/>' +
                             '<div id ="col"></div>'
                         ),
@@ -125,12 +127,20 @@ var AlertsView = Marionette.View.extend({
 
     onRender : function (){
         this.showChildView('col', new (this.collectionView)({collection : this.alerts}));
+    },
+
+    events: {
+        'click #alerts-handle' : "hideContainer"
+    },
+
+    hideContainer : function(){
+        alertChannel.trigger('alert:hide');
     }
 
 });
 
 var AlertCollectionView = Marionette.CollectionView.extend({
-    childView: AlertsItemView,
+    childView: AlertsItemView
 });
 
 var AlertsPanel = Marionette.View.extend({
@@ -140,62 +150,31 @@ var AlertsPanel = Marionette.View.extend({
     initialize : function(){
         var that = this;
         alertChannel.on('alert:action:clicked', function() {
-            that.showAction();
+            that.showChildView('alertsContainer', new AlertsView({alerts: actionCollection, title:"Alerts", collectionView : AlertCollectionView}));
+            //FIXME - Localize title
+            that.ui.alertsContainer.show();
         });
         alertChannel.on('alert:error:clicked', function() {
-            that.showError();
+            that.showChildView('alertsContainer', new AlertsView({alerts: errorCollection, title:"Errors", collectionView : AlertCollectionView}));
+            that.ui.alertsContainer.show();
         });
         alertChannel.on('alert:info:clicked', function() {
-            that.showInfo();
+            that.showChildView('alertsContainer', new AlertsView({alerts: infoCollection, title:"Informational Alerts", collectionView : AlertCollectionView}));
+            that.ui.alertsContainer.show();
         });
-    },
-    events: {
-        "click #alerts-handle": "toggleAlertContainer",
-    },
-
-    showAction : function(){
-        //FIXME - Localize title
-        this.showChildView('alertsContainer', new AlertsView({alerts: actionCollection, title:"Alerts", collectionView : AlertCollectionView}));
-        this.toggleAlertContainer(true);
-    },
-    showError : function(){
-        this.showChildView('alertsContainer', new AlertsView({alerts: errorCollection, title:"Errors", collectionView : AlertCollectionView}));
-        this.toggleAlertContainer(true);
-    },
-    showInfo : function(){
-        this.showChildView('alertsContainer', new AlertsView({alerts: infoCollection, title:"Informational Alerts", collectionView : AlertCollectionView}));
-        this.toggleAlertContainer(true);
-    },
-    toggleAlertContainer : function(show){
-        if(show == undefined) {
-            //Called when the toggle is clicked (i.e not called when a specific collection is requested
-            if ($(this.ui.alertsContainer).is(':visible')) {
-                $(this.ui.alertsHandle).removeClass('glyphicon-eye-close');
-                $(this.ui.alertsHandle).addClass('glyphicon-eye-open');
-            } else {
-                $(this.ui.alertsHandle).removeClass('glyphicon-eye-open');
-                $(this.ui.alertsHandle).addClass('glyphicon-eye-close');
-            }
-            this.ui.alertsContainer.toggle();
-            return;
-        }
-        if ($(this.ui.alertsContainer).is(':visible')) return;
-        $(this.ui.alertsHandle).removeClass('glyphicon-eye-open');
-        $(this.ui.alertsHandle).addClass('glyphicon-eye-close');
-        this.ui.alertsContainer.toggle();
+        alertChannel.on('alert:hide', function() {
+            that.ui.alertsContainer.hide();
+        });
     },
 
     ui: {
-        alertsContainer: "#alerts-container",
+        alertsContainer: "#alerts-container"
     },
 
     regions: {
-        alertsContainer: '#alerts-container',
-    },
+        alertsContainer: '#alerts-container'
+    }
 
-    onRender : function(){
-        this.showChildView('alertsContainer', new AlertsView({alerts: actionCollection, title:"Alerts", collectionView : AlertCollectionView}));
-    },
 });
 var alertsPanel = new AlertsPanel();
 
@@ -204,13 +183,12 @@ Application.Alerts = {
     registerAlertSubscriptions : function(){
         _.each(Application.getSubscribersForAlerts(), function(subscription){
             var notificationChannel = subscription.channel;
-            var options = subscription.options;
 
-            subscribedAlerts[notificationChannel] = options;
+            subscribedAlerts[notificationChannel] = subscription.options;
             Application.subscribe(notificationChannel, function(message){
                 var newAlerts = [];
                 var alertCollection;
-                if(message.data[0].alertType == 'ACTION') {alertCollection = actionCollection;alertsPanel.toggleAlertContainer(true);}
+                if(message.data[0].alertType == 'ACTION') {alertCollection = actionCollection;alertChannel.trigger('alert:action:clicked');}
                 if(message.data[0].alertType == 'ERROR') alertCollection = errorCollection;
                 if(message.data[0].alertType == 'INFO') alertCollection = infoCollection;
                 _.each(message.data, function(notification){
@@ -229,7 +207,7 @@ Application.Alerts = {
     getAlertPanelView : function (){
         return alertsPanel;
     }
-}
+};
 Application.subscribe('/core/notificationCancel', function(message){
     var alertCollection;
     if(message.data[0].alertType == 'ACTION') alertCollection = actionCollection;
