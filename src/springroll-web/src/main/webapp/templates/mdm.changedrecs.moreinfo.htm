@@ -1,5 +1,5 @@
 <h5 class="text-info"><%-Localize('ui.mdmChangedRecs')%></h5>
-<table style="width: 100%;" class="table table-hover table-striped">
+<table class="table table-hover table-striped">
     <thead>
     <tr>
         <% _.each(mdmChangesForReview.colDefs, function(colDef) {
@@ -26,7 +26,7 @@
                 if(!changed){
                     %><%-newVal%><%
                 } else {
-                    %><div style="border-bottom: 1px solid #ccc;"><%-newVal%></div><div class="text-muted"><%-prevVal%></div><%
+                    %><div class="alertActionsPanelBorder"><%-newVal%></div><div class="text-muted"><%-prevVal%></div><%
                 }
             %>
         </td>
