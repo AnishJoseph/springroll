@@ -116,11 +116,10 @@ var AlertsView = Marionette.View.extend({
         this.model.set("title", options.title);
     },
     template : _.template(
-                            '<div>' +
+                            '<div class="alertActionsPanelBorder">' +
                                 '<div id="alerts-handle" class="alertHandle glyphicon glyphicon-eye-close"></div>' +
                                 '<div class="alertTitle"><p> <%-title%></p></div>' +
                             '</div>' +
-                            '<div style="clear:both; border-bottom: 1px solid #ccc;"/>' +
                             '<div id ="col"></div>'
                         ),
 
