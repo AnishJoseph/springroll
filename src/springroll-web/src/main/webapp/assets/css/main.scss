@@ -117,6 +117,26 @@ table.nowrap {
   padding: 5px;
 }
 
+.alertMessage {
+  overflow: auto;
+  height: 50px;
+  font-size: 10px;
+  padding: 3px;
+}
+.alertActionsPanelItem {
+  padding: 6px;
+  font-size: 10px
+}
+.alertActionsPanelTime {
+  padding: 3px;
+  padding-right: 10px;
+  float: right
+}
+.alertActionsPanelBorder {
+  border-bottom: 1px solid #ccc;
+  margin-top: 2px
+}
+
 .alertPresent {
   -webkit-animation: glow 1.5s infinite alternate;
 }
