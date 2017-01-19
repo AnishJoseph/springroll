@@ -12,7 +12,7 @@ var NewView = Marionette.View.extend({
 });
 
 var MdmMoreInfoView = Marionette.View.extend({
-    template : _.template('<div  style="overflow: auto"  id="changedRecords"></div><div style="overflow: auto" id="newRecords"></div><div id="control"></div>'),
+    template : _.template('<div id="changedRecords"></div><div style="overflow: auto" id="newRecords"></div><div id="control"></div>'),
     regions : {
         changedRegion: '#changedRecords',
         newRegion: '#newRecords',
