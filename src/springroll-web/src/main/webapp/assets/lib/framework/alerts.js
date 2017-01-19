@@ -150,16 +150,15 @@ var AlertsPanel = Marionette.View.extend({
     initialize : function(){
         var that = this;
         alertChannel.on('alert:action:clicked', function() {
-            that.showChildView('alertsContainer', new AlertsView({alerts: actionCollection, title:"Alerts", collectionView : AlertCollectionView}));
-            //FIXME - Localize title
+            that.showChildView('alertsContainer', new AlertsView({alerts: actionCollection, title:Localize("ui.alert.action"), collectionView : AlertCollectionView}));
             that.ui.alertsContainer.show();
         });
         alertChannel.on('alert:error:clicked', function() {
-            that.showChildView('alertsContainer', new AlertsView({alerts: errorCollection, title:"Errors", collectionView : AlertCollectionView}));
+            that.showChildView('alertsContainer', new AlertsView({alerts: errorCollection, title:Localize("ui.alert.errors"), collectionView : AlertCollectionView}));
             that.ui.alertsContainer.show();
         });
         alertChannel.on('alert:info:clicked', function() {
-            that.showChildView('alertsContainer', new AlertsView({alerts: infoCollection, title:"Informational Alerts", collectionView : AlertCollectionView}));
+            that.showChildView('alertsContainer', new AlertsView({alerts: infoCollection, title:Localize("ui.alert.info"), collectionView : AlertCollectionView}));
             that.ui.alertsContainer.show();
         });
         alertChannel.on('alert:hide', function() {
