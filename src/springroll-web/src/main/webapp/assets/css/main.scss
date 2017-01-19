@@ -6,6 +6,7 @@ $topOfAlertsPanel : $rootMenuHeight + 2 ;
 $widthOfAlertsContainer : 300px;
 //$heightOfAlertsContainer : 800px;
 $heightOfAlertsContainer : calc(100vh - 200px);
+$widthOfIndicator : 600px;
 
 .spaRootElement {
   margin-left: $marginOnSideForSPA;
@@ -68,10 +69,11 @@ table.nowrap {
 
 .alertsIndicator {
   position: fixed;
-  top: 0;
-  align-content: center;
-  width: 100%;
+  top: 5px;
+  width: $widthOfIndicator;
   z-index: 900;
+  left: 50%;
+  margin-left : -($widthOfIndicator/2);
 }
 
 .formSubmit {
