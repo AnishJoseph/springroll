@@ -128,7 +128,11 @@ var AlertsView = Marionette.View.extend({
     },
 
     onRender : function (){
+        var that = this;
         this.showChildView('col', new (this.collectionView)({collection : this.alerts}));
+        alertChannel.on('menu:clicked', function(count) {
+            that.hideContainer();
+        });
     },
 
     events: {

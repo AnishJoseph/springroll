@@ -107,11 +107,14 @@ Application.MenuView = Marionette.View.extend({
 
     events : function(){
         var events = {};
+        var that = this;
         _.each(Application.getMenuItems(), function(item){
             if($.isArray(item.items)){
                 _.forEach(item.items, function(menuItem){
                     var id = 'click #menuId' + menuItem.name;
                     events[id] = function () {
+                        /* Hide Alert window here */
+                        that.alertChannel.trigger('menu:clicked');
                         menuItem.controller.activate(menuItem.name);
                     }
                 });
@@ -119,11 +122,11 @@ Application.MenuView = Marionette.View.extend({
                 var menuItem = item.items;
                 var id = 'click #menuId' + menuItem.name;
                 events[id] = function () {
+                    /* Hide Alert window here */
+                    that.alertChannel.trigger('menu:clicked');
                     menuItem.controller.activate(menuItem.name);
                 }
             }
-
-
         });
 
         events['click .alertInfo'] = function(){
