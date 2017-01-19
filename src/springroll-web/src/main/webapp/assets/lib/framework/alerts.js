@@ -45,7 +45,11 @@ var AlertsItemView = Marionette.View.extend({
             this.model.get('view').dismissClicked();
         } else {
             this.model.destroy({
-                success: function(model, response) {
+                error : function(model){
+                    /* If the delete fails - add the model back into the appropriate collection */
+                    if(model.get('alertType') == 'ACTION')  actionCollection.add(model);
+                    if(model.get('alertType') == 'ERROR')   errorCollection.add(model);
+                    if(model.get('alertType') == 'INFO')    infoCollection.add(model);
                 }
             });
         }
