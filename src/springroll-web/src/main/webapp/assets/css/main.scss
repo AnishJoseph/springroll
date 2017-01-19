@@ -158,3 +158,6 @@ table.nowrap {
   height: calc(100vh - #{$rootMenuHeight});
   overflow: auto
 }
+.review-moreinfo {
+  min-width: 100px;
+}

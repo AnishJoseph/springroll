@@ -5,7 +5,7 @@ var moment = require('moment');
 
 var RowView = Marionette.View.extend({
     tagName: 'tr',
-    template: _.template('<td style="min-width: 100px"><%- violatedRule %></td> <td><%- message %></td>')
+    template: _.template('<td class="review-moreinfo"><%- violatedRule %></td> <td><%- message %></td>')
 });
 
 var TableBody = Marionette.CollectionView.extend({
