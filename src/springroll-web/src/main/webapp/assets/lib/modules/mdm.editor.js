@@ -27,34 +27,34 @@ var MasterRowView = Marionette.View.extend({
             if(colName === 'id')return;
             if(colDefs[index].writeable == true || data.model['id'] == undefined) {
                 if (colDefs[index].lovList !== null) {
-                    template.push('<td style="vertical-align: middle">');
+                    template.push('<td >');
                     Application.Utils.addLovToTemplate(template, colDefs[index], data.model[colName]);
                     template.push('<div class="bg-danger err' + colDefs[index].name + '"></div>');
                     template.push('</td>');
                 } else if (colDefs[index].type === 'date') {
-                    template.push('<td style="vertical-align: middle">');
+                    template.push('<td >');
                     Application.Utils.addDatePickerToTemplate(template, colDefs[index], data.model[colName], colDefs[index].name + ' datepicker');
                     template.push('<div class="bg-danger err' + colDefs[index].name + '"></div>');
                     template.push('</td>');
                 } else if (colDefs[index].type === 'datetime') {
-                    template.push('<td style="vertical-align: middle">');
+                    template.push('<td >');
                     Application.Utils.addDatePickerToTemplate(template, colDefs[index], data.model[colName], colDefs[index].name + ' datetimepicker');
                     template.push('<div class="bg-danger err' + colDefs[index].name + '"></div>');
                     template.push('</td>');
                 } else if (colDefs[index].type === 'text') {
-                    template.push('<td style="vertical-align: middle"><input type="text" data-attrname="' + colDefs[index].name + '" class="form-control " id ="' + colDefs[index].name + '" ');
+                    template.push('<td ><input type="text" data-attrname="' + colDefs[index].name + '" class="form-control " id ="' + colDefs[index].name + '" ');
                     if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
                     template.push('>');
                     template.push('<div class="bg-danger err' + colDefs[index].name + '"></div>');
                     template.push('</td>');
                 } else if (colDefs[index].type === 'num') {
-                    template.push('<td style="vertical-align: middle"><input type="number" data-attrname="' + colDefs[index].name + '"  class="form-control " id ="' + colDefs[index].name + '" ');
+                    template.push('<td ><input type="number" data-attrname="' + colDefs[index].name + '"  class="form-control " id ="' + colDefs[index].name + '" ');
                     if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
                     template.push('>');
                     template.push('<div class="bg-danger err' + colDefs[index].name + '"></div>');
                     template.push('</td>');
                 } else if (colDefs[index].type === 'int') {
-                    template.push('<td style="vertical-align: middle"><input type="number" data-attrname="' + colDefs[index].name + '"  class="form-control " id ="' + colDefs[index].name + '" ');
+                    template.push('<td ><input type="number" data-attrname="' + colDefs[index].name + '"  class="form-control " id ="' + colDefs[index].name + '" ');
                     if(data.model[colName] !== undefined && data.model[colName] !== null) template.push(' value="' + data.model[colName] + '"');
                     template.push('>');
                     template.push('<div class="bg-danger err' + colDefs[index].name + '"></div>');
@@ -389,10 +389,9 @@ var Control = Marionette.View.extend({
 
 });
 Application.MasterView = Marionette.View.extend({
-    template : _.template("<div id='mcontrol' style='margin-bottom: 20px;margin-top: 10px'/>" +
-        "<div style='position: relative;clear: both; height: 100%;width: 100%'>" +
-        "<div style='height: calc(100vh - 150px);overflow: auto' id='mtable'/>" +
-        "</div>"),
+    template : _.template(  "<div id='mcontrol' class='sr-control-panel'/>" +
+                            "<div id='mtable' class='mdm-table'/>"
+                         ),
     regions : {
         'tableRegion' : '#mtable',
         'controlRegion' : '#mcontrol'
