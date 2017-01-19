@@ -5,7 +5,6 @@ var moment = require('moment');
 var Radio = require('backbone.radio');
 var alertChannel = Radio.channel('AlertChannel');
 
-Application.requiresTemplate('#alerts.view');
 Application.requiresTemplate('#alert.item.template');
 var compare = function(model){
     return -(model.get('creationTime'));//Latest alerts show on top
@@ -149,7 +148,7 @@ var AlertCollectionView = Marionette.CollectionView.extend({
 
 var AlertsPanel = Marionette.View.extend({
     tagName: 'div',
-    template: '#alerts.view',
+    template: _.template('<div id="alerts-container" class="alertsContainer"/>'),
 
     initialize : function(){
         var that = this;
