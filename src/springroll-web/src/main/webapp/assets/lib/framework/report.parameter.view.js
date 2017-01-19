@@ -49,10 +49,8 @@ Application.ReportParamsView  = Marionette.View.extend({
             }
         });
 
-        template.push('<div class="clearfix " style="clear: both;">');
         template.push('<div  class="formSubmit">');
         template.push('<span title="' + Localize('Apply') + '" class="form-control submit glyphicon glyphicon-ok"</span>');
-        template.push('</div>');
         template.push('</div>');
 
         template.push('</form>');
