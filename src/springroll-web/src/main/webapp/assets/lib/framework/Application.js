@@ -195,10 +195,10 @@ Application.Localize = function(messageKey, args){
  * @param hinderClose - prevents the Modal window from closing on clicking outside the modal or the ESC key
  */
 Application.showModal = function(title, viewToShow, viewOfCaller, detachViewOnHide, hinderClose){
-    Application.rootView.triggerMethod("show:modal", title, viewToShow, viewOfCaller, detachViewOnHide || false, hinderClose || false);
+    Application.rootView.showModal(title, viewToShow, viewOfCaller, detachViewOnHide || false, hinderClose || false);
 } ;
 Application.hideModal = function(){
-    Application.rootView.triggerMethod("hide:modal");
+    Application.rootView.hideModal();
 } ;
 
 var promises = [];

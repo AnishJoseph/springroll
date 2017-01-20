@@ -27,11 +27,11 @@ Application.RootView = Marionette.View.extend({
     showBody : function(view){
         this.showChildView('bodyRegion', view);
     },
-    onShowModal : function(title, viewToShow, viewOfCaller, detachViewOnHide, hinderClose ){
+    showModal : function(title, viewToShow, viewOfCaller, detachViewOnHide, hinderClose ){
         this.showChildView('modalRegion', new Application.ModalView({model: new Backbone.Model({title:title}), viewToShow : viewToShow, viewOfCaller : viewOfCaller, "detachViewOnHide" : detachViewOnHide, "hinderClose" : hinderClose}));
     },
 
-    onHideModal : function(){
+    hideModal : function(){
         var view = this.getChildView('modalRegion');
         view.hide();
     }
