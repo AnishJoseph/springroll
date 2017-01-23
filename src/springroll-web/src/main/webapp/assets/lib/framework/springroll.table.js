@@ -4,7 +4,7 @@ var moment = require('moment');
 
 Application.SpringrollTable  = Marionette.View.extend({
 
-    template: _.template("<table class='table table-striped table-bordered table-hover' id='springrollTable'/>"),
+    template: _.template("<table class='table table-striped table-bordered table-hover' id='springrollTable' width='100%'/>"),
     ui : {
         springrollTable : '#springrollTable'
     },
