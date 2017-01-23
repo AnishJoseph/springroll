@@ -1,18 +1,21 @@
 var Marionette = require('backbone.marionette');
 var Application =require('Application');
-Application.requiresTemplate('#mdm.newrecs.moreinfo');
-Application.requiresTemplate('#mdm.changedrecs.moreinfo');
+var Radio = require('backbone.radio');
+var modalChannel = Radio.channel('ModalChannel');
 
-var ChangedView = Marionette.View.extend({
-    template: '#mdm.changedrecs.moreinfo'
-});
-
-var NewView = Marionette.View.extend({
-    template: '#mdm.newrecs.moreinfo'
-});
 
 var MdmMoreInfoView = Marionette.View.extend({
     template : _.template('<div id="changedRecords"></div><div style="overflow: auto" id="newRecords"></div><div id="control"></div>'),
+
+    initialize : function(){
+        var that = this;
+        modalChannel.on('modal:attached', function() {
+            if(that.isDestroyed())return;
+            if(that.changedRecordstable != undefined) that.changedRecordstable.refreshDataTable();
+            if(that.newRecordstable != undefined) that.newRecordstable.refreshDataTable();
+        });
+    },
+
     regions : {
         changedRegion: '#changedRecords',
         newRegion: '#newRecords',
@@ -20,13 +23,51 @@ var MdmMoreInfoView = Marionette.View.extend({
     },
 
     onRender : function(){
+        var that = this;
         var changedRecords = this.model.get('mdmChangesForReview')['changedRecords'];
         var newRecords = this.model.get('mdmChangesForReview')['newRecords'];
+
+        var columnDefinitions = [];
+        _.each(this.model.get('mdmChangesForReview').colDefs, function(colDef){
+            if(colDef.name == 'id')return;
+            columnDefinitions.push({title : colDef.name, type : 'html', visible : true});
+        });
+
         if( changedRecords !== null && changedRecords.length > 0){
-            this.showChildView('changedRegion', new ChangedView({'model' : this.model}));
+            var data = [];
+            _.each(changedRecords, function(changedRecord){
+                var mdmChangedColumns = changedRecord.mdmChangedColumns;
+                var dataForRow = [];
+                _.each(that.model.get('mdmChangesForReview').colDefs, function(colDef){
+                    if(colDef.name == 'id')return;
+                    var val = mdmChangedColumns[colDef.name].val;
+                    var prevVal = mdmChangedColumns[colDef.name].prevVal;
+                    if(prevVal == undefined || prevVal == null) prevVal = "";
+                    var changed = mdmChangedColumns[colDef.name].changed;
+                    if(!changed){
+                        dataForRow.push(val);
+                    } else {
+                        dataForRow.push('<div class="alertActionsPanelBorder">' + val + '</div><div class="text-muted">' + prevVal + '</div>');
+                    }
+                });
+                data.push(dataForRow);
+            });
+
+            this.changedRecordstable = new Application.SpringrollTable({'columnDefinitions' : columnDefinitions, 'data' : data, 'dom' : 't'});
+            this.showChildView('changedRegion', this.changedRecordstable);
         }
         if( newRecords !== null && newRecords.length > 0){
-            this.showChildView('newRegion', new NewView({'model' : this.model}));
+            var data = [];
+            _.each(newRecords, function(newRecord){
+                var dataForRow = [];
+                _.each(that.model.get('mdmChangesForReview').colDefs, function(colDef){
+                    if(colDef.name == 'id')return;
+                    dataForRow.push(newRecord[colDef.name]);
+                });
+                data.push(dataForRow);
+            });
+            this.newRecordstable = new Application.SpringrollTable({'columnDefinitions' : columnDefinitions, 'data' : data, 'dom' : 't'});
+            this.showChildView('newRegion', this.newRecordstable);
         }
     }
 });

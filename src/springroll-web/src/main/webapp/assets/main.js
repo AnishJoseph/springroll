@@ -30,6 +30,7 @@ require('mdm.js');
 require('mdm.editor.js');
 require('utils.js');
 require('jobdashboard.js');
+require('springroll.table.js');
 
 $(function() {
     var token = $("meta[name='_csrf']").attr("content");

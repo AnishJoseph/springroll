@@ -1,6 +1,8 @@
 var Marionette = require('backbone.marionette');
 var Application = require('Application');
 Application.requiresTemplate('#modal');
+var Radio = require('backbone.radio');
+var modalChannel = Radio.channel('ModalChannel');
 
 Application.ModalView = Marionette.View.extend({
     tagName: 'div',
@@ -32,6 +34,11 @@ Application.ModalView = Marionette.View.extend({
         'click #reject'  : "rejectClicked",
         'change #comments'  : "commentChanged",
         'hidden.bs.modal'  : "hidden",
+        'shown.bs.modal	'  : "shown",
+    },
+
+    shown : function(){
+        modalChannel.trigger('modal:attached');
     },
 
     hidden : function() {
