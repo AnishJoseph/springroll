@@ -53,7 +53,7 @@ var MdmMoreInfoView = Marionette.View.extend({
                 data.push(dataForRow);
             });
 
-            this.changedRecordstable = new Application.SpringrollTable({'columnDefinitions' : columnDefinitions, 'data' : data, 'dom' : 't'});
+            this.changedRecordstable = new Application.SpringrollTable({'columnDefinitions' : columnDefinitions, 'data' : data, 'dom' : 't', height : '200px'});
             this.showChildView('changedRegion', this.changedRecordstable);
         }
         if( newRecords !== null && newRecords.length > 0){
@@ -66,7 +66,7 @@ var MdmMoreInfoView = Marionette.View.extend({
                 });
                 data.push(dataForRow);
             });
-            this.newRecordstable = new Application.SpringrollTable({'columnDefinitions' : columnDefinitions, 'data' : data, 'dom' : 't'});
+            this.newRecordstable = new Application.SpringrollTable({'columnDefinitions' : columnDefinitions, 'data' : data, 'dom' : 't', height : '200px'});
             this.showChildView('newRegion', this.newRecordstable);
         }
     }
