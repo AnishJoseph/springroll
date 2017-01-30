@@ -2,10 +2,11 @@ var Marionette = require('backbone.marionette');
 var Application =require('Application');
 var Radio = require('backbone.radio');
 var modalChannel = Radio.channel('ModalChannel');
+Application.requiresTemplate('#mdm.moreinfo');
 
 
 var MdmMoreInfoView = Marionette.View.extend({
-    template : _.template('<div id="changedRecords"></div><div style="overflow: auto" id="newRecords"></div><div id="control"></div>'),
+    template: '#mdm.moreinfo',
 
     initialize : function(){
         var that = this;
@@ -14,6 +15,10 @@ var MdmMoreInfoView = Marionette.View.extend({
             if(that.changedRecordstable != undefined) that.changedRecordstable.refreshDataTable();
             if(that.newRecordstable != undefined) that.newRecordstable.refreshDataTable();
         });
+    },
+    ui: {
+        mdmChangedHeader:  '.mdm-changed-header',
+        mdmNewHeader:  '.mdm-new-header'
     },
 
     regions : {
@@ -33,7 +38,12 @@ var MdmMoreInfoView = Marionette.View.extend({
             columnDefinitions.push({title : colDef.name, type : 'html', visible : true});
         });
 
+        var heightOfNewRecordsTable = '400px';
+        var heightOfChangedRecordsTable = '400px';
+
         if( changedRecords !== null && changedRecords.length > 0){
+            if( newRecords !== null && newRecords.length > 0) heightOfChangedRecordsTable = '200px';
+            this.ui.mdmChangedHeader.removeClass('hidden');
             var data = [];
             _.each(changedRecords, function(changedRecord){
                 var mdmChangedColumns = changedRecord.mdmChangedColumns;
@@ -53,10 +63,12 @@ var MdmMoreInfoView = Marionette.View.extend({
                 data.push(dataForRow);
             });
 
-            this.changedRecordstable = new Application.SpringrollTable({'columnDefinitions' : columnDefinitions, 'data' : data, 'dom' : 't', height : '200px'});
+            this.changedRecordstable = new Application.SpringrollTable({'columnDefinitions' : columnDefinitions, 'data' : data, 'dom' : 't', height : heightOfChangedRecordsTable});
             this.showChildView('changedRegion', this.changedRecordstable);
         }
         if( newRecords !== null && newRecords.length > 0){
+            if( changedRecords !== null && changedRecords.length > 0) heightOfNewRecordsTable = '200px';
+            this.ui.mdmNewHeader.removeClass('hidden');
             var data = [];
             _.each(newRecords, function(newRecord){
                 var dataForRow = [];
@@ -66,7 +78,7 @@ var MdmMoreInfoView = Marionette.View.extend({
                 });
                 data.push(dataForRow);
             });
-            this.newRecordstable = new Application.SpringrollTable({'columnDefinitions' : columnDefinitions, 'data' : data, 'dom' : 't', height : '200px'});
+            this.newRecordstable = new Application.SpringrollTable({'columnDefinitions' : columnDefinitions, 'data' : data, 'dom' : 't', height : heightOfNewRecordsTable});
             this.showChildView('newRegion', this.newRecordstable);
         }
     }
