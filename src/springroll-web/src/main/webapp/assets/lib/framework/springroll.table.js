@@ -14,6 +14,9 @@ Application.SpringrollTable  = Marionette.View.extend({
         this.columnDefinitions = options.columnDefinitions;
         this.dom = options.dom;
         this.height = options.height;
+        this.language = {};
+        this.language['thousands'] = Application.Localize('groupingSeparator');
+        this.language['decimal'] = Application.Localize('decimalSeparator');
     },
 
     dateRenderer : function(data, type, full, meta) {
@@ -58,6 +61,7 @@ Application.SpringrollTable  = Marionette.View.extend({
             scrollX: true,
             search : false,
             columns: this.columnDefinitions,
+            language : this.language
         } );
     },
 

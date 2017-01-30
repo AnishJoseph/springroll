@@ -27,8 +27,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +74,7 @@ import java.util.stream.Collectors;
 
         for (int i = 0; i < grid.getGridColumns().size(); i++) {
             GridColumn column = grid.getGridColumns().get(i);
-            if(column.getType().equalsIgnoreCase("num") && column.getNumberFormat() != null) {
+            if(column.getType().equalsIgnoreCase("num-fmt") && column.getNumberFormat() != null) {
                 NumberFormat numberFormat = gridConfiguration.findNumberFormatByName(column.getNumberFormat());
                 if(numberFormat == null)continue;
                 DecimalFormat format = springrollUtils.makeFormatter(SpringrollSecurity.getUser().getLocale(), numberFormat.getFormat());
