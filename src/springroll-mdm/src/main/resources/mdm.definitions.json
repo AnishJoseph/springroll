@@ -49,7 +49,6 @@
       },
       {
         "masterClassName" : "com.springrollexample.orm.entities.TestTableToCheckMdm",
-        "constraints" : ["enumType"],
         "colDefs" : [
           {"name": "stringVariable",  "writeable" : true, "type": "text"},
           {"name": "booleanVariable", "writeable" : true, "type": "boolean"},
