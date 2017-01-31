@@ -35,7 +35,7 @@ var MdmMoreInfoView = Marionette.View.extend({
         var columnDefinitions = [];
         _.each(this.model.get('mdmChangesForReview').colDefs, function(colDef){
             if(colDef.name == 'id')return;
-            columnDefinitions.push({title : colDef.name, type : 'html', visible : true});
+            columnDefinitions.push({title : Localize('ui.'+colDef.name), type : 'html', visible : true});
         });
 
         var heightOfNewRecordsTable = '400px';
