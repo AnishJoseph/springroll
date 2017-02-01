@@ -146,7 +146,7 @@ var MasterTableBody = Marionette.CollectionView.extend({
 
 var MasterTable = Marionette.View.extend({
     tagName: 'table',
-    className: 'table table-hover table-striped nowrap',
+    className: 'table table-hover table-striped nowrap mdmtable',
     serializeData: function(){
         return {colDefs: this.masterGridData.colDefs};
     },
@@ -419,6 +419,20 @@ Application.MasterView = Marionette.View.extend({
         this.showChildView('tableRegion', new MasterTable({masterGridData : this.masterGridData, collections : mdmRecords}));
         this.showChildView('controlRegion',
             new Control({masterGridData : this.masterGridData, url: this.url, collections: mdmRecords, 'model' : new Backbone.Model({'master':this.master})}));
+    },
+
+    onAttach : function(){
+        var ht = (window.innerHeight - 200) + "px"; //FIXME - we need a better soln
+        $('.mdmtable').DataTable({
+            dom : 't',
+            "searching": false,
+            "ordering": false,
+            "scrollY":        ht,
+            "scrollCollapse": true,
+            "paging": false
+
+
+        });
     }
 
 });
