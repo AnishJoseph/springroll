@@ -31,8 +31,12 @@ $widthOfIndicator : 600px;
   height: calc(100vh - #{$rootMenuHeight} -  2*#{$marginOnTopAndBottomForBody} );
 }
 
-.main-body-content {
+.full-overflow {
+  height: 100%;
   overflow: auto;
+}
+
+.main-body-content {
   margin-top: 5px;
   margin-bottom: 5px;
   height: calc(100% - #{$offsetFromBottomForBodyContent});
