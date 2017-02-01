@@ -3,7 +3,8 @@ var Application =require('Application');
 
 var View = Marionette.View.extend({
     tagName: 'div',
-    template: "#m3s2Template",
+    className : 'full-overflow',
+    template: "#m3s2Template"
 });
 
 var M3S2Controller = Marionette.Object.extend({
