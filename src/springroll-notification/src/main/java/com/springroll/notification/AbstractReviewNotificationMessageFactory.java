@@ -27,7 +27,7 @@ public abstract class AbstractReviewNotificationMessageFactory extends AbstractN
     }
 
     @Override
-    public List<? extends INotification> getPendingNotificationsForUser(AlertChannel alertChannel) {
+    public List<? extends INotification> getPendingAlertsForUser(AlertChannel alertChannel) {
         SpringrollUser user = SpringrollSecurity.getUser();
         List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String userId = user.getUsername();

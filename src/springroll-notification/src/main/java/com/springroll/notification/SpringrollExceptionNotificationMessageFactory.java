@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Component public class SpringrollExceptionNotificationMessageFactory extends AbstractNotificationMessageFactory {
     @Override
-    public List<? extends INotification> getPendingNotificationsForUser(AlertChannel alertChannel) {
+    public List<? extends INotification> getPendingAlertsForUser(AlertChannel alertChannel) {
         //FIXME - also get messages for this users role
         List<Notification> pendingNotificationsForUser = repositories.notification.findByChannelNameAndReceivers(alertChannel.getChannelName(), SpringrollSecurity.getUser().getUsername());
         return filterAckedNotifications(pendingNotificationsForUser, SpringrollSecurity.getUser().getUsername());

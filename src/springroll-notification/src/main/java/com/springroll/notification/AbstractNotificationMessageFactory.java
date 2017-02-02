@@ -38,7 +38,7 @@ public abstract class AbstractNotificationMessageFactory implements INotificatio
     }
 
     @Override
-    public List<? extends INotification> getPendingNotificationsForUser(AlertChannel alertChannel) {
+    public List<? extends INotification> getPendingAlertsForUser(AlertChannel alertChannel) {
         SpringrollUser user = SpringrollSecurity.getUser();
         List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         List<Notification> notis = repositories.notification.findByChannelNameAndReceiversIn(alertChannel.getChannelName(), roles);

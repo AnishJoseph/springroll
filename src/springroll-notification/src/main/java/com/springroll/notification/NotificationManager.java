@@ -93,7 +93,7 @@ public class NotificationManager implements NotificationService, LovProvider {
                 return;
             }
             if (alertChannel.getMessageFactory() == null) return;
-            List<Notification> pendingNotificationsForUser = (List<Notification>) alertChannel.getMessageFactory().getPendingNotificationsForUser(alertChannel);
+            List<Notification> pendingNotificationsForUser = (List<Notification>) alertChannel.getMessageFactory().getPendingAlertsForUser(alertChannel);
             if (pendingNotificationsForUser.isEmpty()) return;
 
             List<IAlertMessage> notificationMessagesForUser = pendingNotificationsForUser.stream().map(Notification::getNotificationMessage).collect(Collectors.toList());
