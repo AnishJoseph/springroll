@@ -3,7 +3,7 @@ package com.springroll.router;
 import com.springroll.core.IEvent;
 import com.springroll.core.JobStatus;
 import com.springroll.core.services.notification.NotificationService;
-import com.springroll.notification.CoreNotificationChannels;
+import com.springroll.notification.CorePushChannels;
 import com.springroll.orm.entities.Job;
 import com.springroll.orm.repositories.Repositories;
 import org.slf4j.Logger;
@@ -119,7 +119,9 @@ public class JobManager {
                         legMonitor.jobStatus = job.getStatus();
                     }
                     logger.debug("Job Completed: Transaction leg {} completed for job {}: Status {}", legId, jobId, job.getStatus());
-                    notificationService.sendNotification(CoreNotificationChannels.JOB_STATUS_UPDATE, new JobStatusMessage(job));
+                    Set<String> users = new HashSet<>(1);
+                    users.add(job.getUserId());
+                    notificationService.pushNotification(users, new JobStatusMessage(job), CorePushChannels.JOB_STATUS_UPDATE);
                     break;
                 case REMOVED:
                     if (legMonitor.jobStatus.length() < 3950) {

@@ -5,14 +5,13 @@ import com.springroll.core.services.notification.AlertType;
 /**
  * Created by anishjoseph on 15/10/16.
  */
-public class NotificationCancellationMessage extends AbstractNotificationMessage {
-    protected AlertType alertType;
+public class NotificationCancellationMessage  {
+    private AlertType alertType;
+    private Long id;
     public NotificationCancellationMessage(){}
-    public NotificationCancellationMessage(AlertType alertType, Long id, String initiator ){
+    public NotificationCancellationMessage(AlertType alertType, Long id ){
         this.alertType = alertType;
-        this.setChannel(CoreNotificationChannels.NOTIFICATION_CANCEL.getChannelName());
-        this.setId(id);
-        setInitiator(initiator);
+        this.id = id;
     }
 
     public AlertType getAlertType() {
@@ -21,5 +20,13 @@ public class NotificationCancellationMessage extends AbstractNotificationMessage
 
     public void setAlertType(AlertType alertType) {
         this.alertType = alertType;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

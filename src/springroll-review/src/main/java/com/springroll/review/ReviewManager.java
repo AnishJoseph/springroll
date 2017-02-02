@@ -3,7 +3,7 @@ package com.springroll.review;
 import com.springroll.core.*;
 import com.springroll.core.services.notification.*;
 import com.springroll.core.services.review.ReviewService;
-import com.springroll.notification.CoreNotificationChannels;
+import com.springroll.notification.CorePushChannels;
 import com.springroll.orm.entities.Job;
 import com.springroll.orm.entities.ReviewRule;
 import com.springroll.orm.entities.ReviewStep;
@@ -202,7 +202,9 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
         job.setPendingReviewers(String.join(", ", yetToReview));
 
         job.addReviewLog(new ReviewLog(SpringrollSecurity.getUser().getUsername(), LocalDateTime.now(), reviewActionDTO.isApproved(), reviewActionDTO.getReviewComment()));
-        notificationService.sendNotification(CoreNotificationChannels.JOB_STATUS_UPDATE, new JobStatusMessage(job));
+        Set<String> users = new HashSet<>(1);
+        users.add(job.getUserId());
+        notificationService.pushNotification(users, new JobStatusMessage(job), CorePushChannels.JOB_STATUS_UPDATE);
         if(!areAllStepsComplete) return;
 
         for (Long notificationId : notificationIds) {
@@ -241,7 +243,9 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
                 job.setStatus(prevStatus + " Review Rejected by " + SpringrollSecurity.getUser().getUsername());
                 job.setCompleted(true);
                 job.setJobStatus(JobStatus.RejectedAndDiscarded);
-                notificationService.sendNotification(CoreNotificationChannels.JOB_STATUS_UPDATE, new JobStatusMessage(job));
+                Set<String> targetUser = new HashSet<>(1);
+                users.add(job.getUserId());
+                notificationService.pushNotification(targetUser, new JobStatusMessage(job), CorePushChannels.JOB_STATUS_UPDATE);
             }
             repo.reviewStep.delete(allReviewSteps);
             repo.reviewStepMeta.delete(reviewStepMeta.getID());

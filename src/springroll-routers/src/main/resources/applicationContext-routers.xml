@@ -112,5 +112,4 @@
 
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
 
-    <bean class="com.springroll.router.JobStatusMessageFactory"/>
 </beans>

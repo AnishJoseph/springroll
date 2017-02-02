@@ -1,6 +1,5 @@
 package com.springroll.notification;
 
-import com.springroll.core.services.job.IJobStatusMessageFactory;
 import com.springroll.core.services.mdm.IMdmReviewNotificationMessageFactory;
 import com.springroll.core.services.notification.INotificationMessageFactory;
 import com.springroll.core.services.notification.NotificationChannel;
@@ -14,10 +13,8 @@ public enum CoreNotificationChannels implements NotificationChannel {
     REVIEW("/core/review", IReviewNotificationMessageFactory.class, true, false),
     FYI("/core/fyi", FyiNotificationMessageFactory.class, true, true),
     REVIEW_FYI("/core/reviewfyi", IFyiReviewNotificationMessageFactory.class, true, true),
-    NOTIFICATION_CANCEL("/core/notificationCancel", null, true, true),
     MDM_REVIEW("/core/mdmreview", IMdmReviewNotificationMessageFactory.class, true, false),
-    SPRINGROLL_EXCEPTION("/core/springrollexception", SpringrollExceptionNotificationMessageFactory.class, true, false),
-    JOB_STATUS_UPDATE("/core/jobstatusupdate", IJobStatusMessageFactory.class, false, false);
+    SPRINGROLL_EXCEPTION("/core/springrollexception", SpringrollExceptionNotificationMessageFactory.class, true, false);
 
     private String serviceUri;
     private INotificationMessageFactory messageFactory = null;

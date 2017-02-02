@@ -1,6 +1,5 @@
 package com.springroll.router;
 
-import com.springroll.notification.AbstractNotificationMessage;
 import com.springroll.orm.entities.Job;
 
 import java.util.ArrayList;
@@ -9,11 +8,9 @@ import java.util.List;
 /**
  * Created by anishjoseph on 05/01/17.
  */
-public class JobStatusMessage extends AbstractNotificationMessage {
+public class JobStatusMessage {
 
     List<Object> updatedData = new ArrayList<>();
-
-    private String userId;
 
     public JobStatusMessage(Job job) {
         /* This should match the named query in sr.named.queries.xml and the grid defn in the json file */
@@ -25,16 +22,6 @@ public class JobStatusMessage extends AbstractNotificationMessage {
         updatedData.add(job.getJobStatus());
         updatedData.add(job.getPendingReviewers());
         updatedData.add(job.getReviewLog());
-        this.userId = job.getUserId();
-
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public List<Object> getUpdatedData() {

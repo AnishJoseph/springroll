@@ -45,6 +45,14 @@ public class NotificationManager implements NotificationService, LovProvider {
         this.addNotificationChannels(CoreNotificationChannels.class);
     }
 
+    @Override public void pushNotification(Set<String> targetUsers, Object notificationMessage, PushChannel pushChannel){
+        /* Use spring to publish - spring will deliver this on a successful commit of the transaction.
+           This ensures that the notification is pushed to the user ONLY after the current transaction commits.
+           If we don't have this, then the event is pushed to the user even if the transaction rolls back
+         */
+        publisher.publishEvent(new PushData(targetUsers, new Object[]{notificationMessage}, pushChannel.getServiceUri()));
+    }
+
     @Override public Long sendNotification(NotificationChannel notificationChannel, INotificationMessage notificationMessage) {
         Set<String> targetUsers = notificationChannel.getMessageFactory().getTargetUsers(notificationMessage);
         /* Use spring to publish - spring will deliver this on a successful commit of the transaction.
@@ -112,12 +120,9 @@ public class NotificationManager implements NotificationService, LovProvider {
             logger.error("Unable to find notification with id {}", notificationId);
             return;
         }
-        NotificationCancellationMessage msg = new NotificationCancellationMessage(((AlertNotificationMessage)notification.getNotificationMessage()).getAlertType(), notificationId, notification.getInitiator());
-        List<INotificationMessage> msgs = new ArrayList<>();
-        msgs.add(msg);
-        pushNotification(new PushData(notification.getUsers(), msgs, CoreNotificationChannels.NOTIFICATION_CANCEL.getServiceUri()));
+        NotificationCancellationMessage msg = new NotificationCancellationMessage(((AlertNotificationMessage)notification.getNotificationMessage()).getAlertType(), notificationId);
+        pushNotification(notification.getUsers(), msg, CorePushChannels.NOTIFICATION_CANCEL);
         repositories.notification.delete(notificationId);
-        //FIXME - should this go via sendnotification so that it happens after commit
     }
 
     @Override
