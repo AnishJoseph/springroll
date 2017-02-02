@@ -8,5 +8,5 @@ import java.util.Set;
  */
 public interface INotificationMessageFactory {
     Set<String> getTargetUsers(INotificationMessage notificationMessage);
-    List<? extends INotification> getPendingNotificationsForUser(NotificationChannel notificationChannel);
+    List<? extends INotification> getPendingNotificationsForUser(AlertChannel alertChannel);
 }

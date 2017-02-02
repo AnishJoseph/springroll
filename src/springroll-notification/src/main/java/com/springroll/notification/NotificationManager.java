@@ -37,12 +37,12 @@ public class NotificationManager implements NotificationService, LovProvider {
     private static final Logger logger = LoggerFactory.getLogger(NotificationManager.class);
 
 
-    private Map<String, NotificationChannel> serviceNameToNotificationChannel = new HashMap<>();
+    private Map<String, AlertChannel> serviceNameToNotificationChannel = new HashMap<>();
 
     private List<Class> notificationChannels = new ArrayList<>();
 
     @PostConstruct void init(){
-        this.addNotificationChannels(CoreNotificationChannels.class);
+        this.addNotificationChannels(CoreAlertChannels.class);
     }
 
     @Override public void pushNotification(Set<String> targetUsers, Object notificationMessage, PushChannel pushChannel){
@@ -53,25 +53,25 @@ public class NotificationManager implements NotificationService, LovProvider {
         publisher.publishEvent(new PushData(targetUsers, new Object[]{notificationMessage}, pushChannel.getServiceUri()));
     }
 
-    @Override public Long sendNotification(NotificationChannel notificationChannel, INotificationMessage notificationMessage) {
-        Set<String> targetUsers = notificationChannel.getMessageFactory().getTargetUsers(notificationMessage);
+    @Override public Long sendNotification(AlertChannel alertChannel, INotificationMessage notificationMessage) {
+        Set<String> targetUsers = alertChannel.getMessageFactory().getTargetUsers(notificationMessage);
         /* Use spring to publish - spring will deliver this on a successful commit of the transaction.
            This ensures that the notification is pushed to the user ONLY after the current transaction commits.
            If we don't have this, then the event is pushed to the user even if the transaction rolls back
          */
-        publisher.publishEvent(new PushData(targetUsers, new Object[]{notificationMessage}, notificationChannel.getServiceUri()));
+        publisher.publishEvent(new PushData(targetUsers, new Object[]{notificationMessage}, alertChannel.getServiceUri()));
 
         notificationMessage.setCreationTime(System.currentTimeMillis());
-        notificationMessage.setChannel(notificationChannel.getServiceUri());
+        notificationMessage.setChannel(alertChannel.getServiceUri());
 
         Notification notification = new Notification();
         repositories.notification.save(notification);
         notification.setReceivers(notificationMessage.getNotificationReceivers());
-        notification.setChannelName(notificationChannel.getChannelName());
+        notification.setChannelName(alertChannel.getChannelName());
         notification.setUsers(targetUsers);
         notification.setCreationTime(LocalDateTime.now());
         notification.setInitiator(notificationMessage.getInitiator());
-        notification.setAutoClean(notificationChannel.isAutoClean());
+        notification.setAutoClean(alertChannel.isAutoClean());
 
         notificationMessage.setId(notification.getID());
         /* This MUST be last as we are setting stuff in the notification message before this */
@@ -87,26 +87,26 @@ public class NotificationManager implements NotificationService, LovProvider {
     @Override
     public void pushPendingNotifications(String serviceUri) {
         try {
-            NotificationChannel notificationChannel = serviceUriToEnum(serviceUri);
-            if (notificationChannel == null) {
+            AlertChannel alertChannel = serviceUriToEnum(serviceUri);
+            if (alertChannel == null) {
                 logger.error("Unable to find NotificationChannel for channel '{}' - probably does not exist in the Enums", serviceUri);
                 return;
             }
-            if (notificationChannel.getMessageFactory() == null) return;
-            List<Notification> pendingNotificationsForUser = (List<Notification>) notificationChannel.getMessageFactory().getPendingNotificationsForUser(notificationChannel);
+            if (alertChannel.getMessageFactory() == null) return;
+            List<Notification> pendingNotificationsForUser = (List<Notification>) alertChannel.getMessageFactory().getPendingNotificationsForUser(alertChannel);
             if (pendingNotificationsForUser.isEmpty()) return;
 
             List<INotificationMessage> notificationMessagesForUser = pendingNotificationsForUser.stream().map(Notification::getNotificationMessage).collect(Collectors.toList());
             Set<String> user = new HashSet<>(1);
             user.add(SpringrollSecurity.getUser().getUsername());
-            pushNotification(new PushData(user, notificationMessagesForUser, notificationChannel.getServiceUri()));
+            pushNotification(new PushData(user, notificationMessagesForUser, alertChannel.getServiceUri()));
         }catch (Exception e){
             e.printStackTrace(); //FIXME
         }
     }
 
     @Override
-    public void addNotificationChannels(Class<? extends NotificationChannel> clazz) {
+    public void addNotificationChannels(Class<? extends AlertChannel> clazz) {
         notificationChannels.add(clazz);
         resolveFactories(clazz);
     }
@@ -144,15 +144,15 @@ public class NotificationManager implements NotificationService, LovProvider {
     }
 
     @Override
-    public NotificationChannel nameToEnum(String enumValue){
-        NotificationChannel notificationChannel = notificationChannels.stream()
+    public AlertChannel nameToEnum(String enumValue){
+        AlertChannel alertChannel = notificationChannels.stream()
                 .flatMap(channel -> Arrays.stream(channel.getEnumConstants()))
                 .filter(enumConstant -> ((Enum) enumConstant).name().equals(enumValue))
                 .findFirst()
-                .map(o -> (NotificationChannel)o)
+                .map(o -> (AlertChannel)o)
                 .orElse(null);          //FIXME - throw exception!!
 
-        return notificationChannel;
+        return alertChannel;
     }
 
     @Override
@@ -171,17 +171,17 @@ public class NotificationManager implements NotificationService, LovProvider {
 
     }
 
-    private NotificationChannel serviceUriToEnum(String channel) {
-        NotificationChannel notificationChannel = serviceNameToNotificationChannel.get(channel);
-        if(notificationChannel != null)return notificationChannel;
+    private AlertChannel serviceUriToEnum(String channel) {
+        AlertChannel alertChannel = serviceNameToNotificationChannel.get(channel);
+        if(alertChannel != null)return alertChannel;
 
-        NotificationChannel channelForUri = notificationChannels.stream()
+        AlertChannel channelForUri = notificationChannels.stream()
                 .flatMap(notiChannel -> Arrays.stream(notiChannel.getEnumConstants()))
-                .filter(enumConstant -> ((NotificationChannel) enumConstant).getServiceUri().equals(channel))
+                .filter(enumConstant -> ((AlertChannel) enumConstant).getServiceUri().equals(channel))
                 .findFirst()
                 .map(enumConstant -> {
-                    serviceNameToNotificationChannel.put(channel, (NotificationChannel)enumConstant);
-                    return (NotificationChannel) enumConstant;
+                    serviceNameToNotificationChannel.put(channel, (AlertChannel)enumConstant);
+                    return (AlertChannel) enumConstant;
                 })
                 .orElse(null);         //FIXME - throw exception!!
 
@@ -189,7 +189,7 @@ public class NotificationManager implements NotificationService, LovProvider {
     }
 
     private void resolveFactories(Class notificationChannelClass){
-        Stream.of((NotificationChannel[])notificationChannelClass.getEnumConstants())
+        Stream.of((AlertChannel[])notificationChannelClass.getEnumConstants())
                 .filter(notificationChannel -> notificationChannel.getMessageFactoryClass() != null)
                 .forEach(notificationChannel -> notificationChannel.setMessageFactory(applicationContext.getBean(notificationChannel.getMessageFactoryClass())));
     }

@@ -2,14 +2,14 @@ package com.springroll.notification;
 
 import com.springroll.core.services.mdm.IMdmReviewNotificationMessageFactory;
 import com.springroll.core.services.notification.INotificationMessageFactory;
-import com.springroll.core.services.notification.NotificationChannel;
+import com.springroll.core.services.notification.AlertChannel;
 import com.springroll.core.services.review.IFyiReviewNotificationMessageFactory;
 import com.springroll.core.services.review.IReviewNotificationMessageFactory;
 
 /**
  * Created by anishjoseph on 03/10/16.
  */
-public enum CoreNotificationChannels implements NotificationChannel {
+public enum CoreAlertChannels implements AlertChannel {
     REVIEW("/alerts/core/review", IReviewNotificationMessageFactory.class, false),
     FYI("/alerts/core/fyi", FyiNotificationMessageFactory.class, true),
     REVIEW_FYI("/alerts/core/reviewfyi", IFyiReviewNotificationMessageFactory.class, true),
@@ -21,7 +21,7 @@ public enum CoreNotificationChannels implements NotificationChannel {
     private boolean autoClean;
     private Class<? extends INotificationMessageFactory> messageFactoryClass;
 
-    CoreNotificationChannels(String topicName, Class<? extends INotificationMessageFactory> messageFactoryClass, boolean autoClean) {
+    CoreAlertChannels(String topicName, Class<? extends INotificationMessageFactory> messageFactoryClass, boolean autoClean) {
         this.serviceUri = topicName;
         this.messageFactoryClass = messageFactoryClass;
         this.autoClean = autoClean;

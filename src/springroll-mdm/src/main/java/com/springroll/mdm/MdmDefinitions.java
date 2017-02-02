@@ -1,7 +1,7 @@
 package com.springroll.mdm;
 
 import com.springroll.core.exceptions.SpringrollException;
-import com.springroll.notification.CoreNotificationChannels;
+import com.springroll.notification.CoreAlertChannels;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by anishjoseph on 04/11/16.
  */
 public class MdmDefinitions {
-    private String reviewChannelName = CoreNotificationChannels.MDM_REVIEW.name();  //FIXME
+    private String reviewChannelName = CoreAlertChannels.MDM_REVIEW.name();  //FIXME
     private List<MdmDefinition> masters;
     private LovSource lovSources;
     private Map<String, ILovSource> nameToSourceMap = new HashMap<>();

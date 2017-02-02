@@ -3,7 +3,7 @@ package com.springroll.notification;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.services.notification.INotification;
-import com.springroll.core.services.notification.NotificationChannel;
+import com.springroll.core.services.notification.AlertChannel;
 import com.springroll.core.services.notification.INotificationMessage;
 import com.springroll.orm.entities.Notification;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,16 +27,16 @@ public abstract class AbstractReviewNotificationMessageFactory extends AbstractN
     }
 
     @Override
-    public List<? extends INotification> getPendingNotificationsForUser(NotificationChannel notificationChannel) {
+    public List<? extends INotification> getPendingNotificationsForUser(AlertChannel alertChannel) {
         SpringrollUser user = SpringrollSecurity.getUser();
         List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String userId = user.getUsername();
         roles.add(userId);
 
-        List<Notification> notis = repositories.notification.findByChannelNameAndInitiatorNotAndReceiversIn(notificationChannel.getChannelName(), userId, roles);
+        List<Notification> notis = repositories.notification.findByChannelNameAndInitiatorNotAndReceiversIn(alertChannel.getChannelName(), userId, roles);
 
         List<Notification> notifications = filterAckedNotifications(notis, userId);
-        notifications.addAll(repositories.notification.findByChannelNameAndReceivers(notificationChannel.getChannelName(), userId));
+        notifications.addAll(repositories.notification.findByChannelNameAndReceivers(alertChannel.getChannelName(), userId));
         return notifications;
     }
 }
