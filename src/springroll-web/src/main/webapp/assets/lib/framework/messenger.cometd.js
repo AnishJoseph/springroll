@@ -61,7 +61,7 @@ CometD.configure({
 
 CometD.addListener('/meta/handshake', _metaHandshake);
 CometD.addListener('/meta/connect', _metaConnect);
-CometD.unregisterTransport('websocket');
+//CometD.unregisterTransport('websocket');
 
 
 
