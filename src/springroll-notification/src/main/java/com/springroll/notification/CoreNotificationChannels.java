@@ -14,7 +14,7 @@ public enum CoreNotificationChannels implements NotificationChannel {
     FYI("/alerts/core/fyi", FyiNotificationMessageFactory.class, true),
     REVIEW_FYI("/alerts/core/reviewfyi", IFyiReviewNotificationMessageFactory.class, true),
     MDM_REVIEW("/alerts/core/mdmreview", IMdmReviewNotificationMessageFactory.class, false),
-    SPRINGROLL_EXCEPTION("/alerts/core/springrollexception", SpringrollExceptionNotificationMessageFactory.class, false);
+    SPRINGROLL_EXCEPTION("/alerts/core/springrollexception", SpringrollExceptionNotificationMessageFactory.class, true);
 
     private String serviceUri;
     private INotificationMessageFactory messageFactory = null;
