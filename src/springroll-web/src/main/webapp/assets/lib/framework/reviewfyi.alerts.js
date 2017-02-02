@@ -24,7 +24,7 @@ var AlertsView = Marionette.View.extend({
     },
 });
 
-Application.subscribeForAlert('/core/reviewfyi', {
+Application.subscribeForAlert('/alerts/core/reviewfyi', {
     view: AlertsView,
     showDismiss: true,
     showInfo: true,

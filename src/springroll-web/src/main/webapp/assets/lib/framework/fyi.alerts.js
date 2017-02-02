@@ -29,14 +29,14 @@ var SpringrollExceptionAlertsView = Marionette.View.extend({
     }
 });
 
-Application.subscribeForAlert('/core/fyi', {
+Application.subscribeForAlert('/alerts/core/fyi', {
     view: AlertsView,
     showDismiss: true,
     showInfo: false,
     showAccept: false,
     showReject: false,
 });
-Application.subscribeForAlert('/core/springrollexception', {
+Application.subscribeForAlert('/alerts/core/springrollexception', {
     view: SpringrollExceptionAlertsView,
     showDismiss: true,
     showInfo: true,

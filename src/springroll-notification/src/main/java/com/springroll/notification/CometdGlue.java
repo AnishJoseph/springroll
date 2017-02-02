@@ -71,7 +71,7 @@ public class CometdGlue implements WebPushService
         Set<String> remoteIdsOfUser = channelSubscribers.get(userId);
         remoteIdsOfUser.add(clientId);
 
-        notificationService.pushPendingNotifications(serviceUri);
+        if(serviceUri.startsWith("/alerts"))notificationService.pushPendingNotifications(serviceUri);
 
     }
 }

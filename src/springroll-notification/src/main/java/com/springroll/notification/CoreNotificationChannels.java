@@ -10,11 +10,11 @@ import com.springroll.core.services.review.IReviewNotificationMessageFactory;
  * Created by anishjoseph on 03/10/16.
  */
 public enum CoreNotificationChannels implements NotificationChannel {
-    REVIEW("/core/review", IReviewNotificationMessageFactory.class, true, false),
-    FYI("/core/fyi", FyiNotificationMessageFactory.class, true, true),
-    REVIEW_FYI("/core/reviewfyi", IFyiReviewNotificationMessageFactory.class, true, true),
-    MDM_REVIEW("/core/mdmreview", IMdmReviewNotificationMessageFactory.class, true, false),
-    SPRINGROLL_EXCEPTION("/core/springrollexception", SpringrollExceptionNotificationMessageFactory.class, true, false);
+    REVIEW("/alerts/core/review", IReviewNotificationMessageFactory.class, true, false),
+    FYI("/alerts/core/fyi", FyiNotificationMessageFactory.class, true, true),
+    REVIEW_FYI("/alerts/core/reviewfyi", IFyiReviewNotificationMessageFactory.class, true, true),
+    MDM_REVIEW("/alerts/core/mdmreview", IMdmReviewNotificationMessageFactory.class, true, false),
+    SPRINGROLL_EXCEPTION("/alerts/core/springrollexception", SpringrollExceptionNotificationMessageFactory.class, true, false);
 
     private String serviceUri;
     private INotificationMessageFactory messageFactory = null;
