@@ -64,8 +64,6 @@ public class NotificationManager implements NotificationService, LovProvider {
         notificationMessage.setCreationTime(System.currentTimeMillis());
         notificationMessage.setChannel(notificationChannel.getServiceUri());
 
-        if(!notificationChannel.isPersist())return null;
-
         Notification notification = new Notification();
         repositories.notification.save(notification);
         notification.setReceivers(notificationMessage.getNotificationReceivers());

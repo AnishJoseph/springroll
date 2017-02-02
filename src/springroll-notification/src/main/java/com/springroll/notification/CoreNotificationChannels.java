@@ -10,23 +10,21 @@ import com.springroll.core.services.review.IReviewNotificationMessageFactory;
  * Created by anishjoseph on 03/10/16.
  */
 public enum CoreNotificationChannels implements NotificationChannel {
-    REVIEW("/alerts/core/review", IReviewNotificationMessageFactory.class, true, false),
-    FYI("/alerts/core/fyi", FyiNotificationMessageFactory.class, true, true),
-    REVIEW_FYI("/alerts/core/reviewfyi", IFyiReviewNotificationMessageFactory.class, true, true),
-    MDM_REVIEW("/alerts/core/mdmreview", IMdmReviewNotificationMessageFactory.class, true, false),
-    SPRINGROLL_EXCEPTION("/alerts/core/springrollexception", SpringrollExceptionNotificationMessageFactory.class, true, false);
+    REVIEW("/alerts/core/review", IReviewNotificationMessageFactory.class, false),
+    FYI("/alerts/core/fyi", FyiNotificationMessageFactory.class, true),
+    REVIEW_FYI("/alerts/core/reviewfyi", IFyiReviewNotificationMessageFactory.class, true),
+    MDM_REVIEW("/alerts/core/mdmreview", IMdmReviewNotificationMessageFactory.class, false),
+    SPRINGROLL_EXCEPTION("/alerts/core/springrollexception", SpringrollExceptionNotificationMessageFactory.class, false);
 
     private String serviceUri;
     private INotificationMessageFactory messageFactory = null;
-    private boolean persist;
     private boolean autoClean;
     private Class<? extends INotificationMessageFactory> messageFactoryClass;
 
-    CoreNotificationChannels(String topicName, Class<? extends INotificationMessageFactory> messageFactoryClass, boolean persist, boolean autoClean) {
+    CoreNotificationChannels(String topicName, Class<? extends INotificationMessageFactory> messageFactoryClass, boolean autoClean) {
         this.serviceUri = topicName;
         this.messageFactoryClass = messageFactoryClass;
         this.autoClean = autoClean;
-        this.persist = persist;
     }
 
     @Override public INotificationMessageFactory getMessageFactory() {
@@ -47,10 +45,6 @@ public enum CoreNotificationChannels implements NotificationChannel {
 
     @Override public String getChannelName(){
         return this.name();
-    }
-
-    @Override public boolean isPersist() {
-        return persist;
     }
 
     @Override public boolean isAutoClean() {
