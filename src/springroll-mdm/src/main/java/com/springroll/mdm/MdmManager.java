@@ -279,7 +279,7 @@ import java.util.stream.Collectors;
                     }
                 }
 
-                MdmReviewNotificationMessage mdmReviewNotificationMessage = (MdmReviewNotificationMessage) repositories.notification.findOne(notificationId).getNotificationMessage();  //FIXME
+                MdmReviewAlertMessage mdmReviewNotificationMessage = (MdmReviewAlertMessage) repositories.notification.findOne(notificationId).getNotificationMessage();  //FIXME
                 for (MdmChangedRecord mdmChangedRecord : mdmReviewNotificationMessage.getMdmChangesForReview().getChangedRecords()) {
                     Object[] newRecData = new Object[mdmData.getColDefs().size()];
                     resultList.add(newRecData);

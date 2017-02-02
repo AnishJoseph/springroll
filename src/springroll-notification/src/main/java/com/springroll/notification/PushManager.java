@@ -15,11 +15,11 @@ public class PushManager implements PushService {
     NotificationService notificationService;
     @Override
     public Long pushFYINotification(String messageKey, String[] messageArguments, String notificationReceivers) {
-        FyiNotificationMessage message = new FyiNotificationMessage(messageKey, messageArguments, notificationReceivers);
+        FyiAlertMessage message = new FyiAlertMessage(messageKey, messageArguments, notificationReceivers);
         return notificationService.sendNotification(CoreAlertChannels.FYI, message);
     }
     public Long pushSpringrollExceptionNotification(DebugInfo debugInfo, String notificationReceivers, String initiator) {
-        SpringrollExceptionNotificationMessage message = new SpringrollExceptionNotificationMessage(debugInfo, notificationReceivers, initiator);
+        SpringrollExceptionAlertMessage message = new SpringrollExceptionAlertMessage(debugInfo, notificationReceivers, initiator);
         return notificationService.sendNotification(CoreAlertChannels.SPRINGROLL_EXCEPTION, message);
     }
 }

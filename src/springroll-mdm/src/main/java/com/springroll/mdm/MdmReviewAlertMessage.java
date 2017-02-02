@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by anishjoseph on 02/10/16.
  */
-public class MdmReviewNotificationMessage extends AbstractAlertNotificationMessage {
+public class MdmReviewAlertMessage extends AbstractAlertNotificationMessage {
     private List<Long> reviewStepId;
     private String messageKey = "ui.mdm.review.noti.msg";
     private String[] args = new String[]{};
@@ -17,10 +17,10 @@ public class MdmReviewNotificationMessage extends AbstractAlertNotificationMessa
     {
         alertType = AlertType.ACTION;
     }
-    public MdmReviewNotificationMessage(){
+    public MdmReviewAlertMessage(){
     }
 
-    public MdmReviewNotificationMessage(IReviewMeta reviewMeta, String[] args, MdmChangesForReview mdmChangesForReview) {
+    public MdmReviewAlertMessage(IReviewMeta reviewMeta, String[] args, MdmChangesForReview mdmChangesForReview) {
         setNotificationReceivers(reviewMeta.getApprover());
         this.reviewStepId = reviewMeta.getReviewStepIds();
         this.args = args;

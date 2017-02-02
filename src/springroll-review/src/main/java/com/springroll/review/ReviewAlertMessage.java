@@ -8,16 +8,16 @@ import java.util.List;
 /**
  * Created by anishjoseph on 02/10/16.
  */
-public class ReviewNotificationMessage extends AbstractReviewNotificationMessage{
+public class ReviewAlertMessage extends AbstractReviewAlertMessage {
     private List<Long> reviewStepId;
     {
         alertType = AlertType.ACTION;
     }
 
-    public ReviewNotificationMessage(){
+    public ReviewAlertMessage(){
     }
 
-    public ReviewNotificationMessage(IReviewMeta reviewMeta, String messageKey, String[] args) {
+    public ReviewAlertMessage(IReviewMeta reviewMeta, String messageKey, String[] args) {
         super(reviewMeta, messageKey, args);
         this.reviewStepId = reviewMeta.getReviewStepIds();
     }

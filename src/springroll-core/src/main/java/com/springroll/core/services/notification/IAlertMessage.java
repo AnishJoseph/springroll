@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by anishjoseph on 05/10/16.
  */
-public interface INotificationMessage extends Serializable{
+public interface IAlertMessage extends Serializable{
     Long getId();
     void setId(Long notificationId);
     long getCreationTime();

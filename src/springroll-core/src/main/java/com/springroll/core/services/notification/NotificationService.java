@@ -8,7 +8,7 @@ import java.util.Set;
 public interface NotificationService {
     void pushNotification(Set<String> targetUsers, Object notificationMessage, PushChannel pushChannel);
 
-    Long sendNotification(AlertChannel alertChannel, INotificationMessage notificationPayload);
+    Long sendNotification(AlertChannel alertChannel, IAlertMessage notificationPayload);
 
     void pushPendingNotifications(String serviceUri);
 

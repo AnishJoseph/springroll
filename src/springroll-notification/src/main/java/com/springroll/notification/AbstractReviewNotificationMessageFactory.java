@@ -4,7 +4,7 @@ import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.services.notification.INotification;
 import com.springroll.core.services.notification.AlertChannel;
-import com.springroll.core.services.notification.INotificationMessage;
+import com.springroll.core.services.notification.IAlertMessage;
 import com.springroll.orm.entities.Notification;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractReviewNotificationMessageFactory extends AbstractNotificationMessageFactory {
 
     @Override
-    public Set<String> getTargetUsers(INotificationMessage notificationMessage) {
+    public Set<String> getTargetUsers(IAlertMessage notificationMessage) {
         Set<String> targetUsers = super.getTargetUsers(notificationMessage);
         /* If the initiator is not the receiver then remove the initiator from the set of target users */
         if(!notificationMessage.getInitiator().equals(notificationMessage.getNotificationReceivers()))

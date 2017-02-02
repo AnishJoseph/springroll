@@ -53,7 +53,7 @@ public class NotificationManager implements NotificationService, LovProvider {
         publisher.publishEvent(new PushData(targetUsers, new Object[]{notificationMessage}, pushChannel.getServiceUri()));
     }
 
-    @Override public Long sendNotification(AlertChannel alertChannel, INotificationMessage notificationMessage) {
+    @Override public Long sendNotification(AlertChannel alertChannel, IAlertMessage notificationMessage) {
         Set<String> targetUsers = alertChannel.getMessageFactory().getTargetUsers(notificationMessage);
         /* Use spring to publish - spring will deliver this on a successful commit of the transaction.
            This ensures that the notification is pushed to the user ONLY after the current transaction commits.
@@ -96,7 +96,7 @@ public class NotificationManager implements NotificationService, LovProvider {
             List<Notification> pendingNotificationsForUser = (List<Notification>) alertChannel.getMessageFactory().getPendingNotificationsForUser(alertChannel);
             if (pendingNotificationsForUser.isEmpty()) return;
 
-            List<INotificationMessage> notificationMessagesForUser = pendingNotificationsForUser.stream().map(Notification::getNotificationMessage).collect(Collectors.toList());
+            List<IAlertMessage> notificationMessagesForUser = pendingNotificationsForUser.stream().map(Notification::getNotificationMessage).collect(Collectors.toList());
             Set<String> user = new HashSet<>(1);
             user.add(SpringrollSecurity.getUser().getUsername());
             pushNotification(new PushData(user, notificationMessagesForUser, alertChannel.getServiceUri()));
@@ -162,10 +162,10 @@ public class NotificationManager implements NotificationService, LovProvider {
             logger.error("Unable to find notification with id {}", notificationId);
             return "Unknown";
         }
-        if(notification.getNotificationMessage() instanceof DismissibleNotificationMessage){
+        if(notification.getNotificationMessage() instanceof DismissibleAlertMessage){
             LocalDateTime date = Instant.ofEpochMilli(notification.getNotificationMessage().getCreationTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
             return LocaleFactory.getLocalizedMessage(SpringrollSecurity.getUser().getLocale(), notification.getChannelName()) + " : " +
-                    ((DismissibleNotificationMessage)notification.getNotificationMessage()).getMessage() + " at " + date.format(springrollUtils.getDateTimeFormatter());
+                    ((DismissibleAlertMessage)notification.getNotificationMessage()).getMessage() + " at " + date.format(springrollUtils.getDateTimeFormatter());
         }
         throw new SpringrollException(null, "notification.notdismissible", notification.getChannelName(), notification.getNotificationMessage().getClass().getSimpleName());
 

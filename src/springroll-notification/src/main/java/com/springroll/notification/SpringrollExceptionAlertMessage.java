@@ -3,7 +3,7 @@ package com.springroll.notification;
 import com.springroll.core.LocaleFactory;
 import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.exceptions.DebugInfo;
-import com.springroll.core.services.notification.DismissibleNotificationMessage;
+import com.springroll.core.services.notification.DismissibleAlertMessage;
 import com.springroll.core.services.notification.AlertType;
 
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by anishjoseph on 05/10/16.
  */
-public class SpringrollExceptionNotificationMessage extends AbstractAlertNotificationMessage implements DismissibleNotificationMessage {
+public class SpringrollExceptionAlertMessage extends AbstractAlertNotificationMessage implements DismissibleAlertMessage {
     private String serviceMessageKey = "ui.exception.service.msg";
     private String[] serviceMessageArgs = new String[1];
     private String messageKey;
@@ -27,10 +27,10 @@ public class SpringrollExceptionNotificationMessage extends AbstractAlertNotific
         alertType = AlertType.ERROR;
     }
 
-    public SpringrollExceptionNotificationMessage() {
+    public SpringrollExceptionAlertMessage() {
     }
 
-    public SpringrollExceptionNotificationMessage(DebugInfo debugInfo, String notificationReceivers, String initiator) {
+    public SpringrollExceptionAlertMessage(DebugInfo debugInfo, String notificationReceivers, String initiator) {
         this.serviceMessageArgs[0] = debugInfo.getServiceName();
         this.serviceEventName = debugInfo.getServiceEventName();
         this.eventThatCausedException = debugInfo.getEventThatCausedException();

@@ -6,7 +6,7 @@ import com.springroll.core.services.notification.AlertType;
 /**
  * Created by anishjoseph on 05/10/16.
  */
-public abstract class AbstractAlertNotificationMessage  extends AbstractNotificationMessage implements AlertNotificationMessage {
+public abstract class AbstractAlertNotificationMessage  extends AbstractAlertMessage implements AlertNotificationMessage {
     protected AlertType alertType;
 
     public AlertType getAlertType() {

@@ -1,11 +1,11 @@
 package com.springroll.notification;
 
-import com.springroll.core.services.notification.INotificationMessage;
+import com.springroll.core.services.notification.IAlertMessage;
 
 /**
  * Created by anishjoseph on 05/10/16.
  */
-public abstract class AbstractNotificationMessage implements INotificationMessage {
+public abstract class AbstractAlertMessage implements IAlertMessage {
     private long creationTime;
     private Long id;
     private String notificationReceivers;

@@ -4,7 +4,7 @@ import com.springroll.core.SpringrollSecurity;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.services.notification.INotification;
 import com.springroll.core.services.notification.AlertChannel;
-import com.springroll.core.services.notification.INotificationMessage;
+import com.springroll.core.services.notification.IAlertMessage;
 import com.springroll.core.services.notification.INotificationMessageFactory;
 import com.springroll.orm.entities.Notification;
 import com.springroll.orm.entities.User;
@@ -24,7 +24,7 @@ public abstract class AbstractNotificationMessageFactory implements INotificatio
     @Autowired protected Repositories repositories;
 
     @Override
-    public Set<String> getTargetUsers(INotificationMessage notificationMessage) {
+    public Set<String> getTargetUsers(IAlertMessage notificationMessage) {
         // The notificationReceiver can either be a user or a role
         User user = repositories.users.findByUserIdIgnoreCase(notificationMessage.getNotificationReceivers());
         if(user != null){

@@ -1,7 +1,7 @@
 package com.springroll.mdm;
 
 import com.springroll.core.SpringrollUtils;
-import com.springroll.core.services.notification.INotificationMessage;
+import com.springroll.core.services.notification.IAlertMessage;
 import com.springroll.core.services.notification.IReviewMeta;
 import com.springroll.core.services.mdm.IMdmReviewNotificationMessageFactory;
 import com.springroll.notification.AbstractReviewNotificationMessageFactory;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
     @Autowired MdmManager mdmManager;
     @Autowired SpringrollUtils springrollUtils;
 
-    @Override public INotificationMessage makeMessage(IReviewMeta reviewMeta){
+    @Override public IAlertMessage makeMessage(IReviewMeta reviewMeta){
         MdmDTO mdmDTO = (MdmDTO) reviewMeta.getDtosUnderReview().get(0);
         List<ColDef> colDefs = mdmManager.getDefinition(mdmDTO.getMaster()).getColDefs();
 
@@ -62,6 +62,6 @@ import java.util.stream.Collectors;
 
         MdmChangesForReview mdmChangesForReview = new MdmChangesForReview(mdmDTO, colDefs);
 
-        return new MdmReviewNotificationMessage(reviewMeta, reviewMeta.getBusinessValidationResults().get(0).getArgs(), mdmChangesForReview);
+        return new MdmReviewAlertMessage(reviewMeta, reviewMeta.getBusinessValidationResults().get(0).getArgs(), mdmChangesForReview);
     }
 }

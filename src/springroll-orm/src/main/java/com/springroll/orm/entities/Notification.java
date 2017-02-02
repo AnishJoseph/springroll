@@ -3,7 +3,7 @@ package com.springroll.orm.entities;
 
 import com.springroll.core.AckLog;
 import com.springroll.core.services.notification.INotification;
-import com.springroll.core.services.notification.INotificationMessage;
+import com.springroll.core.services.notification.IAlertMessage;
 import com.springroll.orm.AckLogConverter;
 import com.springroll.orm.CSVSetConverter;
 import com.springroll.orm.JavaSerializationConverter;
@@ -29,7 +29,7 @@ public class Notification extends AbstractEntity implements INotification {
 
     @Column(name = "PAYLOAD", columnDefinition = "BLOB")
     @Convert(converter = JavaSerializationConverter.class)
-    private INotificationMessage notificationMessage;
+    private IAlertMessage notificationMessage;
 
     @Column(name = "RECEIVERS")
     private String receivers;
@@ -67,11 +67,11 @@ public class Notification extends AbstractEntity implements INotification {
         this.users = users;
     }
 
-    public INotificationMessage getNotificationMessage() {
+    public IAlertMessage getNotificationMessage() {
         return notificationMessage;
     }
 
-    public void setNotificationMessage(INotificationMessage notificationMessage) {
+    public void setNotificationMessage(IAlertMessage notificationMessage) {
         this.notificationMessage = notificationMessage;
     }
 

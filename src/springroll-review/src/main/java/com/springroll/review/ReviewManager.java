@@ -138,7 +138,7 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
             AlertChannel alertChannel = notificationService.nameToEnum(step.getChannel());
 
             String serviceName = ((ServiceDTO)reviewStepMeta.getEvent().getPayload()).getServiceDefinition().name();
-            INotificationMessage message = ((IReviewableNotificationMessageFactory) alertChannel.getMessageFactory()).makeMessage(new ReviewMeta(approverToNoti.get(approver), approver, businessValidationResults, reviewStepMeta.getEvent().getUser().getUsername(), serviceName, reviewLog, reviewStepMeta.getEvent().getPayloads()));
+            IAlertMessage message = ((IReviewableNotificationMessageFactory) alertChannel.getMessageFactory()).makeMessage(new ReviewMeta(approverToNoti.get(approver), approver, businessValidationResults, reviewStepMeta.getEvent().getUser().getUsername(), serviceName, reviewLog, reviewStepMeta.getEvent().getPayloads()));
             Long notiId = notificationService.sendNotification(alertChannel, message);
             for (Long stepId : approverToNoti.get(approver)) {
                 repo.reviewStep.findOne(stepId).setNotificationId(notiId);
@@ -272,7 +272,7 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
             }
             AlertChannel alertChannel = notificationService.nameToEnum(step.getChannel());
             String serviceName = ((ServiceDTO)reviewStepMeta.getEvent().getPayload()).getServiceDefinition().name();
-            INotificationMessage message = ((IReviewableNotificationMessageFactory) alertChannel.getMessageFactory()).makeMessage(new ReviewMeta(approverToNoti.get(approver), approver,
+            IAlertMessage message = ((IReviewableNotificationMessageFactory) alertChannel.getMessageFactory()).makeMessage(new ReviewMeta(approverToNoti.get(approver), approver,
                     businessValidationResults, reviewStepMeta.getEvent().getUser().getUsername(), serviceName, job.getReviewLog(), reviewStepMeta.getEvent().getPayloads()));
             notificationService.sendNotification(alertChannel, message);
         }
