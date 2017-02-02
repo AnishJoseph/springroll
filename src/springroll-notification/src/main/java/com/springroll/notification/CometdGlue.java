@@ -34,17 +34,6 @@ public class CometdGlue implements WebPushService
 
     Map<String, Map<String, Set<String>>> channel2User = new HashMap<>();
 
-//    @Listener("/service/businessreview")
-//    public void processHello(ServerSession remote, ServerMessage message)
-//    {
-//        System.out.println("We recieved a helo msg");
-//        Map<String, Object> input = message.getDataAsMap();
-//        String name = (String)input.get("name");
-//
-//        Map<String, Object> output = new HashMap<>();
-//        output.put("greeting", "Hello, " + name);
-//        remote.deliver(serverSession, "/hello", output);
-//    }
     @Listener("/meta/subscribe")
     public void handleSubscribeRequest(ServerSession remote, Message message) {
         addSubscription((String)message.get("subscription"), SpringrollSecurity.getUser().getUsername(), remote.getId());
