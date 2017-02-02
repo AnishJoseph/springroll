@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by anishjoseph on 05/10/16.
  */
-@Component public class SpringrollExceptionNotificationMessageFactory extends AbstractNotificationMessageFactory {
+@Component public class SpringrollExceptionAlertFactory extends AbstractNotificationMessageFactory {
     @Override
     public List<? extends INotification> getPendingAlertsForUser(AlertChannel alertChannel) {
         //FIXME - also get messages for this users role

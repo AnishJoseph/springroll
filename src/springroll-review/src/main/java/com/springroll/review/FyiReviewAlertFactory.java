@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by anishjoseph on 05/10/16.
  */
-@Component public class FyiReviewNotificationMessageFactory extends AbstractReviewNotificationMessageFactory implements IFyiReviewNotificationMessageFactory {
+@Component public class FyiReviewAlertFactory extends AbstractReviewNotificationMessageFactory implements IFyiReviewNotificationMessageFactory {
     @Override public IAlertMessage makeMessage(IReviewMeta reviewMeta){
         return new FyiReviewAlertMessage(reviewMeta, "ui.fyi.review.noti.msg", new String[]{reviewMeta.getService(), reviewMeta.getInitiator()});
     }

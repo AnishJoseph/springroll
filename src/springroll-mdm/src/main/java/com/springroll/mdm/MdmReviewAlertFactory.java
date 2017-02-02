@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Created by anishjoseph on 05/10/16.
  */
-@Component public class MdmReviewNotificationMessageFactory extends AbstractReviewNotificationMessageFactory implements IMdmReviewNotificationMessageFactory {
+@Component public class MdmReviewAlertFactory extends AbstractReviewNotificationMessageFactory implements IMdmReviewNotificationMessageFactory {
     @Autowired MdmManager mdmManager;
     @Autowired SpringrollUtils springrollUtils;
 

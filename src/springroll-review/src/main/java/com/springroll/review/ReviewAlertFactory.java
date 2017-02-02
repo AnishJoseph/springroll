@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by anishjoseph on 05/10/16.
  */
-@Component public class ReviewNotificationMessageFactory extends AbstractReviewNotificationMessageFactory implements IReviewNotificationMessageFactory {
+@Component public class ReviewAlertFactory extends AbstractReviewNotificationMessageFactory implements IReviewNotificationMessageFactory {
 
     @Override public IAlertMessage makeMessage(IReviewMeta reviewMeta){
         String msgKey = reviewMeta.getApprover().equals(SpringrollSecurity.getUser().getUsername()) ? "ui.review.noti.self.msg" : "ui.review.noti.msg";

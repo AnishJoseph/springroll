@@ -11,10 +11,10 @@ import com.springroll.core.services.review.IReviewNotificationMessageFactory;
  */
 public enum CoreAlertChannels implements AlertChannel {
     REVIEW("/alerts/core/review", IReviewNotificationMessageFactory.class, false),
-    FYI("/alerts/core/fyi", FyiNotificationMessageFactory.class, true),
+    FYI("/alerts/core/fyi", FyiAlertFactory.class, true),
     REVIEW_FYI("/alerts/core/reviewfyi", IFyiReviewNotificationMessageFactory.class, true),
     MDM_REVIEW("/alerts/core/mdmreview", IMdmReviewNotificationMessageFactory.class, false),
-    SPRINGROLL_EXCEPTION("/alerts/core/springrollexception", SpringrollExceptionNotificationMessageFactory.class, true);
+    SPRINGROLL_EXCEPTION("/alerts/core/springrollexception", SpringrollExceptionAlertFactory.class, true);
 
     private String serviceUri;
     private INotificationMessageFactory messageFactory = null;

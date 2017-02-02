@@ -5,5 +5,5 @@ import org.springframework.stereotype.Component;
 /**
  * Created by anishjoseph on 05/10/16.
  */
-@Component public class FyiNotificationMessageFactory extends AbstractNotificationMessageFactory {
+@Component public class FyiAlertFactory extends AbstractNotificationMessageFactory {
 }
