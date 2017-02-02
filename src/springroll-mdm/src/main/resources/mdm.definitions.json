@@ -81,7 +81,7 @@
       { "name": "ActiveUsers", "type": "namedQuery", "source": "User.getActiveUsers"}
     ],
     "enumSources": [
-      { "name": "Enum", "type": "enum", "source": "com.springroll.notification.CoreNotificationChannels"},
+      { "name": "Enum", "type": "enum", "source": "com.springroll.notification.CoreAlertChannels"},
       { "name": "setTime", "type": "enum", "source": "com.springroll.core.SetTime"}
     ]
   }
