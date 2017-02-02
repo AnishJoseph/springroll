@@ -14,4 +14,7 @@ public interface IAlertMessage extends Serializable{
     void setChannel(String channel);
     void setInitiator(String initiator);
     String getInitiator();
+    AlertType getAlertType();
+    void setAlertType(AlertType alertType);
+
 }

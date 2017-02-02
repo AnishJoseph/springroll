@@ -8,7 +8,7 @@ import com.springroll.core.services.notification.AlertType;
 /**
  * Created by anishjoseph on 05/10/16.
  */
-public class FyiAlertMessage extends AbstractAlertNotificationMessage implements DismissibleAlertMessage {
+public class FyiAlertMessage extends AbstractAlertMessage implements DismissibleAlertMessage {
     private String messageKey;
     private String[] args = new String[]{};
 

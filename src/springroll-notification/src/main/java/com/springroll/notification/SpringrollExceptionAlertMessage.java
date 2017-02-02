@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by anishjoseph on 05/10/16.
  */
-public class SpringrollExceptionAlertMessage extends AbstractAlertNotificationMessage implements DismissibleAlertMessage {
+public class SpringrollExceptionAlertMessage extends AbstractAlertMessage implements DismissibleAlertMessage {
     private String serviceMessageKey = "ui.exception.service.msg";
     private String[] serviceMessageArgs = new String[1];
     private String messageKey;

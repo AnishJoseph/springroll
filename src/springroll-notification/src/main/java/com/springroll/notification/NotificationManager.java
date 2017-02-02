@@ -118,7 +118,7 @@ public class NotificationManager implements NotificationService, LovProvider {
             logger.error("Unable to find notification with id {}", notificationId);
             return;
         }
-        NotificationCancellationMessage msg = new NotificationCancellationMessage(((AlertMessage)notification.getNotificationMessage()).getAlertType(), notificationId);
+        NotificationCancellationMessage msg = new NotificationCancellationMessage(notification.getNotificationMessage().getAlertType(), notificationId);
         pushNotification(notification.getUsers(), msg, CorePushChannels.NOTIFICATION_CANCEL);
         repositories.notification.delete(notificationId);
     }

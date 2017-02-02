@@ -1,5 +1,6 @@
 package com.springroll.notification;
 
+import com.springroll.core.services.notification.AlertType;
 import com.springroll.core.services.notification.IAlertMessage;
 
 /**
@@ -11,7 +12,19 @@ public abstract class AbstractAlertMessage implements IAlertMessage {
     private String notificationReceivers;
     private String channel;
     private String initiator;
+    protected AlertType alertType;
 
+    @Override
+    public AlertType getAlertType() {
+        return alertType;
+    }
+
+    @Override
+    public void setAlertType(AlertType alertType) {
+        this.alertType = alertType;
+    }
+
+    @Override
     public String getNotificationReceivers() {
         return notificationReceivers;
     }

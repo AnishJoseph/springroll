@@ -1,15 +1,15 @@
 package com.springroll.mdm;
 
-import com.springroll.core.services.notification.IReviewMeta;
 import com.springroll.core.services.notification.AlertType;
-import com.springroll.notification.AbstractAlertNotificationMessage;
+import com.springroll.core.services.notification.IReviewMeta;
+import com.springroll.notification.AbstractAlertMessage;
 
 import java.util.List;
 
 /**
  * Created by anishjoseph on 02/10/16.
  */
-public class MdmReviewAlertMessage extends AbstractAlertNotificationMessage {
+public class MdmReviewAlertMessage extends AbstractAlertMessage {
     private List<Long> reviewStepId;
     private String messageKey = "ui.mdm.review.noti.msg";
     private String[] args = new String[]{};

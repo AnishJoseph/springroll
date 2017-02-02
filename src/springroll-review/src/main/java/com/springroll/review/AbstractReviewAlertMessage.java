@@ -3,14 +3,14 @@ package com.springroll.review;
 import com.springroll.core.BusinessValidationResult;
 import com.springroll.core.ReviewLog;
 import com.springroll.core.services.notification.IReviewMeta;
-import com.springroll.notification.AbstractAlertNotificationMessage;
+import com.springroll.notification.AbstractAlertMessage;
 
 import java.util.List;
 
 /**
  * Created by anishjoseph on 02/10/16.
  */
-public class AbstractReviewAlertMessage extends AbstractAlertNotificationMessage {
+public class AbstractReviewAlertMessage extends AbstractAlertMessage {
     private List<BusinessValidationResult> businessValidationResult;
     private String messageKey;
     private String[] args = new String[]{};
