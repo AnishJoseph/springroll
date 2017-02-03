@@ -32,6 +32,7 @@ public class WebSocketSessionListener implements BayeuxServer.SessionListener, W
             SessionInformation sessionInformation = sessionRegistry.getSessionInformation(jsessionId);
             if(sessionInformation != null){
                 websocketSessionToUserMap.put(session.getId(), (SpringrollUser)sessionInformation.getPrincipal());
+                logger.trace("Web Socket Session : Added {} for user {}", session.getId(), ((SpringrollUser) sessionInformation.getPrincipal()).getUsername());
             } else {
                 logger.warn("jsessionId present in the message but unable to find a authenticated and registered Spring Security Session");
             }
@@ -43,7 +44,7 @@ public class WebSocketSessionListener implements BayeuxServer.SessionListener, W
     @Override
     public void sessionRemoved(ServerSession session, boolean timedout) {
         SpringrollUser user = websocketSessionToUserMap.get(session.getId());
-        logger.debug("Web Socket Session removed {}", session.getId(), user == null ? "Unknown Session" : user.getUsername() );
+        logger.trace("Web Socket Session removed {} for user {}", session.getId(), user == null ? "Unknown Session" : user.getUsername() );
         websocketSessionToUserMap.remove(session.getId());
     }
 

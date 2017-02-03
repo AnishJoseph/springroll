@@ -39,12 +39,11 @@ public class CometdGlue implements WebPushService
 
     @Listener("/meta/subscribe")
     public void handleSubscribeRequest(ServerSession remote, Message message) {
-        logger.debug("COMETDGLUE remote id ---------------- " + remote.getId());
         SpringrollUser user = webSocketSessionRegistry.getUserForSessionId(remote.getId());
         if(user != null){
             ContextStore.put(user, null, null);
             addSubscription((String)message.get("subscription"), user.getUsername(), remote.getId());
-            logger.debug("COMETDGLUE ---------------- " + user.getUsername());
+            logger.trace("Added subscription for channel {} for user {}", (String)message.get("subscription"), user.getUsername());
             return;
         }
         logger.error("Subscription request from unknown - silently returning");
