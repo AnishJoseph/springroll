@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionRegistry;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -24,11 +25,19 @@ import java.util.List;
  */
 public class SwitchUserFilter extends org.springframework.security.web.authentication.switchuser.SwitchUserFilter{
     private static final Logger logger = LoggerFactory.getLogger(SwitchUserFilter.class);
-    @Autowired Repositories repositories;
+    @Autowired private Repositories repositories;
+
+    private SessionRegistry sessionRegistry;
+
+    public void setSessionRegistry(SessionRegistry sessionRegistry) {
+        this.sessionRegistry = sessionRegistry;
+    }
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-        if(((HttpServletRequest) req).getRequestURI().contains("login/impersonate")){
+        boolean isImpersonateRequest = ((HttpServletRequest) req).getRequestURI().contains("login/impersonate");
+        boolean isImpersonateLogout = ((HttpServletRequest) req).getRequestURI().contains("logout/impersonate");
+        if( isImpersonateRequest) {
             SpringrollUser user = (SpringrollUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String realUser = user.isRunningAsDelegate()?user.getDelegator():user.getUsername();
             String userId = req.getParameter(org.springframework.security.web.authentication.switchuser.SwitchUserFilter.SPRING_SECURITY_SWITCH_USERNAME_KEY);
@@ -47,5 +56,9 @@ public class SwitchUserFilter extends org.springframework.security.web.authentic
         ContextStore.put((SpringrollUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal(), null, null);
 
         super.doFilter(req, res, chain);
+        if( isImpersonateRequest || isImpersonateLogout) {
+            /* After the impersonation or after the impersonator logs out register the session id */
+            sessionRegistry.registerNewSession(((HttpServletRequest) req).getSession().getId(), SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        }
     }
 }

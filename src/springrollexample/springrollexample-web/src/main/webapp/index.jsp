@@ -1,5 +1,3 @@
-<%@ page import="java.util.Properties" %>
-<%@ page import="java.io.InputStream" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>SpringRoll</title>
+    <script>
+        var JSessionId = '<%=session.getId()%>';
+    </script>
     <script src="assets/generated/springroll.js"></script>
 </head>
 <body>

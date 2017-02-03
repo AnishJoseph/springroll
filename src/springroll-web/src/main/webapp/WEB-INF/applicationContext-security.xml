@@ -4,7 +4,18 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
+    <!--
+    Why do we have two instances of a Session Registry ?
+    When a user logs in 'RegisterSessionAuthenticationStrategy' both registries are updated with the logged in user.
+    When a user impersonates some other user (and when the impersonator logs out) the 'sessionRegistryForDelegation'
+    instance is updated accordingly. However the instance 'sessionRegistry' is NOT updated during impersonation.
+    Why? If we dont do this, then when user 'A' logs in and then impersonates user 'B' and after which user 'A' tries to
+    login in a different system the prevention of concurrent login will fail.
+    IF we dont update 'sessionRegistryForDelegation' during impersonation then the websocket mapping to user will still point
+    to user A even though user A is now impersonating user B
+    -->
     <bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
+    <bean id="sessionRegistryForDelegation" class="org.springframework.security.core.session.SessionRegistryImpl"/>
 
     <sec:http use-expressions="true">
         <sec:intercept-url pattern="/favicon.ico" access="permitAll" />
@@ -20,6 +31,7 @@
         <sec:intercept-url pattern="/api/**" access="isAuthenticated()" />
         <sec:intercept-url pattern="/**" access="isAuthenticated()" />
         <sec:custom-filter ref="switchUserFilter" position="SWITCH_USER_FILTER"/>
+        <sec:session-management session-authentication-strategy-ref="compositeSessionAuthenticationStrategy" />
         <!--<sec:request-cache ref="requestCache"/>-->
         <sec:form-login/>
         <!--<sec:form-login login-page="/login.jsp" default-target-url="${application.server.home}" always-use-default-target="true"/>-->
@@ -38,6 +50,7 @@
         <property name="userDetailsService" ref="userDetailsService"/>
         <!--<property name="targetUrl" value="/"/>-->
         <property name="successHandler" ref="userDetailsService"/>
+        <property name="sessionRegistry" ref="sessionRegistryForDelegation"/>
     </bean>
 
     <sec:authentication-manager erase-credentials="true">
@@ -68,5 +81,27 @@
         <constructor-arg index="2" ref="contextSource" />
     </bean>
 
+    <bean id="compositeSessionAuthenticationStrategy" class="org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy">
+        <constructor-arg>
+            <list>
+                <bean class="com.springroll.api.facade.security.ConcurrentSessionControlAuthenticationStrategy">
+                    <constructor-arg ref="sessionRegistry"/>
+                    <property name="maximumSessions" value="${maxSessionsPerUser}" />
+                    <property name="exceptionIfMaximumExceeded" value="${blockNewLoginWhenMaxExceeded}" />
+                    <property name="blockDelegatedUsers" value="${blockDelegatedUsers}" />
+                </bean>
+                <bean class="org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy">
+                </bean>
+                <bean class="com.springroll.api.facade.security.RegisterSessionAuthenticationStrategy">
+                    <constructor-arg ref="sessionRegistry"/>
+                    <constructor-arg ref="sessionRegistryForDelegation"/>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean class="com.springroll.api.facade.security.WebSocketSessionListener">
+        <property name="sessionRegistry"  ref="sessionRegistryForDelegation"/>
+    </bean>
 
 </beans>

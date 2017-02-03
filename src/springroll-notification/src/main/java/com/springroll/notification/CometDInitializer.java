@@ -1,6 +1,7 @@
 package com.springroll.notification;
 
 import com.springroll.core.CustomSpringrollJSONSerializers;
+import com.springroll.core.services.push.WebSocketSessionRegistry;
 import org.cometd.annotation.ServerAnnotationProcessor;
 import org.cometd.bayeux.server.BayeuxServer;
 import org.cometd.common.JSONContext;
@@ -14,6 +15,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.ServletContextAware;
 
@@ -27,6 +29,9 @@ import javax.servlet.ServletContext;
 @Component
 public class CometDInitializer implements ServletContextAware
 {
+    @Autowired SessionRegistry sessionRegistry;
+    @Autowired WebSocketSessionRegistry webSocketSessionRegistry;
+
     private ServletContext servletContext;
 
     @Bean(initMethod = "start", destroyMethod = "stop")
@@ -41,6 +46,7 @@ public class CometDInitializer implements ServletContextAware
 
         bean.setOption(ServletContext.class.getName(), servletContext);
         bean.setOption("ws.cometdURLMapping", "/cometd/*");
+        bean.addListener((BayeuxServer.SessionListener)webSocketSessionRegistry);
         return bean;
     }
 

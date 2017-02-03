@@ -1,8 +1,10 @@
 package com.springroll.notification;
 
-import com.springroll.core.SpringrollSecurity;
+import com.springroll.core.ContextStore;
+import com.springroll.core.SpringrollUser;
 import com.springroll.core.services.notification.NotificationService;
 import com.springroll.core.services.push.WebPushService;
+import com.springroll.core.services.push.WebSocketSessionRegistry;
 import org.cometd.annotation.Listener;
 import org.cometd.annotation.Service;
 import org.cometd.annotation.Session;
@@ -28,15 +30,24 @@ public class CometdGlue implements WebPushService
 {
     @Inject private BayeuxServer bayeux;
     @Session private ServerSession serverSession;
-    @Autowired
-    NotificationService notificationService;
+    @Autowired NotificationService notificationService;
+    @Autowired WebSocketSessionRegistry webSocketSessionRegistry;
+
     private static final Logger logger = LoggerFactory.getLogger(CometdGlue.class);
 
     Map<String, Map<String, Set<String>>> channel2User = new HashMap<>();
 
     @Listener("/meta/subscribe")
     public void handleSubscribeRequest(ServerSession remote, Message message) {
-        addSubscription((String)message.get("subscription"), SpringrollSecurity.getUser().getUsername(), remote.getId());
+        logger.debug("COMETDGLUE remote id ---------------- " + remote.getId());
+        SpringrollUser user = webSocketSessionRegistry.getUserForSessionId(remote.getId());
+        if(user != null){
+            ContextStore.put(user, null, null);
+            addSubscription((String)message.get("subscription"), user.getUsername(), remote.getId());
+            logger.debug("COMETDGLUE ---------------- " + user.getUsername());
+            return;
+        }
+        logger.error("Subscription request from unknown - silently returning");
     }
 
     public void deliver(Set<String> userIds, Object message, String channel){

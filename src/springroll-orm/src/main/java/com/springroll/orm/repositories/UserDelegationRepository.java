@@ -11,5 +11,6 @@ import java.util.List;
 public interface UserDelegationRepository extends AbstractEntityRepository<UserDelegation>{
    List<String> findDelegators(String user, LocalDate currDate);
    List<String> isValidDelegate(String delegateuserId, String delegatorUserId, LocalDate currDate);
+   List<String> getMyDelegates(String userId, LocalDate currDate);
 
 }

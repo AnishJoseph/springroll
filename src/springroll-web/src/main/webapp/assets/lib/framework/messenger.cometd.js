@@ -68,7 +68,7 @@ CometD.addListener('/meta/connect', _metaConnect);
 var CometDGlue = {
 
     init : function(){
-        CometD.handshake();
+        CometD.handshake({'jsessionId' : JSessionId});
     }
 
 };
