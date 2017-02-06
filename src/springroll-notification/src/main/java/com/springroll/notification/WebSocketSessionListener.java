@@ -1,7 +1,6 @@
-package com.springroll.api.facade.security;
+package com.springroll.notification;
 
 import com.springroll.core.SpringrollUser;
-import com.springroll.core.services.push.WebSocketSessionRegistry;
 import org.cometd.bayeux.server.BayeuxServer;
 import org.cometd.bayeux.server.ServerMessage;
 import org.cometd.bayeux.server.ServerSession;
@@ -10,15 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by anishjoseph on 02/02/17.
  */
-public class WebSocketSessionListener implements BayeuxServer.SessionListener, WebSocketSessionRegistry {
+public class WebSocketSessionListener implements BayeuxServer.SessionListener {
     private SessionRegistry sessionRegistry;
-    private Map<String, SpringrollUser> websocketSessionToUserMap = new HashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(WebSocketSessionListener.class);
 
     public void setSessionRegistry(SessionRegistry sessionRegistry) {
@@ -31,8 +26,8 @@ public class WebSocketSessionListener implements BayeuxServer.SessionListener, W
         if(jsessionId != null){
             SessionInformation sessionInformation = sessionRegistry.getSessionInformation(jsessionId);
             if(sessionInformation != null){
-                websocketSessionToUserMap.put(session.getId(), (SpringrollUser)sessionInformation.getPrincipal());
                 logger.trace("Web Socket Session : Added {} for user {}", session.getId(), ((SpringrollUser) sessionInformation.getPrincipal()).getUsername());
+                session.setAttribute("SpringrollUser", (SpringrollUser)sessionInformation.getPrincipal());
             } else {
                 logger.warn("jsessionId present in the message but unable to find a authenticated and registered Spring Security Session");
             }
@@ -43,14 +38,6 @@ public class WebSocketSessionListener implements BayeuxServer.SessionListener, W
 
     @Override
     public void sessionRemoved(ServerSession session, boolean timedout) {
-        SpringrollUser user = websocketSessionToUserMap.get(session.getId());
-        logger.trace("Web Socket Session removed {} for user {}", session.getId(), user == null ? "Unknown Session" : user.getUsername() );
-        websocketSessionToUserMap.remove(session.getId());
-    }
-
-    @Override
-    public SpringrollUser getUserForSessionId(String sessionId){
-        return websocketSessionToUserMap.get(sessionId);
     }
 
 }

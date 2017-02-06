@@ -4,7 +4,6 @@ import com.springroll.core.ContextStore;
 import com.springroll.core.SpringrollUser;
 import com.springroll.core.services.notification.NotificationService;
 import com.springroll.core.services.push.WebPushService;
-import com.springroll.core.services.push.WebSocketSessionRegistry;
 import org.cometd.annotation.Listener;
 import org.cometd.annotation.Service;
 import org.cometd.annotation.Session;
@@ -31,7 +30,6 @@ public class CometdGlue implements WebPushService
     @Inject private BayeuxServer bayeux;
     @Session private ServerSession serverSession;
     @Autowired NotificationService notificationService;
-    @Autowired WebSocketSessionRegistry webSocketSessionRegistry;
 
     private static final Logger logger = LoggerFactory.getLogger(CometdGlue.class);
 
@@ -39,7 +37,7 @@ public class CometdGlue implements WebPushService
 
     @Listener("/meta/subscribe")
     public void handleSubscribeRequest(ServerSession remote, Message message) {
-        SpringrollUser user = webSocketSessionRegistry.getUserForSessionId(remote.getId());
+        SpringrollUser user = (SpringrollUser)remote.getAttribute("SpringrollUser");
         if(user != null){
             ContextStore.put(user, null, null);
             addSubscription((String)message.get("subscription"), user.getUsername(), remote.getId());

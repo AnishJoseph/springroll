@@ -100,7 +100,7 @@
         </constructor-arg>
     </bean>
 
-    <bean class="com.springroll.api.facade.security.WebSocketSessionListener">
+    <bean class="com.springroll.notification.WebSocketSessionListener">
         <property name="sessionRegistry"  ref="sessionRegistryForDelegation"/>
     </bean>
 
