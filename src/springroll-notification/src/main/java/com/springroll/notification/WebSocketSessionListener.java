@@ -15,6 +15,7 @@ import org.springframework.security.core.session.SessionRegistry;
 public class WebSocketSessionListener implements BayeuxServer.SessionListener {
     private SessionRegistry sessionRegistry;
     private static final Logger logger = LoggerFactory.getLogger(WebSocketSessionListener.class);
+    public static final String SPRINGROLL_USER = "SpringrollUser";
 
     public void setSessionRegistry(SessionRegistry sessionRegistry) {
         this.sessionRegistry = sessionRegistry;
@@ -27,7 +28,7 @@ public class WebSocketSessionListener implements BayeuxServer.SessionListener {
             SessionInformation sessionInformation = sessionRegistry.getSessionInformation(jsessionId);
             if(sessionInformation != null){
                 logger.trace("Web Socket Session : Added {} for user {}", session.getId(), ((SpringrollUser) sessionInformation.getPrincipal()).getUsername());
-                session.setAttribute("SpringrollUser", (SpringrollUser)sessionInformation.getPrincipal());
+                session.setAttribute(SPRINGROLL_USER, (SpringrollUser)sessionInformation.getPrincipal());
             } else {
                 logger.warn("jsessionId present in the message but unable to find a authenticated and registered Spring Security Session");
             }
@@ -38,6 +39,7 @@ public class WebSocketSessionListener implements BayeuxServer.SessionListener {
 
     @Override
     public void sessionRemoved(ServerSession session, boolean timedout) {
+        session.removeAttribute(SPRINGROLL_USER);
     }
 
 }

@@ -37,7 +37,7 @@ public class CometdGlue implements WebPushService
 
     @Listener("/meta/subscribe")
     public void handleSubscribeRequest(ServerSession remote, Message message) {
-        SpringrollUser user = (SpringrollUser)remote.getAttribute("SpringrollUser");
+        SpringrollUser user = (SpringrollUser)remote.getAttribute(WebSocketSessionListener.SPRINGROLL_USER);
         if(user != null){
             ContextStore.put(user, null, null);
             addSubscription((String)message.get("subscription"), user.getUsername(), remote.getId());
