@@ -89,5 +89,9 @@ public class CometDInitializer implements ServletContextAware
         {
             processor.deprocessCallbacks(bean);
         }
+        public boolean requiresDestruction(Object bean){
+            return true;
+
+        }
     }
 }
