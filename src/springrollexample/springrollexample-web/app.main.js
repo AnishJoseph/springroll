@@ -1,4 +1,5 @@
 require('main.js');
+//require("bootstrap/dist/css/bootstrap.min.css");
 require("bootstrap-select/dist/css/bootstrap-select.min.css");
 require("datatables.net-dt/css/jquery.dataTables.css");
 require("datatables.net-buttons-dt/css/buttons.dataTables.css");

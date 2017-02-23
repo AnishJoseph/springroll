@@ -18,7 +18,8 @@
 
 // Namespaces for the cometd implementation
 //this.org = this.org || {}; //FIXME - ORIGINAL CODE - related to fixme in webpack.config.js
-var org = this.org = this.org || {};
+//var org = this.org = this.org ||{};
+var org = {};
 org.cometd = {};
 
 org.cometd.JSON = {};

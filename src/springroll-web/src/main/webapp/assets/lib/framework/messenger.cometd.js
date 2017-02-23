@@ -1,4 +1,5 @@
-var Application =require('Application');
+import Application from 'App';
+require('jquery.cometd.js');
 
 var CometD = $.cometd;
 var cometURL = location.protocol + "//" + location.host + "/cometd";
@@ -72,4 +73,4 @@ var CometDGlue = {
     }
 
 };
-Application.CometD = CometDGlue;
+export default CometDGlue;

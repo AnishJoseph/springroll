@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang = "en">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,9 +12,11 @@
     <script>
         var JSessionId = '<%=session.getId()%>';
     </script>
-    <script src="assets/generated/springroll.js"></script>
 </head>
+
 <body>
-        <div id="root-element" class="applicationRoot"/>
+<div id = "app"></div>
+<script src = "assets/generated/sindex.js"></script>
 </body>
+
 </html>
