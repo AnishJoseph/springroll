@@ -11,25 +11,10 @@ class ReviewMoreInfo extends React.Component {
 
     }
     handleCommentsChange(e){
-        var comment = e.target.value;
         this.setState({comment : e.target.value});
     }
     handleSubmit(action){
-        var data = JSON.stringify({reviewStepId: this.props.modalCookie.reviewStepId, approved : action, reviewComment : this.state.comment});
-        $.ajax({
-            url: 'api/sr/reviewaction',
-            type: 'POST',
-            data: data,
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'json',
-            success: function (templateData) {
-                console.log("Templates loaded.");
-            },
-            error : function (jqXHR, textStatus, errorThrown ){
-                console.error("Unable to load templates - textStatus is " + textStatus + ' :: errorThrown is ' + errorThrown);
-            }
-        });
-        this.props.onComplete(this.props.modalCookie.id);
+        this.props.onSubmit(action, this.state.comment);
         event.preventDefault();
     }
 
@@ -45,7 +30,7 @@ class ReviewMoreInfo extends React.Component {
                     </thead>
                     <tbody>
                     {
-                        this.props.modalCookie.businessValidationResult.map((violation, index) =>
+                        this.props.alert.businessValidationResult.map((violation, index) =>
                             (<tr key={index}>
                                 <td>{Application.Localize(violation.violatedRule)}</td>
                                 <td>{Application.Localize(violation.messageKey, violation.args)}</td>

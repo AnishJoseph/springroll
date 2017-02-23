@@ -16,7 +16,7 @@ class AlertPanel extends React.Component {
                             this.props.currentAlerts.map((alert, index) =>
                             {
                                 let AlertRenderer = renderers[alert.channel];
-                                return (<AlertRenderer onDeleteAlert={this.props.onDeleteAlert} showModal={this.props.showModal} key={alert.id} alert={alert}/>);
+                                return (<AlertRenderer onDeleteAlert={this.props.onDeleteAlert} key={alert.id} alert={alert}/>);
                             })
                         }
                     </div>
