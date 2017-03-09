@@ -32,7 +32,7 @@ public abstract class AbstractAPI {
     @Autowired protected LocaleFactory localeFactory;
     protected static Locale _locale = Locale.getDefault();
     @Autowired Repositories repositories;
-    @PersistenceContext EntityManager em;
+    @PersistenceContext protected EntityManager em;
     private static final Logger logger = LoggerFactory.getLogger(AbstractAPI.class);
 
 
