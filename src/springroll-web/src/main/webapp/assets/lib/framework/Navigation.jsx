@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import Application from 'App.js';
 import MenuItem from 'MenuItem.jsx';
 import DelegatorMenu from 'DelegatorMenu.jsx';
-import AlertSummary from 'AlertSummary.jsx';
+import AlertSummaryContainer from 'AlertSummaryContainer.jsx';
 
 class Navigation extends React.Component {
     handleLogout() {
@@ -26,7 +26,7 @@ class Navigation extends React.Component {
                             </ul>
                             <p onClick={() => this.handleLogout()} data-toggle="tooltip" title={Application.Localize('ui.logout')} className="navbar-text navbar-right glyphicon glyphicon-eject" aria-hidden="true" id="logout"/>
                             <DelegatorMenu/>
-                            <AlertSummary onChangeOfAlertType={this.props.onChangeOfAlertType} errorAlertsLen={this.props.errorAlertsLen} infoAlertsLen={this.props.infoAlertsLen} actionAlertsLen={this.props.actionAlertsLen}/>
+                            <AlertSummaryContainer />
                         </div>
                     </div>
                 </nav>

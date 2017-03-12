@@ -2,9 +2,13 @@ import Application from 'App';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, hashHistory,IndexRoute } from 'react-router'
-import Root from 'Root';
 import MenuDefinitions from 'MenuDefinitions';
 import ReviewAlertWrapper from 'ReviewAlertWrapper';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import springrollReducers from 'SpringrollReducers.jsx';
+import { connect } from 'react-redux';
+import RootContainer from 'RootContainer.jsx';
 
 $(function() {
     var token = $("meta[name='_csrf']").attr("content");
@@ -80,15 +84,24 @@ $(function() {
             deferred.resolve();
         });
     }
+    //let store = createStore(springrollReducers);
+
+    const store = createStore(
+        springrollReducers,{}
+        +  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    );
 
     $.when.apply($, Application.getPromises()).then(function () {
         ReactDOM.render(
-            <Router history={hashHistory}>
-                <Route path="/" component={Root}>
-                    <IndexRoute component={Application.getModuleMap()[Object.keys(Application.getModuleMap())[0]]}/>
-                    {currentModules.map((module, index) => ( <Route key={index} component={Application.getModuleMap()[module]} path={"/" + module} />))}
-                </Route>
-            </Router> , document.getElementById('app')
+            <Provider store={store}>
+                <Router history={hashHistory}>
+                    <Route path="/" component={RootContainer}>
+                        <IndexRoute component={Application.getModuleMap()[Object.keys(Application.getModuleMap())[0]]}/>
+                        {currentModules.map((module, index) => ( <Route key={index} component={Application.getModuleMap()[module]} path={"/" + module} />))}
+                    </Route>
+                </Router>
+            </Provider>,
+            document.getElementById('app')
         );
         Application.start();
     });

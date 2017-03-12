@@ -28,66 +28,6 @@ class Application {
         return this.moduleMap;
     }
     start() {
-        /*
-        this.addMenu({
-            name: 'ThirdMenu',
-            title: 'ui.menu.third',
-            index : 2,
-            type : "menuitem"
-        });
-        this.addMenu({
-            name: 'FourthMenu',
-            title: 'ui.menu.fourth',
-            index : 4,
-            type : "submenu"
-        });
-        this.addMenu({
-            name: 'FifthMenu',
-            title: 'ui.menu.fifth',
-            index : 4,
-            type : "submenu"
-        });
-
-        this.addMenu({
-            parent: 'FourthMenu',
-            title: 'ui.SubItem2',
-            name: 'subItem2',
-            index : 2,
-            type : "menuitem"
-        });
-
-        this.addMenu({
-            parent: 'FourthMenu',
-            title: 'ui.SubItem1',
-            name: 'subItem1',
-            index : 1,
-            type : "menuitem"
-        });
-
-        this.addMenu({
-            parent: 'FourthMenu',
-            name: 'FourthMenuSub',
-            title: 'ui.menu.fourthsub',
-            index : 2,
-            type : "submenu"
-        });
-
-        this.addMenu({
-            parent: 'FourthMenuSub',
-            title: 'ui.SubItem2sub',
-            name: 'subItem2sub',
-            index : 2,
-            type : "menuitem"
-        });
-
-        this.addMenu({
-            parent: 'FourthMenuSub',
-            title: 'ui.SubItem1sub',
-            name: 'subItem1sub',
-            index : 1,
-            type : "menuitem"
-        });
-        */
         CometD.init();
     }
 
