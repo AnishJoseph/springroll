@@ -6,9 +6,9 @@ function alertsReducer(state = {actions : [], info : [], errors : []}, action) {
         case AlertActions.ACTION_ALERTS:
             return Object.assign({}, state, { actions :  state.actions.concat(action.alerts)});
         case AlertActions.ERROR_ALERTS:
-            return Object.assign({}, state, { actions :  state.errors.concat(action.alerts)});
+            return Object.assign({}, state, { errors :  state.errors.concat(action.alerts)});
         case AlertActions.INFO_ALERTS:
-            return Object.assign({}, state, { actions :  state.info.concat(action.alerts)});
+            return Object.assign({}, state, { info :  state.info.concat(action.alerts)});
         case AlertActions.ALERT_DELETE:
             switch (action.alertType) {
                 case AlertFilters.ALERT_FILTER_ACTION:
