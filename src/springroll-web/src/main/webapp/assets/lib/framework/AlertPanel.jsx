@@ -6,7 +6,6 @@ import { AlertFilters} from 'SpringrollActionTypes';
 
 const AlertPanel = ({ currentAlerts, currentAlertsTitle, alertType, onHideAlerts, onDeleteAlert }) => {
     let renderers = Application.getSubscribersToAlerts();
-    console.log("AlertPANEL - RENDER");
     return (
         <div id='alerts'    className='alertsPanel'>
             <div id="alerts-container" className="alertsContainer">

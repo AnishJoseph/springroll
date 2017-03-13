@@ -65,7 +65,7 @@ $(function() {
     var currentModules = [];
 
     /* Build the menu based on the authorities given to this user */
-    _.each(Object.keys(MenuDefinitions.getxMenuDefns()), function(menu){
+    _.each(Object.keys(MenuDefinitions.getMenuDefns()), function(menu){
         if (_.contains(modules, menu)) {
             Application.addMenu(MenuDefinitions.getMenuDefns()[menu]);
             currentModules.push(menu);
@@ -119,8 +119,6 @@ $(function() {
             </Provider>,
             document.getElementById('app')
         );
-        console.log("GOING TO START APP");
-
         Application.start();
     });
 });

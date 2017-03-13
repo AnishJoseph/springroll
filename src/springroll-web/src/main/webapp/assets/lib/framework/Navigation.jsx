@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Application from 'App.js';
 import MenuItem from 'MenuItem.jsx';
-import DelegatorMenu from 'DelegatorMenu.jsx';
+import DelegatorMenuContainer from 'DelegatorMenuContainer.jsx';
 import AlertSummaryContainer from 'AlertSummaryContainer.jsx';
 
 class Navigation extends React.Component {
@@ -25,7 +25,7 @@ class Navigation extends React.Component {
                                 { Application.getMenuDefns().map((menusDefn, index) => ( <MenuItem key={index} menuDefn={menusDefn}/>)) }
                             </ul>
                             <p onClick={() => this.handleLogout()} data-toggle="tooltip" title={Application.Localize('ui.logout')} className="navbar-text navbar-right glyphicon glyphicon-eject" aria-hidden="true" id="logout"/>
-                            <DelegatorMenu/>
+                            <DelegatorMenuContainer/>
                             <AlertSummaryContainer />
                         </div>
                     </div>
