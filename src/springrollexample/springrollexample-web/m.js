@@ -9,6 +9,9 @@ import { createStore } from 'redux';
 import springrollReducers from 'SpringrollReducers.jsx';
 import { connect } from 'react-redux';
 import RootContainer from 'RootContainer.jsx';
+import { addAlerts, AlertActions} from 'SpringrollActionTypes';
+var moment = require('moment');
+
 
 $(function() {
     var token = $("meta[name='_csrf']").attr("content");
@@ -62,7 +65,7 @@ $(function() {
     var currentModules = [];
 
     /* Build the menu based on the authorities given to this user */
-    _.each(Object.keys(MenuDefinitions.getMenuDefns()), function(menu){
+    _.each(Object.keys(MenuDefinitions.getxMenuDefns()), function(menu){
         if (_.contains(modules, menu)) {
             Application.addMenu(MenuDefinitions.getMenuDefns()[menu]);
             currentModules.push(menu);
@@ -91,6 +94,19 @@ $(function() {
         +  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
     );
 
+    _.each(Object.keys(Application.getSubscribersToAlerts()), function(channel){
+        Application.subscribe(channel, (response) => {
+            _.each(response.data, alert => (alert['creationTimeMoment'] = moment(alert.creationTime).format(Application.getMomentFormatForDateTime())));
+            if (response.data[0].alertType == 'ACTION') {
+                store.dispatch(addAlerts(AlertActions.ACTION_ALERTS, response.data));
+            } else if (response.data[0].alertType == 'ERROR') {
+                store.dispatch(addAlerts(AlertActions.ERROR_ALERTS, response.data));
+            } else if (response.data[0].alertType == 'INFO') {
+                store.dispatch(addAlerts(AlertActions.INFO_ALERTS, response.data));
+            }
+        });
+    });
+
     $.when.apply($, Application.getPromises()).then(function () {
         ReactDOM.render(
             <Provider store={store}>
@@ -103,6 +119,8 @@ $(function() {
             </Provider>,
             document.getElementById('app')
         );
+        console.log("GOING TO START APP");
+
         Application.start();
     });
 });
