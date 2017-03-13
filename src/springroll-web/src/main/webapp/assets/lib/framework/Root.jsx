@@ -1,7 +1,7 @@
 import React from 'react';
 import Application from 'App';
 import Navigation from 'Navigation.jsx';
-import AlertPanel from 'AlertPanel.jsx';
+import AlertPanelContainer from 'AlertPanelContainer.jsx';
 
 
 const Root = ({ currentAlerts, onHideAlerts, currentAlertsTitle, alertType, onDeleteAlert, children }) => {
@@ -13,9 +13,7 @@ const Root = ({ currentAlerts, onHideAlerts, currentAlertsTitle, alertType, onDe
                     {children}
                 </div>
             </div>
-            {currentAlerts != undefined  &&
-                <AlertPanel onHideAlerts={onHideAlerts} currentAlerts={currentAlerts} currentAlertsTitle={currentAlertsTitle} alertType={alertType} onDeleteAlert={onDeleteAlert}/>
-            }
+            <AlertPanelContainer/>
             <div id='indicator' className='alertsIndicator'/>
         </div>
     );

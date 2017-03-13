@@ -1,7 +1,7 @@
 import Application from 'App';
 import { connect } from 'react-redux';
 import { AlertFilters, addAlerts, deleteAlert, setAlertFilter } from 'SpringrollActionTypes';
-import Root from 'Root.jsx';
+import AlertPanel from 'AlertPanel.jsx';
 import { bindActionCreators } from 'redux';
 
 
@@ -24,5 +24,5 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     onHideAlerts : setAlertFilter
 }, dispatch);
 
-const RootContainer = connect(mapStateToProps, mapDispatchToProps )(Root);
-export default RootContainer;
+const AlertPanelContainer = connect(mapStateToProps, mapDispatchToProps )(AlertPanel);
+export default AlertPanelContainer;

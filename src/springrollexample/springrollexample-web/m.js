@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import springrollReducers from 'SpringrollReducers.jsx';
 import { connect } from 'react-redux';
-import RootContainer from 'RootContainer.jsx';
+import Root from 'Root.jsx';
 import { addAlerts, AlertActions} from 'SpringrollActionTypes';
 var moment = require('moment');
 
@@ -111,7 +111,7 @@ $(function() {
         ReactDOM.render(
             <Provider store={store}>
                 <Router history={hashHistory}>
-                    <Route path="/" component={RootContainer}>
+                    <Route path="/" component={Root}>
                         <IndexRoute component={Application.getModuleMap()[Object.keys(Application.getModuleMap())[0]]}/>
                         {currentModules.map((module, index) => ( <Route key={index} component={Application.getModuleMap()[module]} path={"/" + module} />))}
                     </Route>
