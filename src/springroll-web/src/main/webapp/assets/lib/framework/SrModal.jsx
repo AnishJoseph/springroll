@@ -34,8 +34,9 @@ class SrModal extends React.Component {
                 </Modal.Body>
                 <Modal.Footer>
                     { this.props.onSubmit != undefined && <input onChange={this.handleCommentsChange} type="text"  className="form-control"/> }
-                    { this.props.onSubmit != undefined && this.state.comment.length > 0 && <Button onClick={() => this.handleSubmit(true)}>{Application.Localize('ui.accept')}</Button> }
-                    { this.props.onSubmit != undefined && this.state.comment.length > 0 && <Button onClick={() => this.handleSubmit(false)}>{Application.Localize('ui.reject')}</Button> }
+                    { this.props.onSubmit != undefined && this.state.comment.length > 0 && <span style={{fontSize:14 +'px'}} onClick={() => this.handleSubmit(true)} data-toggle="tooltip" title={Application.Localize('ui.accept')}  className="alertActionsPanelItem glyphicon glyphicon-ok"></span> }
+                    { this.props.onSubmit != undefined && this.state.comment.length > 0 && <span style={{fontSize:14 +'px'}} onClick={() => this.handleSubmit(false)} data-toggle="tooltip" title={Application.Localize('ui.reject')}  className="alertActionsPanelItem glyphicon glyphicon-remove"></span> }
+                    { this.props.onDismissAlert != undefined &&  <span style={{fontSize:14 +'px'}} onClick={this.props.onDismissAlert} data-toggle="tooltip" title={Application.Localize('ui.dismiss')}  className="alertActionsPanelItem glyphicon glyphicon-trash"></span>}
                 </Modal.Footer>
             </Modal>
         );
