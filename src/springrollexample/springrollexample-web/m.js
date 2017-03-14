@@ -96,12 +96,12 @@ $(function() {
         Application.subscribe(channel, (response) => {
             _.each(response.data, alert => (alert['creationTimeMoment'] = moment(alert.creationTime).format(Application.getMomentFormatForDateTime())));
             if (response.data[0].alertType == 'ACTION') {
-                store.dispatch(addAlerts(AlertActions.ACTION_ALERTS, response.data));
+                store.dispatch(addAlerts(AlertActions.ADD_ACTION_ALERTS, response.data));
                 store.dispatch(setAlertFilter(AlertFilters.ALERT_FILTER_ACTION));
             } else if (response.data[0].alertType == 'ERROR') {
-                store.dispatch(addAlerts(AlertActions.ERROR_ALERTS, response.data));
+                store.dispatch(addAlerts(AlertActions.ADD_ERROR_ALERTS, response.data));
             } else if (response.data[0].alertType == 'INFO') {
-                store.dispatch(addAlerts(AlertActions.INFO_ALERTS, response.data));
+                store.dispatch(addAlerts(AlertActions.ADD_INFO_ALERTS, response.data));
             }
         });
     });
