@@ -3,7 +3,7 @@ import Application from 'App.js';
 import Modal from 'react-bootstrap/lib/Modal';
 import Button from 'react-bootstrap/lib/Button';
 
-class SrModal extends React.Component {
+class ReviewModal extends React.Component {
     constructor(props){
         super(props);
         this.state = {showModal: true, comment : ''};
@@ -42,4 +42,4 @@ class SrModal extends React.Component {
         );
     }
 }
-export default SrModal;
+export default ReviewModal;

@@ -1,6 +1,6 @@
 import React from 'react'
 import Application from 'App.js';
-import Modal from 'SrModal.jsx';
+import ReviewModal from 'ReviewModal.jsx';
 import ReviewMoreInfo from 'ReviewMoreInfo.jsx';
 
 class ReviewFYIAlertItem extends React.Component {
@@ -37,9 +37,9 @@ class ReviewFYIAlertItem extends React.Component {
                 </div>
                 {
                     this.state.showMoreInfo &&
-                    <Modal onDismissAlert={this.props.onDismissAlert} onModalClosed={this.handleModalClosed} title={message}>
+                    <ReviewModal onDismissAlert={this.props.onDismissAlert} onModalClosed={this.handleModalClosed} title={message}>
                         <ReviewMoreInfo alert={this.props.alert}/>
-                    </Modal>
+                    </ReviewModal>
                 }
 
             </span>
