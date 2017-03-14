@@ -1,3 +1,4 @@
+import Application from 'App.js';
 export const SET_ALERT_FILTER = "SET_ALERT_FILTER";
 
 export const AlertFilters = {
@@ -23,6 +24,30 @@ export function deleteAlert(id, alertType) {
     }
 }
 
+export function logout() {
+    return function (dispatch) {
+        var deferred = $.Deferred();
+        $.ajax({
+            type: "POST",
+            url: "/logout"
+        });
+        window.location.href = '/';
+        return deferred;
+    }
+}
+
+export function switchUser(delegator) {
+    return function (dispatch) {
+        var deferred = $.Deferred();
+        if (Application.user.delegator != null && Application.user.delegator == delegator) {
+            window.location.href = 'logout/impersonate';
+        } else {
+            window.location.href = 'login/impersonate?username=' + delegator;
+        }
+        return deferred;
+    }
+}
+
 export function dismissAlert(id, alertType) {
     return function (dispatch) {
     var deferred = $.Deferred();
@@ -42,6 +67,7 @@ export function dismissAlert(id, alertType) {
         return deferred;
     }
 }
+
 export function sendToServerAndDismissAlert(id, alertType, defnOfRESTCall) {
     return function (dispatch) {
         var deferred = $.Deferred();

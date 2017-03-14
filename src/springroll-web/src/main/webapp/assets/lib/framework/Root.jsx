@@ -1,13 +1,13 @@
 import React from 'react';
 import Application from 'App';
-import Navigation from 'Navigation.jsx';
+import NavigationContainer from 'NavigationContainer.jsx';
 import AlertPanelContainer from 'AlertPanelContainer.jsx';
 
 
-const Root = ({ currentAlerts, onHideAlerts, currentAlertsTitle, alertType, onDeleteAlert, children }) => {
+const Root = ({ children }) => {
     return (
         <div>
-            <Navigation />
+            <NavigationContainer />
             <div id='main-body' className='main-body'>
                 <div id='content' className='main-body-content'>
                     {children}
