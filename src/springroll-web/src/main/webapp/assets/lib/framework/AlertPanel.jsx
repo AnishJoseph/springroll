@@ -4,7 +4,7 @@ import Application from 'App.js';
 import { AlertFilters} from 'SpringrollActionTypes';
 
 
-const AlertPanel = ({ currentAlerts, currentAlertsTitle, alertType, onHideAlerts, onDeleteAlert, onDismissAlert }) => {
+const AlertPanel = ({ currentAlerts, currentAlertsTitle, alertType, onHideAlerts, onDismissAlert, onSendToServerAndDismissAlert }) => {
     let renderers = Application.getSubscribersToAlerts();
     if(currentAlerts != undefined) {
         return (
@@ -15,10 +15,16 @@ const AlertPanel = ({ currentAlerts, currentAlertsTitle, alertType, onHideAlerts
                              className="alertHandle glyphicon glyphicon-eye-close"></div>
                         <div className="alertTitle"><p>{currentAlertsTitle}</p></div>
                         {
-                            currentAlerts.map((alert, index) => {
+                            currentAlerts.map((alert, index) =>
+                            {
                                 let AlertRenderer = renderers[alert.channel];
-                                return (<AlertRenderer onDismissAlert={() => onDismissAlert(alert.id, alertType)} onDeleteAlert={() => onDeleteAlert(alert.id, alertType)}
-                                                       key={alert.id} alert={alert}/>);
+                                return (
+                                    <AlertRenderer
+                                        onDismissAlert={() => onDismissAlert(alert.id, alertType)}
+                                        onSendToServerAndDismissAlert={(defnOfRESTCall) => onSendToServerAndDismissAlert(alert.id, alertType, defnOfRESTCall)}
+                                        key={alert.id} alert={alert}
+                                    />
+                                );
                             })
                         }
                     </div>

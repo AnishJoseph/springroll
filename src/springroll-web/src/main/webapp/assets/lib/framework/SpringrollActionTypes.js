@@ -25,7 +25,7 @@ export function deleteAlert(id, alertType) {
 
 export function dismissAlert(id, alertType) {
     return function (dispatch) {
-        var deferred = $.Deferred();
+    var deferred = $.Deferred();
         $.ajax({
             url: `api/sr/notification/${id}`,
             type: 'DELETE',
@@ -35,11 +35,65 @@ export function dismissAlert(id, alertType) {
                 deferred.resolve();
                 dispatch(deleteAlert(id, alertType));
             },
-            error : function (jqXHR, textStatus, errorThrown ){
+            error: function (jqXHR, textStatus, errorThrown) {
                 deferred.resolve();
             }
         });
         return deferred;
+    }
+}
+export function sendToServerAndDismissAlert(id, alertType, defnOfRESTCall) {
+    return function (dispatch) {
+        var deferred = $.Deferred();
+        if(defnOfRESTCall.type == "POST") {
+            $.ajax({
+                url: defnOfRESTCall.url,
+                type: 'POST',
+                data: defnOfRESTCall.data,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (templateData) {
+                    deferred.resolve();
+                    dispatch(deleteAlert(id, alertType));
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    deferred.resolve();
+                }
+            });
+            return deferred;
+        }
+        if(defnOfRESTCall.type == "GET") {
+            $.ajax({
+                url: defnOfRESTCall.url,
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (templateData) {
+                    deferred.resolve();
+                    dispatch(deleteAlert(id, alertType));
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    deferred.resolve();
+                }
+            });
+            return deferred;
+        }
+        if(defnOfRESTCall.type == "DELETE") {
+            $.ajax({
+                url: defnOfRESTCall.url,
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (templateData) {
+                    deferred.resolve();
+                    dispatch(deleteAlert(id, alertType));
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    deferred.resolve();
+                }
+            });
+            return deferred;
+        }
     }
 }
 

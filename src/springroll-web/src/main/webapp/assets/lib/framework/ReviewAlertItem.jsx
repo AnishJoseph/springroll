@@ -58,13 +58,13 @@ class ReviewAlertItem extends React.Component {
         this.onSubmit = this.onSubmit.bind(this);
         this.handleInfoClicked = this.handleInfoClicked.bind(this);
         this.handleModalClosed = this.handleModalClosed.bind(this);
-        this.submitToServer = this.submitToServer.bind(this);
         this.state = {showMoreInfo : false}
     }
     onSubmit(action, comment){
-        this.props.onDeleteAlert(this.props.alert.id);
         this.setState({showMoreInfo: false});
-        this.submitToServer(action, comment);
+        var data = JSON.stringify({ reviewStepId: this.props.alert.reviewStepId, approved: action, reviewComment: comment});
+        let defnOfRESTCall = {type : 'POST', data : data, url : 'api/sr/reviewaction'};
+        this.props.onSendToServerAndDismissAlert(defnOfRESTCall);
     }
 
     handleInfoClicked(){
@@ -93,27 +93,5 @@ class ReviewAlertItem extends React.Component {
             </span>
         );
     }
-
-    submitToServer(action, comment) {
-        var data = JSON.stringify({
-            reviewStepId: this.props.alert.reviewStepId,
-            approved: action,
-            reviewComment: comment
-        });
-        $.ajax({
-            url: 'api/sr/reviewaction',
-            type: 'POST',
-            data: data,
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'json',
-            success: function (templateData) {
-                console.log("Templates loaded.");
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.error("Unable to load templates - textStatus is " + textStatus + ' :: errorThrown is ' + errorThrown);
-            }
-        });
-    }
-
 }
 export default ReviewAlertItem;
