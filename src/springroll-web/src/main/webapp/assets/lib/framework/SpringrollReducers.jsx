@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { AlertActions, AlertFilters} from 'SpringrollActionTypes'
 
-function alertsReducer(state = {actions : [], info : [], errors : []}, action, visibleAlertType :AlertFilters.ALERT_FILTER_NONE ) {
+function alertsReducer(state = {actions : [], info : [], errors : [], visibleAlertType : AlertFilters.ALERT_FILTER_NONE}, action) {
     switch (action.type) {
         case AlertActions.ADD_ACTION_ALERTS:
             return Object.assign({}, state, { actions :  state.actions.concat(action.alerts)});
