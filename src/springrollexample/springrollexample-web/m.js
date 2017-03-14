@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import springrollReducers from 'SpringrollReducers.jsx';
 import Root from 'Root.jsx';
-import { addAlerts, AlertActions} from 'SpringrollActionTypes';
+import { addAlerts, AlertActions, setAlertFilter, AlertFilters} from 'SpringrollActionTypes';
 import thunkMiddleware from 'redux-thunk'
 var moment = require('moment');
 
@@ -97,6 +97,7 @@ $(function() {
             _.each(response.data, alert => (alert['creationTimeMoment'] = moment(alert.creationTime).format(Application.getMomentFormatForDateTime())));
             if (response.data[0].alertType == 'ACTION') {
                 store.dispatch(addAlerts(AlertActions.ACTION_ALERTS, response.data));
+                store.dispatch(setAlertFilter(AlertFilters.ALERT_FILTER_ACTION));
             } else if (response.data[0].alertType == 'ERROR') {
                 store.dispatch(addAlerts(AlertActions.ERROR_ALERTS, response.data));
             } else if (response.data[0].alertType == 'INFO') {
