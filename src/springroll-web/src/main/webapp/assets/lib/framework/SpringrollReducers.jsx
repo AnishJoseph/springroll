@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { AlertActions, AlertFilters, SET_ALERT_FILTER} from 'SpringrollActionTypes'
+import { AlertActions, AlertFilters} from 'SpringrollActionTypes'
 
 function alertsReducer(state = {actions : [], info : [], errors : []}, action, visibleAlertType :AlertFilters.ALERT_FILTER_NONE ) {
     switch (action.type) {
@@ -18,7 +18,7 @@ function alertsReducer(state = {actions : [], info : [], errors : []}, action, v
                 case AlertFilters.ALERT_FILTER_INFO:
                     return Object.assign({}, state, { info :  removeAlert(state.info, action.id)});
             }
-        case SET_ALERT_FILTER:
+        case AlertActions.SET_ALERT_FILTER:
             return Object.assign({}, state, { visibleAlertType :  action.alertFilter});
         default:
             return state;

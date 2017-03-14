@@ -1,5 +1,4 @@
 import Application from 'App.js';
-export const SET_ALERT_FILTER = "SET_ALERT_FILTER";
 
 export const AlertFilters = {
     ALERT_FILTER_ACTION : 'ALERT_FILTER_ACTION',
@@ -13,7 +12,8 @@ export const AlertActions = {
     ERROR_ALERTS  : 'ERROR_ALERTS',
     ACTION_ALERTS : 'ACTION_ALERTS',
     ALERT_DELETE  : 'ALERT_DELETE',
-    ALERT_DISMISS : 'ALERT_DISMISS'
+    ALERT_DISMISS : 'ALERT_DISMISS',
+    SET_ALERT_FILTER : 'SET_ALERT_FILTER'
 };
 /* Action Creators */
 export function deleteAlert(id, alertType) {
@@ -129,5 +129,5 @@ export function addAlerts(type, alerts) {
 }
 
 export function setAlertFilter(alertFilter) {
-    return { type: SET_ALERT_FILTER, alertFilter : alertFilter }
+    return { type: AlertActions.SET_ALERT_FILTER, alertFilter : alertFilter }
 }
