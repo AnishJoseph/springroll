@@ -8,7 +8,7 @@ class FYIAlertItem extends React.Component {
             <span>
                 <div id='message' className="alertMessage">{Application.Localize(this.props.alert.messageKey, this.props.alert.args)}</div>
                 <div id='action'>
-                    <span onClick={this.props.onDeleteAlert} data-toggle="tooltip" title={Application.Localize('ui.dismiss')}  className="alertActionsPanelItem glyphicon glyphicon-trash"></span>
+                    <span onClick={this.props.onDismissAlert} data-toggle="tooltip" title={Application.Localize('ui.dismiss')}  className="alertActionsPanelItem glyphicon glyphicon-trash"></span>
                     <span className="alertActionsPanelTime">{this.props.alert.creationTimeMoment}</span>
                     <div className="alertActionsPanelBorder"/>
                 </div>

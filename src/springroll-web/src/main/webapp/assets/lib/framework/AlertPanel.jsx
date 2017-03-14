@@ -4,7 +4,7 @@ import Application from 'App.js';
 import { AlertFilters} from 'SpringrollActionTypes';
 
 
-const AlertPanel = ({ currentAlerts, currentAlertsTitle, alertType, onHideAlerts, onDeleteAlert }) => {
+const AlertPanel = ({ currentAlerts, currentAlertsTitle, alertType, onHideAlerts, onDeleteAlert, onDismissAlert }) => {
     let renderers = Application.getSubscribersToAlerts();
     if(currentAlerts != undefined) {
         return (
@@ -17,7 +17,7 @@ const AlertPanel = ({ currentAlerts, currentAlertsTitle, alertType, onHideAlerts
                         {
                             currentAlerts.map((alert, index) => {
                                 let AlertRenderer = renderers[alert.channel];
-                                return (<AlertRenderer onDeleteAlert={() => onDeleteAlert(alert.id, alertType)}
+                                return (<AlertRenderer onDismissAlert={() => onDismissAlert(alert.id, alertType)} onDeleteAlert={() => onDeleteAlert(alert.id, alertType)}
                                                        key={alert.id} alert={alert}/>);
                             })
                         }

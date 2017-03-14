@@ -5,11 +5,11 @@ import { Router, Route, hashHistory,IndexRoute } from 'react-router'
 import MenuDefinitions from 'MenuDefinitions';
 import ReviewAlertWrapper from 'ReviewAlertWrapper';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import springrollReducers from 'SpringrollReducers.jsx';
-import { connect } from 'react-redux';
 import Root from 'Root.jsx';
 import { addAlerts, AlertActions} from 'SpringrollActionTypes';
+import thunkMiddleware from 'redux-thunk'
 var moment = require('moment');
 
 
@@ -87,14 +87,12 @@ $(function() {
             deferred.resolve();
         });
     }
-    //let store = createStore(springrollReducers);
+    const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+    const store = createStore(springrollReducers, {}, composeEnhancers(
+        applyMiddleware(thunkMiddleware)
+    ));
 
-    const store = createStore(
-        springrollReducers,{}
-        +  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-    );
-
-    _.each(Object.keys(Application.getSubscribersToAlerts()), function(channel){
+        _.each(Object.keys(Application.getSubscribersToAlerts()), function(channel){
         Application.subscribe(channel, (response) => {
             _.each(response.data, alert => (alert['creationTimeMoment'] = moment(alert.creationTime).format(Application.getMomentFormatForDateTime())));
             if (response.data[0].alertType == 'ACTION') {
