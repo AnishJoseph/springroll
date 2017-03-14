@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { AlertActions, AlertFilters, SET_ALERT_FILTER} from 'SpringrollActionTypes'
 
-function alertsReducer(state = {actions : [], info : [], errors : []}, action) {
+function alertsReducer(state = {actions : [], info : [], errors : []}, action, visibleAlertType :AlertFilters.ALERT_FILTER_NONE ) {
     switch (action.type) {
         case AlertActions.ACTION_ALERTS:
             return Object.assign({}, state, { actions :  state.actions.concat(action.alerts)});
@@ -18,6 +18,8 @@ function alertsReducer(state = {actions : [], info : [], errors : []}, action) {
                 case AlertFilters.ALERT_FILTER_INFO:
                     return Object.assign({}, state, { info :  removeAlert(state.info, action.id)});
             }
+        case SET_ALERT_FILTER:
+            return Object.assign({}, state, { visibleAlertType :  action.alertFilter});
         default:
             return state;
     }
@@ -27,18 +29,8 @@ function removeAlert(alertCollection, alertId){
     return alertCollection.filter(alert => (alert.id !== alertId));
 }
 
-function setVisibleAlert(state = AlertFilters.ALERT_FILTER_NONE, action) {
-    switch (action.type) {
-        case SET_ALERT_FILTER:
-            return action.alertFilter;
-        default:
-            return state;
-    }
-}
-
 const springrollReducers = combineReducers({
     alerts : alertsReducer,
-    visibleAlertType : setVisibleAlert
 });
 
 
