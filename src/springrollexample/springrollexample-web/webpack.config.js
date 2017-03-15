@@ -8,6 +8,7 @@ module.exports = {
 		path: path.join(__dirname, 'src/main/webapp/assets/generated'),
         filename: "springroll.js",
         publicPath: "/assets/generated/"
+
     },
     module: {
         loaders: [

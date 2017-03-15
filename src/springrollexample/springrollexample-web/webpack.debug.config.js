@@ -3,11 +3,11 @@ const path = require('path');
 const webpack = require('webpack');
 
 var config = {
-    entry: 'm.js',
+    entry: 'index.js',
 
     output: {
         path: path.join(__dirname, 'src/main/webapp/assets/generated'),
-        filename: "sindex.js",
+        filename: "index.js",
         publicPath: "/assets/generated/"
     },
 

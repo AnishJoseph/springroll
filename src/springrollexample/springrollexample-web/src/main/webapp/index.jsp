@@ -16,7 +16,7 @@
 
 <body>
 <div id = "app"></div>
-<script src = "assets/generated/sindex.js"></script>
+<script src = "assets/generated/index.js"></script>
 </body>
 
 </html>
