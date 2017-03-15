@@ -18,11 +18,9 @@ class MenuItem extends React.Component {
             );
         }
         return (
-            <li role="presentation"><Link activeClassName="active" to={this.props.menuDefn.name} data-menuname={this.props.menuDefn.name} >{Application.Localize(this.props.menuDefn.title)}</Link></li>
+            <li role="presentation"><Link activeClassName="active" to={this.props.menuDefn.route}>{Application.Localize(this.props.menuDefn.title)}</Link></li>
         );
     }
 }
 
 export default MenuItem;
-
-//            <li onClick={() => this.handleClick(this.props.menuDefn)} role="presentation"><a data-menuname={this.props.menuDefn.name} >{Application.Localize(this.props.menuDefn.title)}</a></li>

@@ -18,15 +18,8 @@ class Application {
         this.properties = {};
         this.promises = [];
         this.user = undefined;
-        this.moduleMap = {};
     }
 
-    setModule(name, module){
-        this.moduleMap[name] = module;
-    }
-    getModuleMap(){
-        return this.moduleMap;
-    }
     start() {
         CometD.init();
     }
@@ -44,25 +37,40 @@ class Application {
     }
 
     addMenu(menuDefn){
-        console.log("Adding menu item - " + menuDefn.name);
+        console.log("Adding menu item - '" + menuDefn.title + "' on Route '" + menuDefn.route + "' with index " + menuDefn.index);
         this.menuDefns.push(menuDefn);
+        if(menuDefn.parentTitle == undefined)
+            return;
+        var foundParent = _.find(this.menuDefns, function(storedMenuDefn){
+            return menuDefn.parentTitle == storedMenuDefn.title;
+        });
+        if(foundParent)return;
+        this.menuDefns.push({
+            title: menuDefn.parentTitle,
+            index: menuDefn.parentIndex,
+            type: "submenu"
+        });
     }
 
     makeSubMenus(menus, allMenus){
         var that = this;
         _.each(menus, function(menuDefn) {
             if(menuDefn.type == 'menuitem')return;
-            var subMenuItems = _.filter(allMenus, (aMenu) => (aMenu.parent == menuDefn.name)).sort((a,b) => (a.index - b.index));
+            var subMenuItems = _.filter(allMenus, (aMenu) => (aMenu.parentTitle == menuDefn.title)).sort((a,b) => (a.index - b.index));
             menuDefn['subMenuItems'] = subMenuItems;
             if(subMenuItems.length > 0) that.makeSubMenus(subMenuItems, allMenus);
         });
     }
     getMenuDefns(){
-        var rootMenus = _.filter(this.menuDefns, (menuDefn) => (menuDefn.parent == undefined)).sort((a,b) => (a.index - b.index));
+        var rootMenus = _.filter(this.menuDefns, (menuDefn) => (menuDefn.parentTitle == undefined)).sort((a,b) => (a.index - b.index));
         this.makeSubMenus(rootMenus, this.menuDefns);
         /* filter out any menu of type submenu which have no menu items */
-        var menusWithSubMenus =  _.reject(rootMenus, (menuDefn) => (menuDefn.type == 'submenu' && menuDefn.subMenuItems.length == 0));
-        return menusWithSubMenus;
+        var validMenus =  _.reject(rootMenus, (menuDefn) => (menuDefn.type == 'submenu' && menuDefn.subMenuItems.length == 0));
+        return validMenus;
+    }
+    getMenuItems (){
+        var menuItems = _.filter(this.menuDefns, (menuDefn) => (menuDefn.type == 'menuitem'));
+        return menuItems;
     }
 
     loadUser() {

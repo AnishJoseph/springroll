@@ -59,5 +59,10 @@ class Module1 extends React.Component {
 }
 module.exports = Module1;
 
-//export default Module1;
-
+Application.addMenu({
+    title: 'ui.menu.first',
+    index: 1,
+    type: "menuitem",
+    route : 'M1',
+    component : Module1
+});

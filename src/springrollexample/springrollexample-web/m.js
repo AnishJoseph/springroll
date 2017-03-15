@@ -61,21 +61,15 @@ $(function() {
     Application.loadUser();
     Application.loadProperties();
     Application.loadLocaleMessages();
-    var modules = ["Module1", "Module2"];
+    var modules = ["Module1", "Module2", "Module3_1"];
     var currentModules = [];
 
-    /* Build the menu based on the authorities given to this user */
-    _.each(Object.keys(MenuDefinitions.getMenuDefns()), function(menu){
-        if (_.contains(modules, menu)) {
-            Application.addMenu(MenuDefinitions.getMenuDefns()[menu]);
-            currentModules.push(menu);
-        }
-    });
+    /* Based on this users authorization start requiring the modules */
     if (_.contains(modules, "Module1")){
         let deferred = $.Deferred();
         Application.addPromise(deferred.promise());
         require.ensure([], function (require) {
-            Application.setModule("Module1", require("Module1"));
+            require("Module1");
             deferred.resolve();
         });
     }
@@ -83,7 +77,15 @@ $(function() {
         let deferred = $.Deferred();
         Application.addPromise(deferred.promise());
         require.ensure([], function (require) {
-            Application.setModule("Module2", require("Module2"));
+            require("Module2");
+            deferred.resolve();
+        });
+    }
+    if (_.contains(modules, "Module3_1")){
+        let deferred = $.Deferred();
+        Application.addPromise(deferred.promise());
+        require.ensure([], function (require) {
+            require("Module3_1");
             deferred.resolve();
         });
     }
@@ -92,7 +94,7 @@ $(function() {
         applyMiddleware(thunkMiddleware)
     ));
 
-        _.each(Object.keys(Application.getSubscribersToAlerts()), function(channel){
+    _.each(Object.keys(Application.getSubscribersToAlerts()), function(channel){
         Application.subscribe(channel, (response) => {
             _.each(response.data, alert => (alert['creationTimeMoment'] = moment(alert.creationTime).format(Application.getMomentFormatForDateTime())));
             if (response.data[0].alertType == 'ACTION') {
@@ -111,8 +113,10 @@ $(function() {
             <Provider store={store}>
                 <Router history={hashHistory}>
                     <Route path="/" component={Root}>
-                        <IndexRoute component={Application.getModuleMap()[Object.keys(Application.getModuleMap())[0]]}/>
-                        {currentModules.map((module, index) => ( <Route key={index} component={Application.getModuleMap()[module]} path={"/" + module} />))}
+                        <IndexRoute component={Application.getMenuItems()[0].component}/>
+                        {Application.getMenuItems().map((menuDefn, index) =>  {
+                            return (<Route key={index} component={menuDefn.component} path={"/" + menuDefn.route} />);
+                        })}
                     </Route>
                 </Router>
             </Provider>,
