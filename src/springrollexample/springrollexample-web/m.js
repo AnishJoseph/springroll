@@ -61,8 +61,7 @@ $(function() {
     Application.loadUser();
     Application.loadProperties();
     Application.loadLocaleMessages();
-    var modules = ["Module1", "Module2", "Module3_1"];
-    var currentModules = [];
+    var modules = ["Module1", "Module2", "Module3_1", "MDM", "Module3_3"];
 
     /* Based on this users authorization start requiring the modules */
     if (_.contains(modules, "Module1")){
@@ -89,6 +88,23 @@ $(function() {
             deferred.resolve();
         });
     }
+    if (_.contains(modules, "MDM")){
+        let deferred = $.Deferred();
+        Application.addPromise(deferred.promise());
+        require.ensure([], function (require) {
+            require("MDM");
+            deferred.resolve();
+        });
+    }
+    if (_.contains(modules, "Module3_3")){
+        let deferred = $.Deferred();
+        Application.addPromise(deferred.promise());
+        require.ensure([], function (require) {
+            require("Module3_3");
+            deferred.resolve();
+        });
+    }
+
     const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
     const store = createStore(springrollReducers, {}, composeEnhancers(
         applyMiddleware(thunkMiddleware)
@@ -115,7 +131,9 @@ $(function() {
                     <Route path="/" component={Root}>
                         <IndexRoute component={Application.getMenuItems()[0].component}/>
                         {Application.getMenuItems().map((menuDefn, index) =>  {
-                            return (<Route key={index} component={menuDefn.component} path={"/" + menuDefn.route} />);
+                            if(typeof menuDefn.route === 'string')
+                                return (<Route key={index} component={menuDefn.component} path={"/" + menuDefn.route} />);
+                            return menuDefn.route;
                         })}
                     </Route>
                 </Router>

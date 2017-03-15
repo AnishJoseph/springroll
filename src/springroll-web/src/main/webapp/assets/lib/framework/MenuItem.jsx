@@ -18,7 +18,7 @@ class MenuItem extends React.Component {
             );
         }
         return (
-            <li role="presentation"><Link activeClassName="active" to={this.props.menuDefn.route}>{Application.Localize(this.props.menuDefn.title)}</Link></li>
+            <li role="presentation"><Link activeClassName="active" to={(this.props.menuDefn.routeOnClick || this.props.menuDefn.route)}>{Application.Localize(this.props.menuDefn.title)}</Link></li>
         );
     }
 }
