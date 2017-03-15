@@ -4,7 +4,7 @@ import { Router, Route } from 'react-router'
 
 const MDM = (props) => {
     return (
-        <div>Hello World - MDM </div>
+        <div>MDM {props.params.master}</div>
     );
 };
 const routes = (<Route key="mdm" path="/mdm" component={MDM}>

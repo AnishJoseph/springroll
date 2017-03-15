@@ -28,7 +28,8 @@ Application.addMenu({
     parentIndex : 3
 });
 
-
+/*
+ THIRD LEVEL MENUS
 Application.addMenu({
     title: 'ui.menu.third.submenu',
     index: 3,
@@ -54,6 +55,7 @@ Application.addMenu({
     parentTitle: 'ui.menu.third.submenu',
     parentIndex : 3
 });
+*/
 
 module.exports = Module3_1;
 
