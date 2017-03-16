@@ -59,8 +59,6 @@ export function dismissAlert(id, alertType) {
         $.ajax({
             url: `api/sr/notification/${id}`,
             type: 'DELETE',
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'json',
             success: function (user) {
                 deferred.resolve();
                 dispatch(deleteAlert(id, alertType));
@@ -81,8 +79,6 @@ export function sendToServerAndDismissAlert(id, alertType, defnOfRESTCall) {
                 url: defnOfRESTCall.url,
                 type: 'POST',
                 data: defnOfRESTCall.data,
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
                 success: function (templateData) {
                     deferred.resolve();
                     dispatch(deleteAlert(id, alertType));
@@ -97,8 +93,6 @@ export function sendToServerAndDismissAlert(id, alertType, defnOfRESTCall) {
             $.ajax({
                 url: defnOfRESTCall.url,
                 type: 'GET',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
                 success: function (templateData) {
                     deferred.resolve();
                     dispatch(deleteAlert(id, alertType));
@@ -113,8 +107,6 @@ export function sendToServerAndDismissAlert(id, alertType, defnOfRESTCall) {
             $.ajax({
                 url: defnOfRESTCall.url,
                 type: 'GET',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
                 success: function (templateData) {
                     deferred.resolve();
                     dispatch(deleteAlert(id, alertType));

@@ -25,8 +25,6 @@ class Module1 extends React.Component {
             url: 'api/testPipelineSimple',
             type: 'POST',
             data: data,
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'json',
             success: function (templateData) {
                 console.log("Templates loaded.");
             },

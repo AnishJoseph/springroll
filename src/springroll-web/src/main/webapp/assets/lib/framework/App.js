@@ -118,8 +118,6 @@ class Application {
         $.ajax({
             url: 'api/sr/user',
             type: 'GET',
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'json',
             success: function (user) {
                 that.store.dispatch(setUser(user));
                 deferred.resolve();
@@ -138,8 +136,6 @@ class Application {
         $.ajax({
             url: 'api//sr/properties',
             type: 'GET',
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'json',
             success: function (props) {
                 that.properties = props;
                 deferred.resolve();
@@ -170,8 +166,6 @@ class Application {
         $.ajax({
             url: 'api/sr/localeMessages',
             type: 'GET',
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'json',
             success: function (messages) {
                 that.localeMessages = messages;
                 deferred.resolve();
@@ -252,6 +246,8 @@ class Application {
         $.ajaxSetup({
             headers: headers,
             cache: false,
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
             statusCode : {
                 406:function(message){   //NOT_ACCEPTABLE
                     // Check if this is already handled in the business logic
