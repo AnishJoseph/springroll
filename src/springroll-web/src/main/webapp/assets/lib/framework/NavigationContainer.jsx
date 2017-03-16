@@ -6,8 +6,9 @@ import { logout, switchUser } from 'SpringrollActionTypes';
 
 const mapStateToProps = (state) => {
     return {
-        delegators : Application.getUser().delegators,
-        username   : Application.getUser().displayName
+        delegators : state.user.delegators,
+        username   : state.user.displayName,
+        realLoggedInUser   : state.user.realLoggedInUser
     }
 };
 const mapDispatchToProps = (dispatch) => bindActionCreators({

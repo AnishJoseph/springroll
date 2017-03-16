@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DelegatorMenu = ({delegators, username, onSwitchUser}) => {
+const DelegatorMenu = ({delegators, username, onSwitchUser, realLoggedInUser}) => {
     if(delegators == null || delegators.length == 0)
         return ( <p className="navbar-text navbar-right ">{username}</p>);
     return (
@@ -9,7 +9,7 @@ const DelegatorMenu = ({delegators, username, onSwitchUser}) => {
                 <a className="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{username}<span className="caret"></span></a>
                 <ul className="dropdown-menu">
                     {delegators.map((delegator, index) =>
-                        (<li onClick={() => {onSwitchUser(delegator)}} key={index} role="presentation"><a>{delegator}</a></li>))}
+                        (<li onClick={() => {onSwitchUser(delegator, realLoggedInUser)}} key={index} role="presentation"><a>{delegator}</a></li>))}
                 </ul>
             </li>
         </ul>

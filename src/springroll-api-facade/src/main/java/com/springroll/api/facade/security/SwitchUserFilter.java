@@ -39,7 +39,7 @@ public class SwitchUserFilter extends org.springframework.security.web.authentic
         boolean isImpersonateLogout = ((HttpServletRequest) req).getRequestURI().contains("logout/impersonate");
         if( isImpersonateRequest) {
             SpringrollUser user = (SpringrollUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String realUser = user.isRunningAsDelegate()?user.getDelegator():user.getUsername();
+            String realUser = user.isRunningAsDelegate()?user.getRealLoggedInUser():user.getUsername();
             String userId = req.getParameter(org.springframework.security.web.authentication.switchuser.SwitchUserFilter.SPRING_SECURITY_SWITCH_USERNAME_KEY);
             LocalDate now = (LocalDate.now()).minusDays(1);
             if(userId != null){

@@ -1,5 +1,7 @@
 import Application from 'App.js';
 
+export const USER_CHANGED = 'USER_CHANGED';
+
 export const AlertFilters = {
     ALERT_FILTER_ACTION : 'ALERT_FILTER_ACTION',
     ALERT_FILTER_ERROR  : 'ALERT_FILTER_ERROR',
@@ -36,13 +38,16 @@ export function logout() {
     }
 }
 
-export function switchUser(delegator) {
+export function switchUser(userToSwitchTo, realLoggedInUser) {
     return function (dispatch) {
         var deferred = $.Deferred();
-        if (Application.user.delegator != null && Application.user.delegator == delegator) {
+        if (realLoggedInUser != null && realLoggedInUser == userToSwitchTo) {
+            /* If I am currently running as a delegate and I am switching back to myself
+            *  realLoggedInUser will be NULL if i am NOT running as a delegate for someone else */
             window.location.href = 'logout/impersonate';
         } else {
-            window.location.href = 'login/impersonate?username=' + delegator;
+            /* Either i am running as myself, OR i am running as a delegate and I am switching to some other delegator */
+            window.location.href = 'login/impersonate?username=' + userToSwitchTo;
         }
         return deferred;
     }
@@ -130,4 +135,7 @@ export function addAlerts(type, alerts) {
 
 export function setAlertFilter(alertFilter) {
     return { type: AlertActions.SET_ALERT_FILTER, alertFilter : alertFilter }
+}
+export function setUser(user) {
+    return { type: USER_CHANGED, user : user }
 }

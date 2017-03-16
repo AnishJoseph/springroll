@@ -6,7 +6,7 @@ import MenuItem from 'MenuItem.jsx';
 import DelegatorMenu from 'DelegatorMenu.jsx';
 import AlertSummaryContainer from 'AlertSummaryContainer.jsx';
 
-const Navigation = ({ delegators, username, onLogout, onSwitchUser}) => {
+const Navigation = ({ delegators, username, onLogout, onSwitchUser, realLoggedInUser}) => {
     return (
         <div id='main-menu' className='root-menu'>
             <nav className="navbar navbar-default spaRootElement">
@@ -16,7 +16,7 @@ const Navigation = ({ delegators, username, onLogout, onSwitchUser}) => {
                             { Application.getMenuDefns().map((menusDefn, index) => ( <MenuItem key={index} menuDefn={menusDefn}/>)) }
                         </ul>
                         <p onClick={onLogout} data-toggle="tooltip" title={Application.Localize('ui.logout')} className="navbar-text navbar-right glyphicon glyphicon-off" aria-hidden="true" id="logout"/>
-                        <DelegatorMenu delegators={delegators} username={username} onSwitchUser={onSwitchUser}/>
+                        <DelegatorMenu delegators={delegators} username={username} onSwitchUser={onSwitchUser} realLoggedInUser={realLoggedInUser}/>
                         <AlertSummaryContainer />
                     </div>
                 </div>

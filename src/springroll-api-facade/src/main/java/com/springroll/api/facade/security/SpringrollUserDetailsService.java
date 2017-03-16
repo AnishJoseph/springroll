@@ -131,7 +131,7 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
             if ("ROLE_PREVIOUS_ADMINISTRATOR".equals(authorityAsString)) {
                 user.setRunningAsDelegate(true);
                 SpringrollUser oldUser = (SpringrollUser) ((SwitchUserGrantedAuthority) authority).getSource().getPrincipal();
-                user.setDelegator(oldUser.getUsername());
+                user.setRealLoggedInUser(oldUser.getUsername());
                 List<String> switchToPossibilities = new ArrayList<>();
                 switchToPossibilities.addAll(oldUser.getDelegators());
                 switchToPossibilities.remove(user.getUsername());

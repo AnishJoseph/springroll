@@ -14,7 +14,7 @@ import java.util.Locale;
 public class SpringrollUser extends User{
     private String displayName;
     private List<String> delegators = new ArrayList<>();    //User for whom i can be a delegate
-    private String delegator = null;
+    private String realLoggedInUser = null;
     private boolean runningAsDelegate = false;
     private Locale locale;
 
@@ -42,12 +42,12 @@ public class SpringrollUser extends User{
         this.delegators = delegators;
     }
 
-    public String getDelegator() {
-        return delegator;
+    public String getRealLoggedInUser() {
+        return realLoggedInUser;
     }
 
-    public void setDelegator(String delegator) {
-        this.delegator = delegator;
+    public void setRealLoggedInUser(String realLoggedInUser) {
+        this.realLoggedInUser = realLoggedInUser;
     }
 
     public boolean isRunningAsDelegate() {

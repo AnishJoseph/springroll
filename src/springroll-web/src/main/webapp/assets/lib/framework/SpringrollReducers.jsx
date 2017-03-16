@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { AlertActions, AlertFilters} from 'SpringrollActionTypes'
+import { AlertActions, AlertFilters, USER_CHANGED} from 'SpringrollActionTypes'
 
 function alertsReducer(state = {actions : [], info : [], errors : [], visibleAlertType : AlertFilters.ALERT_FILTER_NONE}, action) {
     switch (action.type) {
@@ -24,13 +24,22 @@ function alertsReducer(state = {actions : [], info : [], errors : [], visibleAle
             return state;
     }
 }
-
+function userReducer(state = {}, action) {
+    switch (action.type) {
+        case USER_CHANGED:
+            return action.user;
+        default:
+            return state;
+    }
+}
 function removeAlert(alertCollection, alertId){
     return alertCollection.filter(alert => (alert.id !== alertId));
 }
 
+
 const springrollReducers = combineReducers({
     alerts : alertsReducer,
+    user : userReducer
 });
 
 

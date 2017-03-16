@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import springrollReducers from 'SpringrollReducers.jsx';
 import Root from 'Root.jsx';
-import { addAlerts, AlertActions, setAlertFilter, AlertFilters} from 'SpringrollActionTypes';
+import { setUser, addAlerts, AlertActions, setAlertFilter, AlertFilters} from 'SpringrollActionTypes';
 import thunkMiddleware from 'redux-thunk'
 var moment = require('moment');
 
@@ -24,33 +24,28 @@ class Application {
         this.localeMessages = {"anish" : "joseph"};
         this.properties = {};
         this.promises = [];
-        this.user = undefined;
     }
 
     start() {
         var that = this;
-        const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-        const store = createStore(springrollReducers, {}, composeEnhancers(
-            applyMiddleware(thunkMiddleware)
-        ));
 
         _.each(Object.keys(that.getSubscribersToAlerts()), function (channel) {
             that.subscribe(channel, (response) => {
                 _.each(response.data, alert => (alert['creationTimeMoment'] = moment(alert.creationTime).format(that.getMomentFormatForDateTime())));
                 if (response.data[0].alertType == 'ACTION') {
-                    store.dispatch(addAlerts(AlertActions.ADD_ACTION_ALERTS, response.data));
-                    store.dispatch(setAlertFilter(AlertFilters.ALERT_FILTER_ACTION));
+                    that.store.dispatch(addAlerts(AlertActions.ADD_ACTION_ALERTS, response.data));
+                    that.store.dispatch(setAlertFilter(AlertFilters.ALERT_FILTER_ACTION));
                 } else if (response.data[0].alertType == 'ERROR') {
-                    store.dispatch(addAlerts(AlertActions.ADD_ERROR_ALERTS, response.data));
+                    that.store.dispatch(addAlerts(AlertActions.ADD_ERROR_ALERTS, response.data));
                 } else if (response.data[0].alertType == 'INFO') {
-                    store.dispatch(addAlerts(AlertActions.ADD_INFO_ALERTS, response.data));
+                    that.store.dispatch(addAlerts(AlertActions.ADD_INFO_ALERTS, response.data));
                 }
             });
         });
 
         $.when.apply($, this.getPromises()).then(function () {
             ReactDOM.render(
-                <Provider store={store}>
+                <Provider store={that.store}>
                     <Router history={hashHistory}>
                         <Route path="/" component={Root}>
                             <IndexRoute component={that.getMenuItems()[0].component}/>
@@ -127,7 +122,7 @@ class Application {
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             success: function (user) {
-                that.user = user;
+                that.store.dispatch(setUser(user));
                 deferred.resolve();
             },
             error : function (jqXHR, textStatus, errorThrown ){
@@ -250,9 +245,6 @@ class Application {
         return this.promises;
     }
 
-    getUser() {
-        return this.user;
-    }
     addSubscriberToAlerts(channel, component){
         this.subscribersToAlerts[channel] = component;
     }
@@ -306,6 +298,10 @@ class Application {
             }
         });
 
+        const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+        this.store = createStore(springrollReducers, {}, composeEnhancers(
+            applyMiddleware(thunkMiddleware)
+        ));
         this.loadUser();
         this.loadProperties();
         this.loadLocaleMessages();
