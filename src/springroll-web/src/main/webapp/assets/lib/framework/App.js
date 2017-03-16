@@ -19,7 +19,6 @@ class Application {
     constructor() {
         this.subscribers = {};   //Holds the subscribers to the push notifications - filled in by modules calling subscribe
         this.menuDefns = [];     //Holds the list of menu definitions - filled by modules calling addMenuItem
-        this.subscribersForAlerts = [];
         this.subscribersToAlerts = {};
         this.localeMessages = {"anish" : "joseph"};
         this.properties = {};
@@ -183,14 +182,6 @@ class Application {
             }
         });
         this.addPromise(deferred.promise());
-    }
-
-    subscribeForAlert(channel, options){
-        this.subscribersForAlerts.push({channel : channel, options : options});
-    }
-
-    getSubscribersForAlerts(){
-        return this.subscribersForAlerts;
     }
 
     /* Call this with arguments to replace {n} parameters */
