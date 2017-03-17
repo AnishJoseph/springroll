@@ -235,17 +235,6 @@ import java.util.stream.Collectors;
                     data[i] = ((String)data[i]).split(",");
                 }
             }
-            if(colDefs.get(i).getType().equalsIgnoreCase("date")){
-                for (Object[] data : resultList) {
-                    LocalDate date = (LocalDate) data[i];
-                    if(date != null)data[i] = date.format(springrollUtils.getDateFormatter());
-                }
-            } else if(colDefs.get(i).getType().equalsIgnoreCase("datetime")){
-                for (Object[] data : resultList) {
-                    LocalDateTime date = (LocalDateTime) data[i];
-                    if(date != null)data[i] = date.format(springrollUtils.getDateTimeFormatter());
-                }
-            }
         }
         int fakeIndex = -1;
 
