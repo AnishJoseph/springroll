@@ -80,7 +80,7 @@ public class SpringrollAPI extends AbstractAPI {
         return gridReportingService.getGrid(gridName, parameters);
     }
     @RequestMapping(value = "/sr/mdm/masters", method = RequestMethod.GET)
-    public List<String> getMdmMasterNames() {
+    public Map<String, List<String>> getMdmMasterNames() {
         return mdmService.getMdmMasterNames();
     }
 

@@ -296,8 +296,9 @@ import java.util.stream.Collectors;
     }
 
     @Override
-    public List<String> getMdmMasterNames(){
-        return mdmDefinitions.getMasters().stream().map(MdmDefinition::getMaster).collect(Collectors.toList());
+    public Map<String, List<String>> getMdmMasterNames(){
+        init();
+        return mdmDefinitions.getMasters().stream().collect(Collectors.groupingBy(mdmDefn -> mdmDefn.getGroup(), Collectors.mapping(c -> c.getMaster(), Collectors.toList())));
     }
 
     public MdmDefinition getDefinition(String master){

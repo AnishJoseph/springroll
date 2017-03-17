@@ -1,6 +1,7 @@
 package com.springroll.core.services.mdm;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by anishjoseph on 14/12/16.
@@ -10,5 +11,5 @@ public interface MdmService {
 
     IMdmData getData(String master);
 
-    List<String> getMdmMasterNames();
+    Map<String, List<String>> getMdmMasterNames();
 }

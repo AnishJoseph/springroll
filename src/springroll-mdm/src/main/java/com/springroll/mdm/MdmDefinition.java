@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class MdmDefinition {
     private static final Logger logger = LoggerFactory.getLogger(MdmDefinition.class);
+    private String group = "default";
     private String master;
     private String masterClassName;
     private String queryToGetMdmRecords;
@@ -54,6 +55,14 @@ public class MdmDefinition {
 
     public void setQueryToGetSpecificMdmRecords(String queryToGetSpecificMdmRecords) {
         this.queryToGetSpecificMdmRecords = queryToGetSpecificMdmRecords;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 
     public void setMasterClassName(String masterClassName) {

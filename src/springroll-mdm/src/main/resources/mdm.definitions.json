@@ -1,6 +1,7 @@
 {
   "masters" : [
       {
+        "group" : "UserRole",
         "masterClassName" : "com.springroll.orm.entities.Role",
         "constraints" : ["roleName"],
         "colDefs" : [
@@ -10,6 +11,7 @@
       ]
       },
       {
+        "group" : "Review",
         "masterClassName" : "com.springroll.orm.entities.ReviewRule",
         "colDefs" : [
           { "name": "ruleName", "writeable": true, "type": "text"},
@@ -24,6 +26,7 @@
         ]
       },
       {
+        "group" : "UserRole",
         "masterClassName" : "com.springroll.orm.entities.User",
         "constraints" : ["userId"],
         "colDefs" : [
@@ -36,6 +39,7 @@
         ]
       },
       {
+        "group" : "UserRole",
         "masterClassName" : "com.springroll.orm.entities.UserDelegation",
         "constraints" : ["startDate", "active"],
         "colDefs" : [
@@ -48,6 +52,7 @@
         ]
       },
       {
+        "group" : "Test",
         "masterClassName" : "com.springrollexample.orm.entities.TestTableToCheckMdm",
         "colDefs" : [
           {"name": "stringVariable",  "writeable" : true, "type": "text"},
