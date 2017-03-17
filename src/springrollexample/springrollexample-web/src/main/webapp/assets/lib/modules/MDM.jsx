@@ -5,6 +5,7 @@ import DateTimeFormatter from 'DateTimeFormatter';
 import { Router, Route } from 'react-router'
 import { NavDropdown, Nav, Navbar, MenuItem } from 'react-bootstrap';
 const ReactDataGrid = require('react-data-grid');
+const { Toolbar, Data: { Selectors } } = require('react-data-grid-addons');
 
 
 class MDM extends React.Component {
@@ -13,25 +14,18 @@ class MDM extends React.Component {
         this.masterChosen = this.masterChosen.bind(this);
         this.rowGetter = this.rowGetter.bind(this);
         this.handleGridSort = this.handleGridSort.bind(this);
-        this.state = {masterDefns : undefined, hasData : false, originalRows : [], rows : [] };
+        this.getRows = this.getRows.bind(this);
+        this.getSize = this.getSize.bind(this);
+        this.handleFilterChange = this.handleFilterChange.bind(this);
+        this.onClearFilters = this.onClearFilters.bind(this);
+        this.state = {masterDefns : undefined, hasData : false, rows : [], filters: {}, sortColumn: null, sortDirection: null };
     }
-
     handleGridSort(sortColumn, sortDirection) {
-        const comparer = (a, b) => {
-            if (sortDirection === 'ASC') {
-                console.log ("A - " + a[sortColumn] + " ::  B " + b[sortColumn] + " DIFF " + a[sortColumn] > b[sortColumn]);
-                return (a[sortColumn] > b[sortColumn]) ? 1 : -1;
-            } else if (sortDirection === 'DESC') {
-                console.log ("A - " + a[sortColumn] + " ::  B " + b[sortColumn] + " DIFF " + a[sortColumn] < b[sortColumn]);
-                return (a[sortColumn] < b[sortColumn]) ? 1 : -1;
-            }
-        };
-
-        const rows = sortDirection === 'NONE' ? this.state.originalRows.slice(0) : this.state.rows.sort(comparer);
-
-        this.setState({ rows });
+        this.setState({ sortColumn: sortColumn, sortDirection: sortDirection });
     }
-
+    onClearFilters() {
+        this.setState({ filters: {} });
+    }
     masterChosen(masterName) {
         this.props.router.push('/mdm/' + masterName);
         $.ajax({
@@ -41,18 +35,18 @@ class MDM extends React.Component {
                 var that = this;
                 this._columns = _.map(response.colDefs, function(colDef){
                     if(colDef.type == 'date')
-                        return ({key : colDef.name, name : colDef.name, sortable : true, formatter : DateFormatter});
+                        return ({key : colDef.name, name : colDef.name, sortable : true, formatter : DateFormatter, filterable: true,});
                     if(colDef.type == 'datetime')
-                        return ({key : colDef.name, name : colDef.name, sortable : true, formatter : DateTimeFormatter});
+                        return ({key : colDef.name, name : colDef.name, sortable : true, formatter : DateTimeFormatter, filterable: true,});
                     if(colDef.multiSelect == true)
                         return ({key : colDef.name, name : colDef.name, sortable : false });
-                    return ({key : colDef.name, name : colDef.name, sortable : true });
+                    return ({key : colDef.name, name : colDef.name, sortable : true, filterable: true, });
                 });
                 this._colDefs = response.colDefs;
                 this.colnames = _.map(this._colDefs, function(colDef, index) {
                     return colDef.name;
                 });
-                let originalRows = _.map(response.data, function(rowData, index){
+                let rows = _.map(response.data, function(rowData, index){
                     var row = {};
                     for (var j = 0; j < that.colnames.length; ++j) {
                         if (rowData[j] == undefined) continue;
@@ -65,8 +59,7 @@ class MDM extends React.Component {
                     }
                     return row;
                 });
-                let rows = originalRows.slice(0);
-                this.setState({originalRows, rows, hasData : true});
+                this.setState({rows, rows, hasData : true});
 
                 console.log("Yay");
             }.bind(this),
@@ -77,8 +70,26 @@ class MDM extends React.Component {
 
 
     }
-    rowGetter(i) {
-        return this.state.rows[i];
+    getRows() {
+        return Selectors.getRows(this.state);
+    }
+    getSize() {
+        return this.getRows().length;
+    }
+    rowGetter(rowIdx) {
+        const rows = this.getRows();
+        return rows[rowIdx];
+    }
+
+    handleFilterChange(filter) {
+        let newFilters = Object.assign({}, this.state.filters);
+        if (filter.filterTerm) {
+            newFilters[filter.column.key] = filter;
+        } else {
+            delete newFilters[filter.column.key];
+        }
+
+        this.setState({ filters: newFilters });
     }
 
     render() {
@@ -93,7 +104,7 @@ class MDM extends React.Component {
                         );
                     })}
                 </Nav>
-                {this.state.hasData == true && <ReactDataGrid columns={this._columns} rowGetter={this.rowGetter} rowsCount={this.state.rows.length} minHeight={500} onGridSort={this.handleGridSort}
+                {this.state.hasData == true && <ReactDataGrid onClearFilters={this.onClearFilters} toolbar={<Toolbar enableFilter={true}/>} onAddFilter={this.handleFilterChange} columns={this._columns} rowGetter={this.rowGetter} rowsCount={this.getSize()} minHeight={500} onGridSort={this.handleGridSort}
                 />}
             </div>
         );
