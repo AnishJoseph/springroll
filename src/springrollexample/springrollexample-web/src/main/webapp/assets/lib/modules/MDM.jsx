@@ -50,6 +50,9 @@ class MDM extends React.Component {
 
     masterChosen(masterName) {
         this.props.router.push('/mdm/' + masterName);
+        this.fetchAndDisplayMaster(masterName);
+    }
+    fetchAndDisplayMaster(masterName){
         $.ajax({
             url: "api/sr/mdm/data/" + masterName,
             type: 'POST',
@@ -87,8 +90,6 @@ class MDM extends React.Component {
                     return row;
                 });
                 this.setState({rows, rows, hasData : true});
-
-                console.log("Yay");
             }.bind(this),
             error: function(xhr, reason, exception) {
                 console.log("Error");
@@ -156,6 +157,9 @@ class MDM extends React.Component {
                 console.error("Unable to load MDM Definitions - textStatus is " + textStatus + ' :: errorThrown is ' + errorThrown);
             }.bind(this)
         });
+        if(this.props.params.master != undefined){
+            this.fetchAndDisplayMaster(this.props.params.master, true);
+        }
     }
 
 }
