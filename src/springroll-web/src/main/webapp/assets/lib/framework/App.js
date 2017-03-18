@@ -11,8 +11,6 @@ import thunkMiddleware from 'redux-thunk'
 var moment = require('moment');
 
 
-require("main.scss");
-require("bootstrap/dist/css/bootstrap.min.css");
 
 class Application {
 

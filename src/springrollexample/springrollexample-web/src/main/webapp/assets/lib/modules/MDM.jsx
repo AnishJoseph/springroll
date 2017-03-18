@@ -2,6 +2,7 @@ import React from 'react';
 import Application from 'App';
 import DateFormatter from 'DateFormatter';
 import DatePicker from 'DatePicker';
+import Select from 'Select';
 import DateTimeFormatter from 'DateTimeFormatter';
 import { Router, Route } from 'react-router'
 import { NavDropdown, Nav, Navbar, MenuItem } from 'react-bootstrap';
@@ -56,12 +57,17 @@ class MDM extends React.Component {
                 var that = this;
                 this._columns = _.map(response.colDefs, function(colDef){
                     if(colDef.type == 'date')
-                        return ({key : colDef.name, name : colDef.name, sortable : true, formatter : DateFormatter, filterable: true, editable : true, editor: DatePicker});
+                        return ({key : colDef.name, name : colDef.name, sortable : true, formatter : DateFormatter, filterable: true, editable : colDef.writeable, editor: DatePicker});
                     if(colDef.type == 'datetime')
-                        return ({key : colDef.name, name : colDef.name, sortable : true, formatter : DateTimeFormatter, filterable: true,});
-                    if(colDef.multiSelect == true)
-                        return ({key : colDef.name, name : colDef.name, sortable : false });
-                    return ({key : colDef.name, name : colDef.name, sortable : true, filterable: true, editable : true});
+                        return ({key : colDef.name, name : colDef.name, sortable : true, formatter : DateTimeFormatter, filterable: true, editable : colDef.writeable});
+                    let defn = ({key : colDef.name, name : colDef.name, sortable : true, filterable: true, editable : colDef.writeable});
+                    if(colDef.multiSelect == true) defn['sortable'] = false;
+                    if(colDef.lovList != undefined && colDef.lovList != null){
+                        let opts = _.map(colDef.lovList, function(lov){return {value : lov.value, label : lov.name}});
+                        let editor = <Select options={opts} multiSelect={colDef.multiSelect}/>;
+                        defn['editor'] = editor;
+                    }
+                    return defn;
                 });
                 this._colDefs = response.colDefs;
                 this.colnames = _.map(this._colDefs, function(colDef, index) {

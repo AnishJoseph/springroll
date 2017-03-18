@@ -4,8 +4,6 @@ var moment = require('moment');
 import ReactDOM from 'react-dom';
 import { DateField } from 'react-date-picker'
 
-import 'react-date-picker/index.css'
-
 class DatePicker extends React.Component {
     constructor(props) {
         super(props);
