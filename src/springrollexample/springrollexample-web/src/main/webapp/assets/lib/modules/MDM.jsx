@@ -22,6 +22,8 @@ class MDM extends React.Component {
         this.handleFilterChange = this.handleFilterChange.bind(this);
         this.handleGridRowsUpdated = this.handleGridRowsUpdated.bind(this);
         this.onClearFilters = this.onClearFilters.bind(this);
+        this.saveClicked = this.saveClicked.bind(this);
+        this.getMap = this.getMap.bind(this);
         this.state = {masterDefns : undefined, hasData : false, rows : [], filters: {}, sortColumn: null, sortDirection: null };
         this.changedRows = {};
     }
@@ -31,6 +33,38 @@ class MDM extends React.Component {
 
     onClearFilters() {
         this.setState({ filters: {} });
+    }
+
+    getMap(changedVars, changedRowIndex){
+        //FIXME - should not be setting prevVal here
+        var that = this;
+        let mdmChangedColumns = {};
+        _.each(Object.keys(changedVars), function(colName){
+            mdmChangedColumns[colName] = { val : changedVars[colName], prevVal : that.originalRows[changedRowIndex][colName], changed : true};
+        });
+        return mdmChangedColumns;
+    }
+
+    saveClicked(){
+        var that = this;
+        let changedRecords = _.map(Object.keys(this.changedRows), function(changedRowIndex){
+            return {id : that.state.rows[changedRowIndex]['id'], mdmChangedColumns : that.getMap(that.changedRows[changedRowIndex], changedRowIndex)};
+        });
+        var mdmDTO = {master : this.currentMaster, changedRecords : changedRecords, newRecords : []};
+
+        $.ajax({
+            url: "api/sr/mdm/update/",
+            type: 'POST',
+            data: JSON.stringify(mdmDTO),
+            success: function(response){
+                console.log("MDM Posted");
+            }.bind(this),
+            error: function(xhr, reason, exception) {
+                console.log("Error");
+            }
+        });
+
+
     }
 
     handleGridRowsUpdated({ fromRow, toRow, updated }) {
@@ -53,17 +87,19 @@ class MDM extends React.Component {
         this.fetchAndDisplayMaster(masterName);
     }
     fetchAndDisplayMaster(masterName){
+        this.currentMaster = masterName;
         $.ajax({
             url: "api/sr/mdm/data/" + masterName,
             type: 'POST',
             success: function(response){
                 var that = this;
+
                 this._columns = _.map(response.colDefs, function(colDef){
                     if(colDef.type == 'date')
                         return ({key : colDef.name, name : colDef.name, sortable : true, formatter : DateFormatter, filterable: true, editable : colDef.writeable, editor: DatePicker});
                     if(colDef.type == 'datetime')
                         return ({key : colDef.name, name : colDef.name, sortable : true, formatter : DateTimeFormatter, filterable: true, editable : colDef.writeable});
-                    let defn = ({key : colDef.name, name : colDef.name, sortable : true, filterable: true, editable : colDef.writeable});
+                    let defn = ({key : colDef.name, name : colDef.name, sortable : true, filterable: true, editable : colDef.writeable, resizable : true});
                     if(colDef.multiSelect == true) defn['sortable'] = false;
                     if(colDef.lovList != undefined && colDef.lovList != null){
                         let opts = _.map(colDef.lovList, function(lov){return {value : lov.value, label : lov.name}});
@@ -90,6 +126,8 @@ class MDM extends React.Component {
                     return row;
                 });
                 this.setState({rows, rows, hasData : true});
+                this.originalRows = rows.slice(0);
+
             }.bind(this),
             error: function(xhr, reason, exception) {
                 console.log("Error");
@@ -132,6 +170,7 @@ class MDM extends React.Component {
                         );
                     })}
                 </Nav>
+                <span data-toggle="tooltip" title="Save" onClick={this.saveClicked} className="pull-right alertActionsPanelItem glyphicon glyphicon-save"></span>
                 {this.state.hasData == true &&
                     <ReactDataGrid onGridRowsUpdated={this.handleGridRowsUpdated}
                                    onClearFilters={this.onClearFilters}

@@ -29,7 +29,7 @@ class ReviewModal extends React.Component {
                 <Modal.Header closeButton>
                     <Modal.Title>{this.props.title}</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body className="scrollable">
                     {this.props.children}
                 </Modal.Body>
                 <Modal.Footer>
