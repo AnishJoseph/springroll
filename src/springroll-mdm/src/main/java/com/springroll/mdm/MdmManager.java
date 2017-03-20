@@ -98,6 +98,10 @@ import java.util.stream.Collectors;
 
     public void on(MdmEvent mdmEvent) {
         MdmDTO mdmDTO = mdmEvent.getPayload();
+        if(!mdmEvent.isApproved()){
+            logger.debug("Nothing to be done as the someone rejected the changes");
+            return;
+        }
         MdmDefinition mdmDefinition = getDefinitionForMaster(mdmDTO.getMaster());
         for (MdmChangedRecord mdmChangedRecord : mdmDTO.getChangedRecords()) {
             MdmEntity entity = createEntityFromChangedRecords(mdmDefinition, mdmChangedRecord, false);
