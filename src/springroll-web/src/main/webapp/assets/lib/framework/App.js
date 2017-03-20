@@ -158,6 +158,28 @@ class Application {
         return this.getProperty('ui.moment.datetime.format.js');
     }
 
+    showInfoNotification (message) {
+        this.notificationSystem.addNotification({
+            message: message,
+            level: 'success',
+            position : 'tc',
+            autoDismiss : 5
+        });
+
+    }
+    showErrorNotification (message) {
+        this.notificationSystem.addNotification({
+            title: 'Error',
+            message: message,
+            level: 'error',
+            position : 'tc',
+            autoDismiss : 0
+        });
+    }
+
+    setNotificationSystem (notificationSystem){
+        this.notificationSystem = notificationSystem;
+    }
     loadLocaleMessages() {
         var deferred = $.Deferred();
         var that = this;

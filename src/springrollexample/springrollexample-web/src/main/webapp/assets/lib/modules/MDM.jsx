@@ -119,10 +119,15 @@ class MDM extends React.Component {
                 this.changedRows = {};
 
                 this.setState({ rows, needsSave : false});
+                Application.showInfoNotification("Changes submitted successfully. ");
 
             }.bind(this),
             error: function(xhr, reason, exception) {
-                console.log("Error");
+                xhr['errorHandled'] = true;
+                _.each(xhr.responseJSON, function (violation) {
+                    let message = "Row: " + (parseInt(violation.cookie) + 1) + ". Field " + violation.field + " - " + violation.message;
+                    Application.showErrorNotification(message);
+                });
             }
         });
     }

@@ -40,6 +40,7 @@
     "react-data-grid-addons": "^2.0.18",
     "react-date-picker": "^5.3.28",
     "react-dom": "^15.4.2",
+    "react-notification-system": "^0.2.13",
     "react-redux": "^5.0.3",
     "react-router": "^3.0.2",
     "react-select": "^1.0.0-rc.3",
