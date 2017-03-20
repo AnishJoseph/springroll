@@ -2,13 +2,14 @@ import React from 'react';
 import Application from 'App';
 import DateFormatter from 'DateFormatter';
 import DatePicker from 'DatePicker';
+import MdmToolbar from 'MdmToolbar';
 import Select from 'Select';
 import DateTimeFormatter from 'DateTimeFormatter';
 import { Router, Route } from 'react-router'
 import { NavDropdown, Nav, Navbar, MenuItem } from 'react-bootstrap';
 const ReactDataGrid = require('react-data-grid');
 const { Row } = ReactDataGrid;
-const { Editors, Formatters, Toolbar, Data: { Selectors } } = require('react-data-grid-addons');
+const { Data: { Selectors } } = require('react-data-grid-addons');
 
 class RowRenderer extends React.Component {
     constructor(props) {
@@ -105,17 +106,17 @@ class MDM extends React.Component {
             type: 'POST',
             data: JSON.stringify(mdmDTO),
             success: function(response){
-                this.changedRows = {};
-                this.newRows = {};
                 let rows = this.state.rows.slice();
                 _.each(Object.keys(this.newRows), (cid) => {
                     let rowToUpdate = rows[cid];
                     rowToUpdate['disabled'] = true;
                 });
+                this.newRows = {};
                 _.each(Object.keys(this.changedRows), (cid) => {
                     let rowToUpdate = rows[cid];
                     rowToUpdate['disabled'] = true;
                 });
+                this.changedRows = {};
 
                 this.setState({ rows });
 
@@ -232,11 +233,10 @@ class MDM extends React.Component {
                         );
                     })}
                 </Nav>
-                {this.state.needsSave && <span data-toggle="tooltip" title="Save" onClick={this.saveClicked} className="springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-save"></span>}
                 {this.state.hasData == true &&
-                    <ReactDataGrid onGridRowsUpdated={this.handleGridRowsUpdated}
+                    <div className="springroll-table"><ReactDataGrid onGridRowsUpdated={this.handleGridRowsUpdated}
                                    onClearFilters={this.onClearFilters}
-                                   toolbar={<Toolbar enableAddRow={true} onAddRow={this.handleAddRow} enableFilter={true}/>}
+                                   toolbar={<MdmToolbar enableAddRow={true} onAddRow={this.handleAddRow} enableFilter={true} onSaveClicked={this.saveClicked} needsSave={this.state.needsSave}/>}
                                    onAddFilter={this.handleFilterChange}
                                    columns={this._columns} rowGetter={this.rowGetter}
                                    rowsCount={this.getSize()} minHeight={500}
@@ -245,8 +245,7 @@ class MDM extends React.Component {
                                    rowKey="cid"
                                    onCheckCellIsEditable={this.onCheckCellIsEditable}
                                    rowRenderer={RowRenderer}
-
-                    />}
+                    /></div>}
             </div>
         );
     }
