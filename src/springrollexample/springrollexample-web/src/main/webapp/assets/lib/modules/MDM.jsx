@@ -94,7 +94,7 @@ class MDM extends React.Component {
         });
 
         let newRecords =  _.chain(Object.keys(this.newRows))
-            .map(key => this.newRows[key])
+            .map(key => Object.assign({}, this.newRows[key]) )
             .filter( row => row.new === true)
             .each(row => delete row['new'])
             .value();
