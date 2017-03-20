@@ -20,8 +20,8 @@ class RowRenderer extends React.Component {
         this.refs.row.setScrollLeft(scrollBy);
     }
     render() {
-        if(this.props.row.disabled == false) {
-            return (<div className='mdm-disabled text-muted'><Row ref="row" {...this.props}/></div>);
+        if(this.props.row.disabled === true) {
+            return (<div><Row extraClasses="text-muted mdm-disabled" ref="row" {...this.props}/></div>);
         }
         return (<div><Row ref="row" {...this.props}/></div>);
     }
@@ -197,6 +197,8 @@ class MDM extends React.Component {
                         }
                     }
                     row['cid'] = index;
+                    let underReview = _.find(response.recIdsUnderReview, id => id == row['id']);
+                    if(underReview) row['disabled'] = true;
                     return row;
                 });
                 this.setState({rows, rows, hasData : true});
