@@ -7,9 +7,24 @@ import DateTimeFormatter from 'DateTimeFormatter';
 import { Router, Route } from 'react-router'
 import { NavDropdown, Nav, Navbar, MenuItem } from 'react-bootstrap';
 const ReactDataGrid = require('react-data-grid');
+const { Row } = ReactDataGrid;
 const { Editors, Formatters, Toolbar, Data: { Selectors } } = require('react-data-grid-addons');
 
-
+class RowRenderer extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    setScrollLeft(scrollBy) {
+        // if you want freeze columns to work, you need to make sure you implement this as a pass through
+        this.refs.row.setScrollLeft(scrollBy);
+    }
+    render() {
+        if(this.props.row.disabled == false) {
+            return (<div className='mdm-disabled text-muted'><Row ref="row" {...this.props}/></div>);
+        }
+        return (<div><Row ref="row" {...this.props}/></div>);
+    }
+}
 
 class MDM extends React.Component {
     constructor(props){
@@ -23,9 +38,13 @@ class MDM extends React.Component {
         this.handleGridRowsUpdated = this.handleGridRowsUpdated.bind(this);
         this.onClearFilters = this.onClearFilters.bind(this);
         this.saveClicked = this.saveClicked.bind(this);
+        this.handleAddRow = this.handleAddRow.bind(this);
+        this.onCheckCellIsEditable = this.onCheckCellIsEditable.bind(this);
         this.getMap = this.getMap.bind(this);
-        this.state = {masterDefns : undefined, hasData : false, rows : [], filters: {}, sortColumn: null, sortDirection: null };
+        this.state = {masterDefns : undefined, hasData : false, rows : [], filters: {}, sortColumn: null, sortDirection: null, master : undefined, needsSave : false };
         this.changedRows = {};
+        this.newRows = {};
+        this.recIdsUnderReview = [];
     }
     handleGridSort(sortColumn, sortDirection) {
         this.setState({ sortColumn: sortColumn, sortDirection: sortDirection });
@@ -33,6 +52,24 @@ class MDM extends React.Component {
 
     onClearFilters() {
         this.setState({ filters: {} });
+    }
+    onCheckCellIsEditable(meta){
+        if(meta.row.disabled) return false;
+        let isUnderReview = _.find(this.recIdsUnderReview, id =>  id == meta.row.id);
+        if(isUnderReview) return false;
+        if(meta.column.writeable) return true;
+        if(meta.row.new) return true;
+        return false;
+    }
+    handleAddRow( {newRowIndex}) {
+        let newrow = {};
+        newrow['cid'] = newRowIndex;
+        newrow['new'] = true;
+        let rows = this.state.rows.slice();
+        rows.push(newrow);
+        this.setState({rows : rows, needsSave : true});
+        this.newRows[newRowIndex] = newrow;
+
     }
 
     getMap(changedVars, changedRowIndex){
@@ -47,39 +84,60 @@ class MDM extends React.Component {
 
     saveClicked(){
         var that = this;
-        let changedRecords = _.map(Object.keys(this.changedRows), function(changedRowIndex){
-            return {id : that.state.rows[changedRowIndex]['id'], mdmChangedColumns : that.getMap(that.changedRows[changedRowIndex], changedRowIndex)};
+
+        let changedRecords = _.map(Object.keys(this.changedRows), function(changedRowIndex) {
+            return {
+                id: that.state.rows[changedRowIndex]['id'],
+                mdmChangedColumns: that.getMap(that.changedRows[changedRowIndex], changedRowIndex)
+            };
         });
-        var mdmDTO = {master : this.currentMaster, changedRecords : changedRecords, newRecords : []};
+
+        let newRecords =  _.chain(Object.keys(this.newRows))
+            .map(key => this.newRows[key])
+            .filter( row => row.new === true)
+            .each(row => delete row['new'])
+            .value();
+
+        var mdmDTO = {master : this.state.master, changedRecords : changedRecords, newRecords : newRecords};
 
         $.ajax({
             url: "api/sr/mdm/update/",
             type: 'POST',
             data: JSON.stringify(mdmDTO),
             success: function(response){
-                console.log("MDM Posted");
+                this.changedRows = {};
+                this.newRows = {};
+                let rows = this.state.rows.slice();
+                _.each(Object.keys(this.newRows), (cid) => {
+                    let rowToUpdate = rows[cid];
+                    rowToUpdate['disabled'] = true;
+                });
+                _.each(Object.keys(this.changedRows), (cid) => {
+                    let rowToUpdate = rows[cid];
+                    rowToUpdate['disabled'] = true;
+                });
+
+                this.setState({ rows });
+
             }.bind(this),
             error: function(xhr, reason, exception) {
                 console.log("Error");
             }
         });
-
-
     }
 
-    handleGridRowsUpdated({ fromRow, toRow, updated }) {
+    handleGridRowsUpdated({ cellKey, fromRow, toRow, updated, rowIds, action}) {
         let rows = this.state.rows.slice();
-
-        for (let i = fromRow; i <= toRow; i++) {
-            let alreadyMadeChanges = this.changedRows[i] || {};
-            let rowToUpdate = rows[i];
-            let updatedRow = Object.assign({}, rowToUpdate, updated);
+        var that = this;
+        _.each(rowIds, function(cid){
+            let rowToUpdate = rows[cid];
+            let alreadyMadeChanges = rowToUpdate.new === true ? that.newRows[cid] : that.changedRows[cid] || { cid : cid};
+            let updatedRow = Object.assign(rowToUpdate, updated);
             alreadyMadeChanges = Object.assign(alreadyMadeChanges, updated);
-            rows[i] = updatedRow;
-            this.changedRows[i] = alreadyMadeChanges;
-        }
+            if(rowToUpdate.new !== true )that.changedRows[cid] = alreadyMadeChanges;
 
-        this.setState({ rows });
+        });
+        this.setState({ rows, needsSave : true });
     }
 
     masterChosen(masterName) {
@@ -87,25 +145,28 @@ class MDM extends React.Component {
         this.fetchAndDisplayMaster(masterName);
     }
     fetchAndDisplayMaster(masterName){
-        this.currentMaster = masterName;
+        this.setState({master : masterName});
         $.ajax({
             url: "api/sr/mdm/data/" + masterName,
             type: 'POST',
             success: function(response){
                 var that = this;
-
+                this.recIdsUnderReview = response.recIdsUnderReview;
                 this._columns = _.map(response.colDefs, function(colDef){
-                    if(colDef.type == 'date')
-                        return ({key : colDef.name, name : colDef.name, sortable : true, formatter : DateFormatter, filterable: true, editable : colDef.writeable, editor: DatePicker});
-                    if(colDef.type == 'datetime')
-                        return ({key : colDef.name, name : colDef.name, sortable : true, formatter : DateTimeFormatter, filterable: true, editable : colDef.writeable});
-                    let defn = ({key : colDef.name, name : colDef.name, sortable : true, filterable: true, editable : colDef.writeable, resizable : true});
+                    let defn = ({key : colDef.name, name : colDef.name, sortable : true, filterable: true, resizable : true, editable : true, writeable : colDef.writeable});
+
+                    if(colDef.type == 'date') defn = Object.assign(defn, {formatter : DateFormatter, editor: DatePicker});
+
+                    if(colDef.type == 'datetime') defn = Object.assign(defn, {formatter : DateTimeFormatter, editor: DatePicker});
+
                     if(colDef.multiSelect == true) defn['sortable'] = false;
+
                     if(colDef.lovList != undefined && colDef.lovList != null){
                         let opts = _.map(colDef.lovList, function(lov){return {value : lov.value, label : lov.name}});
                         let editor = <Select options={opts} multiSelect={colDef.multiSelect}/>;
                         defn['editor'] = editor;
                     }
+
                     return defn;
                 });
                 this._colDefs = response.colDefs;
@@ -123,6 +184,7 @@ class MDM extends React.Component {
                             row[that.colnames[j]] = rowData[j];
                         }
                     }
+                    row['cid'] = index;
                     return row;
                 });
                 this.setState({rows, rows, hasData : true});
@@ -170,16 +232,19 @@ class MDM extends React.Component {
                         );
                     })}
                 </Nav>
-                <span data-toggle="tooltip" title="Save" onClick={this.saveClicked} className="pull-right alertActionsPanelItem glyphicon glyphicon-save"></span>
+                {this.state.needsSave && <span data-toggle="tooltip" title="Save" onClick={this.saveClicked} className="springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-save"></span>}
                 {this.state.hasData == true &&
                     <ReactDataGrid onGridRowsUpdated={this.handleGridRowsUpdated}
                                    onClearFilters={this.onClearFilters}
-                                   toolbar={<Toolbar enableAddRow={true} enableFilter={true}/>}
+                                   toolbar={<Toolbar enableAddRow={true} onAddRow={this.handleAddRow} enableFilter={true}/>}
                                    onAddFilter={this.handleFilterChange}
                                    columns={this._columns} rowGetter={this.rowGetter}
                                    rowsCount={this.getSize()} minHeight={500}
                                    onGridSort={this.handleGridSort}
                                    enableCellSelect={true}
+                                   rowKey="cid"
+                                   onCheckCellIsEditable={this.onCheckCellIsEditable}
+                                   rowRenderer={RowRenderer}
 
                     />}
             </div>

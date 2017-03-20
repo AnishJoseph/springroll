@@ -24,6 +24,7 @@ import java.util.Set;
  */
 @Service
 public class MdmBusinessValidator implements DTOBusinessValidator {
+    private static final String CID = "cid";
     @PersistenceContext EntityManager em;
 
     @Autowired Repositories repositories;
@@ -42,33 +43,33 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
         MdmDefinition mdmDefinition = mdmManager.getDefinition(mdmDTO.getMaster());
         boolean hasNoErrorsInChangedRecords = true, hasNoErrorsInNewRecords = true;
         for (MdmChangedRecord mdmChangedRecord : mdmDTO.getChangedRecords()) {
-            Long id = mdmChangedRecord.getId();
+            String cid = mdmChangedRecord.getMdmChangedColumns().get(CID).getVal().toString();
 
             try {
                 MdmEntity mdmEntity = mdmManager.createEntityFromChangedRecords(mdmDefinition, mdmChangedRecord, true);
-                hasNoErrorsInChangedRecords = validate(mdmEntity, businessValidationResults, id);
+                hasNoErrorsInChangedRecords = validate(mdmEntity, businessValidationResults, cid);
             } catch (PropertyBatchUpdateException e) {
                 hasNoErrorsInChangedRecords = false;
                 for (PropertyAccessException propertyAccessException : e.getPropertyAccessExceptions()) {
-                    businessValidationResults.addBusinessViolation(id, 1, propertyAccessException.getPropertyName(), propertyAccessException.getErrorCode(), null);
+                    businessValidationResults.addBusinessViolation(cid, 1, propertyAccessException.getPropertyName(), propertyAccessException.getErrorCode(), null);
                 }
             }
         }
 
         for (Map<String, Object> newRecord : mdmDTO.getNewRecords()) {
-            Long id = (Long)newRecord.remove("id");
+            String cid = newRecord.remove(CID).toString();
             try {
                 MdmEntity mdmEntity = mdmManager.createEntityFromNewRecord(mdmDefinition, newRecord);
-                hasNoErrorsInNewRecords = validate(mdmEntity, businessValidationResults, id);
+                hasNoErrorsInNewRecords = validate(mdmEntity, businessValidationResults, cid);
             } catch (PropertyBatchUpdateException e) {
                 hasNoErrorsInNewRecords = false;
                 for (PropertyAccessException propertyAccessException : e.getPropertyAccessExceptions()) {
-                    businessValidationResults.addBusinessViolation(id, 1, propertyAccessException.getPropertyName(), propertyAccessException.getErrorCode(), null);
+                    businessValidationResults.addBusinessViolation(cid, 1, propertyAccessException.getPropertyName(), propertyAccessException.getErrorCode(), null);
                 }
             }
             if(hasNoErrorsInNewRecords) {
                 if (!validateConstraintsForNewRecords(mdmDefinition, newRecord)) {
-                    mdmDefinition.getConstraints().forEach(s -> businessValidationResults.addBusinessViolation(id, 1, s, "non-uniq", new String[]{}));
+                    mdmDefinition.getConstraints().forEach(s -> businessValidationResults.addBusinessViolation(cid, 1, s, "non-uniq", new String[]{}));
                     hasNoErrorsInNewRecords = false;
                 }
             }
@@ -78,11 +79,11 @@ public class MdmBusinessValidator implements DTOBusinessValidator {
             businessValidationResults.addReviewNeeded(null, 0, "fld", "rule4", new String[]{mdmDTO.getMaster(), SpringrollSecurity.getUser().getUsername()}, "MdmMasterRule");
         }
     }
-    private boolean validate(MdmEntity entity, IBusinessValidationResults businessValidationResults, Long id){
+    private boolean validate(MdmEntity entity, IBusinessValidationResults businessValidationResults, String cid){
         Set<ConstraintViolation<MdmEntity>> violations = validator.validate(entity);
         for (ConstraintViolation<MdmEntity> constraintViolation : violations) {
             String field = constraintViolation.getPropertyPath().toString();
-            businessValidationResults.addBusinessViolation(id, 1, field, constraintViolation.getMessage(), new String[]{});
+            businessValidationResults.addBusinessViolation(cid, 1, field, constraintViolation.getMessage(), new String[]{});
         }
         return violations.isEmpty();
     }
