@@ -20,33 +20,40 @@ const ValueFormatter = React.createClass({
 class MDMReviewMoreInfo extends React.Component {
     constructor(props){
         super(props);
-        this.onSubmit = this.onSubmit.bind(this);
-        this.rowGetter = this.rowGetter.bind(this);
-        this._columns = _.map(this.props.alert.mdmChangesForReview.colDefs, function(colDef){
+        this.rowGetterForNewRows = this.rowGetterForNewRows.bind(this);
+        this.rowGetterForChangedRows = this.rowGetterForChangedRows.bind(this);
+        this._columns = _.chain(this.props.alert.mdmChangesForReview.colDefs).filter(colDef => colDef.name !== 'id').map(function(colDef){
             if(colDef.type == 'date')
                 return ({key : colDef.name, name : colDef.name, formatter : DateFormatter, resizable : true});
             if(colDef.type == 'datetime')
                 return ({key : colDef.name, name : colDef.name, formatter : DateTimeFormatter, resizable : true});
-            return ({key : colDef.name, name : colDef.name, formatter : ValueFormatter, resizable : true});
-        });
+            return ({key : colDef.name, name : colDef.name, formatter : ValueFormatter, resizable : true, width : 200});
+        }).value();
+
+        this._ncolumns = _.chain(this.props.alert.mdmChangesForReview.colDefs).filter(colDef => colDef.name !== 'id').map(function(colDef){
+            if(colDef.type == 'date')
+                return ({key : colDef.name, name : colDef.name, formatter : DateFormatter, resizable : true});
+            if(colDef.type == 'datetime')
+                return ({key : colDef.name, name : colDef.name, formatter : DateTimeFormatter, resizable : true});
+            return ({key : colDef.name, name : colDef.name, resizable : true});
+        }).value();
+
         this._colDefs = this.props.alert.colDefs;
-        this._rows = this.props.alert.mdmChangesForReview.changedRecords;
+        this._changedRows = this.props.alert.mdmChangesForReview.changedRecords;
+        this._newRows = this.props.alert.mdmChangesForReview.newRecords;
     }
-    rowGetter(i) {
-        let x = this._rows[i].mdmChangedColumns;
-        //let row = _.map(Object.keys(this._rows[i].mdmChangedColumns), function(colName, index){
-        //    return { }
-        //
-        //});
-        return this._rows[i].mdmChangedColumns;
+    rowGetterForChangedRows(i) {
+        return this._changedRows[i].mdmChangedColumns;
     }
-
-    onSubmit(action, comment){
+    rowGetterForNewRows(i) {
+        return this._newRows[i];
     }
-
     render() {
         return (
-            <ReactDataGrid columns={this._columns} rowGetter={this.rowGetter} rowsCount={this._rows.length}/>
+            <div>
+                { this.props.alert.mdmChangesForReview.changedRecords.length > 0     && <div><h4 className="text-info mdm-changed-header">{Application.Localize('ui.mdmChangedRecs', this._changedRows.length)}</h4><ReactDataGrid minHeight={100} columns={this._columns}  rowGetter={this.rowGetterForChangedRows} rowsCount={this._changedRows.length}/> </div> }
+                { this.props.alert.mdmChangesForReview.newRecords.length > 0         && <div><h4 className="text-info mdm-changed-header">{Application.Localize('ui.mdmNewRecs',     this._newRows.length)}    </h4><ReactDataGrid minHeight={100} columns={this._ncolumns} rowGetter={this.rowGetterForNewRows}     rowsCount={this._newRows.length}/>     </div> }
+            </div>
         );
     }
 }
