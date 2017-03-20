@@ -128,6 +128,7 @@ class MDM extends React.Component {
     }
 
     handleGridRowsUpdated({ cellKey, fromRow, toRow, updated, rowIds, action}) {
+        let needsSave = true;
         let rows = this.state.rows.slice();
         var that = this;
         _.each(rowIds, function(cid){
@@ -135,10 +136,20 @@ class MDM extends React.Component {
             let alreadyMadeChanges = rowToUpdate.new === true ? that.newRows[cid] : that.changedRows[cid] || { cid : cid};
             let updatedRow = Object.assign(rowToUpdate, updated);
             alreadyMadeChanges = Object.assign(alreadyMadeChanges, updated);
-            if(rowToUpdate.new !== true )that.changedRows[cid] = alreadyMadeChanges;
-
+            if(rowToUpdate.new !== true ){
+                that.changedRows[cid] = alreadyMadeChanges;
+                if(alreadyMadeChanges[cellKey] === that.originalRows[cid][cellKey]){
+                    //The user changd the value and then changed it back to the original value
+                    delete alreadyMadeChanges[cellKey];
+                    if(Object.keys(alreadyMadeChanges).length == 1){
+                        // There are no changes for this row
+                        needsSave = false;
+                        delete that.changedRows[cid];
+                    }
+                }
+            }
         });
-        this.setState({ rows, needsSave : true });
+        this.setState({ rows, needsSave : needsSave });
     }
 
     masterChosen(masterName) {
@@ -189,7 +200,7 @@ class MDM extends React.Component {
                     return row;
                 });
                 this.setState({rows, rows, hasData : true});
-                this.originalRows = rows.slice(0);
+                this.originalRows = rows.map(a => Object.assign({}, a));
 
             }.bind(this),
             error: function(xhr, reason, exception) {
