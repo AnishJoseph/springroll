@@ -64,7 +64,8 @@ import java.util.stream.Collectors;
             MdmChangedColumn mdmChangedColumn = mdmChangedRecord.getMdmChangedColumns().get(colName);
             if(!mdmChangedColumn.isChanged())continue;
             if(!colDef.isWriteable())throw new SpringrollException(null, "mdm.notwritable", colDef.getName(), mdmDefinition.getMasterClass().getSimpleName() );
-            valueMap.put(colName, mdmChangedColumn.getVal());
+            Object o = mdmChangedColumn.getVal() instanceof String && ((String) mdmChangedColumn.getVal()).trim().isEmpty() ? null : mdmChangedColumn.getVal();
+            valueMap.put(colName, o);
             if(colDef.getType().equalsIgnoreCase("date")){
                 valueMap.put(colName,LocalDate.parse((String)mdmChangedColumn.getVal(), springrollUtils.getDateFormatter()));
             }
