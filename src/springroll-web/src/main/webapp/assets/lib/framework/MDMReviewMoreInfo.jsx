@@ -49,10 +49,12 @@ class MDMReviewMoreInfo extends React.Component {
         return this._newRows[i];
     }
     render() {
+        let heightOfChangeTable = (this._changedRows.length + 1) * 36 >  250 ? 250 : (this._changedRows.length+1) * 36;
+        let heightOfNewTable    = (this._newRows.length + 1)     * 36 >  250 ? 250 : (this._newRows.length+1) * 36;
         return (
-            <div>
-                { this.props.alert.mdmChangesForReview.changedRecords.length > 0     && <div><h4 className="text-info mdm-changed-header">{Application.Localize('ui.mdmChangedRecs', this._changedRows.length)}</h4><ReactDataGrid minHeight={100} columns={this._columns}  rowGetter={this.rowGetterForChangedRows} rowsCount={this._changedRows.length}/> </div> }
-                { this.props.alert.mdmChangesForReview.newRecords.length > 0         && <div><h4 className="text-info mdm-changed-header">{Application.Localize('ui.mdmNewRecs',     this._newRows.length)}    </h4><ReactDataGrid minHeight={100} columns={this._ncolumns} rowGetter={this.rowGetterForNewRows}     rowsCount={this._newRows.length}/>     </div> }
+            <div className="springroll-table">
+                { this.props.alert.mdmChangesForReview.changedRecords.length > 0     && <div><h4 className="text-info mdm-changed-header">{Application.Localize('ui.mdmChangedRecs', this._changedRows.length)}</h4><ReactDataGrid minHeight={heightOfChangeTable} columns={this._columns}  rowGetter={this.rowGetterForChangedRows} rowsCount={this._changedRows.length}/> </div> }
+                { this.props.alert.mdmChangesForReview.newRecords.length > 0         && <div><h4 className="text-info mdm-changed-header">{Application.Localize('ui.mdmNewRecs',     this._newRows.length)}    </h4><ReactDataGrid minHeight={heightOfNewTable} columns={this._ncolumns} rowGetter={this.rowGetterForNewRows}     rowsCount={this._newRows.length}/>     </div> }
             </div>
         );
     }
