@@ -2,6 +2,8 @@ package com.springrollexample.router.test;
 
 import com.springroll.core.DTO;
 
+import javax.validation.constraints.Min;
+
 /**
  * Created by anishjoseph on 11/09/16.
  */
@@ -9,7 +11,9 @@ public class TestDTO implements DTO {
     private static final long serialVersionUID = 1L;
     private String thread;
     private String valueToWrite;
+    @Min(value = 0, message = "{0} is a testLocation - it must be greated that 0")
     private int testLocation;
+    @Min(value = 0)
     private int testCase;
     private TestType testType;
     private String testLocationEventName;

@@ -16,7 +16,7 @@ class Module1 extends React.Component {
         this.setState({testCase: event.target.value});
     }
     handleTestLocationChange(event) {
-        this.setState({testCase: event.target.value});
+        this.setState({testLocation: event.target.value});
     }
 
     handleSubmit(event) {
@@ -28,9 +28,6 @@ class Module1 extends React.Component {
             success: function (templateData) {
                 console.log("Templates loaded.");
             },
-            error : function (jqXHR, textStatus, errorThrown ){
-                console.error("Unable to load templates - textStatus is " + textStatus + ' :: errorThrown is ' + errorThrown);
-            }
         });
 
         event.preventDefault();
