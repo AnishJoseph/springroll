@@ -118,7 +118,7 @@ class MDM extends React.Component {
                 });
                 this.changedRows = {};
 
-                this.setState({ rows });
+                this.setState({ rows, needsSave : false});
 
             }.bind(this),
             error: function(xhr, reason, exception) {
@@ -164,7 +164,7 @@ class MDM extends React.Component {
             success: function(response){
                 var that = this;
                 this.recIdsUnderReview = response.recIdsUnderReview;
-                this._columns = _.map(response.colDefs, function(colDef){
+                this._columns = _.chain(response.colDefs).filter(colDef => colDef.name != 'id').map(function(colDef){
                     let defn = ({key : colDef.name, name : colDef.name, sortable : true, filterable: true, resizable : true, editable : true, writeable : colDef.writeable});
 
                     if(colDef.type == 'date') defn = Object.assign(defn, {formatter : DateFormatter, editor: DatePicker});
@@ -180,7 +180,7 @@ class MDM extends React.Component {
                     }
 
                     return defn;
-                });
+                }).value();
                 this._colDefs = response.colDefs;
                 this.colnames = _.map(this._colDefs, function(colDef, index) {
                     return colDef.name;
