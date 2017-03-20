@@ -25,7 +25,7 @@ class ReviewModal extends React.Component {
     }
     render() {
         return (
-            <Modal show={this.state.showModal} onHide={this.close}>
+            <Modal show={this.state.showModal} onHide={this.close} bsSize="large">
                 <Modal.Header closeButton>
                     <Modal.Title>{this.props.title}</Modal.Title>
                 </Modal.Header>

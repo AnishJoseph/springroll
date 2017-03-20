@@ -33,8 +33,10 @@ import javax.persistence.Query;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -67,10 +69,12 @@ import java.util.stream.Collectors;
             Object o = mdmChangedColumn.getVal() instanceof String && ((String) mdmChangedColumn.getVal()).trim().isEmpty() ? null : mdmChangedColumn.getVal();
             valueMap.put(colName, o);
             if(colDef.getType().equalsIgnoreCase("date")){
-                valueMap.put(colName,LocalDate.parse((String)mdmChangedColumn.getVal(), springrollUtils.getDateFormatter()));
+                LocalDate localDate = Instant.ofEpochMilli((long) mdmChangedColumn.getVal()).atZone(ZoneId.systemDefault()).toLocalDate();
+                valueMap.put(colName,localDate);
             }
             if(colDef.getType().equalsIgnoreCase("datetime")){
-                valueMap.put(colName,LocalDateTime.parse((String)mdmChangedColumn.getVal(), springrollUtils.getDateTimeFormatter()));
+                LocalDateTime localDateTime = Instant.ofEpochMilli((long) mdmChangedColumn.getVal()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                valueMap.put(colName,localDateTime);
             }
         }
         wrapper.setPropertyValues(valueMap);
@@ -86,9 +90,11 @@ import java.util.stream.Collectors;
             if(newRecord.get(colName) == null)continue;
             valueMap.put(colName, newRecord.get(colName));
             if(colDef.getType().equalsIgnoreCase("date")){
-                valueMap.put(colName,LocalDate.parse((String)newRecord.get(colName), springrollUtils.getDateFormatter()));
+                LocalDate localDate = Instant.ofEpochMilli((long) newRecord.get(colName)).atZone(ZoneId.systemDefault()).toLocalDate();
+                valueMap.put(colName,localDate);
             } else if (colDef.getType().equalsIgnoreCase("datetime")){
-                valueMap.put(colName,LocalDateTime.parse((String)newRecord.get(colName), springrollUtils.getDateTimeFormatter()));
+                LocalDateTime localDateTime = Instant.ofEpochMilli((long) newRecord.get(colName)).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                valueMap.put(colName,localDateTime);
             }
         }
         BeanWrapper wrapper = new BeanWrapperImpl(mdmDefinition.getMasterClass());

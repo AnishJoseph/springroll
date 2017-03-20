@@ -5,6 +5,7 @@ import DatePicker from 'DatePicker';
 import MdmToolbar from 'MdmToolbar';
 import Select from 'Select';
 import DateTimeFormatter from 'DateTimeFormatter';
+import BooleanFormatter from 'BooleanFormatter';
 import { Router, Route } from 'react-router'
 import { NavDropdown, Nav, Navbar, MenuItem } from 'react-bootstrap';
 const ReactDataGrid = require('react-data-grid');
@@ -175,6 +176,7 @@ class MDM extends React.Component {
                     if(colDef.type == 'date') defn = Object.assign(defn, {formatter : DateFormatter, editor: DatePicker});
 
                     if(colDef.type == 'datetime') defn = Object.assign(defn, {formatter : DateTimeFormatter, editor: DatePicker});
+                    if(colDef.type == 'boolean') defn = Object.assign(defn, {formatter : BooleanFormatter});
 
                     if(colDef.multiSelect == true) defn['sortable'] = false;
 

@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -35,9 +37,9 @@ public class SpringrollUtils {
      */
     public Object convert(Object paramValue, Class parameterType){
         if(parameterType.equals(LocalDateTime.class)){
-            return LocalDateTime.parse((String) paramValue, getDateTimeFormatter());
+            return Instant.ofEpochMilli((long) paramValue).atZone(ZoneId.systemDefault()).toLocalDateTime();
         } else if (parameterType.equals(LocalDate.class)) {
-            return LocalDate.parse((String) paramValue, getDateFormatter());
+            return Instant.ofEpochMilli((long) paramValue).atZone(ZoneId.systemDefault()).toLocalDate();
         }
         Object o = conversionService.convert(paramValue, parameterType);
         return o;

@@ -25,14 +25,12 @@ class Select extends React.Component {
     }
     render() {
         return (<ReactSelect
-            name="form-field-name"
             options={this.props.options}
             onChange={this.onChange}
             multi={this.props.multiSelect}
             delimiter=","
             joinValues={true}
             simpleValue={true}
-            onInputChange={this.onInputChange}
             value={this.state.value}
         />);
     }
