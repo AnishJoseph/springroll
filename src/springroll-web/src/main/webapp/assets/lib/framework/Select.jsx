@@ -15,7 +15,13 @@ class Select extends React.Component {
         return ReactDOM.findDOMNode(this);
     }
     onChange(value){
-        this.setState({ value });
+        let choices = undefined;
+        if(this.props.multiSelect) {
+            choices = _.pluck(value, 'value');
+        } else {
+            choices = value.value;
+        }
+        this.setState({ value : choices });
 
     }
     getValue() {
@@ -28,9 +34,6 @@ class Select extends React.Component {
             options={this.props.options}
             onChange={this.onChange}
             multi={this.props.multiSelect}
-            delimiter=","
-            joinValues={true}
-            simpleValue={true}
             value={this.state.value}
         />);
     }

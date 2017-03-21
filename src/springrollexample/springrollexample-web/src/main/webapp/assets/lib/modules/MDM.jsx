@@ -5,6 +5,7 @@ import DatePicker from 'DatePicker';
 import MdmToolbar from 'MdmToolbar';
 import Select from 'Select';
 import DateTimeFormatter from 'DateTimeFormatter';
+import ArrayFormatter from 'ArrayFormatter';
 import BooleanFormatter from 'BooleanFormatter';
 import DeleteFormatter from 'DeleteFormatter';
 import { Router, Route } from 'react-router'
@@ -200,11 +201,12 @@ class MDM extends React.Component {
                     let defn = ({key : colDef.name, name : colDef.name, sortable : true, filterable: true, resizable : true, editable : true, writeable : colDef.writeable});
 
                     if(colDef.type == 'date') defn = Object.assign(defn, {formatter : DateFormatter, editor: DatePicker});
-
                     if(colDef.type == 'datetime') defn = Object.assign(defn, {formatter : DateTimeFormatter, editor: DatePicker});
-                    if(colDef.type == 'boolean') defn = Object.assign(defn, {formatter : BooleanFormatter});
-
-                    if(colDef.multiSelect == true) defn['sortable'] = false;
+                    if(colDef.type == 'boolean') defn['formatter'] = BooleanFormatter;
+                    if(colDef.multiSelect == true) {
+                        defn['sortable'] = false;
+                        defn['formatter'] = ArrayFormatter;
+                    }
 
                     if(colDef.lovList != undefined && colDef.lovList != null){
                         defn['editor'] = <Select options={colDef.lovList} multiSelect={colDef.multiSelect}/>;
@@ -222,11 +224,7 @@ class MDM extends React.Component {
                     for (var j = 0; j < that.colnames.length; ++j) {
                         if (rowData[j] == undefined) continue;
                         if (rowData[j] == null) continue;
-                        if (rowData[j].constructor === Array){
-                            row[that.colnames[j]] = rowData[j].toString();
-                        } else {
-                            row[that.colnames[j]] = rowData[j];
-                        }
+                        row[that.colnames[j]] = rowData[j];
                     }
                     row['cid'] = index;
                     let underReview = _.find(response.recIdsUnderReview, id => id == row['id']);
@@ -289,7 +287,7 @@ class MDM extends React.Component {
                                    enableCellSelect={true}
                                    rowKey="cid"
                                    onCheckCellIsEditable={this.onCheckCellIsEditable}
-                                   rowRenderer={RowRenderer}
+                                   //rowRenderer={RowRenderer}
                     /></div>}
             </div>
         );

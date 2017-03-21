@@ -137,6 +137,11 @@ import java.util.stream.Collectors;
             mdmDefinitions = mapper.readValue(br, MdmDefinitions.class);
             for (MdmDefinition mdmDefinition : mdmDefinitions.getMasters()) {
                 mdmDefinition.getColDefs().add(0, new ColDef("id", false, "num", false));
+                for (ColDef colDef : mdmDefinition.getColDefs()) {
+                    if("boolean".equals(colDef.getType())){
+                        colDef.setLovList(makeBooleanLov());
+                    }
+                }
                 makeNamedQueries(mdmDefinition);
             }
             mdmDefinitions.init();

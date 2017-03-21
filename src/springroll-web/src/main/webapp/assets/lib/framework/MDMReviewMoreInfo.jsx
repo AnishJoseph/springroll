@@ -5,6 +5,7 @@ const ReactDataGrid = require('react-data-grid');
 import DateTimeFormatter from 'DateTimeFormatter';
 import DateFormatter from 'DateFormatter';
 import BooleanFormatter from 'BooleanFormatter';
+import ArrayFormatter from 'ArrayFormatter';
 
 const ValueFormatter = React.createClass({
     render() {
@@ -25,12 +26,15 @@ class MDMReviewMoreInfo extends React.Component {
         this.rowGetterForChangedRows = this.rowGetterForChangedRows.bind(this);
         this._columns = _.chain(this.props.alert.mdmChangesForReview.colDefs).filter(colDef => colDef.name !== 'id').map(function(colDef){
             if(colDef.type == 'date')
-                return ({key : colDef.name, name : colDef.name, formatter : DateFormatter, resizable : true, width : 200});
+                return ({key : colDef.name, name : colDef.name, formatter : DateFormatter, resizable : true});
             if(colDef.type == 'datetime')
-                return ({key : colDef.name, name : colDef.name, formatter : DateTimeFormatter, resizable : true, width : 200});
+                return ({key : colDef.name, name : colDef.name, formatter : DateTimeFormatter, resizable : true});
             if(colDef.type == 'boolean')
                 return ({key : colDef.name, name : colDef.name, formatter : BooleanFormatter, resizable : true});
-            return ({key : colDef.name, name : colDef.name, formatter : ValueFormatter, resizable : true, width : 200});
+            if(colDef.multiSelect == true) {
+                return ({key: colDef.name, name: colDef.name, formatter: ArrayFormatter, resizable: true});
+            }
+            return ({key : colDef.name, name : colDef.name, formatter : ValueFormatter, resizable : true});
         }).value();
 
         this._ncolumns = _.chain(this.props.alert.mdmChangesForReview.colDefs).filter(colDef => colDef.name !== 'id').map(function(colDef){
