@@ -30,12 +30,12 @@
         "masterClassName" : "com.springroll.orm.entities.User",
         "constraints" : ["userId"],
         "colDefs" : [
-          { "name": "userId", "writeable": false, "type": "text"},
-          { "name": "roles", "writeable": true, "type": "text", "lovSource" : "Roles", "multiSelect": true},
-          { "name": "country", "writeable": true, "type": "text", "lovSource" : "Countries"},
-          { "name": "language", "writeable": true, "type": "text", "lovSource" : "Languages"},
-          { "name": "variant", "writeable": true, "type": "text"},
-          { "name": "active", "writeable": true, "type": "boolean", "defVal": "true"}
+          { "name": "userId", "writeable": false, "type": "text", "width" : 100},
+          { "name": "roles", "writeable": true, "type": "text", "lovSource" : "Roles", "multiSelect": true, "width" : 300},
+          { "name": "country", "writeable": true, "type": "text", "lovSource" : "Countries", "width" : 100},
+          { "name": "language", "writeable": true, "type": "text", "lovSource" : "Languages", "width" : 100},
+          { "name": "variant", "writeable": true, "type": "text", "width" : 100},
+          { "name": "active", "writeable": true, "type": "boolean", "defVal": "true", "width" : 100}
         ]
       },
       {

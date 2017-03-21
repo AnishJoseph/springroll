@@ -25,4 +25,6 @@ public interface MdmColumnDefinition {
     boolean isMultiSelect();
 
     boolean isNullable();
+
+    int getWidth();
 }

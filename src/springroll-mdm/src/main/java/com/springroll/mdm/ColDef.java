@@ -20,6 +20,7 @@ public class ColDef implements Serializable, MdmColumnDefinition {
     private Object defaultValue;
     private boolean multiSelect = false;
     private boolean nullable = true;
+    private int width = 100;
 
     public ColDef(ColDef colDef){
         this.name = colDef.name;
@@ -28,6 +29,7 @@ public class ColDef implements Serializable, MdmColumnDefinition {
         this.defaultValue = colDef.defaultValue;
         this.multiSelect = colDef.multiSelect;
         this.nullable = colDef.nullable;
+        this.width = colDef.width;
     }
 
     public ColDef(String name, boolean writeable, String type, Object defaultValue, boolean multiSelect) {
@@ -122,4 +124,12 @@ public class ColDef implements Serializable, MdmColumnDefinition {
         this.nullable = nullable;
     }
 
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
 }
