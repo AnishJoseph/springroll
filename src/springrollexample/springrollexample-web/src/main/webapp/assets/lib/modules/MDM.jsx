@@ -104,7 +104,7 @@ class MDM extends React.Component {
         var that = this;
         let mdmChangedColumns = {};
         _.each(Object.keys(changedVars), function(colName){
-            mdmChangedColumns[colName] = { val : changedVars[colName], prevVal : that.originalRows[changedRowIndex][colName], changed : true};
+            mdmChangedColumns[colName] = { val : changedVars[colName], changed : true};
         });
         return mdmChangedColumns;
     }

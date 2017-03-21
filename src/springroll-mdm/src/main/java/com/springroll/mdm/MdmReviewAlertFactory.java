@@ -41,7 +41,11 @@ import java.util.stream.Collectors;
                         Map<String, MdmChangedColumn> unchangedCols = new HashMap<>();
                         Set<String> changedCols = changedRecord.getMdmChangedColumns().keySet();
                         for (int j = 0; j < colNames.size(); j++) {
-                            if (changedCols.contains(colNames.get(j))) continue;
+                            if (changedCols.contains(colNames.get(j))){
+                                changedRecord.getMdmChangedColumns().get(colNames.get(j)).setPrevVal(existingValuesForThisRecord[j]);
+                                changedRecord.getMdmChangedColumns().get(colNames.get(j)).setChanged(true);
+                                continue;
+                            }
                             unchangedCols.put(colNames.get(j), new MdmChangedColumn(existingValuesForThisRecord[j], existingValuesForThisRecord[j], false));
                         }
                         changedRecord.getMdmChangedColumns().putAll(unchangedCols);
