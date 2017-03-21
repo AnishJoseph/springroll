@@ -100,7 +100,6 @@ class MDM extends React.Component {
     }
 
     getMap(changedVars, changedRowIndex){
-        //FIXME - should not be setting prevVal here
         var that = this;
         let mdmChangedColumns = {};
         _.each(Object.keys(changedVars), function(colName){
