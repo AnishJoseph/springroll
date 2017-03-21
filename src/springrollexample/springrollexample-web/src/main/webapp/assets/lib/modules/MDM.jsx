@@ -6,6 +6,7 @@ import MdmToolbar from 'MdmToolbar';
 import Select from 'Select';
 import DateTimeFormatter from 'DateTimeFormatter';
 import BooleanFormatter from 'BooleanFormatter';
+import DeleteFormatter from 'DeleteFormatter';
 import { Router, Route } from 'react-router'
 import { NavDropdown, Nav, Navbar, MenuItem } from 'react-bootstrap';
 const ReactDataGrid = require('react-data-grid');
@@ -40,6 +41,7 @@ class MDM extends React.Component {
         this.handleGridRowsUpdated = this.handleGridRowsUpdated.bind(this);
         this.onClearFilters = this.onClearFilters.bind(this);
         this.saveClicked = this.saveClicked.bind(this);
+        this.delete = this.delete.bind(this);
         this.handleAddRow = this.handleAddRow.bind(this);
         this.onCheckCellIsEditable = this.onCheckCellIsEditable.bind(this);
         this.getMap = this.getMap.bind(this);
@@ -47,6 +49,22 @@ class MDM extends React.Component {
         this.changedRows = {};
         this.newRows = {};
         this.recIdsUnderReview = [];
+    }
+
+    delete(evt, args){
+        if(this.getRows()[args.rowIdx].new !== true)return;
+        if(this.getRows()[args.rowIdx].disabled === true)return;
+        let cid = this.getRows()[args.rowIdx].cid;
+
+        let rows = this.state.rows.slice();
+        rows.splice(cid, 1);
+        delete this.newRows[cid];
+
+        if(Object.keys(this.newRows).length === 0 && Object.keys(this.changedRows).length === 0){
+            this.setState({rows : rows, needsSave : false});
+        } else {
+            this.setState({rows : rows});
+        }
     }
     handleGridSort(sortColumn, sortDirection) {
         this.setState({ sortColumn: sortColumn, sortDirection: sortDirection });
@@ -64,9 +82,7 @@ class MDM extends React.Component {
         return false;
     }
     handleAddRow( {newRowIndex}) {
-        let newrow = {};
-        newrow['cid'] = newRowIndex;
-        newrow['new'] = true;
+        let newrow = {'cid' : newRowIndex, new : true, delete : true};
         let rows = this.state.rows.slice();
         rows.push(newrow);
         this.setState({rows : rows, needsSave : true});
@@ -97,7 +113,7 @@ class MDM extends React.Component {
         let newRecords =  _.chain(Object.keys(this.newRows))
             .map(key => Object.assign({}, this.newRows[key]) )
             .filter( row => row.new === true)
-            .each(row => delete row['new'])
+            .each(row => {delete row['new']; delete row['delete']})
             .value();
 
         var mdmDTO = {master : this.state.master, changedRecords : changedRecords, newRecords : newRecords};
@@ -149,8 +165,10 @@ class MDM extends React.Component {
                     delete alreadyMadeChanges[cellKey];
                     if(Object.keys(alreadyMadeChanges).length == 1){
                         // There are no changes for this row
-                        needsSave = false;
                         delete that.changedRows[cid];
+                        if(Object.keys(that.newRows).length === 0 && Object.keys(that.changedRows).length === 0){
+                            needsSave = false;
+                        }
                     }
                 }
             }
@@ -188,8 +206,9 @@ class MDM extends React.Component {
 
                     return defn;
                 }).value();
-                this._colDefs = response.colDefs;
-                this.colnames = _.map(this._colDefs, function(colDef, index) {
+                this._columns.push({key : 'delete', name : Application.Localize('ui.mdm.delete'), sortable : false, filterable : false, editable : false, writeable : false, formatter : DeleteFormatter, events : { onClick : this.delete}});
+
+                this.colnames = _.map(response.colDefs, function(colDef, index) {
                     return colDef.name;
                 });
                 let rows = _.map(response.data, function(rowData, index){
