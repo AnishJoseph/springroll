@@ -83,6 +83,15 @@ class MDM extends React.Component {
     }
     handleAddRow( {newRowIndex}) {
         let newrow = {'cid' : newRowIndex, new : true, delete : true};
+        _.each(this.colDefs, colDef => {
+           if(colDef.defVal != null){
+               if(colDef.type == 'boolean'){
+                   newrow[colDef.name] = colDef.defVal == 'true' ? true : false;
+               } else {
+                   newrow[colDef.name] = colDef.defVal;
+               }
+           }
+        });
         let rows = this.state.rows.slice();
         rows.push(newrow);
         this.setState({rows : rows, needsSave : true});
@@ -229,7 +238,7 @@ class MDM extends React.Component {
                 });
                 this.setState({rows, rows, hasData : true});
                 this.originalRows = rows.map(a => Object.assign({}, a));
-
+                this.colDefs = response.colDefs;
             }.bind(this),
             error: function(xhr, reason, exception) {
                 console.log("Error");

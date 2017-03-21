@@ -17,7 +17,6 @@ public class ColDef implements Serializable, MdmColumnDefinition {
     private List<Lov> lovList;
     private String defVal;
     private String lovSource;
-    private Object defaultValue;
     private boolean multiSelect = false;
     private boolean nullable = true;
     private int width = 100;
@@ -26,17 +25,16 @@ public class ColDef implements Serializable, MdmColumnDefinition {
         this.name = colDef.name;
         this.writeable = colDef.writeable;
         this.type = colDef.type;
-        this.defaultValue = colDef.defaultValue;
+        this.defVal = colDef.defVal;
         this.multiSelect = colDef.multiSelect;
         this.nullable = colDef.nullable;
         this.width = colDef.width;
     }
 
-    public ColDef(String name, boolean writeable, String type, Object defaultValue, boolean multiSelect) {
+    public ColDef(String name, boolean writeable, String type, boolean multiSelect) {
         this.name = name;
         this.writeable = writeable;
         this.type = type;
-        this.defaultValue = defaultValue;
         this.multiSelect = multiSelect;
     }
 
@@ -86,15 +84,6 @@ public class ColDef implements Serializable, MdmColumnDefinition {
 
     public void setDefVal(String defVal) {
         this.defVal = defVal;
-    }
-
-    @Override
-    public Object getDefaultValue() {
-        return defaultValue;
-    }
-
-    public void setDefaultValue(Object defaultValue) {
-        this.defaultValue = defaultValue;
     }
 
     @Override

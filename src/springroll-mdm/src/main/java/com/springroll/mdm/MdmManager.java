@@ -136,17 +136,7 @@ import java.util.stream.Collectors;
             ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             mdmDefinitions = mapper.readValue(br, MdmDefinitions.class);
             for (MdmDefinition mdmDefinition : mdmDefinitions.getMasters()) {
-                mdmDefinition.getColDefs().add(0, new ColDef("id", false, "num", null, false));
-                for (ColDef colDef : mdmDefinition.getColDefs()) {
-                    if("boolean".equals(colDef.getType())){
-                        colDef.setLovList(makeBooleanLov());
-                        colDef.setDefaultValue(colDef.getDefVal() == null || colDef.getDefVal().equals("false")? false : true);
-                    } else if("int".equals(colDef.getType())){
-                        colDef.setDefaultValue(colDef.getDefVal() == null ? null : Integer.parseInt(colDef.getDefVal()));
-                    } else if("num".equals(colDef.getType())){
-                        colDef.setDefaultValue(colDef.getDefVal() == null ? null : Float.parseFloat(colDef.getDefVal()));
-                    }
-                }
+                mdmDefinition.getColDefs().add(0, new ColDef("id", false, "num", false));
                 makeNamedQueries(mdmDefinition);
             }
             mdmDefinitions.init();

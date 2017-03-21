@@ -18,8 +18,6 @@ public interface MdmColumnDefinition {
 
     String getDefVal();
 
-    Object getDefaultValue();
-
     String getLovSource();
 
     boolean isMultiSelect();

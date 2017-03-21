@@ -32,10 +32,10 @@
         "colDefs" : [
           { "name": "userId", "writeable": false, "type": "text", "width" : 100},
           { "name": "roles", "writeable": true, "type": "text", "lovSource" : "Roles", "multiSelect": true, "width" : 300},
-          { "name": "country", "writeable": true, "type": "text", "lovSource" : "Countries", "width" : 100},
-          { "name": "language", "writeable": true, "type": "text", "lovSource" : "Languages", "width" : 100},
+          { "name": "country", "writeable": true, "type": "text", "lovSource" : "Countries", "width" : 100, "defVal" : "IN"},
+          { "name": "language", "writeable": true, "type": "text", "lovSource" : "Languages", "width" : 100, "defVal" : "en"},
           { "name": "variant", "writeable": true, "type": "text", "width" : 100},
-          { "name": "active", "writeable": true, "type": "boolean", "defVal": "true", "width" : 100}
+          { "name": "active", "writeable": true, "type": "boolean", "defVal": "true", "width" : 100, "defVal" : "true"}
         ]
       },
       {
