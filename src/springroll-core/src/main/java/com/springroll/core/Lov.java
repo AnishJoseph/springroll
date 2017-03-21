@@ -7,18 +7,18 @@ import java.io.Serializable;
  */
 public class Lov implements Serializable {
     private Object value;
-    private String name;
+    private String label;
 
     public Lov() {
     }
 
     public Lov(Object value) {
         this.value = value;
-        this.name = value.toString();
+        this.label = value.toString();
     }
-    public Lov(Object value, String name) {
+    public Lov(Object value, String label) {
         this.value = value;
-        this.name = name;
+        this.label = label;
     }
 
     public Object getValue() {
@@ -29,11 +29,11 @@ public class Lov implements Serializable {
         this.value = value;
     }
 
-    public String getName() {
-        return name;
+    public String getLabel() {
+        return label;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

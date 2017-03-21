@@ -208,9 +208,7 @@ class MDM extends React.Component {
                     if(colDef.multiSelect == true) defn['sortable'] = false;
 
                     if(colDef.lovList != undefined && colDef.lovList != null){
-                        let opts = _.map(colDef.lovList, function(lov){return {value : lov.value, label : lov.name}});
-                        let editor = <Select options={opts} multiSelect={colDef.multiSelect}/>;
-                        defn['editor'] = editor;
+                        defn['editor'] = <Select options={colDef.lovList} multiSelect={colDef.multiSelect}/>;
                     }
 
                     return defn;
