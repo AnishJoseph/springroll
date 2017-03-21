@@ -215,7 +215,7 @@ class MDM extends React.Component {
 
                     return defn;
                 }).value();
-                this._columns.push({key : 'delete', name : Application.Localize('ui.mdm.delete'), sortable : false, filterable : false, editable : false, writeable : false, formatter : DeleteFormatter, events : { onClick : this.delete}});
+                this._columns.push({width : 50, key : 'delete', name : Application.Localize('ui.mdm.delete'), sortable : false, filterable : false, editable : false, writeable : false, formatter : DeleteFormatter, events : { onClick : this.delete}});
 
                 this.colnames = _.map(response.colDefs, function(colDef, index) {
                     return colDef.name;
