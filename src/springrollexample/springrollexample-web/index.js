@@ -37,7 +37,7 @@ $(function() {
             let deferred = $.Deferred();
             Application.addPromise(deferred.promise());
             require.ensure([], function (require) {
-                require("MDM");
+                require("mdm/MDMContainer.jsx");
                 deferred.resolve();
             });
         }

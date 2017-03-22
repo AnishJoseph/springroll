@@ -17,7 +17,15 @@ export const AlertActions = {
     ALERT_DISMISS : 'ALERT_DISMISS',
     SET_ALERT_FILTER : 'SET_ALERT_FILTER'
 };
+
+export const MdmActions = {
+    MDM_MASTER_METADATA_RECEIVED : 'MDM_MASTER_METADATA_RECEIVED',
+    MDM_MASTER_DATA_RECEIVED : 'MDM_MASTER_DATA_RECEIVED'
+}
+
 /* Action Creators */
+
+/* ALERT RELATED */
 export function deleteAlert(id, alertType) {
     return {
         type: AlertActions.ALERT_DELETE,
@@ -130,4 +138,79 @@ export function setAlertFilter(alertFilter) {
 }
 export function setUser(user) {
     return { type: USER_CHANGED, user : user }
+}
+
+/* MDM ACTION CREATORS */
+
+export function mdmMasterDefnsReceived(masterDefns) {
+    return {
+        type: MdmActions.MDM_MASTER_METADATA_RECEIVED,
+        masterDefns : masterDefns
+    }
+}
+export function mdmMasterDataReceived(masterData) {
+    return {
+        type: MdmActions.MDM_MASTER_DATA_RECEIVED,
+        masterData : masterData
+    }
+}
+export function mdmModuleActivated(masterName) {
+    return function (dispatch) {
+        var deferred = $.Deferred();
+        $.ajax({
+            url: 'api/sr/mdm/masters',
+            type: 'GET',
+            success: function (masterDefns) {
+                deferred.resolve();
+                dispatch(mdmMasterDefnsReceived(masterDefns));
+            }.bind(this),
+            error : function (jqXHR, textStatus, errorThrown ){
+                deferred.resolve();
+                console.error("Unable to load MDM Definitions - textStatus is " + textStatus + ' :: errorThrown is ' + errorThrown);
+            }.bind(this)
+        });
+        return deferred;
+    }
+}
+export function mdmMasterChosen(masterName) {
+    return function (dispatch) {
+        var deferred = $.Deferred();
+        $.ajax({
+            url: 'api/sr/mdm/data/' + masterName,
+            type: 'POST',
+            success: function (masterData) {
+                deferred.resolve();
+                masterData['master'] = masterName;
+                dispatch(mdmMasterDataReceived(masterData));
+            }.bind(this),
+            error : function (jqXHR, textStatus, errorThrown ){
+                deferred.resolve();
+                console.error("Unable to load MDM Definitions - textStatus is " + textStatus + ' :: errorThrown is ' + errorThrown);
+            }.bind(this)
+        });
+        return deferred;
+    }
+}
+export function mdmMasterChanged(mdmDTO) {
+    return function (dispatch) {
+        var deferred = $.Deferred();
+        $.ajax({
+            url: 'api/sr/mdm/update/',
+            type: 'POST',
+            data: JSON.stringify(mdmDTO),
+            success: function (masterData) {
+                deferred.resolve();
+                Application.showInfoNotification("Changes submitted successfully. ");
+            }.bind(this),
+            error : function (jqXHR, textStatus, errorThrown ){
+                deferred.resolve();
+                xhr['errorHandled'] = true;
+                _.each(xhr.responseJSON, function (violation) {
+                    let message = "Row: " + (parseInt(violation.cookie) + 1) + ". Field " + violation.field + " - " + violation.message;
+                    Application.showErrorNotification(message);
+                });
+            }.bind(this)
+        });
+        return deferred;
+    }
 }

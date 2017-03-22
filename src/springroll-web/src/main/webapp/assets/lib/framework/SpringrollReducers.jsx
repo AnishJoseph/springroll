@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { AlertActions, AlertFilters, USER_CHANGED} from 'SpringrollActionTypes'
+import { AlertActions, AlertFilters, USER_CHANGED, MdmActions} from 'SpringrollActionTypes'
 
 function alertsReducer(state = {actions : [], info : [], errors : [], visibleAlertType : AlertFilters.ALERT_FILTER_NONE}, action) {
     switch (action.type) {
@@ -36,10 +36,23 @@ function removeAlert(alertCollection, alertId){
     return alertCollection.filter(alert => (alert.id !== alertId));
 }
 
+function mdmReducer(state = {}, action) {
+    switch (action.type) {
+        case MdmActions.MDM_MASTER_METADATA_RECEIVED:
+            return Object.assign({}, state, { masterDefns :  action.masterDefns});
+        case MdmActions.MDM_MASTER_DATA_RECEIVED:
+            let x = Object.assign({}, state, { masterData :  {data : action.masterData.data, colDefs : action.masterData.colDefs, master : action.masterData.master}});
+            return x;
+            //return Object.assign({}, state, { masterData :  action.masterData});
+        default:
+            return state;
+    }
+}
 
 const springrollReducers = combineReducers({
     alerts : alertsReducer,
-    user : userReducer
+    user : userReducer,
+    mdm : mdmReducer,
 });
 
 
