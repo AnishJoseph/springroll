@@ -7,6 +7,8 @@ $widthOfAlertsContainer : 300px;
 //$heightOfAlertsContainer : 800px;
 $heightOfAlertsContainer : calc(100vh - 200px);
 $widthOfIndicator : 600px;
+$mutedColor : #AAA;
+$disabledRowColor : #f8ffe4;
 
 .spaRootElement {
   margin-left: $marginOnSideForSPA;
@@ -172,8 +174,8 @@ table.nowrap {
   overflow: scroll;
 }
 .mdm-prev-value {
-  font-style: italic;
   font-size: 12px;
+  color : $mutedColor;
 }
 .springroll-icon {
   font-size: 16px;
@@ -184,9 +186,9 @@ table.nowrap {
 }
 
 .mdm-disabled .react-grid-Cell{
-  background-color: #f8ffe4;
+  background-color: $disabledRowColor;
 }
 
 .icon-muted {
-  color : #AAA;
+  color : $mutedColor;
 }
