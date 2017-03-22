@@ -7,12 +7,21 @@ import DateFormatter from 'DateFormatter';
 import BooleanFormatter from 'BooleanFormatter';
 import ArrayFormatter from 'ArrayFormatter';
 
+const BasicFormatter = ({value}) => {
+    return <div title={value}>{value}</div>;
+};
+
 const ValueFormatter = React.createClass({
     render() {
+        let Formatter =  BasicFormatter;
+        if(this.props.colDef.type === 'date') Formatter =  DateFormatter;
+        if(this.props.colDef.type === 'datetime') Formatter =  DateTimeFormatter;
+        if(this.props.colDef.type === 'boolean') Formatter =  BooleanFormatter;
+        if(this.props.colDef.multiSelect === true) Formatter =  ArrayFormatter;
         return (
             <div>
-                <div>{this.props.value.val}</div>
-                {this.props.value.changed && <div className="text-muted mdm-prev-value">{this.props.value.prevVal}</div>}
+                <div><Formatter value={this.props.value.val}/></div>
+                {this.props.value.changed && <div className="mdm-prev-value"><Formatter value={this.props.value.prevVal}/></div>}
             </div>
         )
     }
@@ -25,29 +34,18 @@ class MDMReviewMoreInfo extends React.Component {
         this.rowGetterForNewRows = this.rowGetterForNewRows.bind(this);
         this.rowGetterForChangedRows = this.rowGetterForChangedRows.bind(this);
         this._columns = _.chain(this.props.alert.mdmChangesForReview.colDefs).filter(colDef => colDef.name !== 'id').map(function(colDef){
-            if(colDef.type == 'date')
-                return ({key : colDef.name, name : colDef.name, formatter : DateFormatter, resizable : true});
-            if(colDef.type == 'datetime')
-                return ({key : colDef.name, name : colDef.name, formatter : DateTimeFormatter, resizable : true});
-            if(colDef.type == 'boolean')
-                return ({key : colDef.name, name : colDef.name, formatter : BooleanFormatter, resizable : true});
-            if(colDef.multiSelect == true) {
-                return ({key: colDef.name, name: colDef.name, formatter: ArrayFormatter, resizable: true});
-            }
-            return ({key : colDef.name, name : colDef.name, formatter : ValueFormatter, resizable : true});
+            return {key : colDef.name, name : colDef.name, resizable : true, formatter : <ValueFormatter colDef={colDef}/>};
         }).value();
 
         this._ncolumns = _.chain(this.props.alert.mdmChangesForReview.colDefs).filter(colDef => colDef.name !== 'id').map(function(colDef){
-            if(colDef.type == 'date')
-                return ({key : colDef.name, name : colDef.name, formatter : DateFormatter, resizable : true});
-            if(colDef.type == 'datetime')
-                return ({key : colDef.name, name : colDef.name, formatter : DateTimeFormatter, resizable : true});
-            if(colDef.type == 'boolean')
-                return ({key : colDef.name, name : colDef.name, formatter : BooleanFormatter, resizable : true});
-            return ({key : colDef.name, name : colDef.name, resizable : true});
+            var defn = {key : colDef.name, name : colDef.name, resizable : true};
+            if(colDef.type === 'date') defn['formatter'] =  DateFormatter;
+            if(colDef.type === 'datetime') defn['formatter'] =  DateTimeFormatter;
+            if(colDef.type === 'boolean') defn['formatter'] =  BooleanFormatter;
+            if(colDef.multiSelect === true) defn['formatter'] =  ArrayFormatter;
+            return defn;
         }).value();
 
-        this._colDefs = this.props.alert.colDefs;
         this._changedRows = this.props.alert.mdmChangesForReview.changedRecords;
         this._newRows = this.props.alert.mdmChangesForReview.newRecords;
     }
