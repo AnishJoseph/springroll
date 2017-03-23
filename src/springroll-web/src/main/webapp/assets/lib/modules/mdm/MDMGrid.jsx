@@ -127,35 +127,23 @@ class MDMGrid extends React.Component {
         var mdmDTO = {master : this.props.masterData.master, changedRecords : changedRecords, newRecords : newRecords};
 
         this.props.onMdmMasterChanged(mdmDTO);
-        //$.ajax({
-        //    url: "api/sr/mdm/update/",
-        //    type: 'POST',
-        //    data: JSON.stringify(mdmDTO),
-        //    success: function(response){
-        //        let rows = this.state.rows.slice();
-        //        _.each(Object.keys(this.newRows), (cid) => {
-        //            let rowToUpdate = rows[cid];
-        //            rowToUpdate['disabled'] = true;
-        //        });
-        //        this.newRows = {};
-        //        _.each(Object.keys(this.changedRows), (cid) => {
-        //            let rowToUpdate = rows[cid];
-        //            rowToUpdate['disabled'] = true;
-        //        });
-        //        this.changedRows = {};
-        //
-        //        this.setState({ rows, needsSave : false});
-        //        Application.showInfoNotification("Changes submitted successfully. ");
-        //
-        //    }.bind(this),
-        //    error: function(xhr, reason, exception) {
-        //        xhr['errorHandled'] = true;
-        //        _.each(xhr.responseJSON, function (violation) {
-        //            let message = "Row: " + (parseInt(violation.cookie) + 1) + ". Field " + violation.field + " - " + violation.message;
-        //            Application.showErrorNotification(message);
-        //        });
-        //    }
-        //});
+
+        let rows = this.state.rows.slice();
+        _.each(Object.keys(this.newRows), (cid) => {
+            let rowToUpdate = rows[cid];
+            rowToUpdate['disabled'] = true;
+        });
+        this.prevNewRows = this.newRows;
+        this.newRows = {};
+        _.each(Object.keys(this.changedRows), (cid) => {
+            let rowToUpdate = rows[cid];
+            rowToUpdate['disabled'] = true;
+        });
+        this.prevChangedRows = this.changedRows;
+        this.changedRows = {};
+
+        this.setState({ rows, needsSave : false});
+
     }
 
     handleGridRowsUpdated({ cellKey, fromRow, toRow, updated, rowIds, action}) {
@@ -267,9 +255,51 @@ class MDMGrid extends React.Component {
         );
     }
     componentWillReceiveProps(nextProps){
-        this.setState({rows : this.massageMasterData(nextProps.masterData)});
-    }
+        console.log("componentWillReceiveProps");
+        /*  Some props have changed - could be because EITHER
+            a) A new master was chosen and the data for the new master was retrieved causing prop 'masterData' to change
+            b) The master was changed and updated to the server - server responded with success or failuer
+            c) A new master was chosen and a server request to fetch data either succeeded or failed
+         */
+        /* CASE A */
+        if(nextProps.updateStatus === undefined) {
+            console.log("DATA received - massaging data and returning");
+            this.setState({rows: this.massageMasterData(nextProps.masterData)});
+            this.prevNewRows = undefined;
+            this.prevChangedRows = undefined;
+            return;
+        }
 
+
+        /*
+            CASE B. Rollback some state since we presumed that the update would be successful
+        */
+        if(nextProps.updateStatus === false){
+            let rows = this.state.rows.slice();
+            if(this.prevNewRows !== undefined) {
+                _.each(Object.keys(this.prevNewRows), (cid) => {
+                    let rowToUpdate = rows[cid];
+                    delete rowToUpdate['disabled'];
+                });
+                this.newRows = this.prevNewRows;
+                this.prevNewRows = undefined;
+            }
+
+            if(this.prevChangedRows !== undefined) {
+                _.each(Object.keys(this.prevChangedRows), (cid) => {
+                    let rowToUpdate = rows[cid];
+                    delete rowToUpdate['disabled'];
+                });
+                this.changedRows = this.prevChangedRows;
+                this.prevChangedRows = undefined;
+            }
+            this.setState({ rows, needsSave : true});
+
+        } else if (nextProps.updateStatus === true){
+            this.prevNewRows = undefined;
+            this.prevChangedRows = undefined;
+        }
+    }
 }
 
 

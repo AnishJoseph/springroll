@@ -20,7 +20,8 @@ export const AlertActions = {
 
 export const MdmActions = {
     MDM_MASTER_METADATA_RECEIVED : 'MDM_MASTER_METADATA_RECEIVED',
-    MDM_MASTER_DATA_RECEIVED : 'MDM_MASTER_DATA_RECEIVED'
+    MDM_MASTER_DATA_RECEIVED : 'MDM_MASTER_DATA_RECEIVED',
+    MDM_MASTER_UPDATE_COMPLETE : 'MDM_MASTER_UPDATE_COMPLETE'
 }
 
 /* Action Creators */
@@ -154,6 +155,13 @@ export function mdmMasterDataReceived(masterData) {
         masterData : masterData
     }
 }
+export function mdmMasterUpdateComplete(status, response) {
+    return {
+        type: MdmActions.MDM_MASTER_UPDATE_COMPLETE,
+        status : status,
+        response : response
+    }
+}
 export function mdmModuleActivated(masterName) {
     return function (dispatch) {
         var deferred = $.Deferred();
@@ -201,11 +209,14 @@ export function mdmMasterChanged(mdmDTO) {
             success: function (masterData) {
                 deferred.resolve();
                 Application.showInfoNotification("Changes submitted successfully. ");
+                dispatch(mdmMasterUpdateComplete(true));
+
             }.bind(this),
             error : function (jqXHR, textStatus, errorThrown ){
                 deferred.resolve();
-                xhr['errorHandled'] = true;
-                _.each(xhr.responseJSON, function (violation) {
+                dispatch(mdmMasterUpdateComplete(false, jqXHR));
+                jqXHR['errorHandled'] = true;
+                _.each(jqXHR.responseJSON, function (violation) {
                     let message = "Row: " + (parseInt(violation.cookie) + 1) + ". Field " + violation.field + " - " + violation.message;
                     Application.showErrorNotification(message);
                 });

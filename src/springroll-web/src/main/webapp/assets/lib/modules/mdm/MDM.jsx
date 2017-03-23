@@ -27,7 +27,7 @@ class MDM extends React.Component {
                         );
                     })}
                 </Nav>
-                {this.props.masterData !== undefined && <MDMGrid masterData={this.props.masterData} onMdmMasterChanged={this.props.onMdmMasterChanged}/>}
+                {this.props.masterData !== undefined && <MDMGrid masterData={this.props.masterData} onMdmMasterChanged={this.props.onMdmMasterChanged} updateStatus={this.props.updateStatus} updateResponse={this.props.updateResponse}/>}
             </div>
         );
     }

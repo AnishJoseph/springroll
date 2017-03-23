@@ -41,9 +41,9 @@ function mdmReducer(state = {}, action) {
         case MdmActions.MDM_MASTER_METADATA_RECEIVED:
             return Object.assign({}, state, { masterDefns :  action.masterDefns});
         case MdmActions.MDM_MASTER_DATA_RECEIVED:
-            let x = Object.assign({}, state, { masterData :  {data : action.masterData.data, colDefs : action.masterData.colDefs, master : action.masterData.master}});
-            return x;
-            //return Object.assign({}, state, { masterData :  action.masterData});
+            return Object.assign({}, state, { masterData :  {data : action.masterData.data, colDefs : action.masterData.colDefs, master : action.masterData.master}, updateStatus: undefined});
+        case MdmActions.MDM_MASTER_UPDATE_COMPLETE:
+            return Object.assign({}, state, { updateStatus :  action.status, updateResponse : action.response});
         default:
             return state;
     }

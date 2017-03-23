@@ -8,7 +8,7 @@ import { Router, Route } from 'react-router'
 
 
 const mapStateToProps = (state) => {
-    return {masterDefns : state.mdm.masterDefns, masterData : state.mdm.masterData};
+    return {masterDefns : state.mdm.masterDefns, masterData : state.mdm.masterData, updateResponse : state.mdm.updateResponse, updateStatus : state.mdm.updateStatus};
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
