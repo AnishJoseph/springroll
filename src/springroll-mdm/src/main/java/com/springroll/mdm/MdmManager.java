@@ -87,6 +87,10 @@ import java.util.stream.Collectors;
         Map<String, Object> valueMap = new HashMap<>();
         for (String colName : newRecord.keySet()) {
             ColDef colDef = mdmDefinition.getColDefByName(colName);
+            if(colDef == null){
+                logger.debug("Received an unknown column '{}'  - ignoring", colName);
+                continue;
+            }
             if(newRecord.get(colName) == null)continue;
             valueMap.put(colName, newRecord.get(colName));
             if(colDef.getType().equalsIgnoreCase("date")){
