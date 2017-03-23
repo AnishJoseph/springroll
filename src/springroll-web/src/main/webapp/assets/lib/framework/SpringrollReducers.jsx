@@ -1,14 +1,25 @@
 import { combineReducers } from 'redux';
 import { AlertActions, AlertFilters, USER_CHANGED, MdmActions} from 'SpringrollActionTypes'
 
+function dedup(array1, array2){
+    let allAlerts = array1.concat(array2);
+    let existingAlertIds = [];
+    let uniqAlerts = _.filter(allAlerts, function(alert){
+        if(existingAlertIds.includes(alert.id)) return false;
+        existingAlertIds.push(alert.id);
+        return true;
+    });
+    return uniqAlerts;
+
+}
 function alertsReducer(state = {actions : [], info : [], errors : [], visibleAlertType : AlertFilters.ALERT_FILTER_NONE}, action) {
     switch (action.type) {
         case AlertActions.ADD_ACTION_ALERTS:
-            return Object.assign({}, state, { actions :  state.actions.concat(action.alerts)});
+            return Object.assign({}, state, { actions :  dedup(state.actions, action.alerts)});
         case AlertActions.ADD_ERROR_ALERTS:
-            return Object.assign({}, state, { errors :  state.errors.concat(action.alerts)});
+            return Object.assign({}, state, { errors :  dedup(state.errors, action.alerts)});
         case AlertActions.ADD_INFO_ALERTS:
-            return Object.assign({}, state, { info :  state.info.concat(action.alerts)});
+            return Object.assign({}, state, { info :  dedup(state.info, action.alerts)});
         case AlertActions.ALERT_DELETE:
             switch (action.alertType) {
                 case AlertFilters.ALERT_FILTER_ACTION:
