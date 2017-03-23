@@ -28,7 +28,6 @@ class Application {
 
         _.each(Object.keys(that.getSubscribersToAlerts()), function (channel) {
             that.subscribe(channel, (response) => {
-                _.each(response.data, alert => (alert['creationTimeMoment'] = moment(alert.creationTime).format(that.getMomentFormatForDateTime())));
                 if (response.data[0].alertType == 'ACTION') {
                     that.store.dispatch(addAlerts(AlertActions.ADD_ACTION_ALERTS, response.data));
                     that.store.dispatch(setAlertFilter(AlertFilters.ALERT_FILTER_ACTION));

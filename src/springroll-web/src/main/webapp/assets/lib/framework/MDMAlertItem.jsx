@@ -2,6 +2,7 @@ import React from 'react'
 import Application from 'App.js';
 import ReviewModal from 'ReviewModal.jsx';
 import MDMReviewMoreInfo from 'MDMReviewMoreInfo.jsx';
+import GenericAlertItem from 'GenericAlertItem.jsx';
 
 class MDMAlertItem extends React.Component {
     constructor(props){
@@ -28,12 +29,7 @@ class MDMAlertItem extends React.Component {
         let message = Application.Localize(this.props.alert.messageKey, this.props.alert.args);
         return (
             <span>
-                <div id='message' className="alertMessage">{message}</div>
-                <div id='action'>
-                    <span id='info' onClick={this.handleInfoClicked} data-toggle="tooltip" title={Application.Localize('ui.info')} className="alertActionsPanelItem glyphicon glyphicon-info-sign"></span>
-                    <span className="alertActionsPanelTime">{this.props.alert.creationTimeMoment}</span>
-                    <div className="alertActionsPanelBorder"/>
-                </div>
+                <GenericAlertItem alert={this.props.alert} onMoreInfoClicked={this.handleInfoClicked} />
                 {
                     this.state.showMoreInfo &&
                     <ReviewModal onSubmit={this.onSubmit} onModalClosed={this.handleModalClosed} title={message}>
