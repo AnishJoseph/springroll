@@ -24,6 +24,9 @@ class RowRenderer extends React.Component {
         if(this.props.row.disabled === true) {
             return (<div><Row extraClasses="text-muted mdm-disabled" ref="row" {...this.props}/></div>);
         }
+        if(this.props.row.hasError === true) {
+            return (<div><Row extraClasses="text-muted mdm-error" ref="row" {...this.props}/></div>);
+        }
         return (<div><Row ref="row" {...this.props}/></div>);
     }
 }
@@ -293,6 +296,13 @@ class MDMGrid extends React.Component {
                 this.changedRows = this.prevChangedRows;
                 this.prevChangedRows = undefined;
             }
+
+            _.each(nextProps.updateResponse, function (violation) {
+                let rowIdx = parseInt(violation.cookie);
+                let rowToUpdate = rows[rowIdx];
+                rowToUpdate['hasError'] = true;
+            });
+
             this.setState({ rows, needsSave : true});
 
         } else if (nextProps.updateStatus === true){

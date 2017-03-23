@@ -214,7 +214,7 @@ export function mdmMasterChanged(mdmDTO) {
             }.bind(this),
             error : function (jqXHR, textStatus, errorThrown ){
                 deferred.resolve();
-                dispatch(mdmMasterUpdateComplete(false, jqXHR));
+                dispatch(mdmMasterUpdateComplete(false, jqXHR.responseJSON));
                 jqXHR['errorHandled'] = true;
                 _.each(jqXHR.responseJSON, function (violation) {
                     let message = "Row: " + (parseInt(violation.cookie) + 1) + ". Field " + violation.field + " - " + violation.message;

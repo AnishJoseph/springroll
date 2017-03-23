@@ -9,6 +9,7 @@ $heightOfAlertsContainer : calc(100vh - 200px);
 $widthOfIndicator : 600px;
 $mutedColor : #AAA;
 $disabledRowColor : #f8ffe4;
+$errorRowColor : #de9e9e;
 
 .spaRootElement {
   margin-left: $marginOnSideForSPA;
@@ -187,6 +188,10 @@ table.nowrap {
 
 .mdm-disabled .react-grid-Cell{
   background-color: $disabledRowColor;
+}
+
+.mdm-error .react-grid-Cell{
+  background-color: $errorRowColor;
 }
 
 .icon-muted {
