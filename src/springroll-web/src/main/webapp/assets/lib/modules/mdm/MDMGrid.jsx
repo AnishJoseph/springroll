@@ -124,7 +124,7 @@ class MDMGrid extends React.Component {
         let newRecords =  _.chain(Object.keys(this.newRows))
             .map(key => Object.assign({}, this.newRows[key]) )
             .filter( row => row.new === true)
-            .each(row => {delete row['new']; delete row['delete']})
+            .each(row => {delete row['new']; delete row['delete'], delete row['hasError']})
             .value();
 
         var mdmDTO = {master : this.props.masterData.master, changedRecords : changedRecords, newRecords : newRecords};
@@ -135,12 +135,14 @@ class MDMGrid extends React.Component {
         _.each(Object.keys(this.newRows), (cid) => {
             let rowToUpdate = rows[cid];
             rowToUpdate['disabled'] = true;
+            delete rowToUpdate['hasError'];
         });
         this.prevNewRows = this.newRows;
         this.newRows = {};
         _.each(Object.keys(this.changedRows), (cid) => {
             let rowToUpdate = rows[cid];
             rowToUpdate['disabled'] = true;
+            delete rowToUpdate['hasError'];
         });
         this.prevChangedRows = this.changedRows;
         this.changedRows = {};
@@ -225,7 +227,7 @@ class MDMGrid extends React.Component {
     }
     rowGetter(rowIdx) {
         const rows = this.getRows();
-        return rows[rowIdx];
+        return Object.assign({}, rows[rowIdx]);
     }
 
     handleFilterChange(filter) {
@@ -258,7 +260,6 @@ class MDMGrid extends React.Component {
         );
     }
     componentWillReceiveProps(nextProps){
-        console.log("componentWillReceiveProps");
         /*  Some props have changed - could be because EITHER
             a) A new master was chosen and the data for the new master was retrieved causing prop 'masterData' to change
             b) The master was changed and updated to the server - server responded with success or failuer
