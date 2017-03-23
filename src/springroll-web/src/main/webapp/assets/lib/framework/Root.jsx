@@ -5,18 +5,10 @@ import AlertPanelContainer from 'AlertPanelContainer.jsx';
 var NotificationSystem = require('react-notification-system');
 
 var style = {
-    NotificationItem : {
+    Containers : {
         DefaultStyle : {
-            width : 600
-        },
-        tc: {
-            top: '0px',
-            bottom: 'auto',
-            margin: '0 auto',
-            left: '50%',
-            marginLeft: -(600 / 2)
+            width : 900
         }
-
     }
 }
 
