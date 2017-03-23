@@ -41,7 +41,7 @@ class Root extends React.Component {
                     </div>
                 </div>
                 <AlertPanelContainer/>
-                <NotificationSystem ref="notificationSystem" style={style}/>
+                <NotificationSystem ref="notificationSystem" style={style} allowHTML={true}/>
             </div>
         );
     }
