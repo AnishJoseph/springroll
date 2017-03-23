@@ -167,13 +167,14 @@ class Application {
         });
 
     }
-    showErrorNotification (message) {
+    showErrorNotification (message, children) {
         this.notificationSystem.addNotification({
             title: 'Error',
             message: message,
             level: 'error',
             position : 'tc',
-            autoDismiss : 0
+            autoDismiss : 0,
+            children : children
         });
     }
 

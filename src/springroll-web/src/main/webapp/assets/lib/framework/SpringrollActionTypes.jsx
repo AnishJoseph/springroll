@@ -1,4 +1,5 @@
 import Application from 'App.js';
+import React from 'react';
 
 export const USER_CHANGED = 'USER_CHANGED';
 
@@ -216,10 +217,13 @@ export function mdmMasterChanged(mdmDTO) {
                 deferred.resolve();
                 dispatch(mdmMasterUpdateComplete(false, jqXHR.responseJSON));
                 jqXHR['errorHandled'] = true;
-                _.each(jqXHR.responseJSON, function (violation) {
-                    let message = "Row: " + (parseInt(violation.cookie) + 1) + ". Field " + violation.field + " - " + violation.message;
-                    Application.showErrorNotification(message);
-                });
+                let message = "Error(s) encountered while updating master '" + mdmDTO.master +"' - correct and resubmit";
+                var children = (<div>
+                    {
+                        jqXHR.responseJSON.map((violation, index) => {return (<div key={index}>Row : {(parseInt(violation.cookie) + 1)} - Field : {violation.field} - {violation.message}</div>)})
+                    }
+                </div>);
+                Application.showErrorNotification(message, children);
             }.bind(this)
         });
         return deferred;
