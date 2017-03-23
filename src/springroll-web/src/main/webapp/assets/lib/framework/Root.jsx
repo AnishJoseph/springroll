@@ -4,6 +4,21 @@ import NavigationContainer from 'NavigationContainer.jsx';
 import AlertPanelContainer from 'AlertPanelContainer.jsx';
 var NotificationSystem = require('react-notification-system');
 
+var style = {
+    NotificationItem : {
+        DefaultStyle : {
+            width : 600
+        },
+        tc: {
+            top: '0px',
+            bottom: 'auto',
+            margin: '0 auto',
+            left: '50%',
+            marginLeft: -(600 / 2)
+        }
+
+    }
+}
 
 class Root extends React.Component {
     constructor(props){
@@ -26,7 +41,7 @@ class Root extends React.Component {
                     </div>
                 </div>
                 <AlertPanelContainer/>
-                <NotificationSystem ref="notificationSystem" />
+                <NotificationSystem ref="notificationSystem" style={style}/>
             </div>
         );
     }
