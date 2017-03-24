@@ -246,7 +246,7 @@ class MDMGrid extends React.Component {
             <div className="springroll-table">
                 <ReactDataGrid onGridRowsUpdated={this.handleGridRowsUpdated}
                                onClearFilters={this.onClearFilters}
-                               toolbar={<MdmToolbar enableAddRow={true} onAddRow={this.handleAddRow} enableFilter={true} onSaveClicked={this.saveClicked} needsSave={this.state.needsSave}/>}
+                               toolbar={<MdmToolbar masterName={this.props.masterData.master} enableAddRow={true} onAddRow={this.handleAddRow} enableFilter={true} onSaveClicked={this.saveClicked} needsSave={this.state.needsSave}/>}
                                onAddFilter={this.handleFilterChange}
                                columns={this._columns} rowGetter={this.rowGetter}
                                rowsCount={this.getSize()} minHeight={500}

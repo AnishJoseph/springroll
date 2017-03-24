@@ -49,11 +49,14 @@ const MdmToolbar = React.createClass({
 
     render() {
         return (
-            <div className="react-grid-Toolbar">
-                <div className="tools">
-                    {this.renderSaveButton()}
-                    {this.renderAddRowButton()}
-                    {this.renderToggleFilterButton()}
+            <div>
+                <div className="tools react-grid-Toolbar">
+                    <div className="row">
+                        <span className="text-info toolbar-title">{Application.Localize('ui.mdm.title', Application.Localize('ui.mdm.master.'+ this.props.masterName))}</span>
+                        {this.renderSaveButton()}
+                        {this.renderAddRowButton()}
+                        {this.renderToggleFilterButton()}
+                    </div>
                     {this.props.children}
                 </div>
             </div>);
