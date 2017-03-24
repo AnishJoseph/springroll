@@ -32,6 +32,7 @@ $errorRowColor : #de9e9e;
   bottom: 0;
   z-index: 1;
   height: calc(100vh - #{$rootMenuHeight} -  2*#{$marginOnTopAndBottomForBody} );
+  overflow: scroll;
 }
 
 .full-overflow {
@@ -200,5 +201,10 @@ table.nowrap {
 
 .dropdown:hover .dropdown-menu {
   display: block;
-  margin-top: 0; // remove the gap so it doesn't close
+  margin-top: 0;
+  // remove the gap so it doesn't close
 }
+
+//.navbar-default .navbar-nav > .open > a {
+//  background-color: #de9e9e!important;
+//}
