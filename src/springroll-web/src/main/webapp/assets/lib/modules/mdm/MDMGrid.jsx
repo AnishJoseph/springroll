@@ -182,7 +182,7 @@ class MDMGrid extends React.Component {
         var that = this;
         this.recIdsUnderReview = masterData.recIdsUnderReview;
         this._columns = _.chain(masterData.colDefs).filter(colDef => colDef.name != 'id').map(function(colDef){
-            let defn = ({key : colDef.name, name : colDef.name, sortable : true, filterable: true, resizable : true, editable : true, writeable : colDef.writeable});
+            let defn = ({key : colDef.name, name : colDef.title == undefined ? colDef.name : Application.Localize(colDef.title), sortable : true, filterable: true, resizable : true, editable : true, writeable : colDef.writeable});
 
             if(colDef.type == 'date') defn = Object.assign(defn, {formatter : DateFormatter, editor: DatePicker});
             if(colDef.type == 'datetime') defn = Object.assign(defn, {formatter : DateTimeFormatter, editor: DatePicker});

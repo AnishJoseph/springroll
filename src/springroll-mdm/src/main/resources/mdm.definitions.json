@@ -5,8 +5,8 @@
         "masterClassName" : "com.springroll.orm.entities.Role",
         "constraints" : ["roleName"],
         "colDefs" : [
-          { "name": "roleName", "writeable": false, "type": "text"},
-          { "name": "description", "writeable": true, "type": "text"},
+          { "title" : "ui.roleName", "name": "roleName", "writeable": false, "type": "text"},
+          { "title" : "Description", "name": "description", "writeable": true, "type": "text"},
           { "name": "active", "writeable": true, "type": "boolean", "defVal": "true"}
       ]
       },

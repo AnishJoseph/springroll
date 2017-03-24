@@ -12,6 +12,7 @@ import java.util.List;
 
 public class ColDef implements Serializable, MdmColumnDefinition {
     private String name;
+    private String title;
     private boolean writeable;
     private String type;
     private List<Lov> lovList;
@@ -29,6 +30,7 @@ public class ColDef implements Serializable, MdmColumnDefinition {
         this.multiSelect = colDef.multiSelect;
         this.nullable = colDef.nullable;
         this.width = colDef.width;
+        this.title = colDef.title;
     }
 
     public ColDef(String name, boolean writeable, String type, boolean multiSelect) {
@@ -120,5 +122,14 @@ public class ColDef implements Serializable, MdmColumnDefinition {
 
     public void setWidth(int width) {
         this.width = width;
+    }
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

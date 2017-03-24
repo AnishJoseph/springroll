@@ -34,7 +34,7 @@ class MDMReviewMoreInfo extends React.Component {
         this.rowGetterForNewRows = this.rowGetterForNewRows.bind(this);
         this.rowGetterForChangedRows = this.rowGetterForChangedRows.bind(this);
         this._columns = _.chain(this.props.alert.mdmChangesForReview.colDefs).filter(colDef => colDef.name !== 'id').map(function(colDef){
-            return {key : colDef.name, name : colDef.name, resizable : true, formatter : <ValueFormatter colDef={colDef}/>};
+            return {key : colDef.name, name : colDef.title == undefined ? colDef.name : Application.Localize(colDef.title), resizable : true, formatter : <ValueFormatter colDef={colDef}/>};
         }).value();
 
         this._ncolumns = _.chain(this.props.alert.mdmChangesForReview.colDefs).filter(colDef => colDef.name !== 'id').map(function(colDef){
