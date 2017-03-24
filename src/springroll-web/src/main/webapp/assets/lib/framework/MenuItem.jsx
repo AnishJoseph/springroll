@@ -8,7 +8,7 @@ class MenuItem extends React.Component {
         {
             return (
                 <li role="presentation" className="dropdown">
-                    <a className="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">  {Application.Localize(this.props.menuDefn.title)} <span className="caret"></span></a>
+                    <a className="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">  {Application.Localize(this.props.menuDefn.title)} <span className=""></span></a>
                     <ul className="dropdown-menu">
                         {
                             this.props.menuDefn.subMenuItems.map((menuDefn, index) => ( <MenuItem key={index} menuDefn={menuDefn}/>))
