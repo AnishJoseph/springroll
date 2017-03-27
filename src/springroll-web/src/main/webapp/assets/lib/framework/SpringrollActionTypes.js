@@ -22,7 +22,11 @@ export const MdmActions = {
     MDM_MASTER_METADATA_RECEIVED : 'MDM_MASTER_METADATA_RECEIVED',
     MDM_MASTER_DATA_RECEIVED : 'MDM_MASTER_DATA_RECEIVED',
     MDM_MASTER_UPDATE_COMPLETE : 'MDM_MASTER_UPDATE_COMPLETE'
-}
+};
+export const GridReportActions = {
+    GRID_REPORT_PARAMS_RECEIVED : 'GRID_REPORT_PARAMS_RECEIVED',
+    GRID_REPORT_DATA_RECEIVED : 'GRID_REPORT_DATA_RECEIVED'
+};
 
 /* Action Creators */
 
@@ -221,6 +225,62 @@ export function mdmMasterChanged(mdmDTO) {
                     message += "<div class='mdm-error-msg'>Row : " + (parseInt(violation.cookie) + 1) + " - Field : " + violation.field + " - " + violation.message + "</div>";
                 });
                 Application.showErrorNotification(message);
+            }.bind(this)
+        });
+        return deferred;
+    }
+}
+
+
+export function gridReceivedParameters(gridName, gridParams) {
+    return {
+        type: GridReportActions.GRID_REPORT_PARAMS_RECEIVED,
+        gridParams : gridParams,
+        gridName : gridName
+    }
+}
+
+export function gridDataReceived(gridData) {
+    return {
+        type: GridReportActions.GRID_REPORT_DATA_RECEIVED,
+        gridData : gridData
+    }
+}
+
+export function gridParamRequest(gridName, params) {
+    return function (dispatch) {
+        var deferred = $.Deferred();
+        $.ajax({
+            url: 'api/sr/gridParams/' + gridName,
+            type: 'POST',
+            data: JSON.stringify(params),
+            success: function (gridParams) {
+                deferred.resolve();
+                dispatch(gridReceivedParameters(gridName, gridParams));
+
+            }.bind(this),
+            error : function (jqXHR, textStatus, errorThrown ){
+                deferred.resolve();
+                Application.showErrorNotification("Error retrieving parameters for grid - " + gridName);
+            }.bind(this)
+        });
+        return deferred;
+    }
+}
+export function gridDataRequest(gridName, params) {
+    return function (dispatch) {
+        var deferred = $.Deferred();
+        $.ajax({
+            url: 'api/sr/getGridData/' + gridName,
+            type: 'POST',
+            data: JSON.stringify(params),
+            success: function (gridReport) {
+                deferred.resolve();
+                dispatch(gridDataReceived(gridReport));
+            }.bind(this),
+            error : function (jqXHR, textStatus, errorThrown ){
+                deferred.resolve();
+                Application.showErrorNotification("Error retrieving parameters for grid - " + gridName);
             }.bind(this)
         });
         return deferred;

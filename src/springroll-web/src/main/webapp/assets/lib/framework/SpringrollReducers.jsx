@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { AlertActions, AlertFilters, USER_CHANGED, MdmActions} from 'SpringrollActionTypes'
+import { AlertActions, AlertFilters, USER_CHANGED, MdmActions, GridReportActions} from 'SpringrollActionTypes'
 
 function dedup(array1, array2){
     let allAlerts = array1.concat(array2);
@@ -31,6 +31,16 @@ function alertsReducer(state = {actions : [], info : [], errors : [], visibleAle
             }
         case AlertActions.SET_ALERT_FILTER:
             return Object.assign({}, state, { visibleAlertType :  action.alertFilter});
+        default:
+            return state;
+    }
+}
+function gridReportReducer(state = {params : [], gridData : undefined}, action) {
+    switch (action.type) {
+        case GridReportActions.GRID_REPORT_PARAMS_RECEIVED:
+            return Object.assign({}, state, { params :  action.gridParams, gridName : action.gridName});
+        case GridReportActions.GRID_REPORT_DATA_RECEIVED:
+            return Object.assign({}, state, { gridData :  action.gridData});
         default:
             return state;
     }
@@ -69,6 +79,7 @@ const springrollReducers = combineReducers({
     alerts : alertsReducer,
     user : userReducer,
     mdm : mdmReducer,
+    gridReport : gridReportReducer
 });
 
 

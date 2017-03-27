@@ -242,12 +242,11 @@ class MDMGrid extends React.Component {
     }
 
     render() {
-        let title = Application.Localize('ui.mdm.title', Application.Localize('ui.mdm.master.'+ this.props.masterData.master))
         return (
             <div className="springroll-table">
                 <ReactDataGrid onGridRowsUpdated={this.handleGridRowsUpdated}
                                onClearFilters={this.onClearFilters}
-                               toolbar={<MdmToolbar title={title} masterName={this.props.masterData.master} enableAddRow={true} onAddRow={this.handleAddRow} enableFilter={true} onSaveClicked={this.saveClicked} needsSave={this.state.needsSave}/>}
+                               toolbar={<MdmToolbar masterName={this.props.masterData.master} enableAddRow={true} onAddRow={this.handleAddRow} enableFilter={true} onSaveClicked={this.saveClicked} needsSave={this.state.needsSave}/>}
                                onAddFilter={this.handleFilterChange}
                                columns={this._columns} rowGetter={this.rowGetter}
                                rowsCount={this.getSize()} minHeight={500}
