@@ -35,13 +35,15 @@ class GridReport extends React.Component {
                     </span>
                     {
                         (this.props.gridParams !== undefined && this.props.gridParams.length > 0) &&
-                        <span onClick={this.onFilterClick} title={Application.Localize('filter')} style={{ paddingLeft: 100 +'px'}} className='pull-left glyphicon glyphicon-filter'></span>
+                        <span onClick={this.onFilterClick} title={Application.Localize('filter')}
+                              style={{ paddingLeft: 100 +'px'}} className='pull-left glyphicon glyphicon-filter'></span>
                     }
                 </div>
                 <div>
                     {
                         /* If there is data AND the data if for the chosen grid THEN show the grid */
-                        (this.props.gridData && this.props.gridData.gridName === this.props.gridName) && <Grid gridData={this.props.gridData} formatters={formatters}/>
+                        (this.props.gridData && this.props.gridData.gridName === this.props.gridName) &&
+                        <Grid gridData={this.props.gridData} formatters={formatters}/>
                     }
                 </div>
                 {
