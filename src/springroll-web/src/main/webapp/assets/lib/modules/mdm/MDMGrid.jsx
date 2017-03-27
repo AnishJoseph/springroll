@@ -1,9 +1,9 @@
 import React from 'react';
 import Application from 'App';
 import DateFormatter from 'DateFormatter';
-import DatePicker from 'DatePicker';
+import MdmDatePicker from 'MdmDatePicker';
 import MdmToolbar from 'MdmToolbar';
-import Select from 'Select';
+import MdmSelect from 'MdmSelect';
 import DateTimeFormatter from 'DateTimeFormatter';
 import ArrayFormatter from 'ArrayFormatter';
 import BooleanFormatter from 'BooleanFormatter';
@@ -184,8 +184,8 @@ class MDMGrid extends React.Component {
         this._columns = _.chain(masterData.colDefs).filter(colDef => colDef.name != 'id').map(function(colDef){
             let defn = ({key : colDef.name, name : colDef.title == undefined ? colDef.name : Application.Localize(colDef.title), sortable : true, filterable: true, resizable : true, editable : true, writeable : colDef.writeable});
 
-            if(colDef.type == 'date') defn = Object.assign(defn, {formatter : DateFormatter, editor: DatePicker});
-            if(colDef.type == 'datetime') defn = Object.assign(defn, {formatter : DateTimeFormatter, editor: DatePicker});
+            if(colDef.type == 'date') defn = Object.assign(defn, {formatter : DateFormatter, editor: MdmDatePicker});
+            if(colDef.type == 'datetime') defn = Object.assign(defn, {formatter : DateTimeFormatter, editor: MdmDatePicker});
             if(colDef.type == 'boolean') defn['formatter'] = BooleanFormatter;
             if(colDef.multiSelect == true) {
                 defn['sortable'] = false;
@@ -193,7 +193,7 @@ class MDMGrid extends React.Component {
             }
 
             if(colDef.lovList != undefined && colDef.lovList != null){
-                defn['editor'] = <Select options={colDef.lovList} multiSelect={colDef.multiSelect}/>;
+                defn['editor'] = <MdmSelect options={colDef.lovList} multiSelect={colDef.multiSelect}/>;
             }
 
             return defn;

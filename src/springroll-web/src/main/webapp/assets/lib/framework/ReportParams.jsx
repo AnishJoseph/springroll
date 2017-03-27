@@ -1,7 +1,7 @@
 import React from 'react';
 import Application from 'App';
-import DupDatePicker from 'DupDatePicker';
-import DupSelect from 'DupSelect.jsx';
+import DatePicker from 'DatePicker';
+import Select from 'Select.jsx';
 
 class ReportParams extends React.Component {
     constructor(props){
@@ -32,7 +32,7 @@ class ReportParams extends React.Component {
                                 return (
                                     <div key={parameter.name} className="form-group rep-param col-md-3">
                                         <div>{Application.Localize(parameter.name)}</div>
-                                        <DupSelect key={parameter.name} options={parameter.lovList} multiSelect={parameter.multiSelect} onChange={ (value) => this.onChange(parameter.name, value)}  />
+                                        <Select key={parameter.name} options={parameter.lovList} multiSelect={parameter.multiSelect} onChange={ (value) => this.onChange(parameter.name, value)}  />
                                     </div>
                                 )
                                } else if ( parameter.javaType == "java.lang.Integer" || parameter.javaType == "java.lang.Long" || parameter.javaType == "java.math.BigInteger" || parameter.javaType == "java.lang.Short"){
@@ -54,14 +54,14 @@ class ReportParams extends React.Component {
                                    return (
                                        <div key={parameter.name} className="form-group rep-param col-md-3">
                                            <div>{Application.Localize(parameter.name)}</div>
-                                           <DupSelect key={parameter.name} options={lovList} multiSelect={false} onChange={ (value) => this.onChange(parameter.name, value)}  />
+                                           <Select key={parameter.name} options={lovList} multiSelect={false} onChange={ (value) => this.onChange(parameter.name, value)}  />
                                        </div>
                                    )
                                } else if (parameter.javaType == "java.time.LocalDate" || (parameter.javaType == "java.time.LocalDateTime" && (parameter.setTime === 'START_OF_DAY' || parameter.setTime === 'END_OF_DAY'))){
                                    return (
                                        <div key={parameter.name} className="form-group rep-param">
                                            <div>{Application.Localize(parameter.name)}</div>
-                                           <DupDatePicker onChange={ (value) => this.onChange(parameter.name, value)}/>
+                                           <DatePicker onChange={ (value) => this.onChange(parameter.name, value)}/>
                                        </div>
                                    )
                                } else if (parameter.javaType == "java.time.LocalDateTime"){
