@@ -27,10 +27,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -176,9 +173,16 @@ import java.util.stream.Collectors;
                 throw new SpringrollException(null, "missing.namedquery.parameter", parameter.getName());
             }
             try {
-                Object o = paramValue;
-                if(!(paramValue instanceof Collection))
+                Object o;
+                if(gridParameter.isMultiSelect() && paramValue instanceof Collection){
+                    o = new ArrayList<>();
+                    Iterator iterator = ((Collection) paramValue).iterator();
+                    while (iterator.hasNext()){
+                        ((List)o).add(springrollUtils.convert(iterator.next(), parameter.getParameterType()));
+                    }
+                } else {
                     o = springrollUtils.convert(paramValue, parameter.getParameterType());
+                }
                 query.setParameter(parameter.getName(), o);
             }catch (Exception e){
                 e.printStackTrace();
