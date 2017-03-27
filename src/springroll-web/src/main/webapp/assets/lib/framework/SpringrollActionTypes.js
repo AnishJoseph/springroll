@@ -261,7 +261,6 @@ export function gridParamRequest(gridName, params) {
             }.bind(this),
             error : function (jqXHR, textStatus, errorThrown ){
                 deferred.resolve();
-                Application.showErrorNotification("Error retrieving parameters for grid - " + gridName);
             }.bind(this)
         });
         return deferred;
@@ -281,7 +280,6 @@ export function gridDataRequest(gridName, params) {
             }.bind(this),
             error : function (jqXHR, textStatus, errorThrown ){
                 deferred.resolve();
-                Application.showErrorNotification("Error retrieving parameters for grid - " + gridName);
             }.bind(this)
         });
         return deferred;
