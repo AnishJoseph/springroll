@@ -10,8 +10,7 @@ class GridReport extends React.Component {
         this.handleModalClosed = this.handleModalClosed.bind(this);
         this.onFilterClick = this.onFilterClick.bind(this);
         this.paramsSelected = this.paramsSelected.bind(this);
-        this.state = {showFilter : this.props.parameterFirst, paramValues : {}}
-        //FIXME - add any initial params to this
+        this.state = {showFilter : this.props.parameterFirst, paramValues : this.props.params || {}};
     }
     handleModalClosed(){
         this.setState({showFilter : false});
@@ -52,12 +51,14 @@ class GridReport extends React.Component {
         );
     }
     componentDidMount(){
+        /* Go fetch the paramaters for this grid, if any.
+           While requesting the parameters for the grid, send in any preset parameters
+         */
+        this.props.onGridParamRequest(this.props.gridName, this.props.params || {});
         if(this.props.parameterFirst){
-            this.props.onGridParamRequest(this.props.gridName, {});
             return;
         }
         this.props.onGridDataRequest(this.props.gridName, this.props.params || {});
-
     }
 }
 
