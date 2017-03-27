@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -175,7 +176,9 @@ import java.util.stream.Collectors;
                 throw new SpringrollException(null, "missing.namedquery.parameter", parameter.getName());
             }
             try {
-                Object o = springrollUtils.convert(paramValue, parameter.getParameterType());
+                Object o = paramValue;
+                if(!(paramValue instanceof Collection))
+                    o = springrollUtils.convert(paramValue, parameter.getParameterType());
                 query.setParameter(parameter.getName(), o);
             }catch (Exception e){
                 e.printStackTrace();

@@ -9,8 +9,9 @@ class GridReport extends React.Component {
         super(props);
         this.handleModalClosed = this.handleModalClosed.bind(this);
         this.onFilterClick = this.onFilterClick.bind(this);
-        this.paramsChosen = this.paramsChosen.bind(this);
-        this.state = {showFilter : this.props.parameterFirst}
+        this.paramsSelected = this.paramsSelected.bind(this);
+        this.state = {showFilter : this.props.parameterFirst, paramValues : {}}
+        //FIXME - add any initial params to this
     }
     handleModalClosed(){
         this.setState({showFilter : false});
@@ -19,10 +20,10 @@ class GridReport extends React.Component {
     onFilterClick() {
         this.setState({showFilter : !this.state.showFilter});
     }
-    paramsChosen(params){
-        console.log(JSON.stringify(params));
-        this.setState({showFilter : false});
-        this.props.onGridDataRequest(this.props.gridName, params);
+    paramsSelected(paramValues){
+        console.log(JSON.stringify(paramValues));
+        this.setState({showFilter : false, paramValues: paramValues});
+        this.props.onGridDataRequest(this.props.gridName, paramValues);
     }
     render() {
         let message = "Report Params";
@@ -42,10 +43,10 @@ class GridReport extends React.Component {
                     }
                 </div>
                 {
-                    (this.state.showFilter) &&
-                        <ReviewModal onModalClosed={this.handleModalClosed} title={message}>
-                            <ReportParams params={this.props.gridParams} paramsChosen={this.paramsChosen}/>
-                        </ReviewModal>
+                    this.state.showFilter &&
+                    <ReviewModal onModalClosed={this.handleModalClosed} title={message}>
+                        <ReportParams params={this.props.gridParams} onParamsSelected={this.paramsSelected} paramValues={this.state.paramValues}/>
+                    </ReviewModal>
                 }
             </span>
         );

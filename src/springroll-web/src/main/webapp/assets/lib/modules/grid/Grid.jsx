@@ -92,10 +92,15 @@ class Grid extends React.Component {
                     minHeight={500}
                     toolbar={<MdmToolbar masterName={'anish'}  enableFilter={true}/>}
                     onAddFilter={this.handleFilterChange}
-                    onClearFilters={this.onClearFilters} />);
+                    onClearFilters={this.onClearFilters}
                 />
             </div>
         );
+    }
+
+    componentWillReceiveProps(nextProps) {
+        let rows = this.massageMasterData(nextProps.gridData);
+        this.setState({hasData : true, rows : rows, filters: {}, sortColumn: null, sortDirection: null});
     }
 }
 
