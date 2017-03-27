@@ -174,7 +174,7 @@ import java.util.stream.Collectors;
             }
             try {
                 Object o;
-                if(gridParameter.isMultiSelect() && paramValue instanceof Collection){
+                if(gridParameter != null && gridParameter.isMultiSelect() && paramValue instanceof Collection){
                     o = new ArrayList<>();
                     Iterator iterator = ((Collection) paramValue).iterator();
                     while (iterator.hasNext()){
@@ -186,7 +186,7 @@ import java.util.stream.Collectors;
                 query.setParameter(parameter.getName(), o);
             }catch (Exception e){
                 e.printStackTrace();
-                throw new RuntimeException("xx");//FIXME
+                throw new RuntimeException(e);//FIXME
             }
         }
         return query.getResultList();
