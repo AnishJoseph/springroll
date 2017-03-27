@@ -8,6 +8,11 @@ import DeleteFormatter from 'DeleteFormatter';
 const ReactDataGrid = require('react-data-grid');
 const { Data: { Selectors } } = require('react-data-grid-addons');
 
+const EmptyRowsView = React.createClass({
+    render() {
+        return (<div>{Application.Localize('ui.grid.empty')}</div>);
+    }
+});
 class Grid extends React.Component {
     constructor(props){
         super(props);
@@ -93,7 +98,7 @@ class Grid extends React.Component {
                     toolbar={<MdmToolbar  enableFilter={true}/>}
                     onAddFilter={this.handleFilterChange}
                     onClearFilters={this.onClearFilters}
-                />
+                    emptyRowsView={EmptyRowsView}/>
             </div>
         );
     }
