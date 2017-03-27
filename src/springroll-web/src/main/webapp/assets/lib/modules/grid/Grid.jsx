@@ -90,7 +90,7 @@ class Grid extends React.Component {
                     rowGetter={this.rowGetter}
                     rowsCount={this.getSize()}
                     minHeight={500}
-                    toolbar={<MdmToolbar masterName={'anish'}  enableFilter={true}/>}
+                    toolbar={<MdmToolbar  enableFilter={true}/>}
                     onAddFilter={this.handleFilterChange}
                     onClearFilters={this.onClearFilters}
                 />
