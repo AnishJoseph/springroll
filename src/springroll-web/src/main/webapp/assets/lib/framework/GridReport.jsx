@@ -33,7 +33,10 @@ class GridReport extends React.Component {
                     <span className='pull-left' style={{width : "100%"}}>
                         <h4 className=' text-info'>{Application.Localize(this.props.gridName)}</h4>
                     </span>
-                    <span onClick={this.onFilterClick} title={Application.Localize('filter')} style={{ paddingLeft: 100 +'px'}} className='pull-left glyphicon glyphicon-filter'></span>
+                    {
+                        (this.props.gridParams !== undefined && this.props.gridParams.length > 0) &&
+                        <span onClick={this.onFilterClick} title={Application.Localize('filter')} style={{ paddingLeft: 100 +'px'}} className='pull-left glyphicon glyphicon-filter'></span>
+                    }
                 </div>
                 <div>
                     {
