@@ -276,6 +276,7 @@ export function gridDataRequest(gridName, params) {
             data: JSON.stringify(params),
             success: function (gridReport) {
                 deferred.resolve();
+                gridReport['gridName'] = gridName;
                 dispatch(gridDataReceived(gridReport));
             }.bind(this),
             error : function (jqXHR, textStatus, errorThrown ){

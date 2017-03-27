@@ -10,7 +10,7 @@ class GridReport extends React.Component {
         this.handleModalClosed = this.handleModalClosed.bind(this);
         this.onFilterClick = this.onFilterClick.bind(this);
         this.paramsChosen = this.paramsChosen.bind(this);
-        this.state = {showFilter : false}
+        this.state = {showFilter : this.props.parameterFirst}
     }
     handleModalClosed(){
         this.setState({showFilter : false});
@@ -26,6 +26,7 @@ class GridReport extends React.Component {
     }
     render() {
         let message = "Report Params";
+        let formatters = this.props.formatters || {};
         return (
             <span>
                 <div className='grid-title-panel'>
@@ -36,7 +37,8 @@ class GridReport extends React.Component {
                 </div>
                 <div>
                     {
-                        this.props.gridData && <Grid gridData={this.props.gridData} formatters={this.props.formatters}/>
+                        /* If there is data AND the data if for the chosen grid THEN show the grid */
+                        (this.props.gridData && this.props.gridData.gridName === this.props.gridName) && <Grid gridData={this.props.gridData} formatters={formatters}/>
                     }
                 </div>
                 {
@@ -51,6 +53,7 @@ class GridReport extends React.Component {
     componentDidMount(){
         if(this.props.parameterFirst){
             this.props.onGridParamRequest(this.props.gridName, {});
+            return;
         }
         this.props.onGridDataRequest(this.props.gridName, this.props.params || {});
 
