@@ -2,12 +2,15 @@ import React from 'react';
 import Application from 'App';
 import DatePicker from 'DatePicker';
 import Select from 'Select.jsx';
+import Input from 'Input.jsx';
+
+const floatPattern = new RegExp("^[-+]?[0-9]*\\.?[0-9]*$");
+const intPattern = new RegExp("^[-+]?[0-9]+$");
 
 class ReportParams extends React.Component {
     constructor(props){
         super(props);
         this.onChange = this.onChange.bind(this);
-        this.onTextInput = this.onTextInput.bind(this);
         this.state = {paramValues : this.props.paramValues}
     }
 
@@ -17,11 +20,9 @@ class ReportParams extends React.Component {
         newValue[paramName] = value;
         this.setState({paramValues : Object.assign({}, this.state.paramValues, newValue )});
     }
-    onTextInput(paramName, value){
-        this.onChange(paramName, value);
-    }
 
     render() {
+        let pattern = undefined;
         return (
            <div className="panel panel-default">
                <div className="panel-body">
@@ -36,20 +37,6 @@ class ReportParams extends React.Component {
                                         <Select key={parameter.name} options={parameter.lovList} multiSelect={parameter.multiSelect} onChange={ (value) => this.onChange(parameter.name, value)}  value={this.state.paramValues[parameter.name]}/>
                                     </div>
                                 )
-                               } else if ( parameter.javaType == "java.lang.Integer" || parameter.javaType == "java.lang.Long" || parameter.javaType == "java.math.BigInteger" || parameter.javaType == "java.lang.Short"){
-                                   return (
-                                       <div key={parameter.name} className="form-group rep-param col-md-3">
-                                           <div>{Application.Localize(parameter.name)}</div>
-                                           <input required className="form-control " type="number" step="1" onChange={ (value) => this.onChange(parameter.name, value.target.value)}   value={this.state.paramValues[parameter.name]}/>
-                                       </div>
-                                   )
-                               } else if ( parameter.javaType == "java.lang.Double"  || parameter.javaType == "java.lang.Float" || parameter.javaType == "java.math.BigDecimal"){
-                                   return (
-                                       <div key={parameter.name} className="form-group rep-param col-md-3">
-                                           <div>{Application.Localize(parameter.name)}</div>
-                                           <input required className="form-control " type="number" onChange={ (value) => this.onChange(parameter.name, value.target.value)}  value={this.state.paramValues[parameter.name]}/>
-                                       </div>
-                                   )
                                } else if (parameter.javaType == "java.lang.Boolean"){
                                    let lovList = [{value : true, label : Application.Localize('ui.true')}, {value : false, label : Application.Localize('ui.false')}];
                                    return (
@@ -73,14 +60,17 @@ class ReportParams extends React.Component {
                                            <div>DATETIME TBD</div>
                                        </div>
                                    )
-                               } else {
-                                   return (
-                                       <div key={parameter.name} className="form-group rep-param col-md-3">
-                                           <div>{Application.Localize(parameter.name)}</div>
-                                           <input required className="form-control " value={this.state.paramValues[parameter.name]} type="text" onChange={ (value) => this.onTextInput(parameter.name, value.target.value)}  value={this.state.paramValues[parameter.name]}/>
-                                       </div>
-                                   )
+                               } else if ( parameter.javaType == "java.lang.Integer" || parameter.javaType == "java.lang.Long" || parameter.javaType == "java.math.BigInteger" || parameter.javaType == "java.lang.Short"){
+                                   pattern = intPattern;
+                               } else if ( parameter.javaType == "java.lang.Double"  || parameter.javaType == "java.lang.Float" || parameter.javaType == "java.math.BigDecimal"){
+                                   pattern = floatPattern;
                                }
+                               return (
+                                   <div key={parameter.name} className="form-group rep-param col-md-3">
+                                       <div>{Application.Localize(parameter.name)}</div>
+                                       <Input pattern={pattern} classes="form-control " value={this.state.paramValues[parameter.name]} onChange={ (value) => this.onChange(parameter.name, value)} />
+                                   </div>
+                               )
                            })
                        }
                        </div>
