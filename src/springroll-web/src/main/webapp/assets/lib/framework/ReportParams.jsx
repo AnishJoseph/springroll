@@ -5,7 +5,7 @@ import Select from 'Select.jsx';
 import Input from 'Input.jsx';
 
 const floatPattern = new RegExp("^[-+]?[0-9]*\\.?[0-9]*$");
-const intPattern = new RegExp("^[-+]?[0-9]+$");
+const intPattern = new RegExp("^[-+]?[0-9]*$");
 
 class ReportParams extends React.Component {
     constructor(props){
@@ -13,7 +13,7 @@ class ReportParams extends React.Component {
         this.onChange = this.onChange.bind(this);
         this.getErrorIcon = this.getErrorIcon.bind(this);
         this.onSubmitClicked = this.onSubmitClicked.bind(this);
-        this.state = {paramValues : this.props.paramValues, dummy : 1}
+        this.state = {paramValues : this.props.paramValues, paramsWithError : {}}
     }
 
     onChange(paramName, value){
@@ -21,10 +21,14 @@ class ReportParams extends React.Component {
         let newValue = {};
         newValue[paramName] = value;
         this.setState({paramValues : Object.assign({}, this.state.paramValues, newValue )});
+        if(value !== undefined){
+            let newErrorState = Object.assign({}, this.state.paramsWithError);
+            delete newErrorState[paramName];
+            this.setState({paramsWithError : newErrorState});
+        }
     }
     getErrorIcon(parameterName){
-        let param = _.find(this.props.params, (param) => (param.name == parameterName));
-        if(param.error !== undefined)
+        if(this.state.paramsWithError[parameterName] !== undefined)
             return <span title={Application.Localize('ui.report.parameters.empty')} className="error-icon glyphicon glyphicon-warning-sign"></span>
         return;
     }
@@ -32,14 +36,17 @@ class ReportParams extends React.Component {
         var that = this;
         let hasErrors = false;
         /* Validate the params (as much as possible) */
+        let newErrorState = Object.assign({}, this.state.paramsWithError);
         _.each(this.props.params, function(param){
-            if(param.visible && that.state.paramValues[param.name] == undefined){
-                param['error'] = true;
+            if(param.visible && (that.state.paramValues[param.name] == undefined || that.state.paramValues[param.name] === '')){
+                newErrorState[param.name] = true;
                 hasErrors = true;
+            } else {
+                delete newErrorState[param.name];
             }
         });
+        this.setState({paramsWithError : newErrorState});
         if(hasErrors){
-            this.setState({dummy : this.state.dummy + 1});
             return;
         }
         this.props.onParamsSelected(this.state.paramValues);
@@ -99,7 +106,7 @@ class ReportParams extends React.Component {
                            })
                        }
                        </div>
-                       <div  className="formSubmit" dummy={this.state.dummy}>
+                       <div  className="formSubmit">
                            <span title={Application.Localize('Apply')} onClick={this.onSubmitClicked} className=" submit glyphicon glyphicon-ok"></span>
                        </div>
                    </form>
@@ -107,6 +114,10 @@ class ReportParams extends React.Component {
            </div>
         );
     }
+    componentWillReceiveProps(nextProps) {
+    }
+
+
 }
 
 export default ReportParams;
