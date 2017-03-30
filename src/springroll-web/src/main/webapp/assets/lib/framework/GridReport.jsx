@@ -41,7 +41,8 @@ class GridReport extends React.Component {
                 </div>
                 <Grid gridData={this.props.gridData} formatters={formatters}/>
                 {
-                    this.state.showFilter &&
+                    /* Show the parameters in a MODAL ONLY if the filter is to be shown AND this grid has parameters */
+                    (this.state.showFilter &&  this.props.gridParams !== undefined && this.props.gridParams.length > 0) &&
                     <ReviewModal onModalClosed={this.handleModalClosed} title={message}>
                         <ReportParams params={this.props.gridParams} onParamsSelected={this.paramsSelected} paramValues={this.state.paramValues}/>
                     </ReviewModal>
@@ -50,7 +51,7 @@ class GridReport extends React.Component {
         );
     }
     componentDidMount(){
-        /* Go fetch the paramaters for this grid, if any.
+        /* Go fetch the parameters for this grid, if any.
            While requesting the parameters for the grid, send in any preset parameters
          */
         this.props.onGridParamRequest(this.props.gridName, this.props.params || {});
