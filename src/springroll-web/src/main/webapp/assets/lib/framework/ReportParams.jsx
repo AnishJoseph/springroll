@@ -13,7 +13,7 @@ class ReportParams extends React.Component {
         this.onChange = this.onChange.bind(this);
         this.getErrorIcon = this.getErrorIcon.bind(this);
         this.onSubmitClicked = this.onSubmitClicked.bind(this);
-        this.state = {paramValues : this.props.paramValues, paramsWithError : {}}
+        this.state = {paramValues : {}, paramsWithError : {}}
     }
 
     onChange(paramName, value){
@@ -115,6 +115,7 @@ class ReportParams extends React.Component {
         );
     }
     componentWillReceiveProps(nextProps) {
+        this.setState({paramValues : Object.assign({}, this.state.paramValues, this.props.paramValues)});
     }
 
 
