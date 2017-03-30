@@ -39,13 +39,7 @@ class GridReport extends React.Component {
                               style={{ paddingLeft: 100 +'px'}} className='springroll-icon pull-left glyphicon glyphicon-tasks'></span>
                     }
                 </div>
-                <div>
-                    {
-                        /* If there is data AND the data if for the chosen grid THEN show the grid */
-                        (this.props.gridData && this.props.gridData.gridName === this.props.gridName) &&
-                        <Grid gridData={this.props.gridData} formatters={formatters}/>
-                    }
-                </div>
+                <Grid gridData={this.props.gridData} formatters={formatters}/>
                 {
                     this.state.showFilter &&
                     <ReviewModal onModalClosed={this.handleModalClosed} title={message}>

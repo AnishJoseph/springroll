@@ -22,9 +22,7 @@ class Grid extends React.Component {
         this.getRows = this.getRows.bind(this);
         this.getSize = this.getSize.bind(this);
         this.handleFilterChange = this.handleFilterChange.bind(this);
-
-        let rows = this.massageMasterData(this.props.gridData);
-        this.state = {hasData : true, rows : rows, filters: {}, sortColumn: null, sortDirection: null};
+        this.state = {rows : undefined, filters: {}, sortColumn: null, sortDirection: null};
     }
 
     handleGridSort(sortColumn, sortDirection) {
@@ -88,24 +86,29 @@ class Grid extends React.Component {
     render() {
         return (
             <div className="springroll-table">
-                <ReactDataGrid
-                    onGridSort={this.handleGridSort}
-                    enableCellSelect={false}
-                    columns={this._columns}
-                    rowGetter={this.rowGetter}
-                    rowsCount={this.getSize()}
-                    minHeight={500}
-                    toolbar={<MdmToolbar  enableFilter={true}/>}
-                    onAddFilter={this.handleFilterChange}
-                    onClearFilters={this.onClearFilters}
-                    emptyRowsView={EmptyRowsView}/>
+                {   this.state.rows !== undefined &&
+                    <ReactDataGrid
+                        onGridSort={this.handleGridSort}
+                        enableCellSelect={false}
+                        columns={this._columns}
+                        rowGetter={this.rowGetter}
+                        rowsCount={this.getSize()}
+                        minHeight={500}
+                        toolbar={<MdmToolbar  enableFilter={true}/>}
+                        onAddFilter={this.handleFilterChange}
+                        onClearFilters={this.onClearFilters}
+                        emptyRowsView={EmptyRowsView}/>
+                }
             </div>
         );
     }
 
     componentWillReceiveProps(nextProps) {
-        let rows = this.massageMasterData(nextProps.gridData);
-        this.setState({hasData : true, rows : rows, filters: {}, sortColumn: null, sortDirection: null});
+        let rows = undefined;
+        if(nextProps.gridData !== undefined) {
+            rows = this.massageMasterData(nextProps.gridData);
+        }
+        this.setState({rows : rows});
     }
 }
 
