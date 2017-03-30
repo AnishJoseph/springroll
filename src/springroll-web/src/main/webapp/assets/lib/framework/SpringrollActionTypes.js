@@ -240,10 +240,11 @@ export function gridReceivedParameters(gridName, gridParams) {
     }
 }
 
-export function gridDataReceived(gridData) {
+export function gridDataReceived(gridData, gridName) {
     return {
         type: GridReportActions.GRID_REPORT_DATA_RECEIVED,
-        gridData : gridData
+        gridData : gridData,
+        gridName : gridName
     }
 }
 
@@ -276,7 +277,7 @@ export function gridDataRequest(gridName, params) {
             success: function (gridReport) {
                 deferred.resolve();
                 gridReport['gridName'] = gridName;
-                dispatch(gridDataReceived(gridReport));
+                dispatch(gridDataReceived(gridReport, gridName));
             }.bind(this),
             error : function (jqXHR, textStatus, errorThrown ){
                 deferred.resolve();
