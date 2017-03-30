@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import springrollReducers from 'SpringrollReducers.jsx';
 import Root from 'Root.jsx';
-import { setUser, addAlerts, AlertActions, setAlertFilter, AlertFilters} from 'SpringrollActionTypes';
+import { setUser, addAlerts, deleteAlert, AlertActions, setAlertFilter, AlertFilters} from 'SpringrollActionTypes';
 import thunkMiddleware from 'redux-thunk'
 var moment = require('moment');
 
@@ -38,7 +38,21 @@ class Application {
                 }
             });
         });
+        /* Subscribe to the notification cancellation channel. When an alert is no longer valid the server pushes a message
+            on thus channel. All we need to do is to dispatch a delete alert action. Note this will cause the alert to
+            vanish from the alert panel (even if the user is watching it )
+         */
 
+        this.subscribe('/core/notificationCancel', function(response){
+            let notificationCancellationMessage = response.data[0];
+            if (notificationCancellationMessage.alertType == 'ACTION') {
+                that.store.dispatch(deleteAlert(notificationCancellationMessage.id, AlertFilters.ALERT_FILTER_ACTION));
+            } else if (notificationCancellationMessage.alertType == 'ERROR') {
+                that.store.dispatch(deleteAlert(notificationCancellationMessage.id, AlertFilters.ALERT_FILTER_ERROR));
+            } else if (notificationCancellationMessage.alertType == 'INFO') {
+                that.store.dispatch(deleteAlert(notificationCancellationMessage.id, AlertFilters.ALERT_FILTER_INFO));
+            }
+        });
         $.when.apply($, this.getPromises()).then(function () {
             ReactDOM.render(
                 <Provider store={that.store}>
