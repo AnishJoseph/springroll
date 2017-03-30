@@ -20,7 +20,8 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
 const MDMContainer = connect(mapStateToProps, mapDispatchToProps)(MDM);
 export default MDMContainer;
 
-const routes = (<Route key="mdm" path="/mdm" component={MDMContainer}>
+const routes = (
+    <Route key="mdm" path="/mdm" component={MDMContainer}>
         <Route key="mm" path="/mdm/:master" component={MDMContainer}/>
     </Route>
 );
