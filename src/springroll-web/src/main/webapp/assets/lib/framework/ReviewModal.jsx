@@ -24,6 +24,7 @@ class ReviewModal extends React.Component {
         this.props.onModalClosed();
     }
     render() {
+        let footerNeeded = this.props.onSubmit !== undefined || this.props.onDismissAlert !== undefined;
         return (
             <Modal show={this.state.showModal} onHide={this.close} bsSize="large">
                 <Modal.Header closeButton>
@@ -32,12 +33,24 @@ class ReviewModal extends React.Component {
                 <Modal.Body className="scrollable">
                     {this.props.children}
                 </Modal.Body>
-                <Modal.Footer>
-                    { this.props.onSubmit != undefined && <input onChange={this.handleCommentsChange} type="text"  className="form-control"/> }
-                    { this.props.onSubmit != undefined && this.state.comment.length > 0 && <span style={{fontSize:14 +'px'}} onClick={() => this.handleSubmit(true)} data-toggle="tooltip" title={Application.Localize('ui.accept')}  className="alertActionsPanelItem glyphicon glyphicon-ok"></span> }
-                    { this.props.onSubmit != undefined && this.state.comment.length > 0 && <span style={{fontSize:14 +'px'}} onClick={() => this.handleSubmit(false)} data-toggle="tooltip" title={Application.Localize('ui.reject')}  className="alertActionsPanelItem glyphicon glyphicon-remove"></span> }
-                    { this.props.onDismissAlert != undefined &&  <span style={{fontSize:14 +'px'}} onClick={this.props.onDismissAlert} data-toggle="tooltip" title={Application.Localize('ui.dismiss')}  className="alertActionsPanelItem glyphicon glyphicon-trash"></span>}
-                </Modal.Footer>
+                {
+                    footerNeeded && <Modal.Footer>
+                        { this.props.onSubmit != undefined &&
+                        <input onChange={this.handleCommentsChange} type="text" className="form-control"/> }
+                        { this.props.onSubmit != undefined && this.state.comment.length > 0 &&
+                        <span style={{fontSize:14 +'px'}} onClick={() => this.handleSubmit(true)} data-toggle="tooltip"
+                              title={Application.Localize('ui.accept')}
+                              className="alertActionsPanelItem glyphicon glyphicon-ok"></span> }
+                        { this.props.onSubmit != undefined && this.state.comment.length > 0 &&
+                        <span style={{fontSize:14 +'px'}} onClick={() => this.handleSubmit(false)} data-toggle="tooltip"
+                              title={Application.Localize('ui.reject')}
+                              className="alertActionsPanelItem glyphicon glyphicon-remove"></span> }
+                        { this.props.onDismissAlert != undefined &&
+                        <span style={{fontSize:14 +'px'}} onClick={this.props.onDismissAlert} data-toggle="tooltip"
+                              title={Application.Localize('ui.dismiss')}
+                              className="alertActionsPanelItem glyphicon glyphicon-trash"></span>}
+                    </Modal.Footer>
+                }
             </Modal>
         );
     }
