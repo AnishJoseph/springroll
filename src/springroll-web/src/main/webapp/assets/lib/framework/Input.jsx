@@ -5,7 +5,7 @@ class Input extends React.Component {
     constructor(props) {
         super(props);
         this.onChange = this.onChange.bind(this);
-        this.state = {value : this.props.value}
+        this.state = {value : undefined}
     }
 
     onChange(value){
@@ -27,6 +27,10 @@ class Input extends React.Component {
             <input required className={this.props.classes} value={this.state.value} type="text" onChange={this.onChange} />
         );
     }
+    componentWillReceiveProps(nextProps) {
+        this.setState({value : nextProps.value});
+    }
+
 }
 
 export default Input;

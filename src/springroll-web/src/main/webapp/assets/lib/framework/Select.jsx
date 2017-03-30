@@ -7,7 +7,7 @@ class Select extends React.Component {
     constructor(props) {
         super(props);
         this.onChange = this.onChange.bind(this);
-        this.state = {value : this.props.value}
+        this.state = {value : undefined}
     }
 
     onChange(value){
@@ -31,6 +31,10 @@ class Select extends React.Component {
             className={this.props.className}
         />);
     }
+    componentWillReceiveProps(nextProps) {
+        this.setState({value : nextProps.value});
+    }
+
 }
 
 export default Select;

@@ -66,7 +66,7 @@ class ReportParams extends React.Component {
                                 return (
                                     <div key={parameter.name} className="form-group rep-param col-md-3">
                                         <div>{errorIcon}{Application.Localize(parameter.name)}</div>
-                                        <Select className="form-control"  key={parameter.name} options={parameter.lovList} multiSelect={parameter.multiSelect} onChange={ (value) => this.onChange(parameter.name, value)}  value={this.state.paramValues[parameter.name]}/>
+                                        <Select className="form-control"  key={parameter.name} options={parameter.lovList} multiSelect={parameter.multiSelect} onChange={ (value) => that.onChange(parameter.name, value)}  value={that.state.paramValues[parameter.name]}/>
                                     </div>
                                 )
                                } else if (parameter.javaType == "java.lang.Boolean"){
@@ -74,21 +74,21 @@ class ReportParams extends React.Component {
                                    return (
                                        <div key={parameter.name} className="form-group rep-param col-md-3">
                                            <div>{errorIcon}{Application.Localize(parameter.name)}</div>
-                                           <Select className="form-control" key={parameter.name} options={lovList} multiSelect={false} onChange={ (value) => this.onChange(parameter.name, value)}   value={this.state.paramValues[parameter.name]} />
+                                           <Select className="form-control" key={parameter.name} options={lovList} multiSelect={false} onChange={ (value) => that.onChange(parameter.name, value)}   value={that.state.paramValues[parameter.name]} />
                                        </div>
                                    )
                                } else if (parameter.javaType == "java.time.LocalDate" || (parameter.javaType == "java.time.LocalDateTime" && (parameter.setTime === 'START_OF_DAY' || parameter.setTime === 'END_OF_DAY'))){
                                    return (
                                        <div key={parameter.name} className="form-group rep-param col-md-3">
                                            <div>{errorIcon}{Application.Localize(parameter.name)}</div>
-                                           <DatePicker onChange={ (value) => this.onChange(parameter.name, value)}  value={this.state.paramValues[parameter.name]}/>
+                                           <DatePicker onChange={ (value) => that.onChange(parameter.name, value)}  value={that.state.paramValues[parameter.name]}/>
                                        </div>
                                    )
                                } else if (parameter.javaType == "java.time.LocalDateTime"){
                                    return (
                                        <div key={parameter.name} className="form-group rep-param col-md-3">
                                            <div>{errorIcon}{Application.Localize(parameter.name)}</div>
-                                           //<DupDateTimePicker onChange={ (value) => this.onChange(parameter.name, value)}  value={this.state.paramValues[parameter.name]}/>
+                                           //<DupDateTimePicker onChange={ (value) => that.onChange(parameter.name, value)}  value={that.state.paramValues[parameter.name]}/>
                                            <div>DATETIME TBD</div>
                                        </div>
                                    )
@@ -97,10 +97,11 @@ class ReportParams extends React.Component {
                                } else if ( parameter.javaType == "java.lang.Double"  || parameter.javaType == "java.lang.Float" || parameter.javaType == "java.math.BigDecimal"){
                                    pattern = floatPattern;
                                }
+                               console.log("PARAM = " + parameter.name + "  Value = " + that.state.paramValues[parameter.name]);
                                return (
                                    <div key={parameter.name} className="form-group rep-param col-md-3">
                                        <div>{errorIcon}{Application.Localize(parameter.name)}</div>
-                                       <Input pattern={pattern} classes="form-control " value={this.state.paramValues[parameter.name]} onChange={ (value) => this.onChange(parameter.name, value)} />
+                                       <Input pattern={pattern} classes="form-control " value={that.state.paramValues[parameter.name]} onChange={ (value) => that.onChange(parameter.name, value)} />
                                    </div>
                                )
                            })
@@ -115,7 +116,8 @@ class ReportParams extends React.Component {
         );
     }
     componentWillReceiveProps(nextProps) {
-        this.setState({paramValues : Object.assign({}, this.state.paramValues, this.props.paramValues)});
+        let newParamValue = Object.assign({}, this.state.paramValues, this.props.paramValues);
+        this.setState({paramValues : newParamValue});
     }
 
 
