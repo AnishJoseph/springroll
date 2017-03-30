@@ -10,7 +10,9 @@ import { Router, Route } from 'react-router'
 
 
 const mapStateToProps = (state, ownProps) => {
-    return Object.assign({gridParams : state.gridReport.params, gridData : state.gridReport.gridData}, ownProps);
+    let params =  state.gridReports[ownProps.gridName] === undefined ? [] : state.gridReports[ownProps.gridName].params;
+    let gridData =  state.gridReports[ownProps.gridName] === undefined ? undefined : state.gridReports[ownProps.gridName].gridData;
+    return Object.assign({gridParams : params, gridData : gridData}, ownProps);
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

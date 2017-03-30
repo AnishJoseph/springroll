@@ -35,12 +35,20 @@ function alertsReducer(state = {actions : [], info : [], errors : [], visibleAle
             return state;
     }
 }
-function gridReportReducer(state = {params : [], gridData : undefined}, action) {
+function gridReportReducer(state = {}, action) {
     switch (action.type) {
         case GridReportActions.GRID_REPORT_PARAMS_RECEIVED:
-            return Object.assign({}, state, { params :  action.gridParams, gridName : action.gridName});
+            let gridInfoAboutThisGrid = state[action.gridName] || {};
+            let updatedGridInfoAboutThisGrid = Object.assign({}, gridInfoAboutThisGrid, { params :  action.gridParams, gridName : action.gridName});
+            let newState = Object.assign({}, state);
+            newState[action.gridName] = updatedGridInfoAboutThisGrid;
+            return Object.assign({}, state, newState);
         case GridReportActions.GRID_REPORT_DATA_RECEIVED:
-            return Object.assign({}, state, { gridData :  action.gridData});
+            var gridInfoAboutThisGrid = state[action.gridName] || {};
+            var updatedGridInfoAboutThisGrid = Object.assign({}, gridInfoAboutThisGrid, { gridData :  action.gridData});
+            newState = Object.assign({}, state);
+            newState[action.gridName] = updatedGridInfoAboutThisGrid;
+            return Object.assign({}, state, newState);
         default:
             return state;
     }
@@ -79,7 +87,7 @@ const springrollReducers = combineReducers({
     alerts : alertsReducer,
     user : userReducer,
     mdm : mdmReducer,
-    gridReport : gridReportReducer
+    gridReports : gridReportReducer
 });
 
 
