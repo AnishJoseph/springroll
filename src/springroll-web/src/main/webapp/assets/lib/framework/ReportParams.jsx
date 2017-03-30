@@ -50,7 +50,7 @@ class ReportParams extends React.Component {
         return (
            <div className="panel panel-default">
                <div className="panel-body">
-                   <form className=" form-inline report-param-form">
+                   <form className="report-param-form">
                        <div className="container-fluid">
                        {
                            this.props.params.map((parameter) => {
@@ -58,7 +58,7 @@ class ReportParams extends React.Component {
                                if(parameter.lovList != null){
                                 return (
                                     <div key={parameter.name} className="form-group rep-param col-md-3">
-                                        <div>{Application.Localize(parameter.name)}</div>
+                                        <div>{errorIcon}{Application.Localize(parameter.name)}</div>
                                         <Select className="form-control"  key={parameter.name} options={parameter.lovList} multiSelect={parameter.multiSelect} onChange={ (value) => this.onChange(parameter.name, value)}  value={this.state.paramValues[parameter.name]}/>
                                     </div>
                                 )
@@ -66,21 +66,21 @@ class ReportParams extends React.Component {
                                    let lovList = [{value : true, label : Application.Localize('ui.true')}, {value : false, label : Application.Localize('ui.false')}];
                                    return (
                                        <div key={parameter.name} className="form-group rep-param col-md-3">
-                                           <div>{Application.Localize(parameter.name)}</div>
+                                           <div>{errorIcon}{Application.Localize(parameter.name)}</div>
                                            <Select className="form-control" key={parameter.name} options={lovList} multiSelect={false} onChange={ (value) => this.onChange(parameter.name, value)}   value={this.state.paramValues[parameter.name]} />
                                        </div>
                                    )
                                } else if (parameter.javaType == "java.time.LocalDate" || (parameter.javaType == "java.time.LocalDateTime" && (parameter.setTime === 'START_OF_DAY' || parameter.setTime === 'END_OF_DAY'))){
                                    return (
                                        <div key={parameter.name} className="form-group rep-param col-md-3">
-                                           <div>{Application.Localize(parameter.name)}</div>
+                                           <div>{errorIcon}{Application.Localize(parameter.name)}</div>
                                            <DatePicker onChange={ (value) => this.onChange(parameter.name, value)}  value={this.state.paramValues[parameter.name]}/>
                                        </div>
                                    )
                                } else if (parameter.javaType == "java.time.LocalDateTime"){
                                    return (
                                        <div key={parameter.name} className="form-group rep-param col-md-3">
-                                           <div>{Application.Localize(parameter.name)}</div>
+                                           <div>{errorIcon}{Application.Localize(parameter.name)}</div>
                                            //<DupDateTimePicker onChange={ (value) => this.onChange(parameter.name, value)}  value={this.state.paramValues[parameter.name]}/>
                                            <div>DATETIME TBD</div>
                                        </div>
@@ -100,7 +100,7 @@ class ReportParams extends React.Component {
                        }
                        </div>
                        <div  className="formSubmit" dummy={this.state.dummy}>
-                           <span title={Application.Localize('Apply')} onClick={this.onSubmitClicked} className="form-control submit glyphicon glyphicon-ok"></span>
+                           <span title={Application.Localize('Apply')} onClick={this.onSubmitClicked} className=" submit glyphicon glyphicon-ok"></span>
                        </div>
                    </form>
                </div>
