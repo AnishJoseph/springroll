@@ -28,6 +28,7 @@ class Select extends React.Component {
             onChange={this.onChange}
             multi={this.props.multiSelect}
             value={this.state.value}
+            className={this.props.className}
         />);
     }
 }

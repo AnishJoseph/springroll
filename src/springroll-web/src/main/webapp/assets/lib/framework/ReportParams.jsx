@@ -11,7 +11,9 @@ class ReportParams extends React.Component {
     constructor(props){
         super(props);
         this.onChange = this.onChange.bind(this);
-        this.state = {paramValues : this.props.paramValues}
+        this.getErrorIcon = this.getErrorIcon.bind(this);
+        this.onSubmitClicked = this.onSubmitClicked.bind(this);
+        this.state = {paramValues : this.props.paramValues, dummy : 1}
     }
 
     onChange(paramName, value){
@@ -20,21 +22,44 @@ class ReportParams extends React.Component {
         newValue[paramName] = value;
         this.setState({paramValues : Object.assign({}, this.state.paramValues, newValue )});
     }
-
+    getErrorIcon(parameterName){
+        let param = _.find(this.props.params, (param) => (param.name == parameterName));
+        if(param.error !== undefined)
+            return <span title={Application.Localize('ui.report.parameters.empty')} className="error-icon glyphicon glyphicon-warning-sign"></span>
+        return;
+    }
+    onSubmitClicked(){
+        var that = this;
+        let hasErrors = false;
+        /* Validate the params (as much as possible) */
+        _.each(this.props.params, function(param){
+            if(param.visible && that.state.paramValues[param.name] == undefined){
+                param['error'] = true;
+                hasErrors = true;
+            }
+        });
+        if(hasErrors){
+            this.setState({dummy : this.state.dummy + 1});
+            return;
+        }
+        this.props.onParamsSelected(this.state.paramValues);
+    }
     render() {
         let pattern = undefined;
+        var that = this;
         return (
            <div className="panel panel-default">
                <div className="panel-body">
-                   <form className="form-inline report-param-form">
+                   <form className=" form-inline report-param-form">
                        <div className="container-fluid">
                        {
                            this.props.params.map((parameter) => {
+                               let errorIcon = that.getErrorIcon(parameter.name);
                                if(parameter.lovList != null){
                                 return (
                                     <div key={parameter.name} className="form-group rep-param col-md-3">
                                         <div>{Application.Localize(parameter.name)}</div>
-                                        <Select key={parameter.name} options={parameter.lovList} multiSelect={parameter.multiSelect} onChange={ (value) => this.onChange(parameter.name, value)}  value={this.state.paramValues[parameter.name]}/>
+                                        <Select className="form-control"  key={parameter.name} options={parameter.lovList} multiSelect={parameter.multiSelect} onChange={ (value) => this.onChange(parameter.name, value)}  value={this.state.paramValues[parameter.name]}/>
                                     </div>
                                 )
                                } else if (parameter.javaType == "java.lang.Boolean"){
@@ -42,7 +67,7 @@ class ReportParams extends React.Component {
                                    return (
                                        <div key={parameter.name} className="form-group rep-param col-md-3">
                                            <div>{Application.Localize(parameter.name)}</div>
-                                           <Select key={parameter.name} options={lovList} multiSelect={false} onChange={ (value) => this.onChange(parameter.name, value)}   value={this.state.paramValues[parameter.name]} />
+                                           <Select className="form-control" key={parameter.name} options={lovList} multiSelect={false} onChange={ (value) => this.onChange(parameter.name, value)}   value={this.state.paramValues[parameter.name]} />
                                        </div>
                                    )
                                } else if (parameter.javaType == "java.time.LocalDate" || (parameter.javaType == "java.time.LocalDateTime" && (parameter.setTime === 'START_OF_DAY' || parameter.setTime === 'END_OF_DAY'))){
@@ -67,15 +92,15 @@ class ReportParams extends React.Component {
                                }
                                return (
                                    <div key={parameter.name} className="form-group rep-param col-md-3">
-                                       <div>{Application.Localize(parameter.name)}</div>
+                                       <div>{errorIcon}{Application.Localize(parameter.name)}</div>
                                        <Input pattern={pattern} classes="form-control " value={this.state.paramValues[parameter.name]} onChange={ (value) => this.onChange(parameter.name, value)} />
                                    </div>
                                )
                            })
                        }
                        </div>
-                       <div  className="formSubmit">
-                           <span title={Application.Localize('Apply')} onClick={() => this.props.onParamsSelected(this.state.paramValues)} className="form-control submit glyphicon glyphicon-ok"></span>
+                       <div  className="formSubmit" dummy={this.state.dummy}>
+                           <span title={Application.Localize('Apply')} onClick={this.onSubmitClicked} className="form-control submit glyphicon glyphicon-ok"></span>
                        </div>
                    </form>
                </div>
