@@ -4,6 +4,7 @@ import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import DateTimeFormatter from 'DateTimeFormatter';
 import DateFormatter from 'DateFormatter';
 import BooleanFormatter from 'BooleanFormatter';
+import DebounceInput from 'react-debounce-input';
 
 function bsFormatter(cell, formatter) {
     let Formatter = formatter;
@@ -25,6 +26,8 @@ function dateTimeSorter(a, b, order, sortField){
 class BootstrapGrid extends React.Component {
     constructor(props){
         super(props);
+        this.search = this.search.bind(this);
+        this.state = {"searchValue" : ''};
     }
 
     massageMasterData(gridData){
@@ -44,6 +47,10 @@ class BootstrapGrid extends React.Component {
         });
         return rows;
     }
+    search(e){
+        this.setState({searchValue: e.target.value})
+        this.refs.table.handleSearch(e.target.value);
+    }
     render() {
         let rows;
         if(this.props.gridData !== undefined) {
@@ -52,7 +59,10 @@ class BootstrapGrid extends React.Component {
             return null;
         }
         return (
-            <BootstrapTable data={rows} striped hover search={true} keyField={this.props.gridData.key} height='800px' scrollTop={ 'Top' } multiColumnSort={3} >
+            <div>
+                <DebounceInput minLength={2} debounceTimeout={300} onChange={this.search} placeholder={Application.Localize('ui.search')}/>
+
+                <BootstrapTable ref="table" data={rows} striped hover search={false} keyField={this.props.gridData.key} height='800px' scrollTop={ 'Top' } multiColumnSort={3} >
                 {
                     this.props.gridData.columns.map((colDef, index) => {
                         let formatter = undefined, dataFormatter, sorter = undefined;
@@ -78,7 +88,7 @@ class BootstrapGrid extends React.Component {
                     })
                 }
             </BootstrapTable>
-
+            </div>
         );
     }
 }

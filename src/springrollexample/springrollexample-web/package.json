@@ -24,6 +24,7 @@
     "react-data-grid": "^2.0.18",
     "react-data-grid-addons": "^2.0.18",
     "react-date-picker": "^5.3.28",
+    "react-debounce-input": "^2.4.2",
     "react-dom": "^15.4.2",
     "react-notification-system": "^0.2.13",
     "react-redux": "^5.0.3",
