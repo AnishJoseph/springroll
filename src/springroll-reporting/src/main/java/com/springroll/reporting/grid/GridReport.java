@@ -11,6 +11,7 @@ import java.util.List;
 public class GridReport implements IGridReport {
     private List<? extends IGridColumn> columns;
     private List<Object> data;
+    private String key;
 
     @Override
     public List<? extends IGridColumn> getColumns() {
@@ -28,5 +29,14 @@ public class GridReport implements IGridReport {
 
     public void setData(List<Object> data) {
         this.data = data;
+    }
+
+    @Override
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

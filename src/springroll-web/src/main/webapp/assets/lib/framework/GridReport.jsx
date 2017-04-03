@@ -2,7 +2,7 @@ import React from 'react';
 import Application from 'App';
 import ReportParams from 'ReportParams';
 import ReviewModal from 'ReviewModal.jsx';
-import Grid from 'grid/Grid.jsx';
+import Grid from 'grid/BootstrapGrid.jsx';
 
 class GridReport extends React.Component {
     constructor(props){

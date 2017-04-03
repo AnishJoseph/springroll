@@ -9,4 +9,6 @@ import java.util.List;
 public interface IGridReport {
     List<? extends IGridColumn> getColumns();
     List<Object> getData();
+    String getKey();
+
 }

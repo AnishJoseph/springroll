@@ -68,6 +68,7 @@ import java.util.stream.Collectors;
 
         List data = executeQuery(grid.getNamedQuery(), parameters);
         GridReport gridReport = new GridReport();
+        gridReport.setKey(grid.getKey());
         gridReport.setColumns(grid.getGridColumns());
 
         for (int i = 0; i < grid.getGridColumns().size(); i++) {

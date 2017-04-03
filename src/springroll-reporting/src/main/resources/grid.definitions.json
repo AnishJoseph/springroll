@@ -1,25 +1,25 @@
 {
   "grids" : [
-    {"name" : "TestGrid1", "fixedColumns": 2, "namedQuery": "StringListBooleanDateParam",
+    {"name" : "TestGrid1", "fixedColumns": 2, "namedQuery": "StringListBooleanDateParam", "key" : "ID",
       "gridColumns":[
           {"title": "ID", "type":"num"},
           {"title": "User", "type" : "text"},
           {"title": "ServiceName", "type":"text"}
         ]
     },
-    {"name" : "JobDashboard", "namedQuery": "JobDashboardQuery",
+    {"name" : "JobDashboard", "namedQuery": "JobDashboardQuery", "key" : "ID",
       "gridColumns":[
-          {"title": "ID", "type":"text", "visible" : false},
-          {"title": "ui.grid.Action", "type":"text"},
-          {"title": "ui.grid.Description", "type":"text"},
-          {"title": "ui.grid.StartTime", "type":"datetime", "className" : "text-center"},
-          {"title": "ui.grid.EndTime", "type":"datetime", "className" : "text-center"},
-          {"title": "ui.grid.JobStatus", "type":"text", "className" : "text-center"},
-          {"title": "ui.grid.PendingWith", "type":"text"},
-          {"title": "ui.grid.Reviewers", "type":"reviewlog"}
+          {"title": "ID", "type":"text", "visible" : false, "align" : "LEFT"},
+          {"title": "ui.grid.Action", "type":"text", "align" : "LEFT"},
+          {"title": "ui.grid.Description", "type":"text", "align" : "LEFT", "width" : "500px"},
+          {"title": "ui.grid.StartTime", "type":"datetime", "className" : "text-center", "align" : "CENTER"},
+          {"title": "ui.grid.EndTime", "type":"datetime", "className" : "text-center", "align" : "CENTER"},
+          {"title": "ui.grid.JobStatus", "type":"text", "className" : "text-center", "align" : "LEFT"},
+          {"title": "ui.grid.PendingWith", "type":"text", "align" : "LEFT"},
+          {"title": "ui.grid.Reviewers", "type":"reviewlog", "width" : "300px", "sortable" : false}
       ]
     },
-    {"name" : "TestGridAllTypes", "namedQuery": "TestGridAllTypes",
+    {"name" : "TestGridAllTypes", "namedQuery": "TestGridAllTypes",  "key" : "stringVariable",
       "gridColumns":[
           {"title": "stringVariable", "type":"text"},
           {"title": "booleanVariable", "type":"boolean", "className" : "text-center"},
@@ -32,7 +32,7 @@
           {"title": "localDateTimeVariable", "type":"datetime", "className" : "text-center"}
         ]
     },
-    {"name" : "TestGridParamFromSpringrollUser", "namedQuery": "TestGridParamFromSpringrollUser",
+    {"name" : "TestGridParamFromSpringrollUser", "namedQuery": "TestGridParamFromSpringrollUser", "key" : "ID",
       "gridColumns":[
         {"title": "ID", "type":"num", "className" : "text-right"},
         {"title": "User", "type" : "text"},

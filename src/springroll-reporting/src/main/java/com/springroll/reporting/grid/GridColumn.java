@@ -1,5 +1,6 @@
 package com.springroll.reporting.grid;
 
+import com.springroll.core.Align;
 import com.springroll.core.services.reporting.IGridColumn;
 
 /**
@@ -10,8 +11,10 @@ public class GridColumn implements IGridColumn {
     private String title;
     private String type = "text";
     private String numberFormat;
-    private String className;
     private boolean visible = true;
+    private Align align = Align.LEFT;
+    private String width;
+    private boolean sortable = true;
 
     @Override
     public String getTitle() {
@@ -42,20 +45,38 @@ public class GridColumn implements IGridColumn {
     }
 
     @Override
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    @Override
     public boolean isVisible() {
         return visible;
     }
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    @Override
+    public Align getAlign() {
+        return align;
+    }
+
+    public void setAlign(Align align) {
+        this.align = align;
+    }
+
+    @Override
+    public String getWidth() {
+        return width;
+    }
+
+    public void setWidth(String width) {
+        this.width = width;
+    }
+
+    @Override
+    public boolean isSortable() {
+        return sortable;
+    }
+
+    public void setSortable(boolean sortable) {
+        this.sortable = sortable;
     }
 }

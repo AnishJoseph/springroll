@@ -4,7 +4,8 @@ import GridReportContainer from 'GridReportContainer';
 import ReviewLogFormatter from 'ReviewLogFormatter';
 
 function TestGrid1(props) {
-    return <GridReportContainer gridName="TestGrid1" parameterFirst={true}/>;
+    var p = {completeStatus : true, userIds : ['ANISH']};
+    return <GridReportContainer gridName="TestGrid1" parameterFirst={true} params={p}/>;
 }
 function TestGridParamFromSpringrollUser(props) {
     return <GridReportContainer gridName="TestGridParamFromSpringrollUser" parameterFirst={true}/>;

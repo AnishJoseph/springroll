@@ -13,6 +13,7 @@ public class Grid {
     private String  namedQuery;
     private List<GridColumn> gridColumns;
     private List<Parameter<?>> parameters = null;
+    private String key = "ID";
 
     public String getName() {
         return name;
@@ -52,5 +53,13 @@ public class Grid {
 
     public void setParameters(List<Parameter<?>> parameters) {
         this.parameters = parameters;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }
