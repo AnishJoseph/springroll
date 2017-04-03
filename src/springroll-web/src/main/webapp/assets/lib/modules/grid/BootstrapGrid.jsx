@@ -12,6 +12,16 @@ function bsFormatter(cell, formatter) {
     );
 }
 
+function dateTimeSorter(a, b, order, sortField){
+    let aValue = a[sortField] == null ? 0: a[sortField];
+    let bValue = b[sortField] == null ? 0: b[sortField];
+    if (order === 'desc') {
+        return aValue - bValue;
+    } else {
+        return bValue - aValue;
+    }
+}
+
 class BootstrapGrid extends React.Component {
     constructor(props){
         super(props);
@@ -42,24 +52,28 @@ class BootstrapGrid extends React.Component {
             return null;
         }
         return (
-            <BootstrapTable data={rows} striped hover search={true} keyField={this.props.gridData.key} height='800px' scrollTop={ 'Top' }>
+            <BootstrapTable data={rows} striped hover search={true} keyField={this.props.gridData.key} height='800px' scrollTop={ 'Top' } multiColumnSort={3} >
                 {
                     this.props.gridData.columns.map((colDef, index) => {
-                        let formatter = undefined, dataFormatter;
-                        if(colDef.type == 'date')     formatter = DateFormatter;
-                        if(colDef.type == 'datetime') formatter = DateTimeFormatter;
+                        let formatter = undefined, dataFormatter, sorter = undefined;
+                        if(colDef.type == 'date')     {formatter = DateFormatter; sorter = dateTimeSorter;}
+                        if(colDef.type == 'datetime') {formatter = DateTimeFormatter; sorter = dateTimeSorter;}
                         if(colDef.type == 'boolean')  formatter = BooleanFormatter;
 
                         /* If the caller has specified a formatter (tied to a type) then use that formatter - it overrides everything else */
                         if(this.props.formatters !== undefined && this.props.formatters[colDef.type]){
                             formatter = this.props.formatters[colDef.type];
                         }
+                        /* If the caller has specified a sorter (tied to a type) then use that sorter - it overrides everything else */
+                        if(this.props.sorter !== undefined && this.props.sorter[colDef.type]){
+                            sorter = this.props.sorter[colDef.type];
+                        }
                         if(formatter){
                             dataFormatter = (cell, row) => bsFormatter(cell, formatter);
                         }
                         let align = colDef.align.toLowerCase();
 
-                        return <TableHeaderColumn dataAlign={align} dataSort={colDef.sortable} hidden={!colDef.visible} width={colDef.width} tdStyle={ { whiteSpace: 'normal' } } key={index} dataFormat={dataFormatter} dataField={colDef.title}>{Application.Localize(colDef.title)}</TableHeaderColumn>
+                        return <TableHeaderColumn sortFunc={sorter} dataAlign={align} dataSort={colDef.sortable} hidden={!colDef.visible} width={colDef.width} tdStyle={ { whiteSpace: 'normal' } } key={index} dataFormat={dataFormatter} dataField={colDef.title}>{Application.Localize(colDef.title)}</TableHeaderColumn>
 
                     })
                 }
