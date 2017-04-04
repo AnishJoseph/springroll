@@ -30,9 +30,24 @@ class Application {
         _.each(eventCreators, eventCreator =>
             that.store.dispatch(eventCreator(receivedPushData)));
     }
+    notificationCancelled(cancelMessage) {
+        let notificationCancellationMessage = cancelMessage.data[0];
+        if (notificationCancellationMessage.alertType == 'ACTION') {
+            return deleteAlert(notificationCancellationMessage.id, AlertFilters.ALERT_FILTER_ACTION);
+        } else if (notificationCancellationMessage.alertType == 'ERROR') {
+            return deleteAlert(notificationCancellationMessage.id, AlertFilters.ALERT_FILTER_ERROR);
+        } else if (notificationCancellationMessage.alertType == 'INFO') {
+            return deleteAlert(notificationCancellationMessage.id, AlertFilters.ALERT_FILTER_INFO);
+        }
+    }
 
     start() {
         var that = this;
+        /*  Subscribe to the notification cancellation channel. When an alert is no longer valid the server pushes a message
+         on thus channel. All we need to do is to dispatch a delete alert action. Note this will cause the alert to
+         vanish from the alert panel (even if the user is watching it )
+         */
+        this.subscribeToPushTopic('/core/notificationCancel', this.notificationCancelled);
 
         _.each(Object.keys(that.getSubscribersToAlerts()), function (channel) {
             that.subscribe(channel, (response) => {
@@ -52,21 +67,7 @@ class Application {
                 that.dispatchActionsOnReceiptOfPushTopic(response, eventCreators);
             });
         });
-        /* Subscribe to the notification cancellation channel. When an alert is no longer valid the server pushes a message
-            on thus channel. All we need to do is to dispatch a delete alert action. Note this will cause the alert to
-            vanish from the alert panel (even if the user is watching it )
-         */
 
-        this.subscribe('/core/notificationCancel', function(response){
-            let notificationCancellationMessage = response.data[0];
-            if (notificationCancellationMessage.alertType == 'ACTION') {
-                that.store.dispatch(deleteAlert(notificationCancellationMessage.id, AlertFilters.ALERT_FILTER_ACTION));
-            } else if (notificationCancellationMessage.alertType == 'ERROR') {
-                that.store.dispatch(deleteAlert(notificationCancellationMessage.id, AlertFilters.ALERT_FILTER_ERROR));
-            } else if (notificationCancellationMessage.alertType == 'INFO') {
-                that.store.dispatch(deleteAlert(notificationCancellationMessage.id, AlertFilters.ALERT_FILTER_INFO));
-            }
-        });
         $.when.apply($, this.getPromises()).then(function () {
             ReactDOM.render(
                 <Provider store={that.store}>
