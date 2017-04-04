@@ -6,7 +6,7 @@ import Application from 'App';
 $(function() {
     Application.setup();
     $.when.apply($, Application.getPromises()).then(function () {
-        var modules = ["Module1", "Module2", "Module3_1", "MDM", "Module3_3", "GridTests"];
+        var modules = ["Module1", "Module2", "Module3_1", "MDM", "Module3_3", "GridTests", "JobDashboard"];
 
         /* Based on this users authorization start requiring the modules */
         if (_.contains(modules, "Module1")) {
@@ -57,7 +57,17 @@ $(function() {
                 deferred.resolve();
             });
         }
+        if (_.contains(modules, "JobDashboard")) {
+            let deferred = $.Deferred();
+            Application.addPromise(deferred.promise());
+            require.ensure([], function (require) {
+                require("JobDashboard.jsx");
+                deferred.resolve();
+            });
+        }
 
-       Application.start();
+        $.when.apply($, Application.getPromises()).then(function () {
+            Application.start();
+        });
     });
 });

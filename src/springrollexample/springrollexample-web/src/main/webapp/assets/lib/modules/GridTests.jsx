@@ -1,7 +1,6 @@
 import React from 'react';
 import Application from 'App';
 import GridReportContainer from 'GridReportContainer';
-import ReviewLogFormatter from 'ReviewLogFormatter';
 
 function TestGrid1(props) {
     var p = {completeStatus : true, userIds : ['ANISH']};
@@ -12,10 +11,6 @@ function TestGridParamFromSpringrollUser(props) {
 }
 function TestGridAllTypes(props) {
     return <GridReportContainer gridName="TestGridAllTypes" parameterFirst={true}/>;
-}
-function JobDashboard(props) {
-    let formatters = {'reviewlog' : ReviewLogFormatter};
-    return <GridReportContainer gridName="JobDashboard" formatters={formatters}/>;
 }
 
 Application.addMenu({
@@ -45,16 +40,3 @@ Application.addMenu({
     parentTitle: 'Grid Tests',
     parentIndex : 5
 });
-
-Application.addMenu({
-    title: 'JobDashboard',
-    index: 6,
-    type: "menuitem",
-    route: 'grids/JobDashboard',
-    component : JobDashboard,
-});
-
-
-
-
-

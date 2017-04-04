@@ -25,6 +25,7 @@ export const MdmActions = {
 };
 export const GridReportActions = {
     GRID_REPORT_PARAMS_RECEIVED : 'GRID_REPORT_PARAMS_RECEIVED',
+    GRID_REPORT_DATA_UPDATE_RECEIVED : 'GRID_REPORT_DATA_UPDATE_RECEIVED',
     GRID_REPORT_DATA_RECEIVED : 'GRID_REPORT_DATA_RECEIVED'
 };
 
@@ -231,7 +232,7 @@ export function mdmMasterChanged(mdmDTO) {
     }
 }
 
-
+/* GRID Action Creators */
 export function gridReceivedParameters(gridName, gridParams) {
     return {
         type: GridReportActions.GRID_REPORT_PARAMS_RECEIVED,
@@ -244,6 +245,13 @@ export function gridDataReceived(gridData, gridName) {
     return {
         type: GridReportActions.GRID_REPORT_DATA_RECEIVED,
         gridData : gridData,
+        gridName : gridName
+    }
+}
+export function gridDataUpdateReceived(receivedPushData, gridName) {
+    return {
+        type: GridReportActions.GRID_REPORT_DATA_UPDATE_RECEIVED,
+        updatedData : receivedPushData,
         gridName : gridName
     }
 }

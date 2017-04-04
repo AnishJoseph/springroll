@@ -49,6 +49,28 @@ function gridReportReducer(state = {}, action) {
             newState = Object.assign({}, state);
             newState[action.gridName] = updatedGridInfoAboutThisGrid;
             return Object.assign({}, state, newState);
+        case GridReportActions.GRID_REPORT_DATA_UPDATE_RECEIVED:
+            var gridInfoAboutThisGrid = state[action.gridName];
+            if(gridInfoAboutThisGrid == undefined){
+                console.log("Received Update for Grid '" + action.gridName + "' but no data available for the grid as yet - discarding the update");
+                return state;
+            }
+
+            var idOfRowThatChanged = action.updatedData[0];
+            let newData = _.map(gridInfoAboutThisGrid.gridData.data, row => {
+                if(row[0] === idOfRowThatChanged){
+                    return action.updatedData;
+                }
+                return row;
+            });
+
+            var newGridData = Object.assign({}, gridInfoAboutThisGrid.gridData, {data : newData});
+            var newGridInfo = Object.assign({}, gridInfoAboutThisGrid, {gridData : newGridData});
+            newState = Object.assign({}, state);
+            newState[action.gridName] = newGridInfo;
+            return Object.assign({}, state, newState);
+
+
         default:
             return state;
     }

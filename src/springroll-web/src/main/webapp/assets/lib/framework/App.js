@@ -15,12 +15,20 @@ var moment = require('moment');
 class Application {
 
     constructor() {
+        this.pushTopicSubscribers = {};   //Holds the subscribers to the push notifications - filled in by modules calling subscribe
         this.subscribers = {};   //Holds the subscribers to the push notifications - filled in by modules calling subscribe
         this.menuDefns = [];     //Holds the list of menu definitions - filled by modules calling addMenuItem
         this.subscribersToAlerts = {};
-        this.localeMessages = {"anish" : "joseph"};
+        this.localeMessages = {};
         this.properties = {};
         this.promises = [];
+    }
+
+    dispatchActionsOnReceiptOfPushTopic(receivedPushData, eventCreators){
+        var that = this;
+        console.log("Received data on channel " + receivedPushData.channel);
+        _.each(eventCreators, eventCreator =>
+            that.store.dispatch(eventCreator(receivedPushData)));
     }
 
     start() {
@@ -36,6 +44,12 @@ class Application {
                 } else if (response.data[0].alertType == 'INFO') {
                     that.store.dispatch(addAlerts(AlertActions.ADD_INFO_ALERTS, response.data));
                 }
+            });
+        });
+        _.each(Object.keys(this.getSubscribersToPushTopics()), function (channel) {
+            let eventCreators = that.getSubscribersToPushTopics()[channel];
+            that.subscribe(channel, function(response){
+                that.dispatchActionsOnReceiptOfPushTopic(response, eventCreators);
             });
         });
         /* Subscribe to the notification cancellation channel. When an alert is no longer valid the server pushes a message
@@ -84,6 +98,16 @@ class Application {
 
     getSubscribers(){
         return this.subscribers;
+    }
+    subscribeToPushTopic(service, eventCreator){
+        if(this.pushTopicSubscribers[service] == undefined){
+            this.pushTopicSubscribers[service] = [];
+        }
+        this.pushTopicSubscribers[service].push(eventCreator);
+    }
+
+    getSubscribersToPushTopics(){
+        return this.pushTopicSubscribers;
     }
 
     addMenu(menuDefn){
