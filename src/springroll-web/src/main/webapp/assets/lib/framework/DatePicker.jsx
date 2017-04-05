@@ -1,7 +1,7 @@
 import React from 'react';
 import Application from 'App';
+import DateField from 'react-datetime';
 var moment = require('moment');
-import { DateField } from 'react-date-picker'
 
 class DatePicker extends React.Component {
     constructor(props) {
@@ -9,19 +9,18 @@ class DatePicker extends React.Component {
         this.onChange = this.onChange.bind(this);
     }
 
-    onChange(dateString, { dateMoment, timestamp }){
+    onChange(dateMoment){
         if(dateMoment == null || dateMoment == undefined)return;
-        this.date = dateMoment.valueOf();
-        this.props.onChange(this.date);
+        this.props.onChange(dateMoment.valueOf());
     }
     render() {
-        this.date = this.props.value;
+        let value = this.props.value === undefined ? undefined : moment(this.props.value);
         return (<DateField
+            value={value}
             dateFormat={Application.getMomentFormatForDate()}
-            defaultValue={this.date}
             onChange={this.onChange}
-            updateOnDateClick={true}
-            collapseOnDateClick={true}
+            closeOnSelect={true}
+            timeFormat={this.props.isDateTime}
         />);
     }
 }

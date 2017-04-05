@@ -6,6 +6,7 @@ import Input from 'Input.jsx';
 
 const floatPattern = new RegExp("^[-+]?[0-9]*\\.?[0-9]*$");
 const intPattern = new RegExp("^[-+]?[0-9]*$");
+const booleanLovList = [{value : true, label : Application.Localize('ui.true')}, {value : false, label : Application.Localize('ui.false')}];
 
 class ReportParams extends React.Component {
     constructor(props){
@@ -70,26 +71,24 @@ class ReportParams extends React.Component {
                                     </div>
                                 )
                                } else if (parameter.javaType == "java.lang.Boolean"){
-                                   let lovList = [{value : true, label : Application.Localize('ui.true')}, {value : false, label : Application.Localize('ui.false')}];
                                    return (
                                        <div key={parameter.name} className="form-group rep-param col-md-3">
                                            <div>{errorIcon}{Application.Localize(parameter.name)}</div>
-                                           <Select className="form-control" key={parameter.name} options={lovList} multiSelect={false} onChange={ (value) => that.onChange(parameter.name, value)}   value={that.state.paramValues[parameter.name]} />
+                                           <Select className="form-control" key={parameter.name} options={booleanLovList} multiSelect={false} onChange={ (value) => that.onChange(parameter.name, value)}   value={that.state.paramValues[parameter.name]} />
                                        </div>
                                    )
                                } else if (parameter.javaType == "java.time.LocalDate" || (parameter.javaType == "java.time.LocalDateTime" && (parameter.setTime === 'START_OF_DAY' || parameter.setTime === 'END_OF_DAY'))){
                                    return (
                                        <div key={parameter.name} className="form-group rep-param col-md-3">
                                            <div>{errorIcon}{Application.Localize(parameter.name)}</div>
-                                           <DatePicker onChange={ (value) => that.onChange(parameter.name, value)}  value={that.state.paramValues[parameter.name]}/>
+                                           <DatePicker onChange={ (value) => that.onChange(parameter.name, value)}  value={that.state.paramValues[parameter.name]} isDateTime={false}/>
                                        </div>
                                    )
                                } else if (parameter.javaType == "java.time.LocalDateTime"){
                                    return (
                                        <div key={parameter.name} className="form-group rep-param col-md-3">
                                            <div>{errorIcon}{Application.Localize(parameter.name)}</div>
-                                           //<DupDateTimePicker onChange={ (value) => that.onChange(parameter.name, value)}  value={that.state.paramValues[parameter.name]}/>
-                                           <div>DATETIME TBD</div>
+                                           <DatePicker onChange={ (value) => that.onChange(parameter.name, value)}  value={that.state.paramValues[parameter.name]} isDateTime={true}/>
                                        </div>
                                    )
                                } else if ( parameter.javaType == "java.lang.Integer" || parameter.javaType == "java.lang.Long" || parameter.javaType == "java.math.BigInteger" || parameter.javaType == "java.lang.Short"){
@@ -97,7 +96,6 @@ class ReportParams extends React.Component {
                                } else if ( parameter.javaType == "java.lang.Double"  || parameter.javaType == "java.lang.Float" || parameter.javaType == "java.math.BigDecimal"){
                                    pattern = floatPattern;
                                }
-                               console.log("PARAM = " + parameter.name + "  Value = " + that.state.paramValues[parameter.name]);
                                return (
                                    <div key={parameter.name} className="form-group rep-param col-md-3">
                                        <div>{errorIcon}{Application.Localize(parameter.name)}</div>
