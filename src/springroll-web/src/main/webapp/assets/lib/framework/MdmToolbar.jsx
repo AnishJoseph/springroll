@@ -50,7 +50,7 @@ const MdmToolbar = React.createClass({
     render() {
         return (
             <div>
-                <div className="tools react-grid-Toolbar">
+                <div className="tools react-grid-Toolbar control-panel">
                     <div className="row">
                         <span className="text-info toolbar-title">{this.props.title}</span>
                         {this.renderSaveButton()}

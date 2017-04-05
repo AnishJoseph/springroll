@@ -1,6 +1,7 @@
+@import 'pre-customizations.scss';
 $rootMenuHeight : 50px;
 $offsetFromBottomForBodyContent : 10px;
-$marginOnSideForSPA : 5px;
+$marginOnSideForSPA : 1px;
 $marginOnTopAndBottomForBody : 1px;
 $topOfAlertsPanel : $rootMenuHeight + 2 ;
 $widthOfAlertsContainer : 300px;
@@ -62,6 +63,7 @@ table.nowrap {
   right: 0;
   z-index: 50;
   border-color: #2aabd2;
+  margin-right: $marginOnSideForSPA;
 }
 .alertsContainer {
   //display: none;
@@ -229,18 +231,36 @@ table.nowrap {
 }
 
 .control-panel {
-  background-color: #f8f8f8;
+  background-color: #ddd!important;
   border-color: #e7e7e7;
   color: #777;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: $marginOnSideForSPA;
+  margin-right: $marginOnSideForSPA;
   padding: 10px;
   padding-right: 100px;
-  width: calc(100% - 20px);
+  width: calc(100% - 2*#{$marginOnSideForSPA});
+}
+.secondary-menu {
+  background-color: #d3d8e0;
+  border-color: #e7e7e7;
+  color: #777;
+  margin-left: $marginOnSideForSPA;
+  margin-right: $marginOnSideForSPA;
+  padding: 10px;
+  padding-right: 100px;
+  width: calc(100% - 2*#{$marginOnSideForSPA});
 }
 
 .control-panel-icon {
   font-size: 18px;
   padding-left: 10px;
   padding-right: 10px;
+}
+
+
+.alert-summary-container {
+  color : $navbar-default-color;
+}
+.react-bs-table {
+  margin: 0px!important;
 }

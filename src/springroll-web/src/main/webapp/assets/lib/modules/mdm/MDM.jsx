@@ -18,7 +18,7 @@ class MDM extends React.Component {
     render() {
         return (
             <div>
-                <Nav bsStyle="pills" onSelect={this.masterChosen}>
+                <Nav bsStyle="pills" onSelect={this.masterChosen} className="secondary-menu">
                     {this.props.masterDefns != undefined && Object.keys(this.props.masterDefns).map((groName, index) => {
                         return (
                             <NavDropdown id="mdm-nav-dropdown" title={groName} key={groName} noCaret>
