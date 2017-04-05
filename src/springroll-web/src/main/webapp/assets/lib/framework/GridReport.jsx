@@ -29,17 +29,7 @@ class GridReport extends React.Component {
         let formatters = this.props.formatters || {};
         return (
             <span>
-                <div className='grid-title-panel'>
-                    <span className='pull-left' style={{width : "50%"}}>
-                        <h4 className=' text-info'>{Application.Localize(this.props.gridName)}</h4>
-                    </span>
-                    {
-                        (this.props.gridParams !== undefined && this.props.gridParams.length > 0) &&
-                        <span onClick={this.onFilterClick} title={Application.Localize('ui.report.parameters')}
-                              style={{ paddingLeft: 100 +'px'}} className='springroll-icon pull-left glyphicon glyphicon-tasks'></span>
-                    }
-                </div>
-                <Grid gridData={this.props.gridData} formatters={formatters}/>
+                <Grid gridData={this.props.gridData} formatters={formatters} title={Application.Localize(this.props.gridName)} gridParams={this.props.gridParams} onFilterClick={this.onFilterClick}/>
                 {
                     /* Show the parameters in a MODAL ONLY if the filter is to be shown AND this grid has parameters */
                     (this.state.showFilter &&  this.props.gridParams !== undefined && this.props.gridParams.length > 0) &&

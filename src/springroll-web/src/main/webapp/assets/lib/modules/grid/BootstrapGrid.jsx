@@ -27,6 +27,8 @@ class BootstrapGrid extends React.Component {
     constructor(props){
         super(props);
         this.search = this.search.bind(this);
+        this.download = this.download.bind(this);
+        this.afterSearch = this.afterSearch.bind(this);
         this.state = {"searchValue" : ''};
     }
 
@@ -51,43 +53,80 @@ class BootstrapGrid extends React.Component {
         this.setState({searchValue: e.target.value})
         this.refs.table.handleSearch(e.target.value);
     }
+    afterSearch(searchText, result){
+        this.currentRows = result;
+    }
+
+    download(){
+        /* this.currentRows has the filtered set of rows (if a search was done) - if undefined it means that no filtering was done */
+    }
     render() {
+        const options = {
+            afterSearch: this.afterSearch
+        };
         let rows;
         if(this.props.gridData !== undefined) {
             rows = this.massageMasterData(this.props.gridData);
-        } else {
-            return null;
-        }
+        } 
         return (
             <div>
-                <DebounceInput minLength={2} debounceTimeout={300} onChange={this.search} placeholder={Application.Localize('ui.search')}/>
-
-                <BootstrapTable ref="table" data={rows} striped hover search={false} keyField={this.props.gridData.key} height='800px' scrollTop={ 'Top' } multiColumnSort={3} >
+                <div className="control-panel">
+                    <div style={{textAlign : 'right'}}>
+                        <h4 className=' pull-left text-info'>{this.props.title}</h4>
+                        {
+                            (this.props.gridParams !== undefined && this.props.gridParams.length > 0) &&
+                            <span onClick={this.props.onFilterClick} title={Application.Localize('ui.report.parameters')} className='control-panel-icon glyphicon glyphicon-tasks'></span>
+                        }
+                        {
+                            this.props.gridData !== undefined &&
+                            <span>
+                                <span onClick={this.download} className="control-panel-icon glyphicon glyphicon-download"/>
+                                <DebounceInput minLength={2} debounceTimeout={300} onChange={this.search} placeholder={Application.Localize('ui.search')}/>
+                            </span>
+                        }
+                    </div>
+                </div>
                 {
-                    this.props.gridData.columns.map((colDef, index) => {
-                        let formatter = undefined, dataFormatter, sorter = undefined;
-                        if(colDef.type == 'date')     {formatter = DateFormatter; sorter = dateTimeSorter;}
-                        if(colDef.type == 'datetime') {formatter = DateTimeFormatter; sorter = dateTimeSorter;}
-                        if(colDef.type == 'boolean')  formatter = BooleanFormatter;
+                    this.props.gridData !== undefined &&
+                    <BootstrapTable options={options} ref="table" data={rows} striped hover search={false}
+                                    keyField={this.props.gridData.key} height='800px' scrollTop={ 'Top' }
+                                    multiColumnSort={3}>
+                        {
+                            this.props.gridData.columns.map((colDef, index) => {
+                                let formatter = undefined, dataFormatter, sorter = undefined;
+                                if (colDef.type == 'date') {
+                                    formatter = DateFormatter;
+                                    sorter = dateTimeSorter;
+                                }
+                                if (colDef.type == 'datetime') {
+                                    formatter = DateTimeFormatter;
+                                    sorter = dateTimeSorter;
+                                }
+                                if (colDef.type == 'boolean') formatter = BooleanFormatter;
 
-                        /* If the caller has specified a formatter (tied to a type) then use that formatter - it overrides everything else */
-                        if(this.props.formatters !== undefined && this.props.formatters[colDef.type]){
-                            formatter = this.props.formatters[colDef.type];
-                        }
-                        /* If the caller has specified a sorter (tied to a type) then use that sorter - it overrides everything else */
-                        if(this.props.sorter !== undefined && this.props.sorter[colDef.type]){
-                            sorter = this.props.sorter[colDef.type];
-                        }
-                        if(formatter){
-                            dataFormatter = (cell, row) => bsFormatter(cell, formatter);
-                        }
-                        let align = colDef.align.toLowerCase();
+                                /* If the caller has specified a formatter (tied to a type) then use that formatter - it overrides everything else */
+                                if (this.props.formatters !== undefined && this.props.formatters[colDef.type]) {
+                                    formatter = this.props.formatters[colDef.type];
+                                }
+                                /* If the caller has specified a sorter (tied to a type) then use that sorter - it overrides everything else */
+                                if (this.props.sorter !== undefined && this.props.sorter[colDef.type]) {
+                                    sorter = this.props.sorter[colDef.type];
+                                }
+                                if (formatter) {
+                                    dataFormatter = (cell, row) => bsFormatter(cell, formatter);
+                                }
+                                let align = colDef.align.toLowerCase();
 
-                        return <TableHeaderColumn sortFunc={sorter} dataAlign={align} dataSort={colDef.sortable} hidden={!colDef.visible} width={colDef.width} tdStyle={ { whiteSpace: 'normal' } } key={index} dataFormat={dataFormatter} dataField={colDef.title}>{Application.Localize(colDef.title)}</TableHeaderColumn>
+                                return <TableHeaderColumn sortFunc={sorter} dataAlign={align} dataSort={colDef.sortable}
+                                                          hidden={!colDef.visible} width={colDef.width}
+                                                          tdStyle={ {whiteSpace: 'normal'} } key={index}
+                                                          dataFormat={dataFormatter}
+                                                          dataField={colDef.title}>{Application.Localize(colDef.title)}</TableHeaderColumn>
 
-                    })
+                            })
+                        }
+                    </BootstrapTable>
                 }
-            </BootstrapTable>
             </div>
         );
     }

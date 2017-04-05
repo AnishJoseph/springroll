@@ -227,3 +227,20 @@ table.nowrap {
 .form-group .Select {
   padding : 0px;
 }
+
+.control-panel {
+  background-color: #f8f8f8;
+  border-color: #e7e7e7;
+  color: #777;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 10px;
+  padding-right: 100px;
+  width: calc(100% - 20px);
+}
+
+.control-panel-icon {
+  font-size: 18px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
