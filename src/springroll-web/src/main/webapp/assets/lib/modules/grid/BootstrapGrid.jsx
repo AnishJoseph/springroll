@@ -5,6 +5,12 @@ import DateTimeFormatter from 'DateTimeFormatter';
 import DateFormatter from 'DateFormatter';
 import BooleanFormatter from 'BooleanFormatter';
 import DebounceInput from 'react-debounce-input';
+import {CSVLink} from 'react-csv';
+const data = [
+    ['name', 'age'],
+    ['Ahmed', 12],
+    ['John', 8]
+];
 
 function bsFormatter(cell, formatter) {
     let Formatter = formatter;
@@ -80,7 +86,7 @@ class BootstrapGrid extends React.Component {
                         {
                             this.props.gridData !== undefined &&
                             <span>
-                                <span onClick={this.download} className="control-panel-icon glyphicon glyphicon-download"/>
+                                <CSVLink ref={(input) => { this.textInput = input; }} data={data} filename={this.props.title + ".csv"} target="_blank"><span onClick={this.download} className="control-panel-icon glyphicon glyphicon-download"/></CSVLink>
                                 <DebounceInput minLength={2} debounceTimeout={300} onChange={this.search} placeholder={Application.Localize('ui.search')}/>
                             </span>
                         }
