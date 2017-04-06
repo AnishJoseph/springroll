@@ -31,9 +31,20 @@ class BootstrapGrid extends React.Component {
         this.search = this.search.bind(this);
         this.download = this.download.bind(this);
         this.afterSearch = this.afterSearch.bind(this);
+        this.print = this.print.bind(this);
         this.state = {dataToDownload : []};
     }
 
+    print() {
+        var x = 'react-bs-table-container';
+        var content = document.getElementById('xx');
+        var pri = document.getElementById("ifmcontentstoprint").contentWindow;
+        pri.document.open();
+        pri.document.write(content.innerHTML);
+        pri.document.close();
+        pri.focus();
+        pri.print();
+    }
     search(e){
         this.refs.table.handleSearch(e.target.value);
     }
@@ -102,13 +113,14 @@ class BootstrapGrid extends React.Component {
                             <span>
                                 <CSVLink ref={(input) => { this.textInput = input; }} data={this.state.dataToDownload} filename={this.props.title + ".csv"} target="_blank"><span onClick={this.download} className="control-panel-icon glyphicon glyphicon-download"/></CSVLink>
                                 <DebounceInput minLength={2} debounceTimeout={300} onChange={this.search} placeholder={Application.Localize('ui.search')}/>
+                                <span onClick={this.print} className="control-panel-icon glyphicon glyphicon-print"/>
                             </span>
                         }
                     </div>
                 </div>
                 {
                     this.props.gridData !== undefined &&
-                    <BootstrapTable options={options} ref="table" data={this.props.gridData.data} striped hover search={false}
+                    <div id="xx"><BootstrapTable options={options} ref="table" data={this.props.gridData.data} striped hover search={false}
                                     keyField={this.props.gridData.key} height='800px' scrollTop={ 'Top' }
                                     multiColumnSort={3}>
                         {
@@ -151,7 +163,7 @@ class BootstrapGrid extends React.Component {
 
                             })
                         }
-                    </BootstrapTable>
+                    </BootstrapTable></div>
                 }
             </div>
         );

@@ -17,6 +17,8 @@
 <body>
 <div id = "app"></div>
 <script src = "assets/generated/index.js"></script>
+<iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute"></iframe>
+
 </body>
 
 </html>
