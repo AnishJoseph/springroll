@@ -6,11 +6,15 @@ import DateFormatter from 'DateFormatter';
 import BooleanFormatter from 'BooleanFormatter';
 import DebounceInput from 'react-debounce-input';
 import {CSVLink} from 'react-csv';
-const data = [
-    ['name', 'age'],
-    ['Ahmed', 12],
-    ['John', 8]
-];
+var json2csv = require('json2csv');
+var moment = require('moment');
+
+const formatDate = (row, field, data) => {
+    return moment(row[field.colName]).format(Application.getMomentFormatForDate())
+};
+const formatDateTime = (row, field, data) => {
+    return moment(row[field.colName]).format(Application.getMomentFormatForDateTime())
+};
 
 function bsFormatter(cell, formatter) {
     let Formatter = formatter;
@@ -35,7 +39,7 @@ class BootstrapGrid extends React.Component {
         this.search = this.search.bind(this);
         this.download = this.download.bind(this);
         this.afterSearch = this.afterSearch.bind(this);
-        this.state = {"searchValue" : ''};
+        this.state = {"searchValue" : '', dataToDownload : []};
     }
 
     search(e){
@@ -48,6 +52,39 @@ class BootstrapGrid extends React.Component {
 
     download(){
         /* this.currentRows has the filtered set of rows (if a search was done) - if undefined it means that no filtering was done */
+        let rowsToDownload = this.currentRows;
+        if(this.currentRows == undefined){
+            rowsToDownload = this.props.gridData.data;
+        }
+        let fields = [];
+        _.each(this.props.gridData.columns, function (colDef) {
+            var title = colDef.title;
+            if(!colDef.visible)return;
+            var fldDefn = {
+                 label: Application.Localize(colDef.title),
+                 value: colDef.title,
+                 default: ''
+            };
+            if (colDef.type == 'boolean') {
+                fldDefn['value'] = function (row, field, data) {
+                    return row[title] ? Application.Localize('ui.true') : Application.Localize('ui.false');
+                }
+            }
+            if (colDef.type == 'date') {
+                fldDefn['value'] = function (row, field, data) {
+                    return moment(row[title]).format(Application.getMomentFormatForDate())
+                }
+            }
+            if (colDef.type == 'datetime') {
+                fldDefn['value'] = function (row, field, data) {
+                    return moment(row[title]).format(Application.getMomentFormatForDateTime())
+                }
+            }
+
+            fields.push(fldDefn);
+
+        });
+        this.setState({dataToDownload :json2csv({ data: rowsToDownload, fields: fields })});
     }
     render() {
         const options = {
@@ -65,7 +102,7 @@ class BootstrapGrid extends React.Component {
                         {
                             this.props.gridData !== undefined &&
                             <span>
-                                <CSVLink ref={(input) => { this.textInput = input; }} data={data} filename={this.props.title + ".csv"} target="_blank"><span onClick={this.download} className="control-panel-icon glyphicon glyphicon-download"/></CSVLink>
+                                <CSVLink ref={(input) => { this.textInput = input; }} data={this.state.dataToDownload} filename={this.props.title + ".csv"} target="_blank"><span onClick={this.download} className="control-panel-icon glyphicon glyphicon-download"/></CSVLink>
                                 <DebounceInput minLength={2} debounceTimeout={300} onChange={this.search} placeholder={Application.Localize('ui.search')}/>
                             </span>
                         }
