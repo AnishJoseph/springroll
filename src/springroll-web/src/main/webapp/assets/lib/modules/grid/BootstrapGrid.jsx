@@ -1,20 +1,12 @@
 import React from 'react';
 import Application from 'App';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import DateTimeFormatter from 'DateTimeFormatter';
-import DateFormatter from 'DateFormatter';
-import BooleanFormatter from 'BooleanFormatter';
+import {DateTimeFormatter, DateFormatter, BooleanFormatter, BooleanToString, DateTimeToString, DateToString} from 'Formatters';
 import DebounceInput from 'react-debounce-input';
 import {CSVLink} from 'react-csv';
 var json2csv = require('json2csv');
 var moment = require('moment');
 
-const formatDate = (row, field, data) => {
-    return moment(row[field.colName]).format(Application.getMomentFormatForDate())
-};
-const formatDateTime = (row, field, data) => {
-    return moment(row[field.colName]).format(Application.getMomentFormatForDateTime())
-};
 
 function bsFormatter(cell, formatter) {
     let Formatter = formatter;
@@ -67,17 +59,17 @@ class BootstrapGrid extends React.Component {
             };
             if (colDef.type == 'boolean') {
                 fldDefn['value'] = function (row, field, data) {
-                    return row[title] ? Application.Localize('ui.true') : Application.Localize('ui.false');
+                    return BooleanToString(row[title]);
                 }
             }
             if (colDef.type == 'date') {
                 fldDefn['value'] = function (row, field, data) {
-                    return moment(row[title]).format(Application.getMomentFormatForDate())
+                    return DateToString(row[title]);
                 }
             }
             if (colDef.type == 'datetime') {
                 fldDefn['value'] = function (row, field, data) {
-                    return moment(row[title]).format(Application.getMomentFormatForDateTime())
+                    return DateTimeToString(row[title]);
                 }
             }
 

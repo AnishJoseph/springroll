@@ -1,6 +1,6 @@
 import React from 'react'
 import Application from 'App.js';
-import DateTimeFormatter from 'DateTimeFormatter';
+import {DateTimeFormatter} from 'Formatters';
 
 
 const GenericAlertItem = ({alert, onDismissClicked, onMoreInfoClicked}) => {

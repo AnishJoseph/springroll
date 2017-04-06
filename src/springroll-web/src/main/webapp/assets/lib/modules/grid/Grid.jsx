@@ -1,10 +1,7 @@
 import React from 'react';
 import Application from 'App';
 import MdmToolbar from 'MdmToolbar';
-import DateTimeFormatter from 'DateTimeFormatter';
-import DateFormatter from 'DateFormatter';
-import BooleanFormatter from 'BooleanFormatter';
-import DeleteFormatter from 'DeleteFormatter';
+import {DateTimeFormatter, DateFormatter, BooleanFormatter} from 'Formatters.jsx';
 const ReactDataGrid = require('react-data-grid');
 const { Data: { Selectors } } = require('react-data-grid-addons');
 
