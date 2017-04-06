@@ -26,10 +26,9 @@ class GridReport extends React.Component {
     }
     render() {
         let message = "Report Params";
-        let formatters = this.props.formatters || {};
         return (
             <span>
-                <Grid gridData={this.props.gridData} formatters={formatters} title={Application.Localize(this.props.gridName)} gridParams={this.props.gridParams} onFilterClick={this.onFilterClick}/>
+                <Grid gridData={this.props.gridData} options={this.props.options || {}} title={Application.Localize(this.props.gridName)} gridParams={this.props.gridParams} onFilterClick={this.onFilterClick}/>
                 {
                     /* Show the parameters in a MODAL ONLY if the filter is to be shown AND this grid has parameters */
                     (this.state.showFilter &&  this.props.gridParams !== undefined && this.props.gridParams.length > 0) &&

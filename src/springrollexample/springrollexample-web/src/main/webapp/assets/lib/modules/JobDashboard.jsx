@@ -9,8 +9,8 @@ function jobDashboardUpdated(receivedPushData) {
 }
 
 function JobDashboard(props) {
-    let formatters = {'reviewlog' : {forDisplay : ReviewLogFormatterForDisplay, forExport : ReviewLogFormatterForExport}};
-    return <GridReportContainer gridName="JobDashboard" formatters={formatters}/>;
+    let options = {formatters : {'reviewlog' : {forDisplay : ReviewLogFormatterForDisplay, forExport : ReviewLogFormatterForExport}}};
+    return <GridReportContainer gridName="JobDashboard" options={options}/>;
 }
 
 Application.addMenu({

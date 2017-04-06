@@ -74,9 +74,9 @@ class BootstrapGrid extends React.Component {
                 }
             }
             /* If the caller has specified a formatter (tied to a type) then use that formatter - it overrides everything else */
-            if (that.props.formatters !== undefined && that.props.formatters[colDef.type] && that.props.formatters[colDef.type].forExport) {
+            if (that.props.options.formatters !== undefined && that.props.options.formatters[colDef.type] && that.props.options.formatters[colDef.type].forExport) {
                 fldDefn['value'] = function (row, field, data) {
-                    return that.props.formatters[colDef.type].forExport(row[title]);
+                    return that.props.options.formatters[colDef.type].forExport(row[title]);
                 }
             }
 
@@ -126,12 +126,12 @@ class BootstrapGrid extends React.Component {
                                 if (colDef.type == 'boolean') formatter = BooleanFormatter;
 
                                 /* If the caller has specified a formatter (tied to a type) then use that formatter - it overrides everything else */
-                                if (this.props.formatters !== undefined && this.props.formatters[colDef.type] && this.props.formatters[colDef.type].forDisplay) {
-                                    formatter = this.props.formatters[colDef.type].forDisplay;
+                                if (this.props.options.formatters && this.props.options.formatters[colDef.type] && this.props.options.formatters[colDef.type].forDisplay) {
+                                    formatter = this.props.options.formatters[colDef.type].forDisplay;
                                 }
                                 /* If the caller has specified a sorter (tied to a type) then use that sorter - it overrides everything else */
-                                if (this.props.sorter !== undefined && this.props.sorter[colDef.type]) {
-                                    sorter = this.props.sorter[colDef.type];
+                                if (this.props.options.sorter && this.props.options.sorter[colDef.type]) {
+                                    sorter = this.props.options.sorter[colDef.type];
                                 }
                                 if (formatter) {
                                     dataFormatter = (cell, row) => bsFormatter(cell, formatter);
