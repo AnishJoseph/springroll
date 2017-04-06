@@ -1,14 +1,14 @@
 import React from 'react';
-import Application from 'App.js';
 var moment = require('moment');
+import {BooleanToString, DateTimeToString} from 'Formatters';
 
-const ReviewLogFormatter = ({value}) => {
+export const ReviewLogFormatterForDisplay = ({value}) => {
     if(value !== undefined && value != null){
         return (<span>
             {
                 value.map((reviewLog, index) => {
-                    let appORrej = reviewLog.approved ? Application.Localize('ui.Approved') : Application.Localize('ui.Rejected');
-                    let valueToDisplay = reviewLog.reviewer + ":" + appORrej + ":" + moment(reviewLog.time).format(Application.getMomentFormatForDateTime());
+                    let appORrej = BooleanToString(reviewLog.approved);
+                    let valueToDisplay = reviewLog.reviewer + ":" + appORrej + ":" + DateTimeToString(reviewLog.time);
                     return (<div key={index}>{valueToDisplay}</div>);
                 })
             }
@@ -19,4 +19,13 @@ const ReviewLogFormatter = ({value}) => {
     );
 };
 
-export default ReviewLogFormatter;
+export const ReviewLogFormatterForExport = (value) => {
+    let displayString = '';
+    if(value !== undefined && value != null){
+        _.each(value, (reviewLog, index) => {
+            let appORrej = BooleanToString(reviewLog.approved);
+            displayString += reviewLog.reviewer + ":" + appORrej + ":" + DateTimeToString(reviewLog.time) + " :: ";
+        });
+    }
+    return displayString;
+};

@@ -1,7 +1,7 @@
 import React from 'react';
 import Application from 'App';
 import GridReportContainer from 'GridReportContainer';
-import ReviewLogFormatter from 'ReviewLogFormatter';
+import {ReviewLogFormatterForDisplay, ReviewLogFormatterForExport} from 'ReviewLogFormatter';
 import { gridDataUpdateReceived} from 'SpringrollActionTypes'
 
 function jobDashboardUpdated(receivedPushData) {
@@ -9,7 +9,7 @@ function jobDashboardUpdated(receivedPushData) {
 }
 
 function JobDashboard(props) {
-    let formatters = {'reviewlog' : ReviewLogFormatter};
+    let formatters = {'reviewlog' : {forDisplay : ReviewLogFormatterForDisplay, forExport : ReviewLogFormatterForExport}};
     return <GridReportContainer gridName="JobDashboard" formatters={formatters}/>;
 }
 

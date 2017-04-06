@@ -43,6 +43,7 @@ class BootstrapGrid extends React.Component {
     }
 
     download(){
+        var that = this;
         /* this.currentRows has the filtered set of rows (if a search was done) - if undefined it means that no filtering was done */
         let rowsToDownload = this.currentRows;
         if(this.currentRows == undefined){
@@ -70,6 +71,12 @@ class BootstrapGrid extends React.Component {
             if (colDef.type == 'datetime') {
                 fldDefn['value'] = function (row, field, data) {
                     return DateTimeToString(row[title]);
+                }
+            }
+            /* If the caller has specified a formatter (tied to a type) then use that formatter - it overrides everything else */
+            if (that.props.formatters !== undefined && that.props.formatters[colDef.type] && that.props.formatters[colDef.type].forExport) {
+                fldDefn['value'] = function (row, field, data) {
+                    return that.props.formatters[colDef.type].forExport(row[title]);
                 }
             }
 
@@ -119,8 +126,8 @@ class BootstrapGrid extends React.Component {
                                 if (colDef.type == 'boolean') formatter = BooleanFormatter;
 
                                 /* If the caller has specified a formatter (tied to a type) then use that formatter - it overrides everything else */
-                                if (this.props.formatters !== undefined && this.props.formatters[colDef.type]) {
-                                    formatter = this.props.formatters[colDef.type];
+                                if (this.props.formatters !== undefined && this.props.formatters[colDef.type] && this.props.formatters[colDef.type].forDisplay) {
+                                    formatter = this.props.formatters[colDef.type].forDisplay;
                                 }
                                 /* If the caller has specified a sorter (tied to a type) then use that sorter - it overrides everything else */
                                 if (this.props.sorter !== undefined && this.props.sorter[colDef.type]) {
