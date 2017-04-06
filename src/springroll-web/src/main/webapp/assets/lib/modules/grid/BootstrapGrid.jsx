@@ -31,11 +31,10 @@ class BootstrapGrid extends React.Component {
         this.search = this.search.bind(this);
         this.download = this.download.bind(this);
         this.afterSearch = this.afterSearch.bind(this);
-        this.state = {"searchValue" : '', dataToDownload : []};
+        this.state = {dataToDownload : []};
     }
 
     search(e){
-        this.setState({searchValue: e.target.value})
         this.refs.table.handleSearch(e.target.value);
     }
     afterSearch(searchText, result){

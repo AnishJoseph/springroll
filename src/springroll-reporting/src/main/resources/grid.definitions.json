@@ -12,9 +12,9 @@
           {"title": "ID", "type":"text", "visible" : false, "align" : "LEFT"},
           {"title": "ui.grid.Action", "type":"text", "align" : "LEFT"},
           {"title": "ui.grid.Description", "type":"text", "align" : "LEFT", "width" : "500px"},
-          {"title": "ui.grid.StartTime", "type":"datetime", "className" : "text-center", "align" : "CENTER"},
-          {"title": "ui.grid.EndTime", "type":"datetime", "className" : "text-center", "align" : "CENTER"},
-          {"title": "ui.grid.JobStatus", "type":"text", "className" : "text-center", "align" : "LEFT"},
+          {"title": "ui.grid.StartTime", "type":"datetime", "align" : "CENTER", "align" : "CENTER"},
+          {"title": "ui.grid.EndTime", "type":"datetime", "align" : "CENTER", "align" : "CENTER"},
+          {"title": "ui.grid.JobStatus", "type":"text", "align" : "CENTER", "align" : "LEFT"},
           {"title": "ui.grid.PendingWith", "type":"text", "align" : "LEFT"},
           {"title": "ui.grid.Reviewers", "type":"reviewlog", "width" : "300px", "sortable" : false}
       ]
@@ -22,19 +22,19 @@
     {"name" : "TestGridAllTypes", "namedQuery": "TestGridAllTypes",  "key" : "stringVariable",
       "gridColumns":[
           {"title": "stringVariable", "type":"text"},
-          {"title": "booleanVariable", "type":"boolean", "className" : "text-center"},
-          {"title": "intVariable", "type":"num", "className" : "text-right"},
-          {"title": "floatCVariable", "type":"num", "className" : "text-right", "numberFormat" : "currency"},
-          {"title": "bigDecimalVariable", "type":"num", "className" : "text-right", "numberFormat" : "rate"},
-          {"title": "bigIntegerVariable", "type":"num", "className" : "text-right"},
+          {"title": "booleanVariable", "type":"boolean", "align" : "CENTER"},
+          {"title": "intVariable", "type":"num", "align" : "RIGHT"},
+          {"title": "floatCVariable", "type":"num", "align" : "RIGHT", "numberFormat" : "currency"},
+          {"title": "bigDecimalVariable", "type":"num", "align" : "RIGHT", "numberFormat" : "rate"},
+          {"title": "bigIntegerVariable", "type":"num", "align" : "RIGHT"},
           {"title": "enumType", "type":"text"},
-          {"title": "localDateVariable", "type":"date", "className" : "text-center" },
-          {"title": "localDateTimeVariable", "type":"datetime", "className" : "text-center"}
+          {"title": "localDateVariable", "type":"date", "align" : "CENTER" },
+          {"title": "localDateTimeVariable", "type":"datetime", "align" : "CENTER"}
         ]
     },
     {"name" : "TestGridParamFromSpringrollUser", "namedQuery": "TestGridParamFromSpringrollUser", "key" : "ID",
       "gridColumns":[
-        {"title": "ID", "type":"num", "className" : "text-right"},
+        {"title": "ID", "type":"num", "align" : "RIGHT"},
         {"title": "User", "type" : "text"},
         {"title": "ServiceName", "type":"text"}
       ]
