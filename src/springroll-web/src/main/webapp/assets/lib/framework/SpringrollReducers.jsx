@@ -37,40 +37,63 @@ function alertsReducer(state = {actions : [], info : [], errors : [], visibleAle
 }
 function gridReportReducer(state = {}, action) {
     switch (action.type) {
-        case GridReportActions.GRID_REPORT_PARAMS_RECEIVED:
+        case GridReportActions.GRID_REPORT_PARAMS_RECEIVED:  {
             let gridInfoAboutThisGrid = state[action.gridName] || {};
             let updatedGridInfoAboutThisGrid = Object.assign({}, gridInfoAboutThisGrid, { params :  action.gridParams, gridName : action.gridName});
             let newState = Object.assign({}, state);
             newState[action.gridName] = updatedGridInfoAboutThisGrid;
             return Object.assign({}, state, newState);
-        case GridReportActions.GRID_REPORT_DATA_RECEIVED:
-            var gridInfoAboutThisGrid = state[action.gridName] || {};
-            var updatedGridInfoAboutThisGrid = Object.assign({}, gridInfoAboutThisGrid, { gridData :  action.gridData});
-            newState = Object.assign({}, state);
+        }
+        case GridReportActions.GRID_REPORT_DATA_RECEIVED: {
+            let gridInfoAboutThisGrid = state[action.gridName] || {};
+            let that = this;
+            let rows = _.map(action.gridData.data, function (rowData) {
+                var row = {};
+                for (var j = 0; j < action.gridData.columns.length; ++j) {
+                    if (rowData[j] == undefined || rowData[j] == null) continue;
+                    row[action.gridData.columns[j].title] = rowData[j];
+                }
+                return row;
+            });
+            action.gridData.data = rows;
+            let updatedGridInfoAboutThisGrid = Object.assign({}, gridInfoAboutThisGrid, {gridData: action.gridData});
+            let newState = Object.assign({}, state);
             newState[action.gridName] = updatedGridInfoAboutThisGrid;
             return Object.assign({}, state, newState);
-        case GridReportActions.GRID_REPORT_DATA_UPDATE_RECEIVED:
-            var gridInfoAboutThisGrid = state[action.gridName];
-            if(gridInfoAboutThisGrid == undefined){
+        }
+        case GridReportActions.GRID_REPORT_DATA_UPDATE_RECEIVED: {
+            let gridInfoAboutThisGrid = state[action.gridName];
+            if (gridInfoAboutThisGrid == undefined) {
                 console.log("Received Update for Grid '" + action.gridName + "' but no data available for the grid as yet - discarding the update");
                 return state;
             }
 
-            var idOfRowThatChanged = action.updatedData[0];
+            let idOfRowThatChanged = action.updatedData[0];
+
+            /* The incoming data is just an array of the data - we need to convert to JSON */
+            let newRow = {};
+            _.each(action.updatedData, function (colValue, index) {
+                if (colValue == undefined || colValue == null) return;
+                newRow[gridInfoAboutThisGrid.gridData.columns[index].title] = colValue;
+            });
+
+
+            let isNewRow = true;
             let newData = _.map(gridInfoAboutThisGrid.gridData.data, row => {
-                if(row[0] === idOfRowThatChanged){
-                    return action.updatedData;
+                if (row['ID'] === idOfRowThatChanged) {
+                    isNewRow = false;
+                    return newRow;
                 }
                 return row;
             });
+            if (isNewRow) newData.push(newRow);
 
-            var newGridData = Object.assign({}, gridInfoAboutThisGrid.gridData, {data : newData});
-            var newGridInfo = Object.assign({}, gridInfoAboutThisGrid, {gridData : newGridData});
-            newState = Object.assign({}, state);
+            let newGridData = Object.assign({}, gridInfoAboutThisGrid.gridData, {data: newData});
+            let newGridInfo = Object.assign({}, gridInfoAboutThisGrid, {gridData: newGridData});
+            let newState = Object.assign({}, state);
             newState[action.gridName] = newGridInfo;
             return Object.assign({}, state, newState);
-
-
+        }
         default:
             return state;
     }

@@ -38,23 +38,6 @@ class BootstrapGrid extends React.Component {
         this.state = {"searchValue" : ''};
     }
 
-    massageMasterData(gridData){
-        if(gridData == undefined)return;
-        var that = this;
-
-        this.colnames = _.map(gridData.columns, function(colDef) {
-            return colDef.title;
-        });
-        let rows = _.map(gridData.data, function(rowData){
-            var row = {};
-            for (var j = 0; j < that.colnames.length; ++j) {
-                if (rowData[j] == undefined || rowData[j] == null) continue;
-                row[that.colnames[j]] = rowData[j];
-            }
-            return row;
-        });
-        return rows;
-    }
     search(e){
         this.setState({searchValue: e.target.value})
         this.refs.table.handleSearch(e.target.value);
@@ -70,10 +53,6 @@ class BootstrapGrid extends React.Component {
         const options = {
             afterSearch: this.afterSearch
         };
-        let rows;
-        if(this.props.gridData !== undefined) {
-            rows = this.massageMasterData(this.props.gridData);
-        } 
         return (
             <div>
                 <div className="control-panel">
@@ -94,7 +73,7 @@ class BootstrapGrid extends React.Component {
                 </div>
                 {
                     this.props.gridData !== undefined &&
-                    <BootstrapTable options={options} ref="table" data={rows} striped hover search={false}
+                    <BootstrapTable options={options} ref="table" data={this.props.gridData.data} striped hover search={false}
                                     keyField={this.props.gridData.key} height='800px' scrollTop={ 'Top' }
                                     multiColumnSort={3}>
                         {
