@@ -137,11 +137,17 @@ class BootstrapGrid extends React.Component {
                                 }
                                 let align = colDef.align.toLowerCase();
 
-                                return <TableHeaderColumn sortFunc={sorter} dataAlign={align} dataSort={colDef.sortable}
-                                                          hidden={!colDef.visible} width={colDef.width}
-                                                          tdStyle={ {whiteSpace: 'normal'} } key={index}
-                                                          dataFormat={dataFormatter}
-                                                          dataField={colDef.title}>{Application.Localize(colDef.title)}</TableHeaderColumn>
+                                return <TableHeaderColumn filterFormatted
+                                    sortFunc={sorter}
+                                    dataAlign={align}
+                                    dataSort={colDef.sortable}
+                                    hidden={!colDef.visible}
+                                    width={colDef.width}
+                                    tdStyle={ {whiteSpace: 'normal'} }
+                                    key={index}
+                                    dataFormat={dataFormatter}
+                                    dataField={colDef.title}>{Application.Localize(colDef.title)}
+                                </TableHeaderColumn>
 
                             })
                         }
