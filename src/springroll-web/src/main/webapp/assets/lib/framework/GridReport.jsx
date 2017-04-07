@@ -47,6 +47,13 @@ class GridReport extends React.Component {
         if(this.props.parameterFirst){
             return;
         }
+        /* if caching has been requested and we have sometime in the past retrieved data for this grid
+           then just return - the assumption is that if the data in this grid changes then the changes are
+           pushed to the client and the existing data is updated. i.e somewhere in the callers code
+           there is a subscribeToPushTopic. If this has not been done, the the data shown will never change
+         */
+        if(this.props.options && this.props.options.cache && this.props.gridData)
+            return;
         this.props.onGridDataRequest(this.props.gridName, this.props.params || {});
     }
 }
