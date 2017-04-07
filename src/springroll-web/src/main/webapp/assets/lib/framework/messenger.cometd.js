@@ -2,7 +2,7 @@ import Application from 'App';
 require('jquery.cometd.js');
 
 var CometD = $.cometd;
-var cometURL = location.protocol + "//" + location.host + "/cometd";
+var cometURL = location.protocol + "//" + location.host + location.pathname + "cometd";
 function _connectionEstablished() {
     console.log('CometD Connection Established');
 }
