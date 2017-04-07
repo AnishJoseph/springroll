@@ -1,5 +1,4 @@
 import React from 'react';
-import Application from 'App';
 import MDMGrid from 'mdm/MDMGrid';
 import { Router, Route } from 'react-router'
 import { NavDropdown, Nav, Navbar, MenuItem } from 'react-bootstrap';

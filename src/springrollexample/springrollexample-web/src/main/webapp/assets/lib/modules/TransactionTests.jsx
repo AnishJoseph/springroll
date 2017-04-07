@@ -1,7 +1,7 @@
 import Application from 'App.js';
 import React from 'react';
 
-class Module1 extends React.Component {
+class TransactionTests extends React.Component {
 
     constructor(props) {
         super(props);
@@ -52,12 +52,18 @@ class Module1 extends React.Component {
         );
     }
 }
-module.exports = Module1;
+module.exports = TransactionTests;
 
+/* This is an example of a simple menu
+    - its a top level menu (will be shown first, as the index is set to 1
+    - it has no submenu
+    - a form is rendered when clicked - what gets rendered is specified by 'component'
+    - the route is /TransactionTests - i.e when clicked the url changes 
+ */
 Application.addMenu({
-    title: 'ui.menu.first',
+    title: 'ui.menu.TransactionTests',
     index: 1,
     type: "menuitem",
-    route : 'M1',
-    component : Module1
+    route : 'TransactionTests',
+    component : TransactionTests
 });

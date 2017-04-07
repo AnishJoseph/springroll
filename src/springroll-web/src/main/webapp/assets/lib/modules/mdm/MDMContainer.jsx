@@ -22,7 +22,7 @@ export default MDMContainer;
 
 const routes = (
     <Route key="mdm" path="/mdm" component={MDMContainer}>
-        <Route key="mm" path="/mdm/:master" component={MDMContainer}/>
+        <Route key="mdmMaster" path="/mdm/:master" component={MDMContainer}/>
     </Route>
 );
 
