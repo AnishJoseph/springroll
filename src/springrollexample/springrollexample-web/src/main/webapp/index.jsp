@@ -16,7 +16,11 @@
 
 <body>
 <div id = "app"></div>
-<script src = "assets/generated/index.js"></script>
+
+<%--For production uncomment out the line below and comment out the URL based script --%>
+<%--<script src = "assets/generated/index.js"></script>--%>
+<script src = "http://localhost:9080/assets/generated/index.js"></script>
+
 <iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute"></iframe>
 
 </body>

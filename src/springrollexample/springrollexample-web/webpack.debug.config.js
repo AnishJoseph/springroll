@@ -8,7 +8,7 @@ var config = {
     output: {
         path: path.join(__dirname, 'src/main/webapp/assets/generated'),
         filename: "index.js",
-        publicPath: "assets/generated/"
+        publicPath: "http://localhost:9080/assets/generated/"
     },
 
     module: {
