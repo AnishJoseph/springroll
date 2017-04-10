@@ -23,7 +23,7 @@
       "gridColumns":[
           {"title": "stringVariable", "type":"text"},
           {"title": "booleanVariable", "type":"boolean", "align" : "CENTER"},
-          {"title": "intVariable", "type":"num", "align" : "RIGHT"},
+          {"title": "intVariable", "type":"num", "align" : "RIGHT", "format" : "0.0"},
           {"title": "floatCVariable", "type":"num", "align" : "RIGHT", "numberFormat" : "currency"},
           {"title": "bigDecimalVariable", "type":"num", "align" : "RIGHT", "numberFormat" : "rate"},
           {"title": "bigIntegerVariable", "type":"num", "align" : "RIGHT"},
@@ -55,8 +55,8 @@
   ],
 
   "numberFormats" : [
-    {"name" : "currency", "format": "###,###.00"},
-    {"name" : "rate", "format": "###,###.0000"}
+    {"name" : "currency", "format": "0,0.00"},
+    {"name" : "rate", "format": "0,0.0000"}
   ]
 
 }

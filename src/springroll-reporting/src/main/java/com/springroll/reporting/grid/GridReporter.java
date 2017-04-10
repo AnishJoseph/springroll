@@ -52,6 +52,19 @@ import java.util.stream.Collectors;
             for (NamedQuery namedQuery : gridConfiguration.getNamedQueries()) {
                 em.getEntityManagerFactory().addNamedQuery(namedQuery.getName(), em.createQuery(namedQuery.getQuery()));
             }
+            for (Grid grid : gridConfiguration.getGrids()) {
+                for (GridColumn gridColumn : grid.getGridColumns()) {
+                    if(gridColumn.getType().equalsIgnoreCase("num-fmt") && gridColumn.getNumberFormat() != null) {
+                        NumberFormat numberFormat = gridConfiguration.findNumberFormatByName(gridColumn.getNumberFormat());
+                        if(numberFormat == null){
+                            logger.error("Grid configuration '{}' - column '{}' specifies a format '{}' - cant find the definition of this format in the definitions of the number formats in the json file", grid.getName(), gridColumn.getTitle(), gridColumn.getNumberFormat());
+                            gridColumn.setType("num");
+                            continue;
+                        }
+                        gridColumn.setFormat(numberFormat.getFormat());
+                    }
+                }
+            }
 
         }catch (Exception e){
             throw new RuntimeException(e);
@@ -70,23 +83,6 @@ import java.util.stream.Collectors;
         GridReport gridReport = new GridReport();
         gridReport.setKey(grid.getKey());
         gridReport.setColumns(grid.getGridColumns());
-
-        for (int i = 0; i < grid.getGridColumns().size(); i++) {
-            GridColumn column = grid.getGridColumns().get(i);
-            if(column.getType().equalsIgnoreCase("num-fmt") && column.getNumberFormat() != null) {
-                NumberFormat numberFormat = gridConfiguration.findNumberFormatByName(column.getNumberFormat());
-                if(numberFormat == null)continue;
-                DecimalFormat format = springrollUtils.makeFormatter(SpringrollSecurity.getUser().getLocale(), numberFormat.getFormat());
-                for (Object row : data) {
-                    Object[] rowData = (Object[])row;
-                    Number value = (Number) rowData[i];
-                    if(value != null)rowData[i] = format.format(value);
-                }
-            }
-        }
-
-
-
         gridReport.setData(data);
         return gridReport;
     }

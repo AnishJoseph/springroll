@@ -13,6 +13,7 @@ public class GridColumn implements IGridColumn {
     private String numberFormat;
     private boolean visible = true;
     private Align align = Align.LEFT;
+    private String format;
     private String width;
     private boolean sortable = true;
 
@@ -78,5 +79,14 @@ public class GridColumn implements IGridColumn {
 
     public void setSortable(boolean sortable) {
         this.sortable = sortable;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        type = "num-fmt";
+        this.format = format;
     }
 }

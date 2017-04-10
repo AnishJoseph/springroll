@@ -1,6 +1,8 @@
 import React from 'react';
 import Application from 'App.js';
 const moment = require('moment');
+var numeral = require('numeral');
+
 
 
 export const DateToString = (value) => {
@@ -40,6 +42,11 @@ export const DateTimeFormatter = ({value}) => {
     }
     return (
         <div> {valueToDisplay} </div>
+    );
+};
+export const NumberFormatter = ({value, colDef}) => {
+    return (
+        <div> { numeral(value).format(colDef.format)} </div>
     );
 };
 

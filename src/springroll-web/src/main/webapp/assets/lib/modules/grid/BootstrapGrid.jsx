@@ -1,17 +1,17 @@
 import React from 'react';
 import Application from 'App';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import {DateTimeFormatter, DateFormatter, BooleanFormatter, BooleanToString, DateTimeToString, DateToString} from 'Formatters';
+import {DateTimeFormatter, DateFormatter, BooleanFormatter, NumberFormatter, BooleanToString, DateTimeToString, DateToString} from 'Formatters';
 import DebounceInput from 'react-debounce-input';
 import {CSVLink} from 'react-csv';
 var json2csv = require('json2csv');
 var moment = require('moment');
 
 
-function bsFormatter(cell, formatter) {
+function bsFormatter(cell, formatter, coDef) {
     let Formatter = formatter;
     return (
-        <Formatter value={cell} />
+        <Formatter value={cell} colDef={coDef}/>
     );
 }
 
@@ -134,6 +134,9 @@ class BootstrapGrid extends React.Component {
                                     formatter = DateTimeFormatter;
                                     sorter = dateTimeSorter;
                                 }
+                                if (colDef.type == 'num-fmt') {
+                                    formatter = NumberFormatter;
+                                }
                                 if (colDef.type == 'boolean') formatter = BooleanFormatter;
 
                                 /* If the caller has specified a formatter (tied to a type) then use that formatter - it overrides everything else */
@@ -145,7 +148,7 @@ class BootstrapGrid extends React.Component {
                                     sorter = this.props.options.sorter[colDef.type];
                                 }
                                 if (formatter) {
-                                    dataFormatter = (cell, row) => bsFormatter(cell, formatter);
+                                    dataFormatter = (cell, row) => bsFormatter(cell, formatter, colDef);
                                 }
                                 let align = colDef.align.toLowerCase();
 
