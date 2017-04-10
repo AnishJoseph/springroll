@@ -6,6 +6,10 @@ package com.springroll.orm.repositories;
 
 import com.springroll.orm.entities.Role;
 
+import java.util.List;
+
 
 public interface RoleRepository extends AbstractEntityRepository<Role> {
+    List<List<String>> getAuthorizationsForRoles(List<String> roles);
+
 }

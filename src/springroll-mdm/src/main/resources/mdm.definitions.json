@@ -6,6 +6,7 @@
         "constraints" : ["roleName"],
         "colDefs" : [
           { "title" : "ui.roleName", "name": "roleName", "writeable": false, "type": "text"},
+          { "title" : "ui.authorizations", "name": "authorizations", "writeable": true, "type": "text", "multiSelect": true, "width" : 300, "lovSource" : "Authorizations"},
           { "title" : "Description", "name": "description", "writeable": true, "type": "text"},
           { "name": "active", "writeable": true, "type": "boolean", "defVal": "true"}
       ]
@@ -82,6 +83,7 @@
       { "name": "Countries", "type": "java", "source": "countries"}
     ],
     "namedQuerySources": [
+      { "name": "Authorizations", "type": "namedQuery", "source": "Authorization.getAllAuthorizations"},
       { "name": "Roles", "type": "namedQuery", "source": "Role.getAllRoles"},
       { "name": "ActiveUsers", "type": "namedQuery", "source": "User.getActiveUsers"}
     ],

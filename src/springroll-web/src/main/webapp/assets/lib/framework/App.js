@@ -22,8 +22,11 @@ class Application {
         this.localeMessages = {};
         this.properties = {};
         this.promises = [];
+        this.user = undefined;
     }
-
+    getUser () {
+        return this.user;
+    }
     dispatchActionsOnReceiptOfPushTopic(receivedPushData, eventCreators){
         var that = this;
         console.log("Received data on channel " + receivedPushData.channel);
@@ -156,6 +159,7 @@ class Application {
             type: 'GET',
             success: function (user) {
                 that.store.dispatch(setUser(user));
+                that.user = user;
                 deferred.resolve();
             },
             error : function (jqXHR, textStatus, errorThrown ){

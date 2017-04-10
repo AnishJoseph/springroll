@@ -25,10 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -55,6 +52,16 @@ public class SpringrollUserDetailsService implements UserDetailsService, UserDet
         /* Comes here on both login and on switch user */
         SpringrollUser user = new SpringrollUser(username, "dummyPassword", authorities);
         User userInDb = repo.users.findByUserIdIgnoreCase(username);
+
+        /* Get all authorizations for this user based on the roles asssiged to the user */
+        Set<String> authorizations = new HashSet<>();
+        List<List<String>> authorizationsForRoles = repo.role.getAuthorizationsForRoles(userInDb.getRoles());
+        for (List<String> authorizationsForRole : authorizationsForRoles) {
+            authorizations.addAll(authorizationsForRole);
+
+        }
+
+        user.setAuthorizations(authorizations);
         Locale locale;
         String country = userInDb.getCountry() == null ? "": userInDb.getCountry();
         String variant = userInDb.getVariant() == null ? "": userInDb.getVariant();

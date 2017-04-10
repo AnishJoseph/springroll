@@ -6,7 +6,8 @@ import Application from 'App';
 $(function() {
     Application.setup();
     $.when.apply($, Application.getPromises()).then(function () {
-        var modules = ["TransactionTests", "SubMenuSimple", "MDM", "SubmenuCommon", "GridTests", "JobDashboard"];
+        var user = Application.getUser();
+        var modules = user.authorizations;
 
         /* Based on this users authorization start requiring the modules */
         if (_.contains(modules, "TransactionTests")) {

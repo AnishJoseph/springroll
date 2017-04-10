@@ -45,10 +45,10 @@
             INSERT INTO user VALUES (3,0, 'BOM2',  'BOM,GROUP2', 'US', 'en', 'v1', 'T', 'SCRIPT', null, null, null);
             <!--INSERT INTO user VALUES (4,0, 'BOM3',  'BOM,GROUP2');-->
 
-            INSERT INTO  role values (1,0, 'BOM', 'T', 'SCRIPT', null, null, null,'desc1');
-            INSERT INTO  role values (2,0, 'GROUP1', 'T', 'SCRIPT', null, null, null,'desc1');
-            INSERT INTO  role values (3,0, 'GROUP2', 'T', 'SCRIPT', null , null, null,'desc1');
-            INSERT INTO  role values (4,0, 'GROUP3', 'T', 'SCRIPT', null, null, null,'desc1');
+            INSERT INTO  role values (1,0, 'BOM', 'TransactionTests,SubMenuSimple,MDM,SubmenuCommon,GridTests,JobDashboard', 'T', 'SCRIPT', null, null, null,'desc1');
+            INSERT INTO  role values (2,0, 'GROUP1', 'TransactionTests,SubMenuSimple,MDM,SubmenuCommon,GridTests,JobDashboard', 'T', 'SCRIPT', null, null, null,'desc1');
+            INSERT INTO  role values (3,0, 'GROUP2', 'TransactionTests,SubMenuSimple,MDM,SubmenuCommon,GridTests,JobDashboard', 'T', 'SCRIPT', null , null, null,'desc1');
+            INSERT INTO  role values (4,0, 'GROUP3', 'TransactionTests,SubMenuSimple,MDM,SubmenuCommon,GridTests,JobDashboard', 'T', 'SCRIPT', null, null, null,'desc1');
             <!--id, parentid, rulename, review stage, approver, approvals needed, fyionly, desc-->
             INSERT INTO  review_rule values (1,0, 'Rule1',         'REVIEW',    1, 'BOM', 1, 'F', 'T', 'T', 'SCRIPT', null, null, null,'desc1');
             INSERT INTO  review_rule values (2,0, 'Rule2',         'REVIEW',    2, 'BOM', 1, 'F', 'T', 'T', 'SCRIPT', null, null, null,'desc2');
@@ -63,6 +63,12 @@
             <!--INSERT INTO  SEQUENCE_TABLE values ('ROLE',201);-->
             <!--INSERT INTO  SEQUENCE_TABLE values ('USER',201);-->
             <!--INSERT INTO  SEQUENCE_TABLE values ('USER_DELEGATION',201);-->
+            INSERT INTO  AUTHORIZATION values (1,0, 'TransactionTests', 'T', 'SCRIPT', null, null, null,'desc1');
+            INSERT INTO  AUTHORIZATION values (2,0, 'SubMenuSimple', 'T', 'SCRIPT', null, null, null,'desc1');
+            INSERT INTO  AUTHORIZATION values (3,0, 'MDM', 'T', 'SCRIPT', null, null, null,'desc1');
+            INSERT INTO  AUTHORIZATION values (4,0, 'SubmenuCommon', 'T', 'SCRIPT', null, null, null,'desc1');
+            INSERT INTO  AUTHORIZATION values (5,0, 'GridTests', 'T', 'SCRIPT', null, null, null,'desc1');
+            INSERT INTO  AUTHORIZATION values (6,0, 'JobDashboard', 'T', 'SCRIPT', null, null, null,'desc1');
 
 
 

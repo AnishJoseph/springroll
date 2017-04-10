@@ -1,16 +1,20 @@
 package com.springroll.orm.entities;
 
+import com.springroll.orm.CSVListConverter;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by anishjoseph on 05/09/16.
  */
 @NamedQueries({
-        @NamedQuery(name="Role.getAllRoles", query = "select r.roleName from Role r")
+        @NamedQuery(name="Role.getAllRoles", query = "select r.roleName from Role r"),
+        @NamedQuery(name="Role.getAuthorizationsForRoles", query = "select r.authorizations from Role r WHERE r.roleName in ?1")
 })
 @Entity
 @Table(name = "ROLE")
@@ -25,6 +29,12 @@ public class Role extends MdmEntity {
     @Column(name = "ACTIVE", length = 1)
     @NotNull
     private boolean active;
+
+    @NotNull
+    @Size(min = 1, message = "role.validation.empty")
+    @Column(name = "AUTHORIZATIONS")
+    @Convert(converter = CSVListConverter.class)
+    private List<String> authorizations = new ArrayList<>();
 
     @Column(name = "DESCRIPTION", length = 256)
     @Size(max = 256, min = 1)
@@ -53,5 +63,13 @@ public class Role extends MdmEntity {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public List<String> getAuthorizations() {
+        return authorizations;
+    }
+
+    public void setAuthorizations(List<String> authorizations) {
+        this.authorizations = authorizations;
     }
 }

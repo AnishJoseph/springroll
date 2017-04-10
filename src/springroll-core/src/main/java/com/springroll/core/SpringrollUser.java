@@ -3,10 +3,7 @@ package com.springroll.core;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Created by anishjoseph on 17/09/16.
@@ -17,6 +14,7 @@ public class SpringrollUser extends User{
     private String realLoggedInUser = null;
     private boolean runningAsDelegate = false;
     private Locale locale;
+    private Set<String>  authorizations;
 
     public SpringrollUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
 
@@ -64,5 +62,13 @@ public class SpringrollUser extends User{
 
     public void setLocale(Locale locale) {
         this.locale = locale;
+    }
+
+    public Set<String> getAuthorizations() {
+        return authorizations;
+    }
+
+    public void setAuthorizations(Set<String> authorizations) {
+        this.authorizations = authorizations;
     }
 }
