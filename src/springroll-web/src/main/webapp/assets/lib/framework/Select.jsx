@@ -1,17 +1,14 @@
 import React from 'react';
-import Application from 'App';
-import ReactDOM from 'react-dom';
 import ReactSelect from 'react-select';
 
 class Select extends React.Component {
     constructor(props) {
         super(props);
         this.onChange = this.onChange.bind(this);
-        this.state = {value : undefined}
     }
 
     onChange(value){
-        console.log(JSON.stringify(value));
+        if(value == null)return;
         let choices = undefined;
         if(this.props.multiSelect) {
             choices = _.pluck(value, 'value');
@@ -19,7 +16,6 @@ class Select extends React.Component {
             choices = value.value;
         }
         this.props.onChange(choices);
-        this.setState({value : choices});
 
     }
     render() {
@@ -27,7 +23,7 @@ class Select extends React.Component {
             options={this.props.options}
             onChange={this.onChange}
             multi={this.props.multiSelect}
-            value={this.state.value}
+            value={this.props.value}
             className={this.props.className}
         />);
     }
