@@ -1,8 +1,10 @@
 import React from 'react';
 import Application from 'App';
-import ReportParams from 'ReportParams';
+import ReportParams from 'ReportParameterForm';
 import ReviewModal from 'ReviewModal.jsx';
 import Grid from 'grid/BootstrapGrid.jsx';
+import { reduxForm } from 'redux-form';
+
 
 class GridReport extends React.Component {
     constructor(props){
@@ -10,7 +12,12 @@ class GridReport extends React.Component {
         this.handleModalClosed = this.handleModalClosed.bind(this);
         this.onFilterClick = this.onFilterClick.bind(this);
         this.paramsSelected = this.paramsSelected.bind(this);
-        this.state = {showFilter : this.props.parameterFirst, paramValues : this.props.params || {}};
+        this.state = {showFilter : this.props.parameterFirst};
+        this.ParameterForm = reduxForm({
+            form: 'grid-params:' + this.props.gridName,
+            destroyOnUnmount : false,
+            initialValues : this.props.params
+        })(ReportParams);
     }
     handleModalClosed(){
         this.setState({showFilter : false});
@@ -21,11 +28,11 @@ class GridReport extends React.Component {
     }
     paramsSelected(paramValues){
         console.log(JSON.stringify(paramValues));
-        this.setState({showFilter : false, paramValues: paramValues});
-        this.props.onGridDataRequest(this.props.gridName, paramValues);
+        this.setState({showFilter : false});
+        // this.props.onGridDataRequest(this.props.gridName, paramValues);
     }
     render() {
-        let message = "Report Params";
+        let message = Application.Localize("Report Params");
         return (
             <span>
                 <Grid gridData={this.props.gridData} options={this.props.options || {}} title={Application.Localize(this.props.gridName)} gridParams={this.props.gridParams} onFilterClick={this.onFilterClick}/>
@@ -33,7 +40,7 @@ class GridReport extends React.Component {
                     /* Show the parameters in a MODAL ONLY if the filter is to be shown AND this grid has parameters */
                     (this.state.showFilter &&  this.props.gridParams !== undefined && this.props.gridParams.length > 0) &&
                     <ReviewModal onModalClosed={this.handleModalClosed} title={message}>
-                        <ReportParams params={this.props.gridParams} onParamsSelected={this.paramsSelected} paramValues={this.state.paramValues}/>
+                        <this.ParameterForm params={this.props.gridParams} onSubmit={this.paramsSelected} />
                     </ReviewModal>
                 }
             </span>

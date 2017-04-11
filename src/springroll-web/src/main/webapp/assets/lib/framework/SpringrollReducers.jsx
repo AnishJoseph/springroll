@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { AlertActions, AlertFilters, USER_CHANGED, MdmActions, GridReportActions} from 'SpringrollActionTypes'
+import { reducer as formReducer } from 'redux-form'
 
 function dedup(array1, array2){
     let allAlerts = array1.concat(array2);
@@ -132,7 +133,8 @@ const springrollReducers = combineReducers({
     alerts : alertsReducer,
     user : userReducer,
     mdm : mdmReducer,
-    gridReports : gridReportReducer
+    gridReports : gridReportReducer,
+    form: formReducer
 });
 
 
