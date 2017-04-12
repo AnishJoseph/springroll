@@ -131,9 +131,23 @@ import java.util.stream.Collectors;
                 /* We will come here is the type is text, enum, date etc - the getLovsFromEnum will only return LOVs for enum class else null */
                 lovs = getLovsFromEnum(parameter.getParameterType());
             }
-            reportParameters.add(new ReportParameter(parameter.getName(), parameter.getParameterType().getName(), true, true, multiSelect, true, lovs, gridParameter == null ? null : gridParameter.getSetTime() ));
+            reportParameters.add(new ReportParameter(parameter.getName(), mapJavaType(parameter.getParameterType().getName()), true, true, multiSelect, true, lovs, gridParameter == null ? null : gridParameter.getSetTime() ));
         }
         return reportParameters;
+    }
+
+    private String mapJavaType(String javaType){
+        if(javaType.equals("java.lang.Boolean")) return "boolean";
+        if(javaType.equals("java.time.LocalDate")) return "date";
+        if(javaType.equals("java.time.LocalDateTime")) return "dateTime";
+        if(javaType.equals("java.lang.Integer")) return "int";
+        if(javaType.equals("java.lang.Long")) return "int";
+        if(javaType.equals("java.math.BigInteger")) return "int";
+        if(javaType.equals("java.lang.Short")) return "int";
+        if(javaType.equals("java.lang.Double")) return "float";
+        if(javaType.equals("java.lang.Float")) return "float";
+        if(javaType.equals("java.math.BigDecimal")) return "float";
+        return "text";
     }
 
     private List<Lov> getLovsFromList(List<String> list) {

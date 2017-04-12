@@ -52,7 +52,7 @@ class ReportParameterForm extends Component {
                         <div className="container-fluid">
                             {this.props.params.map((parameter) => {
                                 let pattern = undefined;
-                                if (parameter.javaType == "java.lang.Boolean"){
+                                if (parameter.javaType == "boolean"){
                                     return (
                                             <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderMultiselect} options={booleanLovList} multiSelect={false}/>
                                     )
@@ -60,20 +60,20 @@ class ReportParameterForm extends Component {
                                     return (
                                             <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderMultiselect} options={parameter.lovList} multiSelect={parameter.multiSelect}/>
                                     )
-                                } else if (parameter.javaType == "java.time.LocalDate" || (parameter.javaType == "java.time.LocalDateTime" && (parameter.setTime === 'START_OF_DAY' || parameter.setTime === 'END_OF_DAY'))){
+                                } else if (parameter.javaType == "date" || (parameter.javaType == "dateTime" && (parameter.setTime === 'START_OF_DAY' || parameter.setTime === 'END_OF_DAY'))){
                                     return (
                                             <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderDate} isDateTime={false} />
                                     )
-                                }else if (parameter.javaType == "java.time.LocalDateTime"){
+                                }else if (parameter.javaType == "dateTime"){
                                     return (
                                         <div key={parameter.name} className="form-group rep-param col-md-3">
                                             <label>{Application.Localize(parameter.name)}</label>
                                             <Field name={parameter.name} component={renderDate}  isDateTime={true}/>
                                         </div>
                                     )
-                                }else if ( parameter.javaType == "java.lang.Integer" || parameter.javaType == "java.lang.Long" || parameter.javaType == "java.math.BigInteger" || parameter.javaType == "java.lang.Short"){
+                                }else if ( parameter.javaType == "int"){
                                     pattern = intPattern;
-                                } else if ( parameter.javaType == "java.lang.Double"  || parameter.javaType == "java.lang.Float" || parameter.javaType == "java.math.BigDecimal"){
+                                } else if ( parameter.javaType == "float"){
                                     pattern = floatPattern;
                                 }
                                 return (
