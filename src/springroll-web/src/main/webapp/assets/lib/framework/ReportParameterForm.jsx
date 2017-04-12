@@ -23,6 +23,20 @@ const renderMultiselect = ({ input, multiSelect, options }) => {
     />)
 };
 
+const renderField = (props) => {
+    let { input, type, Renderer, meta: { touched, error, warning } } = props;
+    return (
+        <div className="form-group rep-param col-md-3">
+            <label>{Application.Localize(input.name)}</label>
+            <div>
+                <Renderer {...props} />
+                {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
+            </div>
+        </div>
+    )
+};
+
+
 /*
  If we dont want to show the submit button till the user has filled in all the parameters then
  add the line below into the submit button tag
@@ -40,24 +54,15 @@ class ReportParameterForm extends Component {
                                 let pattern = undefined;
                                 if (parameter.javaType == "java.lang.Boolean"){
                                     return (
-                                        <div key={parameter.name} className="form-group rep-param col-md-3">
-                                            <label>{Application.Localize(parameter.name)}</label>
-                                            <Field name={parameter.name} component={renderMultiselect} multiSelect={false} options={booleanLovList}/>
-                                        </div>
+                                            <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderMultiselect} options={booleanLovList} multiSelect={false}/>
                                     )
                                 } else if(parameter.lovList != null){
                                     return (
-                                        <div key={parameter.name} className="form-group rep-param col-md-3">
-                                            <label>{Application.Localize(parameter.name)}</label>
-                                            <Field name={parameter.name} component={renderMultiselect} multiSelect={parameter.multiSelect} options={parameter.lovList}/>
-                                        </div>
+                                            <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderMultiselect} options={parameter.lovList} multiSelect={parameter.multiSelect}/>
                                     )
                                 } else if (parameter.javaType == "java.time.LocalDate" || (parameter.javaType == "java.time.LocalDateTime" && (parameter.setTime === 'START_OF_DAY' || parameter.setTime === 'END_OF_DAY'))){
                                     return (
-                                        <div key={parameter.name} className="form-group rep-param col-md-3">
-                                            <label>{Application.Localize(parameter.name)}</label>
-                                            <Field name={parameter.name} component={renderDate}  isDateTime={false}/>
-                                        </div>
+                                            <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderDate} isDateTime={false} />
                                     )
                                 }else if (parameter.javaType == "java.time.LocalDateTime"){
                                     return (
