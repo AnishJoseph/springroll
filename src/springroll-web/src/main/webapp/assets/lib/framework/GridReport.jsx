@@ -29,7 +29,7 @@ class GridReport extends React.Component {
     paramsSelected(paramValues){
         console.log(JSON.stringify(paramValues));
         this.setState({showFilter : false});
-        // this.props.onGridDataRequest(this.props.gridName, paramValues);
+        this.props.onGridDataRequest(this.props.gridName, paramValues);
     }
     render() {
         let message = Application.Localize("Report Params");
