@@ -9,6 +9,16 @@ const booleanLovList = [{value : true, label : Application.Localize('ui.true')},
 const floatPattern = new RegExp("^[-+]?[0-9]*\\.?[0-9]*$");
 const intPattern = new RegExp("^[-+]?[0-9]*$");
 
+const normalizeInt = (value, previousValue) => {
+    if(intPattern.test(value))
+        return value
+    return previousValue;
+};
+const normalizeFloat = (value, previousValue) => {
+    if(floatPattern.test(value))
+        return value
+    return previousValue;
+};
 
 const renderDate = ({ input, isDateTime }) => 
      <DatePicker {...input} className="form-control" isDateTime={isDateTime} value={input.value}/>
@@ -29,7 +39,7 @@ const renderField = (props) => {
         <div className="form-group rep-param col-md-3">
             <label>{Application.Localize(input.name)}</label>
             <div>
-                <Renderer {...props} />
+                <Renderer {...props} {...input}/>
                 {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
             </div>
         </div>
@@ -51,36 +61,30 @@ class ReportParameterForm extends Component {
                     <form onSubmit={handleSubmit} className="report-param-form">
                         <div className="container-fluid">
                             {this.props.params.map((parameter) => {
-                                let pattern = undefined;
+                                let normalizer = undefined;
                                 if (parameter.javaType == "boolean"){
                                     return (
-                                            <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderMultiselect} options={booleanLovList} multiSelect={false}/>
+                                        <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderMultiselect} options={booleanLovList} multiSelect={false}/>
                                     )
                                 } else if(parameter.lovList != null){
                                     return (
-                                            <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderMultiselect} options={parameter.lovList} multiSelect={parameter.multiSelect}/>
+                                        <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderMultiselect} options={parameter.lovList} multiSelect={parameter.multiSelect}/>
                                     )
-                                } else if (parameter.javaType == "date" || (parameter.javaType == "dateTime" && (parameter.setTime === 'START_OF_DAY' || parameter.setTime === 'END_OF_DAY'))){
+                                } else if (parameter.javaType == "date" || parameter.setTime === 'START_OF_DAY' || parameter.setTime === 'END_OF_DAY'){
                                     return (
-                                            <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderDate} isDateTime={false} />
+                                        <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderDate} isDateTime={false} />
                                     )
                                 }else if (parameter.javaType == "dateTime"){
                                     return (
-                                        <div key={parameter.name} className="form-group rep-param col-md-3">
-                                            <label>{Application.Localize(parameter.name)}</label>
-                                            <Field name={parameter.name} component={renderDate}  isDateTime={true}/>
-                                        </div>
+                                        <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderDate} isDateTime={true} />
                                     )
                                 }else if ( parameter.javaType == "int"){
-                                    pattern = intPattern;
+                                    normalizer = normalizeInt;
                                 } else if ( parameter.javaType == "float"){
-                                    pattern = floatPattern;
+                                    normalizer = normalizeFloat;
                                 }
                                 return (
-                                    <div key={parameter.name} className="form-group rep-param col-md-3">
-                                        <label htmlFor={parameter.name}>{Application.Localize(parameter.name)}</label>
-                                        <Field name={parameter.name} component="Input" type="text" pattern={pattern}/>
-                                    </div>
+                                        <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={Input} classes="form-control" normalize={normalizer}/>
                                     )
                                 })
                             }

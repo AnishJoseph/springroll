@@ -8,12 +8,6 @@ class Input extends React.Component {
     }
 
     onChange(value){
-        if(this.props.pattern){
-            if(!this.props.pattern.test(value.target.value)){
-                return;
-            }
-        }
-        console.log("Passes or no patern");
         this.props.onChange(value.target.value);
     }
 
