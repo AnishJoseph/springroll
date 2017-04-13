@@ -9,6 +9,8 @@ const booleanLovList = [{value : true, label : Application.Localize('ui.true')},
 const floatPattern = new RegExp("^[-+]?[0-9]*\\.?[0-9]*$");
 const intPattern = new RegExp("^[-+]?[0-9]*$");
 
+const mandatory = value => value ? undefined : Application.Localize('ui.report.parameters.empty');
+
 const normalizeInt = (value, previousValue) => {
     if(intPattern.test(value))
         return value;
@@ -55,7 +57,7 @@ const renderSelect = ({ input, multiSelect, options }) => {
 
 const renderInput = ({ input}) => {
     return (
-        <input required className="form-control" value={input.value} type="text" onChange={ value => input.onChange(value.target.value)} />)
+        <input className="form-control" value={input.value} type="text" onChange={ value => input.onChange(value.target.value)} />)
 };
 
 const renderField = (props) => {
@@ -65,8 +67,8 @@ const renderField = (props) => {
             <label>{Application.Localize(input.name)}</label>
             <div>
                 <Renderer {...props} {...input}/>
-                {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
             </div>
+            {touched && (error && <label className="text-danger"><small>{error}</small></label>)}
         </div>
     )
 };
@@ -87,21 +89,23 @@ class ReportParameterForm extends Component {
                         <div className="container-fluid">
                             {this.props.params.map((parameter) => {
                                 let normalizer = undefined;
+                                let validators = [];
+                                if(parameter.mandatory) validators.push(mandatory);
                                 if (parameter.javaType == "boolean"){
                                     return (
-                                        <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderSelect} options={booleanLovList} multiSelect={false}/>
+                                        <Field validate={validators} key={parameter.name} name={parameter.name} component={renderField} Renderer={renderSelect} options={booleanLovList} multiSelect={false}/>
                                     )
                                 } else if(parameter.lovList != null){
                                     return (
-                                        <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderSelect} options={parameter.lovList} multiSelect={parameter.multiSelect}/>
+                                        <Field validate={validators} key={parameter.name} name={parameter.name} component={renderField} Renderer={renderSelect} options={parameter.lovList} multiSelect={parameter.multiSelect}/>
                                     )
                                 } else if (parameter.javaType == "date" || parameter.setTime === 'START_OF_DAY' || parameter.setTime === 'END_OF_DAY'){
                                     return (
-                                        <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderDate} isDateTime={false} />
+                                        <Field validate={validators} key={parameter.name} name={parameter.name} component={renderField} Renderer={renderDate} isDateTime={false} />
                                     )
                                 }else if (parameter.javaType == "dateTime"){
                                     return (
-                                        <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderDate} isDateTime={true} />
+                                        <Field validate={validators} key={parameter.name} name={parameter.name} component={renderField} Renderer={renderDate} isDateTime={true} />
                                     )
                                 }else if ( parameter.javaType == "int"){
                                     normalizer = normalizeInt;
@@ -109,7 +113,7 @@ class ReportParameterForm extends Component {
                                     normalizer = normalizeFloat;
                                 }
                                 return (
-                                        <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderInput} classes="form-control" normalize={normalizer}/>
+                                        <Field validate={validators} key={parameter.name} name={parameter.name} component={renderField} Renderer={renderInput} classes="form-control" normalize={normalizer}/>
                                     )
                                 })
                             }
