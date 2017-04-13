@@ -19,10 +19,11 @@ public class ReportParameter implements IReportParameter {
     private boolean multiSelect = false;
     private boolean visible = true;
     private SetTime setTime;
+    private int width;
 
 
     public ReportParameter(){}
-    public ReportParameter(String name, String javaType, boolean isConstrained, boolean mandatory, boolean multiSelect, boolean visible, List<Lov> lovs, SetTime setTime) {
+    public ReportParameter(String name, String javaType, boolean isConstrained, boolean mandatory, boolean multiSelect, boolean visible, List<Lov> lovs, SetTime setTime, int width) {
         this.name = name;
         this.javaType = javaType;
         this.isConstrained = isConstrained;
@@ -31,6 +32,7 @@ public class ReportParameter implements IReportParameter {
         this.visible = visible;
         this.lovList = lovs;
         this.setTime = setTime;
+        this.width = width;
     }
 
     @Override
@@ -103,5 +105,13 @@ public class ReportParameter implements IReportParameter {
 
     public void setSetTime(SetTime setTime) {
         this.setTime = setTime;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
     }
 }

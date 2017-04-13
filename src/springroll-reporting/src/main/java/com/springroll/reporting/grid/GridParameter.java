@@ -16,6 +16,7 @@ public class GridParameter {
     private String  bean;
     private SetTime setTime;
     private List<String> list;
+    private int width = 3;
 
     public String getName() {
         return name;
@@ -79,5 +80,13 @@ public class GridParameter {
 
     public void setBean(String bean) {
         this.bean = bean;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
     }
 }

@@ -61,10 +61,11 @@ const renderInput = ({ input}) => {
 };
 
 const renderField = (props) => {
-    let { input, type, Renderer, meta: { touched, error, warning } } = props;
+    let { input, type, Renderer, width, meta: { touched, error, warning } } = props;
+    let colWidth = "col-md-" + width;
     return (
-        <div className="form-group rep-param col-md-3">
-            <label>{Application.Localize(input.name)}</label>
+        <div className={"form-group rep-param " + colWidth }>
+            <label>{Application.Localize("ui."+input.name)}</label>
             <div>
                 <Renderer {...props} {...input}/>
             </div>
@@ -93,19 +94,19 @@ class ReportParameterForm extends Component {
                                 if(parameter.mandatory) validators.push(mandatory);
                                 if (parameter.javaType == "boolean"){
                                     return (
-                                        <Field validate={validators} key={parameter.name} name={parameter.name} component={renderField} Renderer={renderSelect} options={booleanLovList} multiSelect={false}/>
+                                        <Field validate={validators} key={parameter.name} name={parameter.name} component={renderField} Renderer={renderSelect} options={booleanLovList} multiSelect={false} width={parameter.width}/>
                                     )
                                 } else if(parameter.lovList != null){
                                     return (
-                                        <Field validate={validators} key={parameter.name} name={parameter.name} component={renderField} Renderer={renderSelect} options={parameter.lovList} multiSelect={parameter.multiSelect}/>
+                                        <Field validate={validators} key={parameter.name} name={parameter.name} component={renderField} Renderer={renderSelect} options={parameter.lovList} multiSelect={parameter.multiSelect} width={parameter.width}/>
                                     )
                                 } else if (parameter.javaType == "date" || parameter.setTime === 'START_OF_DAY' || parameter.setTime === 'END_OF_DAY'){
                                     return (
-                                        <Field validate={validators} key={parameter.name} name={parameter.name} component={renderField} Renderer={renderDate} isDateTime={false} />
+                                        <Field validate={validators} key={parameter.name} name={parameter.name} component={renderField} Renderer={renderDate} isDateTime={false}  width={parameter.width}/>
                                     )
                                 }else if (parameter.javaType == "dateTime"){
                                     return (
-                                        <Field validate={validators} key={parameter.name} name={parameter.name} component={renderField} Renderer={renderDate} isDateTime={true} />
+                                        <Field validate={validators} key={parameter.name} name={parameter.name} component={renderField} Renderer={renderDate} isDateTime={true} width={parameter.width} />
                                     )
                                 }else if ( parameter.javaType == "int"){
                                     normalizer = normalizeInt;
@@ -113,7 +114,7 @@ class ReportParameterForm extends Component {
                                     normalizer = normalizeFloat;
                                 }
                                 return (
-                                        <Field validate={validators} key={parameter.name} name={parameter.name} component={renderField} Renderer={renderInput} classes="form-control" normalize={normalizer}/>
+                                        <Field validate={validators} key={parameter.name} name={parameter.name} component={renderField} Renderer={renderInput} classes="form-control" normalize={normalizer} width={parameter.width}/>
                                     )
                                 })
                             }
