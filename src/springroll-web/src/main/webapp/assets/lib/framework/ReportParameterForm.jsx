@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Application from 'App';
 import { Field, reduxForm } from 'redux-form';
-import Select from "./Select";
-import DatePicker from 'DatePicker';
-import Input from 'Input.jsx';
+import ReactSelect from 'react-select';
+import DateField from 'react-datetime';
+var moment = require('moment');
 
 const booleanLovList = [{value : true, label : Application.Localize('ui.true')}, {value : false, label : Application.Localize('ui.false')}];
 const floatPattern = new RegExp("^[-+]?[0-9]*\\.?[0-9]*$");
@@ -11,26 +11,51 @@ const intPattern = new RegExp("^[-+]?[0-9]*$");
 
 const normalizeInt = (value, previousValue) => {
     if(intPattern.test(value))
-        return value
+        return value;
     return previousValue;
 };
 const normalizeFloat = (value, previousValue) => {
     if(floatPattern.test(value))
-        return value
+        return value;
     return previousValue;
 };
 
-const renderDate = ({ input, isDateTime }) => 
-     <DatePicker {...input} className="form-control" isDateTime={isDateTime} value={input.value}/>
+const renderDate = ({ input, isDateTime }) => {
+    return (<DateField
+        value={input.value === undefined ? undefined : moment(input.value)}
+        dateFormat={Application.getMomentFormatForDate()}
+        onChange={ value => {
+            if(value == null || value == undefined)return;
+            input.onChange(value.valueOf());
+        }}
+        closeOnSelect={true}
+        timeFormat={isDateTime}
+    />);
 
-const renderMultiselect = ({ input, multiSelect, options }) => {
-    console.log("RENDER Input value = " + input.value);
-    return (<Select {...input}
-            className="form-control"
-            options={options}
-            multiSelect={multiSelect}
-            value={input.value}
-    />)
+};
+
+const renderSelect = ({ input, multiSelect, options }) => {
+    return (<ReactSelect
+        options={options}
+        onChange={ value => {
+            if(value == null)return;
+            let choices = undefined;
+            if(multiSelect) {
+                choices = _.pluck(value, 'value');
+            } else {
+                choices = value.value;
+            }
+            input.onChange(choices);
+        }}
+        multi={multiSelect}
+        value={input.value}
+        className="form-control"
+    />);
+};
+
+const renderInput = ({ input}) => {
+    return (
+        <input required className="form-control" value={input.value} type="text" onChange={ value => input.onChange(value.target.value)} />)
 };
 
 const renderField = (props) => {
@@ -64,11 +89,11 @@ class ReportParameterForm extends Component {
                                 let normalizer = undefined;
                                 if (parameter.javaType == "boolean"){
                                     return (
-                                        <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderMultiselect} options={booleanLovList} multiSelect={false}/>
+                                        <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderSelect} options={booleanLovList} multiSelect={false}/>
                                     )
                                 } else if(parameter.lovList != null){
                                     return (
-                                        <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderMultiselect} options={parameter.lovList} multiSelect={parameter.multiSelect}/>
+                                        <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderSelect} options={parameter.lovList} multiSelect={parameter.multiSelect}/>
                                     )
                                 } else if (parameter.javaType == "date" || parameter.setTime === 'START_OF_DAY' || parameter.setTime === 'END_OF_DAY'){
                                     return (
@@ -84,7 +109,7 @@ class ReportParameterForm extends Component {
                                     normalizer = normalizeFloat;
                                 }
                                 return (
-                                        <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={Input} classes="form-control" normalize={normalizer}/>
+                                        <Field key={parameter.name} name={parameter.name} component={renderField} Renderer={renderInput} classes="form-control" normalize={normalizer}/>
                                     )
                                 })
                             }
