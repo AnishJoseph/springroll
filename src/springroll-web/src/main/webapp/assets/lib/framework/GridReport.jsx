@@ -32,7 +32,7 @@ class GridReport extends React.Component {
         this.props.onGridDataRequest(this.props.gridName, paramValues);
     }
     render() {
-        let message = Application.Localize("Report Params");
+        let message = Application.Localize("ui.ReportParameters");
         return (
             <span>
                 <Grid gridData={this.props.gridData} options={this.props.options || {}} title={Application.Localize(this.props.gridName)} gridParams={this.props.gridParams} onFilterClick={this.onFilterClick}/>
