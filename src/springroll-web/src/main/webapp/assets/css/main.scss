@@ -272,3 +272,20 @@ button.submitButton {
   background:none;
   border:none;
 }
+
+/* For some reason the div for react-select becomes 36px high while the bootstrap
+   div is 34px high - this causes a double line at the bottom of the div - to avoid
+   this (as a workaround) we dont keep a border for the bootstrap div
+ */
+.rep-param .Select {
+  border : none;
+}
+
+/* The following rules are for React Select */
+$select-option-focused-bg:          darken(#fff, 2%)  ; // anish
+$select-item-color:                 #000; // anish
+$select-item-bg:                    #fff ; //anish
+$select-option-selected-bg:         #fff;
+@import '~react-select/scss/default.scss';
+
+/* End of React Select */
