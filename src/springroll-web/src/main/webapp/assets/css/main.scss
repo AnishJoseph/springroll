@@ -1,4 +1,6 @@
 @import 'pre-customizations.scss';
+@import '~bootstrap-sass/assets/stylesheets/bootstrap/_variables.scss';
+
 $rootMenuHeight : 50px;
 $offsetFromBottomForBodyContent : 10px;
 $marginOnSideForSPA : 1px;
@@ -282,10 +284,12 @@ button.submitButton {
 }
 
 /* The following rules are for React Select */
-$select-option-focused-bg:          darken(#fff, 2%)  ; // anish
-$select-item-color:                 #000; // anish
-$select-item-bg:                    #fff ; //anish
-$select-option-selected-bg:         #fff;
+$select-option-focused-bg:          darken($input-bg, 2%);
+$select-item-color:                 $gray-base;
+$select-item-bg:                    $input-bg;
+$select-option-selected-bg:         $input-bg;
+$select-input-bg:                   $input-bg;
+
 @import '~react-select/scss/default.scss';
 
 /* End of React Select */
