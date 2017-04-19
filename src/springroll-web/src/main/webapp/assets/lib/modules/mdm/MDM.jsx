@@ -41,6 +41,13 @@ class MDM extends React.Component {
            the user wants to view/edit we fire an event that will go fetch the master data for this master
         */
         if(this.props.params.master !== undefined)this.props.onMdmMasterChosen(this.props.params.master);
+
+        /* Picture this - The user navigated to a master and then user navigated away and then came back. After this if the
+           user clicks on the MDM menu - i.e no specific master was chosen - however data for the master viewed earlier is already
+           available in redux - we can either say since the route does not specify as master we dont show anything, or simply
+           push he route for the existing master and show what is already present in redux 
+         */
+        if(this.props.masterData != undefined && this.props.masterData.master !== undefined) this.masterChosen(this.props.masterData.master);
     }
 }
 
