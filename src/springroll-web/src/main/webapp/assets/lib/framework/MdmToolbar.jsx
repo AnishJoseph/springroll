@@ -1,31 +1,12 @@
 import React from 'react';
 import Application from 'App';
+import DebounceInput from 'react-debounce-input';
 
 const MdmToolbar = React.createClass({
-    propTypes: {
-        onAddRow: React.PropTypes.func,
-        onToggleFilter: React.PropTypes.func,
-        onSaveClicked: React.PropTypes.func,
-        enableFilter: React.PropTypes.bool,
-        needsSave: React.PropTypes.bool,
-        numberOfRows: React.PropTypes.number,
-        addRowButtonText: React.PropTypes.string,
-        filterRowsButtonText: React.PropTypes.string,
-        children: React.PropTypes.any
-    },
-
     onAddRow() {
         if (this.props.onAddRow !== null && this.props.onAddRow instanceof Function) {
             this.props.onAddRow({newRowIndex: this.props.numberOfRows});
         }
-    },
-
-    getDefaultProps() {
-        return {
-            enableAddRow: true,
-            addRowButtonText: 'Add Row',
-            filterRowsButtonText: 'Filter Rows'
-        };
     },
 
     renderSaveButton() {
@@ -35,8 +16,8 @@ const MdmToolbar = React.createClass({
     },
 
     renderAddRowButton() {
-        if (this.props.onAddRow ) {
-            return (<span data-toggle="tooltip" title={Application.Localize('ui.mdm.New')} onClick={this.onAddRow} className="springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-plus"></span>);
+        if (this.props.onMdmMasterAddRow ) {
+            return (<span data-toggle="tooltip" title={Application.Localize('ui.mdm.New')} onClick={this.props.onMdmMasterAddRow} className="springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-plus"></span>);
         }
     },
 
@@ -56,10 +37,12 @@ const MdmToolbar = React.createClass({
                         {this.renderSaveButton()}
                         {this.renderAddRowButton()}
                         {this.renderToggleFilterButton()}
+                        <DebounceInput className="pull-right" minLength={2} debounceTimeout={300} onChange={this.props.onSearch} placeholder={Application.Localize('ui.search')}/>
                     </div>
                     {this.props.children}
                 </div>
-            </div>);
+            </div>
+        );
     }
 });
 

@@ -1,20 +1,32 @@
 import Application from 'App';
 import React from 'react';
 import { connect } from 'react-redux';
-import { mdmModuleActivated, mdmMasterChosen, mdmMasterChanged} from 'SpringrollActionTypes';
+import { mdmModuleActivated, mdmMasterChosen, mdmMasterChanged, mdmMasterUpdateRow, mdmMasterAddRow, mdmMasterDeleteRow, mdmMasterUpdateStarted} from 'SpringrollActionTypes';
 import MDM from 'mdm/MDM.jsx';
 import { bindActionCreators } from 'redux';
 import { Router, Route } from 'react-router'
 
 
 const mapStateToProps = (state) => {
-    return {masterDefns : state.mdm.masterDefns, masterData : state.mdm.masterData, updateResponse : state.mdm.updateResponse, updateStatus : state.mdm.updateStatus};
+    return {
+        masterDefns : state.mdm.masterDefns,
+        masterData : state.mdm.masterData,
+        updateResponse : state.mdm.updateResponse,
+        updateInProgress : state.mdm.updateInProgress,
+        newRowData : state.mdm.newRowData,
+        changedRowData : state.mdm.changedRowData
+    };
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
     onMdmModuleActivated : mdmModuleActivated,
     onMdmMasterChosen : mdmMasterChosen,
-    onMdmMasterChanged : mdmMasterChanged
+    onMdmMasterChanged : mdmMasterChanged,
+    onMdmMasterRowChanged : mdmMasterUpdateRow,
+    onMdmMasterAddRow : mdmMasterAddRow,
+    onMdmMasterDeleteRow : mdmMasterDeleteRow,
+    onMdmMasterUpdateStarted : mdmMasterUpdateStarted
+
 }, dispatch);
 
 const MDMContainer = connect(mapStateToProps, mapDispatchToProps)(MDM);

@@ -55,6 +55,9 @@ import java.util.stream.Collectors;
 
     public MdmEntity createEntityFromChangedRecords(MdmDefinition mdmDefinition, MdmChangedRecord mdmChangedRecord, boolean detach){
         MdmEntity entity = (MdmEntity) em.find(mdmDefinition.getMasterClass(), mdmChangedRecord.getId());
+        if(entity == null){
+            throw new SpringrollException(null, "mdm.entity.notfound", mdmDefinition.getMaster(), mdmChangedRecord.getId()+"");
+        }
         if(detach)em.detach(entity);
         BeanWrapper wrapper = new BeanWrapperImpl(entity);
         Map<String, Object> valueMap = new HashMap<>();
@@ -141,11 +144,6 @@ import java.util.stream.Collectors;
             mdmDefinitions = mapper.readValue(br, MdmDefinitions.class);
             for (MdmDefinition mdmDefinition : mdmDefinitions.getMasters()) {
                 mdmDefinition.getColDefs().add(0, new ColDef("id", false, "num", false));
-                for (ColDef colDef : mdmDefinition.getColDefs()) {
-                    if("boolean".equals(colDef.getType())){
-                        colDef.setLovList(makeBooleanLov());
-                    }
-                }
                 makeNamedQueries(mdmDefinition);
             }
             mdmDefinitions.init();

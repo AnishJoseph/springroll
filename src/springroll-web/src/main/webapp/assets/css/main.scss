@@ -185,6 +185,7 @@ table.nowrap {
 }
 .springroll-icon {
   font-size: 16px;
+  color: black;
 }
 
 .springroll-table {
@@ -195,8 +196,11 @@ table.nowrap {
   background-color: $disabledRowColor;
 }
 
-.mdm-error .react-grid-Cell{
+.mdm-error{
   background-color: $errorRowColor;
+  font-size : 12px;
+  padding: 5px;
+  width:100%;
 }
 
 .icon-muted {
@@ -293,3 +297,13 @@ $select-input-bg:                   $input-bg;
 @import '~react-select/scss/default.scss';
 
 /* End of React Select */
+
+
+.react-bs-table table td {
+  overflow: visible!important;
+  white-space: normal!important;
+  word-wrap: break-word;
+}
+.mdmTable{
+  height: 36px;
+}

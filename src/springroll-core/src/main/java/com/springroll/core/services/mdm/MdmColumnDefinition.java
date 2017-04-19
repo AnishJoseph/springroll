@@ -16,7 +16,7 @@ public interface MdmColumnDefinition {
 
     List<Lov> getLovList();
 
-    String getDefVal();
+    Object getDefVal();
 
     String getLovSource();
 

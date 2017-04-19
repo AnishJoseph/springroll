@@ -8,7 +8,7 @@
           { "title" : "ui.roleName", "name": "roleName", "writeable": false, "type": "text"},
           { "title" : "ui.authorizations", "name": "authorizations", "writeable": true, "type": "text", "multiSelect": true, "width" : 300, "lovSource" : "Authorizations"},
           { "title" : "Description", "name": "description", "writeable": true, "type": "text"},
-          { "name": "active", "writeable": true, "type": "boolean", "defVal": "true"}
+          { "name": "active", "writeable": true, "type": "boolean", "defVal": true}
       ]
       },
       {
@@ -17,13 +17,13 @@
         "colDefs" : [
           { "name": "ruleName", "writeable": true, "type": "text"},
           { "name": "channel", "writeable": true, "type": "text", "lovSource" : "NotificationChannels"},
-          { "name": "reviewStage", "writeable": true, "type": "int", "defVal" : "1"},
-          { "name": "selfReview", "writeable": true, "type": "boolean", "defVal": "false"},
+          { "name": "reviewStage", "writeable": true, "type": "int", "defVal" : 1},
+          { "name": "selfReview", "writeable": true, "type": "boolean", "defVal": false},
           { "name": "approver", "writeable": true, "type": "text", "lovSource" : "Roles"},
-          { "name": "approvalsNeeded", "writeable": true, "type": "int", "defVal": "1"},
-          { "name": "fyiOnly", "writeable": true, "type": "boolean", "defVal": "false"},
+          { "name": "approvalsNeeded", "writeable": true, "type": "int", "defVal": 1},
+          { "name": "fyiOnly", "writeable": true, "type": "boolean", "defVal": false},
           { "name": "description", "writeable": true, "type": "text"},
-          { "name": "active", "writeable": true, "type": "boolean", "defVal": "true"}
+          { "name": "active", "writeable": true, "type": "boolean", "defVal": true}
         ]
       },
       {
@@ -36,7 +36,7 @@
           { "name": "country", "writeable": true, "type": "text", "lovSource" : "Countries", "width" : 100, "defVal" : "IN"},
           { "name": "language", "writeable": true, "type": "text", "lovSource" : "Languages", "width" : 100, "defVal" : "en"},
           { "name": "variant", "writeable": true, "type": "text", "width" : 100},
-          { "name": "active", "writeable": true, "type": "boolean", "defVal": "true", "width" : 100, "defVal" : "true"}
+          { "name": "active", "writeable": true, "type": "boolean", "defVal": true, "width" : 100}
         ]
       },
       {
@@ -49,7 +49,7 @@
           { "name": "startDate", "writeable": true, "type": "date"},
           { "name": "endDate", "writeable": true, "type": "date"},
           { "name": "description", "writeable": true, "type": "text"},
-          { "name": "active", "writeable": true, "type": "boolean", "defVal": "true"}
+          { "name": "active", "writeable": true, "type": "boolean", "defVal": true}
         ]
       },
       {

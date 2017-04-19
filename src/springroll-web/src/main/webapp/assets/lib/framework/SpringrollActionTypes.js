@@ -21,7 +21,11 @@ export const AlertActions = {
 export const MdmActions = {
     MDM_MASTER_METADATA_RECEIVED : 'MDM_MASTER_METADATA_RECEIVED',
     MDM_MASTER_DATA_RECEIVED : 'MDM_MASTER_DATA_RECEIVED',
-    MDM_MASTER_UPDATE_COMPLETE : 'MDM_MASTER_UPDATE_COMPLETE'
+    MDM_MASTER_UPDATE_COMPLETE : 'MDM_MASTER_UPDATE_COMPLETE',
+    MDM_MASTER_UPDATE_ROW : 'MDM_MASTER_UPDATE_ROW',
+    MDM_MASTER_ADD_ROW : 'MDM_MASTER_ADD_ROW',
+    MDM_MASTER_DELETE_ROW : 'MDM_MASTER_DELETE_ROW',
+    MDM_MASTER_UPDATE_STARTED : 'MDM_MASTER_UPDATE_STARTED'
 };
 export const GridReportActions = {
     GRID_REPORT_PARAMS_RECEIVED : 'GRID_REPORT_PARAMS_RECEIVED',
@@ -148,6 +152,11 @@ export function setUser(user) {
 
 /* MDM ACTION CREATORS */
 
+export function mdmMasterUpdateStarted() {
+    return {
+        type: MdmActions.MDM_MASTER_UPDATE_STARTED,
+    }
+}
 export function mdmMasterDefnsReceived(masterDefns) {
     return {
         type: MdmActions.MDM_MASTER_METADATA_RECEIVED,
@@ -160,11 +169,27 @@ export function mdmMasterDataReceived(masterData) {
         masterData : masterData
     }
 }
-export function mdmMasterUpdateComplete(status, response) {
+export function mdmMasterUpdateComplete(response) {
     return {
         type: MdmActions.MDM_MASTER_UPDATE_COMPLETE,
-        status : status,
         response : response
+    }
+}
+export function mdmMasterUpdateRow(row) {
+    return {
+        type: MdmActions.MDM_MASTER_UPDATE_ROW,
+        row : row
+    }
+}
+export function mdmMasterAddRow() {
+    return {
+        type: MdmActions.MDM_MASTER_ADD_ROW,
+    }
+}
+export function mdmMasterDeleteRow(cid) {
+    return {
+        type: MdmActions.MDM_MASTER_DELETE_ROW,
+        cid : cid
     }
 }
 export function mdmModuleActivated(masterName) {
@@ -194,6 +219,7 @@ export function mdmMasterChosen(masterName) {
             success: function (masterData) {
                 deferred.resolve();
                 masterData['master'] = masterName;
+                //ANISH
                 dispatch(mdmMasterDataReceived(masterData));
             }.bind(this),
             error : function (jqXHR, textStatus, errorThrown ){
@@ -214,18 +240,17 @@ export function mdmMasterChanged(mdmDTO) {
             success: function (masterData) {
                 deferred.resolve();
                 Application.showInfoNotification("Changes submitted successfully. ");
-                dispatch(mdmMasterUpdateComplete(true));
+                dispatch(mdmMasterUpdateComplete());
 
             }.bind(this),
             error : function (jqXHR, textStatus, errorThrown ){
                 deferred.resolve();
-                dispatch(mdmMasterUpdateComplete(false, jqXHR.responseJSON));
-                jqXHR['errorHandled'] = true;
-                let message = "<div class='mdm-error-msg-header'>Error(s) encountered while updating master '" + mdmDTO.master +"' - correct and resubmit</div>";
-                _.each(jqXHR.responseJSON, function(violation){
-                    message += "<div class='mdm-error-msg'>Row : " + (parseInt(violation.cookie) + 1) + " - Field : " + violation.field + " - " + violation.message + "</div>";
-                });
-                Application.showErrorNotification(message);
+                if(jqXHR.status === 400 || jqXHR.status === 409) {
+                    let message = "<div class='mdm-error-msg-header'>" + Application.Localize('ui.mdm.error', mdmDTO.master) + "</div>";
+                    Application.showErrorNotification(message);
+                    dispatch(mdmMasterUpdateComplete(jqXHR.responseJSON));
+                    jqXHR['errorHandled'] = true;
+                }
             }.bind(this)
         });
         return deferred;

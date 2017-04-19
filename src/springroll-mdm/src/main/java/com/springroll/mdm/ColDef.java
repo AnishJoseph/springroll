@@ -16,7 +16,7 @@ public class ColDef implements Serializable, MdmColumnDefinition {
     private boolean writeable;
     private String type;
     private List<Lov> lovList;
-    private String defVal;
+    private Object defVal;
     private String lovSource;
     private boolean multiSelect = false;
     private boolean nullable = true;
@@ -80,11 +80,11 @@ public class ColDef implements Serializable, MdmColumnDefinition {
     }
 
     @Override
-    public String getDefVal() {
+    public Object getDefVal() {
         return defVal;
     }
 
-    public void setDefVal(String defVal) {
+    public void setDefVal(Object defVal) {
         this.defVal = defVal;
     }
 
