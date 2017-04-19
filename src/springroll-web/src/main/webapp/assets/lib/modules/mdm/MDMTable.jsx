@@ -1,12 +1,13 @@
 import React from 'react';
 import Application from 'App';
-import {DeleteFormatter, WrapperForFormatter, TextFormatter, DateTimeFormatter, DateFormatter, BooleanFormatter, ArrayFormatter} from 'Formatters';
+import {intPattern, floatPattern, DeleteFormatter, WrapperForFormatter, TextFormatter, DateTimeFormatter, DateFormatter, BooleanFormatter, ArrayFormatter} from 'Formatters';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import ReactSelect from 'react-select';
 import {DatePicker, DateField} from 'react-date-picker';
 var moment = require('moment');
 import MdmToolbar from 'MdmToolbar';
 
+/* Fixme there are 2 booleanLovList */
 export const booleanLovList = [{value : true, label : Application.Localize('ui.true')}, {value : false, label : Application.Localize('ui.false')}];
 
 const selectEditor = (onUpdate, props) => {
@@ -29,6 +30,36 @@ const selectEditor = (onUpdate, props) => {
         value={props.defaultValue}
     />)
 };
+const numericEditor = (onUpdate, props) => (<NumericEditor onUpdate={ onUpdate } {...props}/>);
+
+class NumericEditor extends React.Component {
+    constructor(props){
+        super(props);
+        this.onChange = this.onChange.bind(this);
+        this.onBlur = this.onBlur.bind(this);
+        this.pattern = props.type == 'int'? intPattern : floatPattern;
+    }
+    onBlur(){
+        this.props.onUpdate(this.props.defaultValue);
+    }
+    focus() {
+        console.log("focus");
+        //FIXME - need to talk to react-bootstrap-table and see if we can avoid this dummy focus
+    }
+    onChange(event){
+        let value = event.target.value;
+        if(this.pattern.test(value)){
+            let changedRowData = {id : this.props.row['id'], cid : this.props.row['cid'], cellName : this.props.cellName, cellValue : value};
+            this.props.onMdmMasterRowChanged(changedRowData);
+        }
+    }
+    
+    render() {
+        return (
+            <input autoFocus style={{width :"100%"}} type="text" onChange={this.onChange} value={this.props.defaultValue} onBlur={this.onBlur}/>
+        )
+    }
+}
 const dateEditor = (onUpdate, props) => (<DateEditor onUpdate={ onUpdate } {...props}/>);
 
 class DateEditor extends React.Component {
@@ -158,10 +189,16 @@ class MDMGrid extends React.Component {
                                 formatter = BooleanFormatter;
                                 customEditor = {getElement : selectEditor, customEditorParameters : {options : booleanLovList, multi : false}};
                             }
+                            if (colDef.type == 'int') {
+                                customEditor = {getElement : numericEditor, customEditorParameters : {type : colDef.type}};
+                            }
+                            if (colDef.type == 'num') {
+                                customEditor = {getElement : numericEditor, customEditorParameters : {type : colDef.type}};
+                            }
 
                             if(colDef.lovList != undefined && colDef.lovList != null){
                                 customEditor = {getElement : selectEditor, customEditorParameters : {options : colDef.lovList, multi : colDef.multiSelect}};
-                                formatter = ArrayFormatter;
+                                if(colDef.multiSelect) formatter = ArrayFormatter;
                             }
                             if(customEditor !== undefined) {
                                 customEditor.customEditorParameters.onMdmMasterRowChanged =  this.props.onMdmMasterRowChanged;

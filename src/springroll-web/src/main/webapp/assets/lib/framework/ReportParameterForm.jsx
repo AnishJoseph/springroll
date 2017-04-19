@@ -3,11 +3,11 @@ import Application from 'App';
 import { Field, reduxForm } from 'redux-form';
 import ReactSelect from 'react-select';
 import DateField from 'react-datetime';
+import {floatPattern, intPattern} from 'Formatters';
 var moment = require('moment');
 
+/* Fixme there are 2 booleanLovList */
 const booleanLovList = [{value : true, label : Application.Localize('ui.true')}, {value : false, label : Application.Localize('ui.false')}];
-const floatPattern = new RegExp("^[-+]?[0-9]*\\.?[0-9]*$");
-const intPattern = new RegExp("^[-+]?[0-9]*$");
 
 const mandatory = value => value ? undefined : Application.Localize('ui.report.parameters.empty');
 

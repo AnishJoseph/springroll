@@ -3,6 +3,8 @@ import Application from 'App.js';
 const moment = require('moment');
 var numeral = require('numeral');
 
+export const floatPattern = new RegExp("^[-+]?[0-9]*\\.?[0-9]*$");
+export const intPattern = new RegExp("^[-+]?[0-9]*$");
 
 export function WrapperForFormatter(cell, formatter, coDef, row, updateResponse) {
     let Formatter = formatter;
@@ -64,11 +66,7 @@ export const BooleanFormatter = ( {value}) => {
         <div> {valueToDisplay} </div>
     );
 };
-export const TextFormatter = ( {value}) => {
-    return (
-        <div> {value} </div>
-    );
-};
+export const TextFormatter = ( {value}) => <div> {value} </div>
 
 export const DateFormatter = ({value}) => {
     let valueToDisplay;
