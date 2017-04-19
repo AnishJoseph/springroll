@@ -41,7 +41,7 @@ class DateEditor extends React.Component {
         let dateFormat = this.props.isDateTime ? Application.getMomentFormatForDateTime() : Application.getMomentFormatForDate();
         return (<DateField
             ref='inputRef'
-            value={this.props.defaultValue === undefined ? undefined : moment(this.props.defaultValue)}
+            value={this.props.defaultValue === undefined || this.props.defaultValue == ''? undefined: moment(this.props.defaultValue)}
             dateFormat={dateFormat}
             expanded={true}
             updateOnDateClick={updateOnDateClick}
@@ -69,9 +69,10 @@ class MDMGrid extends React.Component {
         this.refs.table.handleSearch(e.target.value);
     }
     deleteRow(row){
-        if(row['id'] !== -1)return;
-        // delete this.newRows[row['cid']];
-        this.props.onMdmMasterDeleteRow(row['cid']);
+        /* Fire a delete event ONLY if this is a new row */
+        if(row['id'] === -1 && row['rowIsNew'] === true){
+            this.props.onMdmMasterDeleteRow(row['cid']);
+        }
     }
     /* FIXME - Editable seems to have a bug - even if we return false here the custom editor is shown */
     editable(cell, row, rowIndex, columnIndex){
@@ -117,11 +118,9 @@ class MDMGrid extends React.Component {
     }
 
     beforeSaveCell(row, cellName, cellValue) {
-        /* We always return false as we dont want react-bootstrap-table to change anything. Instead
-           we fire and event that will change the values in the redux store 
+        /* We always return false as we dont want react-bootstrap-table to change anything.
+           The editor would alreacy have fired an event to chnage the value in the redux store
          */
-        // let changedRowData = {id : row['id'], cid : row['cid'], cellName : cellName, cellValue : cellValue};
-        // this.props.onMdmMasterRowChanged(changedRowData);
         return false;
     }
     
