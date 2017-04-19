@@ -95,10 +95,17 @@ class MDMGrid extends React.Component {
         this.search = this.search.bind(this);
         this.editable = this.editable.bind(this);
         this.deleteRow = this.deleteRow.bind(this);
+        this.onShowModified = this.onShowModified.bind(this);
         this.trClassFormat = this.trClassFormat.bind(this);
+        this.isModifiedFilterOn = false;
     }
     search(e){
         this.refs.table.handleSearch(e.target.value);
+    }
+    onShowModified(){
+        let filterSpec = this.isModifiedFilterOn ? {} : { __hasChanged: "__hasChanged"};
+        this.refs.table.handleFilterData(filterSpec);
+        this.isModifiedFilterOn = !this.isModifiedFilterOn;
     }
     deleteRow(row){
         /* Fire a delete event ONLY if this is a new row */
@@ -158,6 +165,9 @@ class MDMGrid extends React.Component {
     trClassFormat(row, rowIndex){
         if(row['id'] === -1 && row['rowIsNew'] === undefined)
             return 'mdm-disabled';
+        if(row['__hasChanged'] === '__hasChanged')
+            return 'mdm-changed';
+
         return "mdmTable";
     }
     render() {
@@ -167,12 +177,12 @@ class MDMGrid extends React.Component {
             beforeSaveCell: this.beforeSaveCell
         };
         let title = Application.Localize('ui.mdm.title', Application.Localize('ui.mdm.master.'+ this.props.masterData.master));
-
+        let needsSave = this.props.changedRowData !== undefined || this.props.newRowData !== undefined;
         /* Filter out any deleted row */
         let data = _.filter(this.props.masterData.data, row => row !== null);
         return (
             <span>
-                <MdmToolbar title={title} enableAddRow={true} onMdmMasterAddRow={this.props.onMdmMasterAddRow} enableFilter={true} onSaveClicked={this.saveClicked} needsSave={this.props.changedRowData !== undefined || this.props.newRowData !== undefined} onSearch={this.search}/>
+                <MdmToolbar title={title} enableAddRow={true} onMdmMasterAddRow={this.props.onMdmMasterAddRow} enableFilter={needsSave} onShowModified={this.onShowModified} onSaveClicked={this.saveClicked} needsSave={needsSave} onSearch={this.search}/>
                 <BootstrapTable ref="table" data={data} striped hover search={false}
                                 keyField={'id'} height='800px' scrollTop={ 'Top' }
                                 multiColumnSort={3}
@@ -225,6 +235,7 @@ class MDMGrid extends React.Component {
                         })
                     }
                     <TableHeaderColumn width={"50px"} key={5000} dataField={'delete'} editable={ false } dataFormat={(cell, row) => DeleteFormatter(cell, row, this.deleteRow)}> {''} </TableHeaderColumn>
+                    <TableHeaderColumn hidden={true} width={"50px"} key={5000} dataField={'__hasChanged'} editable={ false }> {''} </TableHeaderColumn>
                 </BootstrapTable>
             </span>
         );

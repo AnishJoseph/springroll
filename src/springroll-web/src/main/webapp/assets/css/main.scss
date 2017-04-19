@@ -195,6 +195,9 @@ table.nowrap {
 .mdm-disabled, .mdm-disabled:hover{
   background-color: $disabledRowColor!important;
 }
+.mdm-changed, .mdm-changed:hover{
+  background-color: #FFDD97!important;
+}
 
 .mdm-error{
   background-color: $errorRowColor;

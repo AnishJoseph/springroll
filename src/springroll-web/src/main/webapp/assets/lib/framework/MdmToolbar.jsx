@@ -24,7 +24,7 @@ const MdmToolbar = React.createClass({
 
     renderToggleFilterButton() {
         if (this.props.enableFilter) {
-            return (<span data-toggle="tooltip" title={Application.Localize('ui.filter')} onClick={this.props.onToggleFilter} className="springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-filter"></span>);
+            return (<span data-toggle="tooltip" title={Application.Localize('ui.mdm.changeToggle')} onClick={this.props.onShowModified} className="springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-filter"></span>);
         }
     },
 

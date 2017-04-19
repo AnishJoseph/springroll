@@ -160,6 +160,7 @@ function mdmReducer(state = {updateInProgress: false}, action) {
         }
         case MdmActions.MDM_MASTER_UPDATE_ROW:
             let update = {};
+            let rowDeleted = false;
 
             if(action.row['id'] === -1 ) {
                 /* If this is a new row then update the newRowData for this row */
@@ -181,12 +182,13 @@ function mdmReducer(state = {updateInProgress: false}, action) {
                 updatedChangedRowData[action.row['cid']] =  existingChangesForId;
 
                 /* Now check if the user has put back the original value */
-                if(existingChangesForThisFld['prevVal'] === existingChangesForThisFld['val']){
+                if((existingChangesForThisFld['prevVal'] === existingChangesForThisFld['val']) || (existingChangesForThisFld['prevVal'] === undefined && existingChangesForThisFld['val'].length === 0)){
                     /* Ah hah - the user put back the original value */
                     delete existingChangesForId[action.row.cellName];
                     if(Object.keys(existingChangesForId).length === 1){
                         /* there are no changes for this row - remove the row itself */
                         delete updatedChangedRowData[action.row['cid']];
+                        rowDeleted = true;
                     }
                 }
                 update['changedRowData'] = Object.keys(updatedChangedRowData).length === 0? undefined : updatedChangedRowData;
@@ -196,6 +198,10 @@ function mdmReducer(state = {updateInProgress: false}, action) {
             let newRows = state.masterData.data.slice();
             let row = newRows[action.row['cid']];
             row[action.row.cellName] = action.row.cellValue;
+            row['__hasChanged'] = '__hasChanged';
+
+            /* If there are no changes for this row then removed the hasCHanged flag */
+            if(rowDeleted) delete row['__hasChanged'];
             let updatedRowData = Object.assign({}, state.masterData, {data: newRows});
 
             update['masterData'] =  updatedRowData;
@@ -209,7 +215,7 @@ function mdmReducer(state = {updateInProgress: false}, action) {
                    we should not duplicate - need to think about this - FIXME
              */
             let newRows = state.masterData.data.slice();
-            let newRowData = {id: -1, cid: newRows.length, rowIsNew: true};
+            let newRowData = {id: -1, cid: newRows.length, rowIsNew: true, '__hasChanged' : '__hasChanged'};
             _.each(state.masterData.colDefs, colDef => {
                 if(colDef.defVal !== undefined && colDef.defVal !== null){
                     newRowData[colDef.name] = colDef.defVal;
