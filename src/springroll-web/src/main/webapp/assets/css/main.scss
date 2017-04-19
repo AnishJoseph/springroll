@@ -192,8 +192,8 @@ table.nowrap {
   font-size: 12px;
 }
 
-.mdm-disabled .react-grid-Cell{
-  background-color: $disabledRowColor;
+.mdm-disabled, .mdm-disabled:hover{
+  background-color: $disabledRowColor!important;
 }
 
 .mdm-error{

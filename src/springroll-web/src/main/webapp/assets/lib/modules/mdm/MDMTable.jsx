@@ -30,14 +30,14 @@ const selectEditor = (onUpdate, props) => {
         value={props.defaultValue}
     />)
 };
-const numericEditor = (onUpdate, props) => (<NumericEditor onUpdate={ onUpdate } {...props}/>);
+const patternEditor = (onUpdate, props) => (<PatternEditor onUpdate={ onUpdate } {...props}/>);
 
-class NumericEditor extends React.Component {
+class PatternEditor extends React.Component {
     constructor(props){
         super(props);
         this.onChange = this.onChange.bind(this);
         this.onBlur = this.onBlur.bind(this);
-        this.pattern = props.type == 'int'? intPattern : floatPattern;
+        this.pattern = props.type == 'int'? intPattern : props.type == 'num' ? floatPattern : undefined;
     }
     onBlur(){
         this.props.onUpdate(this.props.defaultValue);
@@ -48,7 +48,7 @@ class NumericEditor extends React.Component {
     }
     onChange(event){
         let value = event.target.value;
-        if(this.pattern.test(value)){
+        if(this.pattern === undefined || this.pattern.test(value)){
             let changedRowData = {id : this.props.row['id'], cid : this.props.row['cid'], cellName : this.props.cellName, cellValue : value};
             this.props.onMdmMasterRowChanged(changedRowData);
         }
@@ -95,6 +95,7 @@ class MDMGrid extends React.Component {
         this.search = this.search.bind(this);
         this.editable = this.editable.bind(this);
         this.deleteRow = this.deleteRow.bind(this);
+        this.trClassFormat = this.trClassFormat.bind(this);
     }
     search(e){
         this.refs.table.handleSearch(e.target.value);
@@ -154,7 +155,11 @@ class MDMGrid extends React.Component {
          */
         return false;
     }
-    
+    trClassFormat(row, rowIndex){
+        if(row['id'] === -1 && row['rowIsNew'] === undefined)
+            return 'mdm-disabled';
+        return "mdmTable";
+    }
     render() {
         const cellEditProp = {
             mode: 'click',
@@ -172,7 +177,7 @@ class MDMGrid extends React.Component {
                                 keyField={'id'} height='800px' scrollTop={ 'Top' }
                                 multiColumnSort={3}
                                 cellEdit={ cellEditProp }
-                                trClassName="mdmTable"
+                                trClassName={ this.trClassFormat }
                 >
                     {
                         this.props.masterData.colDefs.map((colDef, index) => {
@@ -180,20 +185,18 @@ class MDMGrid extends React.Component {
                             if (colDef.type == 'date') {
                                 formatter = DateFormatter;
                                 customEditor = {getElement : dateEditor, customEditorParameters : {isDateTime : false}};
-                            }
-                            if (colDef.type == 'datetime') {
+                            } else if (colDef.type == 'datetime') {
                                 formatter = DateTimeFormatter;
                                 customEditor = {getElement : dateEditor, customEditorParameters : {isDateTime : true}};
-                            }
-                            if (colDef.type == 'boolean') {
+                            } else if (colDef.type == 'boolean') {
                                 formatter = BooleanFormatter;
                                 customEditor = {getElement : selectEditor, customEditorParameters : {options : booleanLovList, multi : false}};
-                            }
-                            if (colDef.type == 'int') {
-                                customEditor = {getElement : numericEditor, customEditorParameters : {type : colDef.type}};
-                            }
-                            if (colDef.type == 'num') {
-                                customEditor = {getElement : numericEditor, customEditorParameters : {type : colDef.type}};
+                            } else if (colDef.type == 'int') {
+                                customEditor = {getElement : patternEditor, customEditorParameters : {type : colDef.type}};
+                            } else if (colDef.type == 'num') {
+                                customEditor = {getElement : patternEditor, customEditorParameters : {type : colDef.type}};
+                            } else {
+                                customEditor = {getElement : patternEditor, customEditorParameters : {type : colDef.type}};
                             }
 
                             if(colDef.lovList != undefined && colDef.lovList != null){
