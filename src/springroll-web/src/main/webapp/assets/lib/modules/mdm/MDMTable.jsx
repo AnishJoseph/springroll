@@ -208,6 +208,7 @@ class MDMGrid extends React.Component {
                             dataFormatter = (cell, row) => WrapperForFormatter(cell, formatter, colDef, row, this.props.updateResponse);
                             return (
                                 <TableHeaderColumn
+                                    width={colDef.width}
                                     hidden={colDef.name === 'id'}
                                     filterFormatted
                                     key={index}

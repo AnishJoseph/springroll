@@ -24,6 +24,6 @@ public interface MdmColumnDefinition {
 
     boolean isNullable();
 
-    int getWidth();
+    String getWidth();
     String getTitle();
 }
