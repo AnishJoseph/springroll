@@ -46,6 +46,15 @@ export const BooleanToString = (value) => {
     return value ? Application.Localize('ui.true') : Application.Localize('ui.false');
 };
 
+export const ArrayFormatter = ( {value}) => {
+    let valueToDisplay = undefined;
+    if(value !== undefined && value !== null && Array.isArray(value)) {
+        valueToDisplay = value.join();
+    }
+    return (
+        <div> {valueToDisplay} </div>
+    );
+};
 export const BooleanFormatter = ( {value}) => {
     let valueToDisplay;
     if(value !== undefined && _.isBoolean(value)){

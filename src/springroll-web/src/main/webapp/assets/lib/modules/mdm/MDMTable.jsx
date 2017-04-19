@@ -1,6 +1,6 @@
 import React from 'react';
 import Application from 'App';
-import {DeleteFormatter, WrapperForFormatter, TextFormatter, DateTimeFormatter, DateFormatter, BooleanFormatter} from 'Formatters';
+import {DeleteFormatter, WrapperForFormatter, TextFormatter, DateTimeFormatter, DateFormatter, BooleanFormatter, ArrayFormatter} from 'Formatters';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import ReactSelect from 'react-select';
 import {DatePicker, DateField} from 'react-date-picker';
@@ -161,6 +161,7 @@ class MDMGrid extends React.Component {
 
                             if(colDef.lovList != undefined && colDef.lovList != null){
                                 customEditor = {getElement : selectEditor, customEditorParameters : {options : colDef.lovList, multi : colDef.multiSelect}};
+                                formatter = ArrayFormatter;
                             }
                             if(customEditor !== undefined) {
                                 customEditor.customEditorParameters.onMdmMasterRowChanged =  this.props.onMdmMasterRowChanged;
@@ -172,7 +173,6 @@ class MDMGrid extends React.Component {
                                 <TableHeaderColumn
                                     hidden={colDef.name === 'id'}
                                     filterFormatted
-                                    tdStyle={ {whiteSpace: 'noWrap'} }
                                     key={index}
                                     dataFormat={dataFormatter}
                                     dataField={colDef.name}
