@@ -113,6 +113,8 @@ function removeAlert(alertCollection, alertId){
 
 function mdmReducer(state = {updateInProgress: false}, action) {
     switch (action.type) {
+        case MdmActions.MDM_MASTER_SWITCHING:
+            return Object.assign({}, state, { updateInProgress: false, updateResponse : undefined, changedRowData : undefined, newRowData : undefined});
         case MdmActions.MDM_MASTER_METADATA_RECEIVED:
             return Object.assign({}, state, { masterDefns :  action.masterDefns});
         case MdmActions.MDM_MASTER_DATA_RECEIVED:

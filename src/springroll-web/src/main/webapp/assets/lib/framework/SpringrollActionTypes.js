@@ -25,7 +25,8 @@ export const MdmActions = {
     MDM_MASTER_UPDATE_ROW : 'MDM_MASTER_UPDATE_ROW',
     MDM_MASTER_ADD_ROW : 'MDM_MASTER_ADD_ROW',
     MDM_MASTER_DELETE_ROW : 'MDM_MASTER_DELETE_ROW',
-    MDM_MASTER_UPDATE_STARTED : 'MDM_MASTER_UPDATE_STARTED'
+    MDM_MASTER_UPDATE_STARTED : 'MDM_MASTER_UPDATE_STARTED',
+    MDM_MASTER_SWITCHING : 'MDM_MASTER_SWITCHING'
 };
 export const GridReportActions = {
     GRID_REPORT_PARAMS_RECEIVED : 'GRID_REPORT_PARAMS_RECEIVED',
@@ -192,6 +193,11 @@ export function mdmMasterDeleteRow(cid) {
         cid : cid
     }
 }
+export function mdmMasterSwitching() {
+    return {
+        type: MdmActions.MDM_MASTER_SWITCHING,
+    }
+}
 export function mdmModuleActivated(masterName) {
     return function (dispatch) {
         var deferred = $.Deferred();
@@ -213,6 +219,11 @@ export function mdmModuleActivated(masterName) {
 export function mdmMasterChosen(masterName) {
     return function (dispatch) {
         var deferred = $.Deferred();
+        /* Tell the world that we are switching a master
+           The reducer should clear out any state related
+           to this master - changerd rows, new rows, errors etc
+         */
+        dispatch(mdmMasterSwitching());
         $.ajax({
             url: 'api/sr/mdm/data/' + masterName,
             type: 'POST',
