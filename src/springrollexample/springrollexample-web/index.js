@@ -4,7 +4,7 @@ import Application from 'App';
 
 
 
-$(function() {
+document.addEventListener("DOMContentLoaded", function(event) {
     Application.setup();
     Promise.all(Application.getPromises()).then(function () {
         Application.clearPromises();
@@ -60,15 +60,15 @@ $(function() {
                 });
             }));
         }
-
         if (includes(modules, "JobDashboard")) {
-            let deferred = $.Deferred();
-            Application.addPromise(deferred.promise());
-            require.ensure([], function (require) {
-                require("JobDashboard");
-                deferred.resolve();
-            });
+            Application.addPromise(new Promise((resolve, reject) => {
+                require.ensure([], function (require) {
+                    require("JobDashboard");
+                    resolve();
+                });
+            }));
         }
+
         /*  Wait for all promises to resolve. At that point all required JS files would have been loaded -
             go ahead and start the application
         */

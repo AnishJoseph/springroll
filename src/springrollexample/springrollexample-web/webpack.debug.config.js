@@ -38,12 +38,6 @@ var config = {
 
         ]
     },
-    plugins: [
-        new webpack.ProvidePlugin({
-            $: 'jquery',
-            jQuery:"jquery",
-        })
-    ],
     resolve: {
         root: [
             path.resolve(__dirname),

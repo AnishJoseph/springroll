@@ -51,10 +51,10 @@ function _metaHandshake(handshake) {
 }
 
 //Disconnect when the page unloads
-$(window).bind('unload', function() {
+// $(window).bind('unload', function() {
     //FIXME - should this be disconnect(true)
     //CometD.reload();
-});
+// });
 
 CometD.configure({
     url: cometURL,
