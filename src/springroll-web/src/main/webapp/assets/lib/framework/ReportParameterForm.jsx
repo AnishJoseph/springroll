@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import Application from 'App';
 import { Field, reduxForm } from 'redux-form';
 import ReactSelect from 'react-select';
-import DateField from 'react-datetime';
 import {floatPattern, intPattern} from 'Formatters';
 var moment = require('moment');
+import { DateField } from 'react-date-picker'
 
 /* Fixme there are 2 booleanLovList */
 const booleanLovList = [{value : true, label : Application.Localize('ui.true')}, {value : false, label : Application.Localize('ui.false')}];
@@ -23,17 +23,19 @@ const normalizeFloat = (value, previousValue) => {
 };
 
 const renderDate = ({ input, isDateTime }) => {
-    return (<DateField
-        value={input.value === undefined ? undefined : moment(input.value)}
-        dateFormat={Application.getMomentFormatForDate()}
-        onChange={ value => {
-            if(value == null || value == undefined)return;
-            input.onChange(value.valueOf());
-        }}
-        closeOnSelect={true}
-        timeFormat={isDateTime}
-    />);
+    let updateOnDateClick = !isDateTime;
+    let dateFormat = isDateTime ? Application.getMomentFormatForDateTime() : Application.getMomentFormatForDate();
 
+    return (<DateField
+            value={input.value === undefined || input.value == ''? undefined : moment(input.value)}
+            dateFormat={dateFormat}
+            updateOnDateClick={updateOnDateClick}
+            collapseOnDateClick={true}
+            onChange={ (dateString, {dateMoment}) => {
+                input.onChange(dateMoment.valueOf());
+            }}>
+        </DateField>
+    )
 };
 
 const renderSelect = ({ input, multiSelect, options }) => {
