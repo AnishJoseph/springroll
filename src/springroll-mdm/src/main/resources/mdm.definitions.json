@@ -31,12 +31,12 @@
         "masterClassName" : "com.springroll.orm.entities.User",
         "constraints" : ["userId"],
         "colDefs" : [
-          { "name": "userId", "writeable": false, "type": "text", "width" : 100},
-          { "name": "roles", "writeable": true, "type": "text", "lovSource" : "Roles", "multiSelect": true, "width" : 300},
-          { "name": "country", "writeable": true, "type": "text", "lovSource" : "Countries", "width" : 100, "defVal" : "IN"},
-          { "name": "language", "writeable": true, "type": "text", "lovSource" : "Languages", "width" : 100, "defVal" : "en"},
-          { "name": "variant", "writeable": true, "type": "text", "width" : 100},
-          { "name": "active", "writeable": true, "type": "boolean", "defVal": true, "width" : 100}
+          { "name": "userId", "writeable": false, "type": "text", "width" : "100px"},
+          { "name": "roles", "writeable": true, "type": "text", "lovSource" : "Roles", "multiSelect": true, "width" : "300px"},
+          { "name": "country", "writeable": true, "type": "text", "lovSource" : "Countries", "width" : "100px", "defVal" : "IN"},
+          { "name": "language", "writeable": true, "type": "text", "lovSource" : "Languages", "width" : "100px", "defVal" : "en"},
+          { "name": "variant", "writeable": true, "type": "text", "width" : "100px"},
+          { "name": "active", "writeable": true, "type": "boolean", "defVal": true, "width" : "100px"}
         ]
       },
       {
@@ -56,23 +56,23 @@
         "group" : "Test",
         "masterClassName" : "com.springrollexample.orm.entities.TestTableToCheckMdm",
         "colDefs" : [
-          {"name": "stringVariable",  "writeable" : true, "type": "text"},
-          {"name": "booleanVariable", "writeable" : true, "type": "boolean"},
-          {"name": "intVariable", "writeable" : true, "type": "int"},
-          {"name": "floatVariable", "writeable" : true, "type": "num"},
-          {"name": "longVariable", "writeable" : true, "type": "int"},
-          {"name": "doubleVariable", "writeable" : true, "type": "num"},
-          {"name": "shortVariable", "writeable" : true, "type": "int"},
-          {"name": "booleanCVariable", "writeable" : true, "type": "boolean"},
-          {"name": "intCVariable", "writeable" : true, "type": "int"},
-          {"name": "floatCVariable", "writeable" : true, "type": "num"},
-          {"name": "longCVariable", "writeable" : true, "type": "int"},
-          {"name": "doubleCVariable", "writeable" : true, "type": "num"},
-          {"name": "bigDecimalVariable", "writeable" : true, "type": "num"},
-          {"name": "bigIntegerVariable", "writeable" : true, "type": "int"},
-          {"name": "enumType", "writeable" : true, "type": "int", "lovSource" : "setTime"},
-          {"name": "localDateVariable", "writeable" : true, "type": "date"},
-          {"name": "localDateTimeVariable", "writeable" : true, "type": "datetime"}
+          {"name": "stringVariable",  "writeable" : true, "type": "text", "width" : "500px"},
+          {"name": "booleanVariable", "writeable" : true, "type": "boolean", "width" : "100px"},
+          {"name": "intVariable", "writeable" : true, "type": "int", "width" : "100px"},
+          {"name": "floatVariable", "writeable" : true, "type": "num", "width" : "100px"},
+          {"name": "longVariable", "writeable" : true, "type": "int", "width" : "100px"},
+          {"name": "doubleVariable", "writeable" : true, "type": "num", "width" : "100px"},
+          {"name": "shortVariable", "writeable" : true, "type": "int", "width" : "100px"},
+          {"name": "booleanCVariable", "writeable" : true, "type": "boolean", "width" : "100px"},
+          {"name": "intCVariable", "writeable" : true, "type": "int", "width" : "100px"},
+          {"name": "floatCVariable", "writeable" : true, "type": "num", "width" : "100px"},
+          {"name": "longCVariable", "writeable" : true, "type": "int", "width" : "100px"},
+          {"name": "doubleCVariable", "writeable" : true, "type": "num", "width" : "100px"},
+          {"name": "bigDecimalVariable", "writeable" : true, "type": "num", "width" : "100px"},
+          {"name": "bigIntegerVariable", "writeable" : true, "type": "int", "width" : "100px"},
+          {"name": "enumType", "writeable" : true, "type": "int", "lovSource" : "setTime", "width" : "100px"},
+          {"name": "localDateVariable", "writeable" : true, "type": "date", "width" : "100px"},
+          {"name": "localDateTimeVariable", "writeable" : true, "type": "datetime", "width" : "100px"}
         ]
       }
   ],
