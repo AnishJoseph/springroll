@@ -2,6 +2,7 @@ import React from 'react';
 import Application from 'App';
 import ReactDOM from 'react-dom';
 import ReactSelect from 'react-select';
+import {pluck}  from 'lodash';
 
 class MdmSelect extends React.Component {
     constructor(props) {
@@ -17,7 +18,7 @@ class MdmSelect extends React.Component {
     onChange(value){
         let choices = undefined;
         if(this.props.multiSelect) {
-            choices = _.pluck(value, 'value');
+            choices = pluck(value, 'value');
         } else {
             choices = value.value;
         }

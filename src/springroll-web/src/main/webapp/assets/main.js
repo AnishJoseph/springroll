@@ -1,4 +1,5 @@
 var Application =require('Application');
+import {each}  from 'lodash';
 
 /* Put CSS requires in app.main.js in the application - for some reason it does not when placed here */
 
@@ -50,7 +51,7 @@ $(function() {
             409:function(message){   //CONFLICT BUSINESS VIOLATIONS
                 // Check if this is already handled in the business logic
                 if(message.errorHandled == undefined) {
-                    _.each(message.responseJSON, function (violation) {
+                    each(message.responseJSON, function (violation) {
                         Application.Indicator.showErrorMessage({message:violation.field + ': ' + violation.message});
                     });
                 }
@@ -58,8 +59,8 @@ $(function() {
             400:function(message){   //BAD_MESSAGE CONSTRAINT VIOLATIONS
                 // Check if this is already handled in the business logic
                 if(message.errorHandled == undefined) {
-                    _.each(message.responseJSON, function (violation) {
-                        _.each(Object.keys(violation), function(field) {
+                    each(message.responseJSON, function (violation) {
+                        each(Object.keys(violation), function(field) {
                             /* First localize the field name */
                             var localizedFieldName = Localize(field);
                             if (violation[field].includes('{0}')){

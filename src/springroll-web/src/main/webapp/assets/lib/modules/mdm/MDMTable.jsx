@@ -6,6 +6,7 @@ import ReactSelect from 'react-select';
 import {DatePicker, DateField} from 'react-date-picker';
 var moment = require('moment');
 import MdmToolbar from 'MdmToolbar';
+import {each, pluck, indexOf, filter}  from 'lodash';
 
 /* Fixme there are 2 booleanLovList */
 export const booleanLovList = [{value : true, label : Application.Localize('ui.true')}, {value : false, label : Application.Localize('ui.false')}];
@@ -19,7 +20,7 @@ const selectEditor = (onUpdate, props) => {
             if (value == null)return;
             let choices = undefined;
             if (props.multi) {
-                choices = _.pluck(value, 'value');
+                choices = pluck(value, 'value');
             } else {
                 choices = value.value;
             }
@@ -119,18 +120,18 @@ class MDMGrid extends React.Component {
         if(row['id'] === -1 && row['rowIsNew'] === true)return true;
         if (this.props.masterData.colDefs[columnIndex].writeable === false)
             return false;
-        if(_.indexOf(this.props.masterData.recIdsUnderReview, row['id'], 0) !== -1)
+        if(indexOf(this.props.masterData.recIdsUnderReview, row['id'], 0) !== -1)
             return false;
         return true;
     }
     saveClicked(){
         let changedRecords = [], newRecords = [];
         /* Marshall the changes to existing rows into MdmDTO */
-        _.each(Object.keys(this.props.changedRowData || {}),  rowId => {
+        each(Object.keys(this.props.changedRowData || {}),  rowId => {
             let mdmChangedColumns = {};
             let rowChanges = this.props.changedRowData[rowId];
             /* This is an existing row that has changed */
-            _.each(Object.keys(rowChanges), colName => {
+            each(Object.keys(rowChanges), colName => {
                 if(colName === 'id')return;
                 mdmChangedColumns[colName] = rowChanges[colName];
             });
@@ -140,10 +141,10 @@ class MDMGrid extends React.Component {
         });
 
         /* Marshall the new records into MdmDTO */
-        _.each(Object.keys(this.props.newRowData || {}), rowId => {
+        each(Object.keys(this.props.newRowData || {}), rowId => {
             let attrsForNewRecord = {};
             let rowChanges = this.props.newRowData[rowId];
-            _.each(Object.keys(rowChanges), colName => {
+            each(Object.keys(rowChanges), colName => {
                 if(colName === 'id') return;
                 attrsForNewRecord[colName] = rowChanges[colName];
             });
@@ -179,7 +180,7 @@ class MDMGrid extends React.Component {
         let title = Application.Localize('ui.mdm.title', Application.Localize('ui.mdm.master.'+ this.props.masterData.master));
         let needsSave = this.props.changedRowData !== undefined || this.props.newRowData !== undefined;
         /* Filter out any deleted row */
-        let data = _.filter(this.props.masterData.data, row => row !== null);
+        let data = filter(this.props.masterData.data, row => row !== null);
         return (
             <span>
                 <MdmToolbar title={title} enableAddRow={true} onMdmMasterAddRow={this.props.onMdmMasterAddRow} enableFilter={needsSave} onShowModified={this.onShowModified} onSaveClicked={this.saveClicked} needsSave={needsSave} onSearch={this.search}/>

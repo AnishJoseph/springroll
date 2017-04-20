@@ -1,7 +1,6 @@
 import React from 'react'
 import Application from 'App.js';
 import Modal from 'react-bootstrap/lib/Modal';
-import Button from 'react-bootstrap/lib/Button';
 
 class ReviewModal extends React.Component {
     constructor(props){

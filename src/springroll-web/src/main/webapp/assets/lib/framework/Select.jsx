@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactSelect from 'react-select';
+import {pluck}  from 'lodash';
 
 class Select extends React.Component {
     constructor(props) {
@@ -11,7 +12,7 @@ class Select extends React.Component {
         if(value == null)return;
         let choices = undefined;
         if(this.props.multiSelect) {
-            choices = _.pluck(value, 'value');
+            choices = pluck(value, 'value');
         } else {
             choices = value.value;
         }

@@ -1,6 +1,7 @@
 import React from 'react';
 var moment = require('moment');
 import {BooleanToString, DateTimeToString} from 'Formatters';
+import {each}  from 'lodash';
 
 export const ReviewLogFormatterForDisplay = ({value}) => {
     if(value !== undefined && value != null){
@@ -22,7 +23,7 @@ export const ReviewLogFormatterForDisplay = ({value}) => {
 export const ReviewLogFormatterForExport = (value) => {
     let displayString = '';
     if(value !== undefined && value != null){
-        _.each(value, (reviewLog, index) => {
+        each(value, (reviewLog, index) => {
             let appORrej = BooleanToString(reviewLog.approved);
             displayString += reviewLog.reviewer + ":" + appORrej + ":" + DateTimeToString(reviewLog.time) + " :: ";
         });

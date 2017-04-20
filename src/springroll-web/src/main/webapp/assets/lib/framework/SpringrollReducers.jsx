@@ -1,11 +1,12 @@
 import { combineReducers } from 'redux';
 import { AlertActions, AlertFilters, USER_CHANGED, MdmActions, GridReportActions} from 'SpringrollActionTypes'
 import { reducer as formReducer } from 'redux-form'
+import {filter, map, each}  from 'lodash';
 
 function dedup(array1, array2){
     let allAlerts = array1.concat(array2);
     let existingAlertIds = [];
-    let uniqAlerts = _.filter(allAlerts, function(alert){
+    let uniqAlerts = filter(allAlerts, function(alert){
         if(existingAlertIds.includes(alert.id)) return false;
         existingAlertIds.push(alert.id);
         return true;
@@ -48,7 +49,7 @@ function gridReportReducer(state = {}, action) {
         case GridReportActions.GRID_REPORT_DATA_RECEIVED: {
             let gridInfoAboutThisGrid = state[action.gridName] || {};
             let that = this;
-            let rows = _.map(action.gridData.data, function (rowData) {
+            let rows = map(action.gridData.data, function (rowData) {
                 var row = {};
                 for (var j = 0; j < action.gridData.columns.length; ++j) {
                     if (rowData[j] == undefined || rowData[j] == null) continue;
@@ -73,14 +74,14 @@ function gridReportReducer(state = {}, action) {
 
             /* The incoming data is just an array of the data - we need to convert to JSON */
             let newRow = {};
-            _.each(action.updatedData, function (colValue, index) {
+            each(action.updatedData, function (colValue, index) {
                 if (colValue == undefined || colValue == null) return;
                 newRow[gridInfoAboutThisGrid.gridData.columns[index].title] = colValue;
             });
 
 
             let isNewRow = true;
-            let newData = _.map(gridInfoAboutThisGrid.gridData.data, row => {
+            let newData = map(gridInfoAboutThisGrid.gridData.data, row => {
                 if (row['ID'] === idOfRowThatChanged) {
                     isNewRow = false;
                     return newRow;
@@ -120,7 +121,7 @@ function mdmReducer(state = {updateInProgress: false}, action) {
         case MdmActions.MDM_MASTER_DATA_RECEIVED:
 
             let that = this;
-            let rows = _.map(action.masterData.data, function (rowData, index) {
+            let rows = map(action.masterData.data, function (rowData, index) {
                 var row = {};
                 for (var j = 0; j < action.masterData.colDefs.length; ++j) {
                     if (rowData[j] == undefined || rowData[j] == null) continue;
@@ -140,7 +141,7 @@ function mdmReducer(state = {updateInProgress: false}, action) {
         case MdmActions.MDM_MASTER_UPDATE_COMPLETE: {
             let hasErrors = false;
             let errors = {};
-            _.each(action.response || [], error => {
+            each(action.response || [], error => {
                 let existingErrorsForRow = errors[error.cookie] || {};
                 existingErrorsForRow[error.field] = error.message;
                 errors[error.cookie] = existingErrorsForRow;
@@ -216,7 +217,7 @@ function mdmReducer(state = {updateInProgress: false}, action) {
              */
             let newRows = state.masterData.data.slice();
             let newRowData = {id: -1, cid: newRows.length, rowIsNew: true, '__hasChanged' : '__hasChanged'};
-            _.each(state.masterData.colDefs, colDef => {
+            each(state.masterData.colDefs, colDef => {
                 if(colDef.defVal !== undefined && colDef.defVal !== null){
                     newRowData[colDef.name] = colDef.defVal;
                 }

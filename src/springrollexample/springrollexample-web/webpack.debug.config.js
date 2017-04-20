@@ -41,7 +41,6 @@ var config = {
     plugins: [
         new webpack.ProvidePlugin({
             $: 'jquery',
-            _: 'underscore',
             jQuery:"jquery",
         })
     ],

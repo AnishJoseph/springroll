@@ -2,6 +2,7 @@ import React from 'react';
 import Application from 'App.js';
 const moment = require('moment');
 var numeral = require('numeral');
+import {isBoolean, isNumber}  from 'lodash';
 
 export const floatPattern = new RegExp("^[-+]?[0-9]*\\.?[0-9]*$");
 export const intPattern = new RegExp("^[-+]?[0-9]*$");
@@ -59,7 +60,7 @@ export const ArrayFormatter = ( {value}) => {
 };
 export const BooleanFormatter = ( {value}) => {
     let valueToDisplay;
-    if(value !== undefined && _.isBoolean(value)){
+    if(value !== undefined && isBoolean(value)){
         valueToDisplay = BooleanToString(value);
     }
     return (
@@ -70,7 +71,7 @@ export const TextFormatter = ( {value}) => <div> {value} </div>
 
 export const DateFormatter = ({value}) => {
     let valueToDisplay;
-    if(value !== undefined && _.isNumber(value)){
+    if(value !== undefined && isNumber(value)){
         valueToDisplay = DateToString(value);
     }
     return (
@@ -80,7 +81,7 @@ export const DateFormatter = ({value}) => {
 
 export const DateTimeFormatter = ({value}) => {
     let valueToDisplay;
-    if(value !== undefined && _.isNumber(value)){
+    if(value !== undefined && isNumber(value)){
         valueToDisplay = DateTimeToString(value);
     }
     return (

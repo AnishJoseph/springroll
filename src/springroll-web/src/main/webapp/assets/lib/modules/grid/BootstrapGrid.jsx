@@ -6,6 +6,7 @@ import DebounceInput from 'react-debounce-input';
 import {CSVLink} from 'react-csv';
 var json2csv = require('json2csv');
 var moment = require('moment');
+import {each}  from 'lodash';
 
 
 function bsFormatter(cell, formatter, coDef) {
@@ -60,7 +61,7 @@ class BootstrapGrid extends React.Component {
             rowsToDownload = this.props.gridData.data;
         }
         let fields = [];
-        _.each(this.props.gridData.columns, function (colDef) {
+        each(this.props.gridData.columns, function (colDef) {
             var title = colDef.title;
             if(!colDef.visible)return;
             var fldDefn = {

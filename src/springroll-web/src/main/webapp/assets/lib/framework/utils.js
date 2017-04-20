@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
 var Application = require('Application');
+import {each}  from 'lodash';
 
 Application.Utils = {
     addDatePickerToTemplate : function(template, p, value, datepickerclass){
@@ -19,7 +20,7 @@ Application.Utils = {
         template.push('<select class="' + selectPickerClass + '" id="' + p.name + '" data-attrname="' + p.name + '"');
         if(p.multiSelect === true) template.push(' multiple');
         template.push(">");
-        _.each(p.lovList, function(lov){
+        each(p.lovList, function(lov){
             var selected = lov.value == selectedValue ? " selected" : "";
             if(p.multiSelect === true) selected = ($.inArray(lov.value, selectedValue) > -1)? " selected" : "";
             template.push('<option value="' + lov.value + '"' + selected + '>' + Localize(lov.name) + '</option>');

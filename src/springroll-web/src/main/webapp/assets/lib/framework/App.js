@@ -8,7 +8,9 @@ import springrollReducers from 'SpringrollReducers.jsx';
 import Root from 'Root.jsx';
 import { setUser, addAlerts, deleteAlert, AlertActions, setAlertFilter, AlertFilters} from 'SpringrollActionTypes';
 import thunkMiddleware from 'redux-thunk'
+import {each, find, filter, reject}  from 'lodash';
 var moment = require('moment');
+
 
 
 
@@ -30,7 +32,7 @@ class Application {
     dispatchActionsOnReceiptOfPushTopic(receivedPushData, eventCreators){
         var that = this;
         console.log("Received data on channel " + receivedPushData.channel);
-        _.each(eventCreators, eventCreator =>
+        each(eventCreators, eventCreator =>
             that.store.dispatch(eventCreator(receivedPushData)));
     }
     notificationCancelled(cancelMessage) {
@@ -52,7 +54,7 @@ class Application {
          */
         this.subscribeToPushTopic('/core/notificationCancel', this.notificationCancelled);
 
-        _.each(Object.keys(that.getSubscribersToAlerts()), function (channel) {
+        each(Object.keys(that.getSubscribersToAlerts()), function (channel) {
             that.subscribe(channel, (response) => {
                 if (response.data[0].alertType == 'ACTION') {
                     that.store.dispatch(addAlerts(AlertActions.ADD_ACTION_ALERTS, response.data));
@@ -64,7 +66,7 @@ class Application {
                 }
             });
         });
-        _.each(Object.keys(this.getSubscribersToPushTopics()), function (channel) {
+        each(Object.keys(this.getSubscribersToPushTopics()), function (channel) {
             let eventCreators = that.getSubscribersToPushTopics()[channel];
             that.subscribe(channel, function(response){
                 that.dispatchActionsOnReceiptOfPushTopic(response, eventCreators);
@@ -119,7 +121,7 @@ class Application {
         this.menuDefns.push(menuDefn);
         if(menuDefn.parentTitle == undefined)
             return;
-        var foundParent = _.find(this.menuDefns, function(storedMenuDefn){
+        var foundParent = find(this.menuDefns, function(storedMenuDefn){
             return menuDefn.parentTitle == storedMenuDefn.title;
         });
         if(foundParent)return;
@@ -132,22 +134,22 @@ class Application {
 
     makeSubMenus(menus, allMenus){
         var that = this;
-        _.each(menus, function(menuDefn) {
+        each(menus, function(menuDefn) {
             if(menuDefn.type == 'menuitem')return;
-            var subMenuItems = _.filter(allMenus, (aMenu) => (aMenu.parentTitle == menuDefn.title)).sort((a,b) => (a.index - b.index));
+            var subMenuItems = filter(allMenus, (aMenu) => (aMenu.parentTitle == menuDefn.title)).sort((a,b) => (a.index - b.index));
             menuDefn['subMenuItems'] = subMenuItems;
             if(subMenuItems.length > 0) that.makeSubMenus(subMenuItems, allMenus);
         });
     }
     getMenuDefns(){
-        var rootMenus = _.filter(this.menuDefns, (menuDefn) => (menuDefn.parentTitle == undefined)).sort((a,b) => (a.index - b.index));
+        var rootMenus = filter(this.menuDefns, (menuDefn) => (menuDefn.parentTitle == undefined)).sort((a,b) => (a.index - b.index));
         this.makeSubMenus(rootMenus, this.menuDefns);
         /* filter out any menu of type submenu which have no menu items */
-        var validMenus =  _.reject(rootMenus, (menuDefn) => (menuDefn.type == 'submenu' && menuDefn.subMenuItems.length == 0));
+        var validMenus =  reject(rootMenus, (menuDefn) => (menuDefn.type == 'submenu' && menuDefn.subMenuItems.length == 0));
         return validMenus;
     }
     getMenuItems (){
-        var menuItems = _.filter(this.menuDefns, (menuDefn) => (menuDefn.type == 'menuitem'));
+        var menuItems = filter(this.menuDefns, (menuDefn) => (menuDefn.type == 'menuitem'));
         return menuItems;
     }
 
@@ -321,7 +323,7 @@ class Application {
                 409:function(message){   //CONFLICT BUSINESS VIOLATIONS
                     // Check if this is already handled in the business logic
                     if(message.errorHandled == undefined) {
-                        _.each(message.responseJSON, function (violation) {
+                        each(message.responseJSON, function (violation) {
                             that.showErrorNotification("Field : " + violation.field + ': ' + violation.message);
                         });
                     }
@@ -329,8 +331,8 @@ class Application {
                 400:function(message){   //BAD_MESSAGE / BAD_REQUEST CONSTRAINT VIOLATIONS
                     // Check if this is already handled in the business logic
                     if(message.errorHandled == undefined) {
-                        _.each(message.responseJSON, function (violation) {
-                            _.each(Object.keys(violation), function(field) {
+                        each(message.responseJSON, function (violation) {
+                            each(Object.keys(violation), function(field) {
                                 /* First localize the field name */
                                 var localizedFieldName = that.Localize(field);
                                 if (violation[field].includes('{0}')){
