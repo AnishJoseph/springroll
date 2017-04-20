@@ -290,8 +290,15 @@ class Application {
     }
 
     setup(){
-        var token = $("meta[name='_csrf']").attr("content");
-        var header = $("meta[name='_csrf_header']").attr("content");
+        let metas = document.querySelectorAll("meta");
+        let metaValues = {};
+        each(metas,  meta => {
+            let name = meta.getAttribute("name");
+            let value = meta.getAttribute("content");
+            metaValues[name] = value;
+        });
+        let token = metaValues._csrf;
+        let header = metaValues._csrf_header;
         var headers = {};
         headers[header] = token;
         var that = this;
