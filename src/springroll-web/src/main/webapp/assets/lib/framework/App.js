@@ -10,6 +10,7 @@ import { setUser, addAlerts, deleteAlert, AlertActions, setAlertFilter, AlertFil
 import thunkMiddleware from 'redux-thunk'
 import {each, find, filter, reject}  from 'lodash';
 var moment = require('moment');
+import axios from 'axios';
 
 
 
@@ -73,25 +74,23 @@ class Application {
             });
         });
 
-        $.when.apply($, this.getPromises()).then(function () {
-            ReactDOM.render(
-                <Provider store={that.store}>
-                    <Router history={hashHistory}>
-                        <Route path="/" component={Root}>
-                            <IndexRoute component={that.getMenuItems()[0].component}/>
-                            {that.getMenuItems().map((menuDefn, index) => {
-                                if (typeof menuDefn.route === 'string')
-                                    return (<Route key={index} component={menuDefn.component}
-                                                   path={"/" + menuDefn.route}/>);
-                                return menuDefn.route;
-                            })}
-                        </Route>
-                    </Router>
-                </Provider>,
-                document.getElementById('app')
-            );
-            CometD.init();
-        });
+        ReactDOM.render(
+            <Provider store={that.store}>
+                <Router history={hashHistory}>
+                    <Route path="/" component={Root}>
+                        <IndexRoute component={that.getMenuItems()[0].component}/>
+                        {that.getMenuItems().map((menuDefn, index) => {
+                            if (typeof menuDefn.route === 'string')
+                                return (<Route key={index} component={menuDefn.component}
+                                               path={"/" + menuDefn.route}/>);
+                            return menuDefn.route;
+                        })}
+                    </Route>
+                </Router>
+            </Provider>,
+            document.getElementById('app')
+        );
+        CometD.init();
     }
 
     subscribe(service, callback){
@@ -154,40 +153,41 @@ class Application {
     }
 
     loadUser() {
-        var deferred = $.Deferred();
         var that = this;
-        $.ajax({
-            url: 'api/sr/user',
-            type: 'GET',
-            success: function (user) {
-                that.store.dispatch(setUser(user));
-                that.user = user;
-                deferred.resolve();
-            },
-            error : function (jqXHR, textStatus, errorThrown ){
+        let promise =  axios.get('api/sr/user')
+            .then(function (response) {
+                that.store.dispatch(setUser(response.data));
+                that.user = response.data;
+            })
+            .catch(function (error) {
                 console.error("Unable to load User - textStatus is " + textStatus + ' :: errorThrown is ' + errorThrown);
-                deferred.resolve();
-            }
-        });
-        this.addPromise(deferred.promise());
+            });
+        this.addPromise(promise);
     }
 
     loadProperties() {
-        var deferred = $.Deferred();
         var that = this;
-        $.ajax({
-            url: 'api//sr/properties',
-            type: 'GET',
-            success: function (props) {
-                that.properties = props;
-                deferred.resolve();
-            },
-            error : function (jqXHR, textStatus, errorThrown ){
+        let promise =  axios.get('api/sr/properties')
+            .then(function (response) {
+                that.properties = response.data;
+            })
+            .catch(function (error) {
                 console.error("Unable to load Properties - textStatus is " + textStatus + ' :: errorThrown is ' + errorThrown);
-                deferred.resolve();
-            }
-        });
-        this.addPromise(deferred.promise());
+            });
+        this.addPromise(promise);
+    }
+    
+    loadLocaleMessages() {
+        var that = this;
+
+        let promise =  axios.get('api/sr/localeMessages')
+            .then(function (response) {
+                that.localeMessages = response.data;
+            })
+            .catch(function (error) {
+                console.error("Unable to load Locale Messages - textStatus is " + textStatus + ' :: errorThrown is ' + errorThrown);
+            });
+        this.addPromise(promise);
     }
 
     getProperty(propertyName){
@@ -224,23 +224,6 @@ class Application {
 
     setNotificationSystem (notificationSystem){
         this.notificationSystem = notificationSystem;
-    }
-    loadLocaleMessages() {
-        var deferred = $.Deferred();
-        var that = this;
-        $.ajax({
-            url: 'api/sr/localeMessages',
-            type: 'GET',
-            success: function (messages) {
-                that.localeMessages = messages;
-                deferred.resolve();
-            },
-            error : function (jqXHR, textStatus, errorThrown ){
-                console.error("Unable to load Locale Messages - textStatus is " + textStatus + ' :: errorThrown is ' + errorThrown);
-                deferred.resolve();
-            }
-        });
-        this.addPromise(deferred.promise());
     }
 
     /* Call this with arguments to replace {n} parameters */
@@ -295,6 +278,10 @@ class Application {
         return this.promises;
     }
 
+    clearPromises() {
+        this.promises = [];
+    }
+
     addSubscriberToAlerts(channel, component){
         this.subscribersToAlerts[channel] = component;
     }
@@ -308,47 +295,16 @@ class Application {
         var headers = {};
         headers[header] = token;
         var that = this;
-        $.ajaxSetup({
-            headers: headers,
-            cache: false,
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'json',
-            statusCode : {
-                406:function(message){   //NOT_ACCEPTABLE
-                    // Check if this is already handled in the business logic
-                    if(message.errorHandled == undefined) {
-                        that.showErrorNotification(message.responseText);
-                    }
-                },
-                409:function(message){   //CONFLICT BUSINESS VIOLATIONS
-                    // Check if this is already handled in the business logic
-                    if(message.errorHandled == undefined) {
-                        each(message.responseJSON, function (violation) {
-                            that.showErrorNotification("Field : " + violation.field + ': ' + violation.message);
-                        });
-                    }
-                },
-                400:function(message){   //BAD_MESSAGE / BAD_REQUEST CONSTRAINT VIOLATIONS
-                    // Check if this is already handled in the business logic
-                    if(message.errorHandled == undefined) {
-                        each(message.responseJSON, function (violation) {
-                            each(Object.keys(violation), function(field) {
-                                /* First localize the field name */
-                                var localizedFieldName = that.Localize(field);
-                                if (violation[field].includes('{0}')){
-                                    /* if the error message is a custom message which includes  the field name  i.e message string contains '{0}'
-                                     then dont show the field name separately - just create the message as per the template
-                                     */
-                                    that.showErrorNotification(that.Localize(violation[field], [localizedFieldName]));
-                                } else {
-                                    that.showErrorNotification(localizedFieldName +  " : " + that.Localize(violation[field]));
-                                }
-                            });
-                        });
-                    }
-                },
-            }
-        });
+        // axios.defaults.baseURL = 'api/';
+        axios.defaults.headers.common
+        axios.defaults.headers.common[header] = token;
+
+        /* Need to handle the following HTTP status
+         406:function(message){   //NOT_ACCEPTABLE
+         409:function(message){   //CONFLICT BUSINESS VIOLATIONS
+         400:function(message){   //BAD_MESSAGE / BAD_REQUEST CONSTRAINT VIOLATIONS
+         Also do a catch all 
+         */
 
         const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
         this.store = createStore(springrollReducers, {}, composeEnhancers(

@@ -14,8 +14,8 @@ class ReviewAlertItem extends React.Component {
     }
     onSubmit(action, comment){
         this.setState({showMoreInfo: false});
-        var data = JSON.stringify({ reviewStepId: this.props.alert.reviewStepId, approved: action, reviewComment: comment});
-        let defnOfRESTCall = {type : 'POST', data : data, url : 'api/sr/reviewaction'};
+        var data = { reviewStepId: this.props.alert.reviewStepId, approved: action, reviewComment: comment};
+        let defnOfRESTCall = {data : data, url : 'api/sr/reviewaction'};
         this.props.onSendToServerAndDismissAlert(defnOfRESTCall);
     }
 

@@ -1,4 +1,5 @@
 import Application from 'App.js';
+import axios from 'axios';
 
 export const USER_CHANGED = 'USER_CHANGED';
 
@@ -47,19 +48,13 @@ export function deleteAlert(id, alertType) {
 
 export function logout() {
     return function (dispatch) {
-        var deferred = $.Deferred();
-        $.ajax({
-            type: "POST",
-            url: "/logout"
-        });
+        axios.post("/logout");
         window.location.href = '/';
-        return deferred;
     }
 }
 
 export function switchUser(userToSwitchTo, realLoggedInUser) {
     return function (dispatch) {
-        var deferred = $.Deferred();
         if (realLoggedInUser != null && realLoggedInUser == userToSwitchTo) {
             /* If I am currently running as a delegate and I am switching back to myself
             *  realLoggedInUser will be NULL if i am NOT running as a delegate for someone else */
@@ -68,74 +63,24 @@ export function switchUser(userToSwitchTo, realLoggedInUser) {
             /* Either i am running as myself, OR i am running as a delegate and I am switching to some other delegator */
             window.location.href = 'login/impersonate?username=' + userToSwitchTo;
         }
-        return deferred;
     }
 }
 
 export function dismissAlert(id, alertType) {
     return function (dispatch) {
-    var deferred = $.Deferred();
-        $.ajax({
-            url: `api/sr/notification/${id}`,
-            type: 'DELETE',
-            success: function (user) {
-                deferred.resolve();
-                dispatch(deleteAlert(id, alertType));
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                deferred.resolve();
-            }
+    axios.delete(`api/sr/notification/${id}`)
+        .then(function (response) {
+            dispatch(deleteAlert(id, alertType));
         });
-        return deferred;
     }
 }
 
 export function sendToServerAndDismissAlert(id, alertType, defnOfRESTCall) {
     return function (dispatch) {
-        var deferred = $.Deferred();
-        if(defnOfRESTCall.type == "POST") {
-            $.ajax({
-                url: defnOfRESTCall.url,
-                type: 'POST',
-                data: defnOfRESTCall.data,
-                success: function (templateData) {
-                    deferred.resolve();
-                    dispatch(deleteAlert(id, alertType));
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    deferred.resolve();
-                }
-            });
-            return deferred;
-        }
-        if(defnOfRESTCall.type == "GET") {
-            $.ajax({
-                url: defnOfRESTCall.url,
-                type: 'GET',
-                success: function (templateData) {
-                    deferred.resolve();
-                    dispatch(deleteAlert(id, alertType));
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    deferred.resolve();
-                }
-            });
-            return deferred;
-        }
-        if(defnOfRESTCall.type == "DELETE") {
-            $.ajax({
-                url: defnOfRESTCall.url,
-                type: 'GET',
-                success: function (templateData) {
-                    deferred.resolve();
-                    dispatch(deleteAlert(id, alertType));
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    deferred.resolve();
-                }
-            });
-            return deferred;
-        }
+        axios.post(defnOfRESTCall.url, defnOfRESTCall.data)
+        .then(function (response) {
+            dispatch(deleteAlert(id, alertType));
+        });
     }
 }
 
@@ -198,73 +143,41 @@ export function mdmMasterSwitching() {
         type: MdmActions.MDM_MASTER_SWITCHING,
     }
 }
-export function mdmModuleActivated(masterName) {
+export function mdmModuleActivated() {
     return function (dispatch) {
-        var deferred = $.Deferred();
-        $.ajax({
-            url: 'api/sr/mdm/masters',
-            type: 'GET',
-            success: function (masterDefns) {
-                deferred.resolve();
-                dispatch(mdmMasterDefnsReceived(masterDefns));
-            }.bind(this),
-            error : function (jqXHR, textStatus, errorThrown ){
-                deferred.resolve();
-                console.error("Unable to load MDM Definitions - textStatus is " + textStatus + ' :: errorThrown is ' + errorThrown);
-            }.bind(this)
+        axios.get('api/sr/mdm/masters')
+        .then(function (response) {
+            dispatch(mdmMasterDefnsReceived(response.data));
         });
-        return deferred;
     }
 }
 export function mdmMasterChosen(masterName) {
     return function (dispatch) {
-        var deferred = $.Deferred();
-        /* Tell the world that we are switching a master
-           The reducer should clear out any state related
-           to this master - changerd rows, new rows, errors etc
-         */
+        /* Tell the world that we are switching a master The reducer should clear out any state related to this master - changed rows, new rows, errors etc */
         dispatch(mdmMasterSwitching());
-        $.ajax({
-            url: 'api/sr/mdm/data/' + masterName,
-            type: 'POST',
-            success: function (masterData) {
-                deferred.resolve();
+        axios.post('api/sr/mdm/data/' + masterName)
+        .then(function (response) {
+                let masterData = response.data;
                 masterData['master'] = masterName;
-                //ANISH
                 dispatch(mdmMasterDataReceived(masterData));
-            }.bind(this),
-            error : function (jqXHR, textStatus, errorThrown ){
-                deferred.resolve();
-                console.error("Unable to load MDM Definitions - textStatus is " + textStatus + ' :: errorThrown is ' + errorThrown);
-            }.bind(this)
         });
-        return deferred;
     }
 }
 export function mdmMasterChanged(mdmDTO) {
     return function (dispatch) {
-        var deferred = $.Deferred();
-        $.ajax({
-            url: 'api/sr/mdm/update/',
-            type: 'POST',
-            data: JSON.stringify(mdmDTO),
-            success: function (masterData) {
-                deferred.resolve();
-                Application.showInfoNotification("Changes submitted successfully. ");
-                dispatch(mdmMasterUpdateComplete());
-
-            }.bind(this),
-            error : function (jqXHR, textStatus, errorThrown ){
-                deferred.resolve();
-                if(jqXHR.status === 400 || jqXHR.status === 409) {
-                    let message = "<div class='mdm-error-msg-header'>" + Application.Localize('ui.mdm.error', mdmDTO.master) + "</div>";
-                    Application.showErrorNotification(message);
-                    dispatch(mdmMasterUpdateComplete(jqXHR.responseJSON));
-                    jqXHR['errorHandled'] = true;
-                }
-            }.bind(this)
+        axios.post('api/sr/mdm/update', mdmDTO)
+        .then(function (response) {
+            Application.showInfoNotification("Changes submitted successfully. ");
+            dispatch(mdmMasterUpdateComplete());
+        })
+        .catch(function (error) {
+            if(error.response.status == 409) {
+                let message = "<div class='mdm-error-msg-header'>" + Application.Localize('ui.mdm.error', mdmDTO.master) + "</div>";
+                Application.showErrorNotification(message);
+                dispatch(mdmMasterUpdateComplete(error.response.data));
+                //FIXME - handle the case where the error is NOT 409 - we need to dispatch something and set the state appropriately
+            }
         });
-        return deferred;
     }
 }
 
@@ -294,39 +207,19 @@ export function gridDataUpdateReceived(receivedPushData, gridName) {
 
 export function gridParamRequest(gridName, params) {
     return function (dispatch) {
-        var deferred = $.Deferred();
-        $.ajax({
-            url: 'api/sr/gridParams/' + gridName,
-            type: 'POST',
-            data: JSON.stringify(params),
-            success: function (gridParams) {
-                deferred.resolve();
-                dispatch(gridReceivedParameters(gridName, gridParams));
-
-            }.bind(this),
-            error : function (jqXHR, textStatus, errorThrown ){
-                deferred.resolve();
-            }.bind(this)
+        axios.post('api/sr/gridParams/' + gridName, params)
+        .then(function (response) {
+                dispatch(gridReceivedParameters(gridName, response.data));
         });
-        return deferred;
     }
 }
 export function gridDataRequest(gridName, params) {
     return function (dispatch) {
-        var deferred = $.Deferred();
-        $.ajax({
-            url: 'api/sr/getGridData/' + gridName,
-            type: 'POST',
-            data: JSON.stringify(params),
-            success: function (gridReport) {
-                deferred.resolve();
-                gridReport['gridName'] = gridName;
-                dispatch(gridDataReceived(gridReport, gridName));
-            }.bind(this),
-            error : function (jqXHR, textStatus, errorThrown ){
-                deferred.resolve();
-            }.bind(this)
+        axios.post('api/sr/getGridData/' + gridName, params)
+        .then(function (response) {
+            let gridReport = response.data;
+            gridReport['gridName'] = gridName;
+            dispatch(gridDataReceived(gridReport, gridName));
         });
-        return deferred;
     }
 }

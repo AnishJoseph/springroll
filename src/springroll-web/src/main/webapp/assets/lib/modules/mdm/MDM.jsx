@@ -36,7 +36,7 @@ class MDM extends React.Component {
     componentDidMount(){
         /* The MDM menu (level 1) was chosen - fire a Action to go and fetch the MDM masters from the servers */
         /* Note : This is not getting any master data - just the meta data so that we can create the second level menus */
-        this.props.onMdmModuleActivated(this.props.params.master);
+        this.props.onMdmModuleActivated();
         /* Ah a specific master is part or the URL - for example mdm/UserMaster. In this case since we have a specific master that
            the user wants to view/edit we fire an event that will go fetch the master data for this master
         */

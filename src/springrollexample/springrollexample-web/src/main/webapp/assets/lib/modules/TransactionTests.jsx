@@ -1,5 +1,6 @@
 import Application from 'App.js';
 import React from 'react';
+import axios from 'axios';
 
 class TransactionTests extends React.Component {
 
@@ -20,16 +21,7 @@ class TransactionTests extends React.Component {
     }
 
     handleSubmit(event) {
-        var data = JSON.stringify({testLocation :  this.state.testLocation, testCase : this.state.testCase});
-        $.ajax({
-            url: 'api/testPipelineSimple',
-            type: 'POST',
-            data: data,
-            success: function (templateData) {
-                console.log("Templates loaded.");
-            },
-        });
-
+        axios.post('api/testPipelineSimple', {testLocation :  this.state.testLocation, testCase : this.state.testCase});
         event.preventDefault();
     }
 

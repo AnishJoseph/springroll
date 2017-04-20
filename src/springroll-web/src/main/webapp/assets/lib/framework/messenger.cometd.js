@@ -1,7 +1,8 @@
 import Application from 'App';
-require('jquery.cometd.js');
+var lib = require('cometd');
 
-var CometD = $.cometd;
+var CometD = new lib.CometD();
+
 var cometURL = location.protocol + "//" + location.host + location.pathname + "cometd";
 function _connectionEstablished() {
     console.log('CometD Connection Established');
