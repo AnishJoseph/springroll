@@ -1,3 +1,4 @@
+import {includes}  from 'lodash';
 require('Springrollcore');
 import Application from 'App';
 
@@ -10,7 +11,7 @@ $(function() {
         var modules = user.authorizations;
 
         /* Based on this users authorization start requiring the modules */
-        if (_.contains(modules, "TransactionTests")) {
+        if (includes(modules, "TransactionTests")) {
             let deferred = $.Deferred();
             Application.addPromise(deferred.promise());
             require.ensure([], function (require) {
@@ -18,7 +19,7 @@ $(function() {
                 deferred.resolve();
             });
         }
-        if (_.contains(modules, "SubMenuSimple")) {
+        if (includes(modules, "SubMenuSimple")) {
             let deferred = $.Deferred();
             Application.addPromise(deferred.promise());
             require.ensure([], function (require) {
@@ -26,7 +27,7 @@ $(function() {
                 deferred.resolve();
             });
         }
-        if (_.contains(modules, "MDM")) {
+        if (includes(modules, "MDM")) {
             let deferred = $.Deferred();
             Application.addPromise(deferred.promise());
             require.ensure([], function (require) {
@@ -34,7 +35,7 @@ $(function() {
                 deferred.resolve();
             });
         }
-        if (_.contains(modules, "SubmenuCommon")) {
+        if (includes(modules, "SubmenuCommon")) {
             let deferred = $.Deferred();
             Application.addPromise(deferred.promise());
             require.ensure([], function (require) {
@@ -42,7 +43,7 @@ $(function() {
                 deferred.resolve();
             });
         }
-        if (_.contains(modules, "GridTests")) {
+        if (includes(modules, "GridTests")) {
             let deferred = $.Deferred();
             Application.addPromise(deferred.promise());
             require.ensure([], function (require) {
@@ -50,7 +51,7 @@ $(function() {
                 deferred.resolve();
             });
         }
-        if (_.contains(modules, "JobDashboard")) {
+        if (includes(modules, "JobDashboard")) {
             let deferred = $.Deferred();
             Application.addPromise(deferred.promise());
             require.ensure([], function (require) {
