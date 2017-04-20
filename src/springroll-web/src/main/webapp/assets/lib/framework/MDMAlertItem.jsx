@@ -1,7 +1,7 @@
 import React from 'react'
 import Application from 'App.js';
 import ReviewModal from 'ReviewModal.jsx';
-import MDMReviewMoreInfo from 'MDMReviewMoreInfo.jsx';
+import MDMReviewMoreInfo from 'MMDMReviewMoreInfo.jsx';
 import GenericAlertItem from 'GenericAlertItem.jsx';
 
 class MDMAlertItem extends React.Component {
