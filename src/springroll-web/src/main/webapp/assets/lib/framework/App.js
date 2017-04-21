@@ -75,6 +75,9 @@ class Application {
             });
         });
 
+        if(that.getMenuDefns().length ==0 ){
+            console.error("Looks like this user has no authorities - nothing will show and you will get an error later on");
+        }
         ReactDOM.render(
             <Provider store={that.store}>
                 <Router history={hashHistory}>
