@@ -26,6 +26,7 @@ class Application {
         this.properties = {};
         this.promises = [];
         this.user = undefined;
+        this.index = 0;
     }
     getUser () {
         return this.user;
@@ -211,9 +212,9 @@ class Application {
         });
 
     }
-    showErrorNotification (message, children) {
+    showErrorNotification (message, children, title) {
         this.notificationSystem.addNotification({
-            title: 'Error',
+            title: title,
             message: message,
             level: 'error',
             position : 'tc',
@@ -306,6 +307,34 @@ class Application {
         axios.defaults.headers.common
         axios.defaults.headers.common[header] = token;
 
+        axios.interceptors.response.use(function (response) {
+            return response;
+        }, function (error) {
+            if(error.response == null){
+                /* Could not contact the server */
+                that.showErrorNotification(that.Localize("ui.server.notreachable"));
+                return Promise.reject(error);
+            }
+            if(error.response.status == 403){
+                /* We don't have an authenticated session */
+            }
+            if(error.response.status == 406){
+                /* This handles RuntimeException and SpringrollException - both of which return HTTP status 406  i.e. NOT_ACCEPTABLE */
+                that.showErrorNotification(error.response.data, error.config.method.toUpperCase() + ":" + error.config.url, that.Localize('ui.406Error'));
+                return Promise.reject(error);
+            }
+            return Promise.reject(error);
+        });
+
+        axios.interceptors.request.use(function (config) {
+            if(config.method === 'get'){
+                let params = config.params || {};
+                params['__'] = that.index++;
+                config.params = params;
+            }
+            return config;
+        });
+        
         /* Need to handle the following HTTP status
          406:function(message){   //NOT_ACCEPTABLE
          409:function(message){   //CONFLICT BUSINESS VIOLATIONS
