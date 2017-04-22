@@ -39,7 +39,7 @@ var config = {
         ]
     },
     resolve: {
-        root: [
+        modules: [
             path.resolve(__dirname),
             path.resolve('./node_modules'),
             path.resolve('../../springroll-web/src/main/webapp/assets/lib/framework'),
@@ -48,11 +48,12 @@ var config = {
             path.resolve('../../springroll-web/src/main/webapp/assets/css/'),
             path.resolve('src/main/webapp/assets/lib/modules')
         ],
-        extensions: ['', '.js', '.jsx']
+        extensions: ['.js', '.jsx']
     },
 
     resolveLoader : {
-        root : path.join(__dirname, 'node_modules')
+        modules : [path.join(__dirname, 'node_modules')],
+        moduleExtensions: ["-loader"]
     },
 }
 
