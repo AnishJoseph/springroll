@@ -13,11 +13,48 @@ var config = {
 
     module: {
         loaders: [
-            { test: /\.scss$/, loader: "style-loader!css-loader!sass-loader" },
-            { test: /\.css$/, loader: 'style-loader!css-loader' },
-            { test: /\.(woff|woff2)$/, loader:"url-loader?prefix=font/&limit=5000" },
-            { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader" },
-            { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "url-loader?limit=10000&mimetype=application/octet-stream" },
+            { test: /\.scss$/,
+                use: [{
+                    loader: "style-loader" // creates style nodes from JS strings
+                }, {
+                    loader: "css-loader" // translates CSS into CommonJS
+                }, {
+                    loader: "sass-loader" // compiles Sass to CSS
+                }]
+            },
+            {
+                test: /\.css$/,
+                use: [{
+                    loader: "style-loader" // creates style nodes from JS strings
+                }, {
+                    loader: "css-loader" // translates CSS into CommonJS
+                }]
+            },
+            {
+                test: /\.(woff|woff2)$/,
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            query: {
+                                name:'prefix=font/&limit=5000"'
+                            }
+                        }
+                    }],
+            },
+            {   test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader" },
+            {
+                test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            query: {
+                                name:'limit=10000&mimetype=application/octet-stream'
+                            }
+                        }
+                    }],
+            },
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
@@ -27,13 +64,35 @@ var config = {
                     presets: ['babel-preset-es2015', 'babel-preset-react'].map(require.resolve)
                 }
             },
-            { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url-loader?limit=10000&mimetype=image/svg+xml" },
+            {   test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url-loader?limit=10000&mimetype=image/svg+xml" },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
-                loaders: [
-                    'file-loader?hash=sha512&digest=hex&name=[hash].[ext]',
-                    'image-webpack-loader?bypassOnDebug&optimizationLevel=7&interlaced=false'
-                ]
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            query: {
+                                name:'hash=sha512&digest=hex&name=[hash].[ext]'
+                            }
+                        }
+                    },
+                    {
+                        loader: 'image-webpack-loader',
+                        options: {
+                            query: {
+                                mozjpeg: {
+                                    progressive: true,
+                                },
+                                gifsicle: {
+                                    interlaced: true,
+                                },
+                                optipng: {
+                                    optimizationLevel: 7,
+                                }
+                            }
+                        }
+                    }
+                ],
             }
 
         ]
