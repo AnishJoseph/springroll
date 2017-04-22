@@ -41,8 +41,8 @@
     }
   ],
   "gridParameters" : [
-    {"name" : "userIds", "multiSelect": true, "namedQuery":"User.allUsers"},
-    {"name" : "completeStatus"},
+    {"name" : "userIds", "multiSelect": true, "namedQuery":"User.allUsers", "width" : 6},
+    {"name" : "completeStatus", "width" : 2},
     {"name" : "userIdsss", "list":["Opt1","Opt2","Opt3"], "multiSelect": true},
     {"name" : "startTime", "setTime" : "START_OF_DAY"},
     {"name" : "endTime", "setTime" : "END_OF_DAY"},
@@ -50,7 +50,7 @@
   ],
 
   "namedQueries" : [
-    {"name" : "TestGridAllTypes", "query": "SELECT o.stringVariable, o.booleanVariable, o.intVariable, o.floatCVariable, o.bigDecimalVariable, o.bigIntegerVariable, o.enumType, o.localDateVariable, o.localDateTimeVariable  FROM TestTableToCheckMdm o where o.stringVariable = :stringVariable AND  o.booleanVariable = :booleanVariable AND  o.intVariable = :intVariable AND  o.floatCVariable = :floatCVariable AND  o.bigDecimalVariable = :bigDecimalVariable AND  o.bigIntegerVariable = :bigIntegerVariable AND  o.enumType = :enumType"},
+    {"name" : "TestGridAllTypes", "query": "SELECT o.stringVariable, o.booleanVariable, o.intVariable, o.floatCVariable, o.bigDecimalVariable, o.bigIntegerVariable, o.enumType, o.localDateVariable, o.localDateTimeVariable  FROM TestTableToCheckMdm o where o.stringVariable = :stringVariable AND  o.booleanVariable = :booleanVariable AND  o.intVariable = :intVariable AND  o.floatCVariable = :floatCVariable AND  o.enumType = :enumType and o.bigDecimalVariable = :bigDecimalVariable  AND    o.bigIntegerVariable = :bigIntegerVariable and o.localDateVariable > :localDateVariable"},
     {"name" : "TestGridParamFromSpringrollUser", "query": "SELECT o.id, o.userId, o.service FROM Job o WHERE o.userId = :loggedInUser"}
   ],
 
