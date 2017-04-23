@@ -1,6 +1,7 @@
 const packageJSON = require('./package.json');
 const path = require('path');
 const webpack = require('webpack');
+var DashboardPlugin = require('webpack-dashboard/plugin');
 
 var config = {
     entry: 'index.js',
@@ -62,10 +63,11 @@ var config = {
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                loader: 'babel-loader',
-
-                query: {
-                    presets: ['babel-preset-es2015', 'babel-preset-react'].map(require.resolve)
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['babel-preset-es2015', 'babel-preset-react'].map(require.resolve)
+                    }
                 }
             },
             {
@@ -127,6 +129,10 @@ var config = {
     resolveLoader : {
         modules : [path.join(__dirname, 'node_modules')],
     },
+    plugins: [
+        new DashboardPlugin()
+    ]
+
 }
 
 module.exports = config;
