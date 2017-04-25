@@ -143,7 +143,7 @@ import java.util.stream.Collectors;
             ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             mdmDefinitions = mapper.readValue(br, MdmDefinitions.class);
             for (MdmDefinition mdmDefinition : mdmDefinitions.getMasters()) {
-                mdmDefinition.getColDefs().add(0, new ColDef("id", false, "num", false));
+                mdmDefinition.getColDefs().add(0, new ColDef("id", false, "num", false, true));
                 makeNamedQueries(mdmDefinition);
             }
             mdmDefinitions.init();
@@ -182,13 +182,6 @@ import java.util.stream.Collectors;
         mdmDefinition.setQueryForConstraintValidation(mdmDefinition.getMasterClass().getSimpleName() + "_queryForConstraintValidation");
         Query query = em.createQuery(queryStr);
         em.getEntityManagerFactory().addNamedQuery(mdmDefinition.getQueryForConstraintValidation(), query);
-    }
-
-    private List<Lov> makeBooleanLov(){
-        List<Lov> colDefs = new ArrayList<>();
-        colDefs.add(new Lov(true, "True"));
-        colDefs.add(new Lov(false, "False"));
-        return colDefs;
     }
 
     private MdmDefinition getDefinitionForMaster(String master){

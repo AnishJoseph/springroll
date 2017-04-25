@@ -2,9 +2,10 @@ import React from 'react'
 import Application from 'App.js';
 import ArrayFormatter from 'ArrayFormatter';
 import {DateTimeFormatter, DateFormatter, BooleanFormatter, TextFormatter} from 'Formatters';
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import SpringrollTable from 'SpringrollTable';
 
-export function WrapperForFormatter(value, colDef, row, isNewRecord) {
+function RecordFormatter(value, colDef, isNewRecord) {
+    if(value == null)return null;
     let Formatter =  TextFormatter;
     if(colDef.type === 'date') Formatter =  DateFormatter;
     if(colDef.type === 'datetime') Formatter =  DateTimeFormatter;
@@ -18,6 +19,12 @@ export function WrapperForFormatter(value, colDef, row, isNewRecord) {
         </div>
     )
 }
+function ExistingRecordFormatter({value, colDef}) {
+    return RecordFormatter(value, colDef, false);
+}
+function NewRecordFormatter({value, colDef}) {
+    return RecordFormatter(value, colDef, true);
+}
 
 class MDMReviewMoreInfo extends React.Component {
     constructor(props){
@@ -28,41 +35,25 @@ class MDMReviewMoreInfo extends React.Component {
     render() {
         let heightOfChangeTable = (this.props.alert.mdmChangesForReview.changedRecords.length + 1) * 36 >  350 ? 350 : (this.props.alert.mdmChangesForReview.changedRecords.length+1) * 36;
         let heightOfNewTable    = (this.props.alert.mdmChangesForReview.newRecords.length + 1)     * 36 >  350 ? 350 : (this.props.alert.mdmChangesForReview.newRecords.length+1) * 36;
+        let formattersForExistingRecords = {}, formattersForNewRecords = {};
+        let colDefs = this.props.alert.mdmChangesForReview.colDefs.map((colDef, index) => {
+            formattersForExistingRecords[colDef.name] = ExistingRecordFormatter;
+            formattersForNewRecords[colDef.name] = NewRecordFormatter;
+            return {type : colDef.type, hidden : colDef.name == 'id', title : colDef.name, name : colDef.name};
+        });
+        let optionsForExistingRecords = {}, optionsForNewRecords = {};
+        optionsForExistingRecords['formatters'] = formattersForExistingRecords;
+        optionsForNewRecords['formatters'] = formattersForNewRecords;
         return (
             <div className="springroll-table">
                 { this.props.alert.mdmChangesForReview.changedRecords.length > 0 &&
-                    <div>
-                        <h4 className="text-info mdm-changed-header">{Application.Localize('ui.mdmChangedRecs', this.changedRecs.length)}</h4>
-                        <BootstrapTable ref="table" data={this.changedRecs} striped hover search={false} keyField={'id'} height={heightOfChangeTable} scrollTop={'Top'}>
-                        {
-                                this.props.alert.mdmChangesForReview.colDefs.map((colDef, index) => {
-                                    let dataFormatter = (cellValue, row) => WrapperForFormatter(cellValue, colDef, row, false);
-                                    return (
-                                        <TableHeaderColumn width={colDef.width} hidden={colDef.name === 'id'} key={index} dataFormat={dataFormatter} dataField={colDef.name} editable={ false }>
-                                            {Application.Localize(colDef.name)}
-                                        </TableHeaderColumn>
-                                    )
-                                })
-                            }
-                        </BootstrapTable>
-                    </div>
+                    <SpringrollTable height={heightOfChangeTable} options={optionsForExistingRecords} data={this.changedRecs} columnDefinitions={colDefs} editable={false} keyName='id' title={Application.Localize('ui.mdmChangedRecs', this.changedRecs.length)}/>
                 }
+                <p/>
+                <p/>
+                <p/>
                 { this.newRecords.length > 0 &&
-                    <div>
-                        <h4 className="text-info mdm-changed-header">{Application.Localize('ui.mdmNewRecs', this.newRecords.length)}</h4>
-                        <BootstrapTable ref="table" data={this.newRecords} striped hover search={false} keyField={'id'} height={heightOfNewTable} scrollTop={'Top'}>
-                        {
-                                this.props.alert.mdmChangesForReview.colDefs.map((colDef, index) => {
-                                    let dataFormatter = (cellValue, row) => WrapperForFormatter(cellValue, colDef, row, true);
-                                    return (
-                                        <TableHeaderColumn width={colDef.width} hidden={colDef.name === 'id'} key={index} dataFormat={dataFormatter} dataField={colDef.name} editable={ false }>
-                                            {Application.Localize(colDef.name)}
-                                        </TableHeaderColumn>
-                                    )
-                                })
-                            }
-                        </BootstrapTable>
-                    </div>
+                    <SpringrollTable height={heightOfNewTable} options={optionsForNewRecords} data={this.newRecords} columnDefinitions={colDefs} editable={false} keyName='id' title={Application.Localize('ui.mdmNewRecs', this.newRecords.length)}/>
                 }
             </div>
         );

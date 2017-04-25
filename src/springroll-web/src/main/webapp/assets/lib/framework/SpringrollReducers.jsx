@@ -53,7 +53,7 @@ function gridReportReducer(state = {}, action) {
                 var row = {};
                 for (var j = 0; j < action.gridData.columns.length; ++j) {
                     if (rowData[j] == undefined || rowData[j] == null) continue;
-                    row[action.gridData.columns[j].title] = rowData[j];
+                    row[action.gridData.columns[j].name] = rowData[j];
                 }
                 return row;
             });
@@ -76,7 +76,7 @@ function gridReportReducer(state = {}, action) {
             let newRow = {};
             each(action.updatedData, function (colValue, index) {
                 if (colValue == undefined || colValue == null) return;
-                newRow[gridInfoAboutThisGrid.gridData.columns[index].title] = colValue;
+                newRow[gridInfoAboutThisGrid.gridData.columns[index].name] = colValue;
             });
 
 

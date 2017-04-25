@@ -58,6 +58,9 @@ public class ReviewManager extends SpringrollEndPoint implements ReviewService {
         job.setPendingReviewers(String.join(", ", yetToReview));
         List<ReviewStep> nextReviewSteps = findNextReviewStep(reviewStepMeta, -1);
         createReviewNotifications(nextReviewSteps,  null);
+        Set<String> users = new HashSet<>(1);
+        users.add(job.getUserId());
+        notificationService.pushNotification(users, new JobStatusMessage(job), CorePushChannels.JOB_STATUS_UPDATE);
     }
 
     private ReviewStepMeta createReviewSteps(List<BusinessValidationResult> reviewNeededViolations, Long jobId, ReviewNeededEvent reviewNeededEvent){

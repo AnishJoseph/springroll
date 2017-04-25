@@ -8,6 +8,7 @@ import java.util.List;
  * Created by anishjoseph on 14/12/16.
  */
 public interface MdmColumnDefinition {
+    boolean isHidden();
     String getName();
 
     boolean isWriteable();

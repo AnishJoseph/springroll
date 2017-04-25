@@ -2,8 +2,8 @@ import React from 'react';
 import Application from 'App';
 import ReportParams from 'ReportParameterForm';
 import ReviewModal from 'ReviewModal.jsx';
-import Grid from 'grid/BootstrapGrid.jsx';
 import { reduxForm } from 'redux-form';
+import SpringrollTable from 'SpringrollTable';
 
 
 class GridReport extends React.Component {
@@ -35,7 +35,10 @@ class GridReport extends React.Component {
         let message = Application.Localize("ui.ReportParameters");
         return (
             <span>
-                <Grid gridData={this.props.gridData} options={this.props.options || {}} title={Application.Localize(this.props.gridName)} gridParams={this.props.gridParams} onFilterClick={this.onFilterClick}/>
+                {
+                    this.props.gridData &&
+                    <SpringrollTable data={this.props.gridData.data} columnDefinitions={this.props.gridData.columns} options={this.props.options} editable={false} keyName={this.props.gridData.key} title={Application.Localize(this.props.gridName)}/>
+                }
                 {
                     /* Show the parameters in a MODAL ONLY if the filter is to be shown AND this grid has parameters */
                     (this.state.showFilter &&  this.props.gridParams !== undefined && this.props.gridParams.length > 0) &&

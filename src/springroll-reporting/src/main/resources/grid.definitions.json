@@ -2,41 +2,41 @@
   "grids" : [
     {"name" : "TestGrid1", "fixedColumns": 2, "namedQuery": "StringListBooleanDateParam", "key" : "ID",
       "gridColumns":[
-          {"title": "ID", "type":"num"},
-          {"title": "User", "type" : "text"},
-          {"title": "ServiceName", "type":"text"}
+          {"name" : "ID","title": "ID", "type":"num"},
+          {"name" : "User","title": "User", "type" : "text"},
+          {"name" : "ServiceName","title": "ServiceName", "type":"text"}
         ]
     },
     {"name" : "JobDashboard", "namedQuery": "JobDashboardQuery", "key" : "ID",
       "gridColumns":[
-          {"title": "ID", "type":"text", "visible" : false, "align" : "LEFT"},
-          {"title": "ui.grid.Action", "type":"text", "align" : "LEFT"},
-          {"title": "ui.grid.Description", "type":"text", "align" : "LEFT", "width" : "500px"},
-          {"title": "ui.grid.StartTime", "type":"datetime", "align" : "CENTER", "align" : "CENTER"},
-          {"title": "ui.grid.EndTime", "type":"datetime", "align" : "CENTER", "align" : "CENTER"},
-          {"title": "ui.grid.JobStatus", "type":"text", "align" : "CENTER", "align" : "LEFT"},
-          {"title": "ui.grid.PendingWith", "type":"text", "align" : "LEFT"},
-          {"title": "ui.grid.Reviewers", "type":"reviewlog", "width" : "300px", "sortable" : false}
+          {"name" : "ID",          "title": "ID",                  "type":"text", "visible" : false, "align" : "LEFT"},
+          {"name" : "action",      "title": "ui.grid.Action",      "type":"text", "align" : "LEFT"},
+          {"name" : "description", "title": "ui.grid.Description", "type":"text", "align" : "LEFT", "width" : "500px"},
+          {"name" : "startTime",   "title": "ui.grid.StartTime",   "type":"datetime", "align" : "CENTER", "align" : "CENTER"},
+          {"name" : "endTime",     "title": "ui.grid.EndTime",     "type":"datetime", "align" : "CENTER", "align" : "CENTER"},
+          {"name" : "jobStatus",   "title": "ui.grid.JobStatus",   "type":"text", "align" : "CENTER", "align" : "LEFT"},
+          {"name" : "pendingWith", "title": "ui.grid.PendingWith", "type":"text", "align" : "LEFT"},
+          {"name" : "reviewers",   "title": "ui.grid.Reviewers",   "type":"reviewlog", "width" : "300px", "sortable" : false}
       ]
     },
     {"name" : "TestGridAllTypes", "namedQuery": "TestGridAllTypes",  "key" : "stringVariable",
       "gridColumns":[
-          {"title": "stringVariable", "type":"text"},
-          {"title": "booleanVariable", "type":"boolean", "align" : "CENTER"},
-          {"title": "intVariable", "type":"num", "align" : "RIGHT", "format" : "0.0"},
-          {"title": "floatCVariable", "type":"num", "align" : "RIGHT", "numberFormat" : "currency"},
-          {"title": "bigDecimalVariable", "type":"num", "align" : "RIGHT", "numberFormat" : "rate"},
-          {"title": "bigIntegerVariable", "type":"num", "align" : "RIGHT"},
-          {"title": "enumType", "type":"text"},
-          {"title": "localDateVariable", "type":"date", "align" : "CENTER" },
-          {"title": "localDateTimeVariable", "type":"datetime", "align" : "CENTER"}
+          {"name" : "stringVariable","title": "stringVariable", "type":"text"},
+          {"name" : "booleanVariable","title": "booleanVariable", "type":"boolean", "align" : "CENTER"},
+          {"name" : "intVariable","title": "intVariable", "type":"num", "align" : "RIGHT", "format" : "0.0"},
+          {"name" : "floatCVariable","title": "floatCVariable", "type":"num", "align" : "RIGHT", "numberFormat" : "currency"},
+          {"name" : "bigDecimalVariable","title": "bigDecimalVariable", "type":"num", "align" : "RIGHT", "numberFormat" : "rate"},
+          {"name" : "bigIntegerVariable","title": "bigIntegerVariable", "type":"num", "align" : "RIGHT"},
+          {"name" : "enumType","title": "enumType", "type":"text"},
+          {"name" : "localDateVariable","title": "localDateVariable", "type":"date", "align" : "CENTER" },
+          {"name" : "localDateTimeVariable","title": "localDateTimeVariable", "type":"datetime", "align" : "CENTER"}
         ]
     },
     {"name" : "TestGridParamFromSpringrollUser", "namedQuery": "TestGridParamFromSpringrollUser", "key" : "ID",
       "gridColumns":[
-        {"title": "ID", "type":"num", "align" : "RIGHT"},
-        {"title": "User", "type" : "text"},
-        {"title": "ServiceName", "type":"text"}
+        {"name" : "ID","title": "ID", "type":"num", "align" : "RIGHT"},
+        {"name" : "user","title": "User", "type" : "text"},
+        {"name" : "service","title": "ServiceName", "type":"text"}
       ]
     }
   ],

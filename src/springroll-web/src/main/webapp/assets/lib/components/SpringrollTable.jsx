@@ -1,12 +1,11 @@
 import React from 'react';
 import Application from 'App';
-import {intPattern, floatPattern, DeleteFormatter, WrapperForFormatter, TextFormatter, DateTimeFormatter, DateFormatter, BooleanFormatter, ArrayFormatter} from 'Formatters';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import ReactSelect from 'react-select';
-import {DatePicker, DateField} from 'react-date-picker';
 var moment = require('moment');
-import {each, pluck, indexOf, filter}  from 'lodash';
+import {each, map, indexOf, filter}  from 'lodash';
 import DebounceInput from 'react-debounce-input';
+import {dateTimeSorter, selectEditor, dateEditor, patternEditor, customEditorHandler} from 'SpringrollTableHelpers';
+import {intPattern, floatPattern, DeleteFormatter, WrapperForFormatter, TextFormatter, DateTimeFormatter, DateFormatter, BooleanFormatter, ArrayFormatter, NumberFormatter} from 'SpringrollTableHelpers';
 
 /* SpringrollTable props
     1) data*
@@ -18,6 +17,7 @@ import DebounceInput from 'react-debounce-input';
     8) title - string
     9) height
     10) key
+    11) onUpdate
 
 
     coldef :
@@ -32,76 +32,7 @@ import DebounceInput from 'react-debounce-input';
  sortable
     
  */
-
-function dateTimeSorter(a, b, order, sortField){
-    let aValue = a[sortField] == null ? 0: a[sortField];
-    let bValue = b[sortField] == null ? 0: b[sortField];
-    if (order === 'desc') {
-        return aValue - bValue;
-    } else {
-        return bValue - aValue;
-    }
-}
-
-const dateEditor = (onUpdate, props) => (<DateEditor onUpdate={ onUpdate } {...props}/>);
-
-class DateEditor extends React.Component {
-    focus() {
-        //FIXME - need to talk to react-bootstrap-table and see if we can avoid this dummy focus
-    }
-    render() {
-        let updateOnDateClick = !this.props.isDateTime;
-
-        let dateFormat = this.props.isDateTime ? Application.getMomentFormatForDateTime() : Application.getMomentFormatForDate();
-        return (<DateField
-                ref='inputRef'
-                value={this.props.defaultValue === undefined || this.props.defaultValue == ''? undefined: moment(this.props.defaultValue)}
-                dateFormat={dateFormat}
-                expanded={true}
-                updateOnDateClick={updateOnDateClick}
-                onChange={ (dateString, {dateMoment}) => {
-                    if(dateMoment == null || dateMoment == undefined)return;
-                    let changedRowData = {id : this.props.row['id'], cid : this.props.row['cid'], cellName : this.props.cellName, cellValue : dateMoment.valueOf()};
-                    this.props.onMdmMasterRowChanged(changedRowData);
-                    this.props.onUpdate(this.props.defaultValue);
-                }}>
-            </DateField>
-        )
-    }
-}
-
-const patternEditor = (onUpdate, props) => (<PatternEditor onUpdate={ onUpdate } {...props}/>);
-
-class PatternEditor extends React.Component {
-    constructor(props){
-        super(props);
-        this.onChange = this.onChange.bind(this);
-        this.onBlur = this.onBlur.bind(this);
-        this.pattern = props.type == 'int'? intPattern : props.type == 'num' ? floatPattern : undefined;
-    }
-    onBlur(){
-        this.props.onUpdate(this.props.defaultValue);
-    }
-    focus() {
-        console.log("focus");
-        //FIXME - need to talk to react-bootstrap-table and see if we can avoid this dummy focus
-    }
-    onChange(event){
-        let value = event.target.value;
-        if(this.pattern === undefined || this.pattern.test(value)){
-            let changedRowData = {id : this.props.row['id'], cid : this.props.row['cid'], cellName : this.props.cellName, cellValue : value};
-            this.props.onMdmMasterRowChanged(changedRowData);
-        }
-    }
-
-    render() {
-        return (
-            <input autoFocus style={{width :"100%"}} type="text" onChange={this.onChange} value={this.props.defaultValue} onBlur={this.onBlur}/>
-        )
-    }
-}
-
-const customEditorHandler = (onUpdate, props) => (<props.editor onUpdate={ onUpdate } {...props}/>);
+export const booleanLovList = [{value : true, label : Application.Localize('ui.true')}, {value : false, label : Application.Localize('ui.false')}];
 
 class SpringrollTable extends React.Component {
     constructor(props){
@@ -109,15 +40,13 @@ class SpringrollTable extends React.Component {
         this.beforeSaveCell = this.beforeSaveCell.bind(this);
         this.afterSearch = this.afterSearch.bind(this);
         this.search = this.search.bind(this);
-        this.editable = this.editable.bind(this);
+        this.showModified = this.showModified.bind(this);
         this.trClassFormat = this.trClassFormat.bind(this);
+        this.deleteRow = this.deleteRow.bind(this);
+        this.isModifiedFilterOn = false;
     }
     search(e){
         this.refs.table.handleSearch(e.target.value);
-    }
-
-    editable(cell, row, rowIndex, columnIndex){
-        return this.props.editable ? this.props.editable(cell, row, rowIndex, columnIndex):  false;
     }
 
     afterSearch(searchText, result){
@@ -132,7 +61,25 @@ class SpringrollTable extends React.Component {
     trClassFormat(row, rowIndex){
         this.props.trClassFormat(row, rowIndex);
     }
+    showModified(){
+        let filterSpec = this.isModifiedFilterOn ? {} : { __hasChanged: "__hasChanged"};
+        this.refs.table.handleFilterData(filterSpec);
+        this.isModifiedFilterOn = !this.isModifiedFilterOn;
+    }
+    deleteRow(row){
+        /* Fire a delete event ONLY if this is a new row */
+        if(row['id'] === -1 && row['rowIsNew'] === true){
+            this.props.onDeleteRow(row['cid']);
+        }
+    }
+
     render() {
+        var that = this;
+        let options = this.props.options || {};
+        let columnDefinitions = this.props.columnDefinitions.slice();
+        if(this.props.addRow){
+            columnDefinitions.push({width});
+        }
         const cellEditProp = {
             mode: 'click',
             afterSearch: this.afterSearch,
@@ -144,7 +91,30 @@ class SpringrollTable extends React.Component {
                 <div className="control-panel">
                     <div className="row">
                         <span className="text-info toolbar-title">{this.props.title}</span>
+                        {
+                            this.props.onAddRow && this.props.needsSave &&
+                            <span data-toggle="tooltip" title={Application.Localize('ui.mdm.Save')}
+                                  onClick={this.props.onSaveClicked}
+                                  className="springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-floppy-disk">
+                            </span>
+                        }
                         <DebounceInput className="pull-right" minLength={2} debounceTimeout={300} onChange={this.search} placeholder={Application.Localize('ui.search')}/>
+                        {
+                            this.props.onAddRow &&
+                            <span data-toggle="tooltip" title={Application.Localize('ui.mdm.New')}
+                                  onClick={this.props.onAddRow}
+                                  className="springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-plus">
+                            </span>
+                        }
+                        {
+                            this.props.onAddRow && this.props.needsSave &&
+                            <span data-toggle="tooltip" title={Application.Localize('ui.mdm.changeToggle')}
+                                  onClick={this.showModified}
+                                  className="springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-filter">
+                            </span>
+                        }
+
+
                     </div>
                 </div>
                 <BootstrapTable ref="table" data={this.props.data} striped hover search={false} keyField={this.props.keyName} height={this.props.height || '800px'} scrollTop={ 'Top' } multiColumnSort={3} cellEdit={ cellEditProp } trClassName={ this.props.trClassFormat }>
@@ -163,7 +133,9 @@ class SpringrollTable extends React.Component {
                             } else if (colDef.type == 'int') {
                                 customEditor = {getElement : patternEditor, customEditorParameters : {type : colDef.type}};
                             } else if (colDef.type == 'num') {
-                                customEditor = {getElement : patternEditor, customEditorParameters : {type : colDef.type}};
+                                customEditor = {getElement: patternEditor, customEditorParameters: {type: colDef.type}};
+                            } else if (colDef.type == 'num-fmt') {
+                                    formatter = NumberFormatter;
                             } else {
                                 customEditor = {getElement : patternEditor, customEditorParameters : {type : colDef.type}};
                             }
@@ -177,21 +149,28 @@ class SpringrollTable extends React.Component {
                             }
 
                             /* If the caller has specified a formatter (tied to a type) then use that formatter - it overrides everything else */
-                            if (this.props.options.formatters && this.props.options.formatters[colDef.type] && this.props.options.formatters[colDef.type].forDisplay) {
-                                formatter = this.props.options.formatters[colDef.type].forDisplay;
+                            if (options.formatters && options.formatters[colDef.name] ) {
+                                formatter = options.formatters[colDef.name];
                             }
                             /* If the caller has specified a sorter (tied to a type) then use that sorter - it overrides everything else */
-                            if (this.props.options.sorter && this.props.options.sorter[colDef.type]) {
-                                sorter = this.props.options.sorter[colDef.type];
+                            if (options.sorter && options.sorter[colDef.type]) {
+                                sorter = options.sorter[colDef.type];
                             }
                             /* If the caller has specified an editor (tied to a type) then use that editor - it overrides everything else */
-                            if (this.props.options.editor && this.props.options.editor[colDef.type]) {
-                                customEditor = {getElement : customEditorHandler, customEditorParameters : {editor :this.props.options.editor[colDef.type],  colDef : colDef}};
+                            if (options.editor && options.editor[colDef.type]) {
+                                customEditor = {getElement : customEditorHandler, customEditorParameters : {editor :options.editor[colDef.type],  colDef : colDef}};
                             }
 
-                            dataFormatter = (cell, row) => WrapperForFormatter(cell, formatter, colDef, row);
+                            dataFormatter = (cell, row) => WrapperForFormatter(cell, formatter, colDef, row, that.props.updateResponse);
+                            if(customEditor !== undefined) {
+                                customEditor.customEditorParameters.onRowChange =  this.props.onRowChange;
+                                customEditor.customEditorParameters.cellName =  colDef.name;
+                            }
+                            let align = colDef.align == undefined? 'left' : colDef.align.toLowerCase();
+
                             return (
                                 <TableHeaderColumn
+                                    dataAlign={align}
                                     dataSort={colDef.sortable === undefined? true : colDef.sortable}
                                     sortFunc={sorter}
                                     width={colDef.width}
@@ -201,15 +180,19 @@ class SpringrollTable extends React.Component {
                                     dataFormat={dataFormatter}
                                     dataField={colDef.name}
                                     customEditor={ customEditor }
-                                    editable={ this.editable }
+                                    editable={ this.props.editable === undefined? false : this.props.editable  }
                                     filterValue={filterValue }
                                     searchable={this.props.searchable === undefined ? true : this.props.searchable}
+                                    tdStyle={ {whiteSpace: 'normal'} }
                                 >
                                     {Application.Localize(colDef.title)}
                                 </TableHeaderColumn>
                             )
                         })
                     }
+                    <TableHeaderColumn hidden={this.props.addRow === undefined} width={"50px"} key={'__deleteKey'} dataField={'delete'} editable={ false }
+                                   dataFormat={(cell, row) => DeleteFormatter(cell, row, this.deleteRow)}> {''}
+                    </TableHeaderColumn>
                 </BootstrapTable>
             </span>
         );
@@ -219,6 +202,15 @@ class SpringrollTable extends React.Component {
 
 export default SpringrollTable;
 
+/*
+ {
+ this.props.onAddRow !== undefined &&
+ <TableHeaderColumn width={"50px"} key={'__deleteKey'} dataField={'delete'} editable={ false }
+ dataFormat={(cell, row) => DeleteFormatter(cell, row, this.deleteRow)}> {''}
+ </TableHeaderColumn>
+ }
+
+ */
 
 
 

@@ -8,6 +8,7 @@ import com.springroll.core.services.reporting.IGridColumn;
  * Defines a
  */
 public class GridColumn implements IGridColumn {
+    private String name;
     private String title;
     private String type = "text";
     private String numberFormat;
@@ -16,6 +17,15 @@ public class GridColumn implements IGridColumn {
     private String format;
     private String width;
     private boolean sortable = true;
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @Override
     public String getTitle() {

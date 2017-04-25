@@ -120,6 +120,7 @@ var config = {
             path.resolve('../../springroll-web/src/main/webapp/assets/lib/framework'),
             path.resolve('../../springroll-web/src/main/webapp/assets/lib/modules'),
             path.resolve('../../springroll-web/src/main/webapp/assets/lib/components'),
+            path.resolve('../../springroll-web/src/main/webapp/assets/lib/helpers'),
             path.resolve('../../springroll-web/src/main/webapp/assets/css/'),
             path.resolve('src/main/webapp/assets/lib/modules')
         ],
