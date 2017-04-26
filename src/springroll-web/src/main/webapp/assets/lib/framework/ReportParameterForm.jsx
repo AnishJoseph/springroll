@@ -8,7 +8,8 @@ import { DateField } from 'react-date-picker'
 import {pluck}  from 'lodash';
 
 /* Fixme there are 2 booleanLovList */
-const booleanLovList = [{value : true, label : Application.Localize('ui.true')}, {value : false, label : Application.Localize('ui.false')}];
+/* FIXME - for now we have kept the values of theboolean as a string - there seem to be some problem with redux forms and the false value */
+const booleanLovList = [{value : 'true', label : Application.Localize('ui.true')}, {value : 'false', label : Application.Localize('ui.false')}];
 
 const mandatory = value => value ? undefined : Application.Localize('ui.report.parameters.empty');
 
