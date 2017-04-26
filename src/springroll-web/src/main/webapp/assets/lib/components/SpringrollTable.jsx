@@ -75,11 +75,8 @@ class SpringrollTable extends React.Component {
 
     render() {
         var that = this;
+        let customButtons = this.props.customButtons || [];
         let options = this.props.options || {};
-        let columnDefinitions = this.props.columnDefinitions.slice();
-        if(this.props.addRow){
-            columnDefinitions.push({width});
-        }
         const cellEditProp = {
             mode: 'click',
             afterSearch: this.afterSearch,
@@ -91,6 +88,19 @@ class SpringrollTable extends React.Component {
                 <div className="control-panel">
                     <div className="row">
                         <span className="text-info toolbar-title">{this.props.title}</span>
+                        {
+                            customButtons.map ( (button, index) => {
+                                if(button.visible)
+                                return (
+                                    <span key={index} data-toggle="tooltip"
+                                          title={button.title}
+                                          onClick={button.onClick}
+                                          className={button.className}>
+                                    </span>
+                                )
+                                return null;
+                            })
+                        }
                         {
                             this.props.onAddRow && this.props.needsSave &&
                             <span data-toggle="tooltip" title={Application.Localize('ui.mdm.Save')}
@@ -117,39 +127,51 @@ class SpringrollTable extends React.Component {
 
                     </div>
                 </div>
-                <BootstrapTable ref="table" data={this.props.data} striped hover search={false} keyField={this.props.keyName} height={this.props.height || '800px'} scrollTop={ 'Top' } multiColumnSort={3} cellEdit={ cellEditProp } trClassName={ this.props.trClassFormat }>
+                {this.props.data &&
+                    <BootstrapTable ref="table" data={this.props.data} striped hover search={false}
+                                 keyField={this.props.keyName} height={this.props.height || '800px'} scrollTop={ 'Top' }
+                                 multiColumnSort={3} cellEdit={ cellEditProp } trClassName={ this.props.trClassFormat }>
                     {
                         this.props.columnDefinitions.map((colDef, index) => {
-                            let formatter = TextFormatter, dataFormatter, sorter = undefined, customEditor = undefined, filterValue, filterFormatted=false;
+                            let formatter = TextFormatter, dataFormatter, sorter = undefined, customEditor = undefined, filterValue, filterFormatted = false;
                             if (colDef.type == 'date' || colDef.type === 'datetime') {
-                                let isDateTime =  colDef.type === 'datetime';
+                                let isDateTime = colDef.type === 'datetime';
                                 formatter = isDateTime ? DateTimeFormatter : DateFormatter;
-                                customEditor = {getElement : dateEditor, customEditorParameters : {isDateTime : isDateTime}};
+                                customEditor = {
+                                    getElement: dateEditor,
+                                    customEditorParameters: {isDateTime: isDateTime}
+                                };
                                 sorter = dateTimeSorter;
                                 filterValue = (cell, row) => isDateTime ? moment(cell).format(Application.getMomentFormatForDateTime()) : moment(cell).format(Application.getMomentFormatForDate());
                             } else if (colDef.type == 'boolean') {
                                 formatter = BooleanFormatter;
-                                customEditor = {getElement : selectEditor, customEditorParameters : {options : booleanLovList, multi : false}};
+                                customEditor = {
+                                    getElement: selectEditor,
+                                    customEditorParameters: {options: booleanLovList, multi: false}
+                                };
                             } else if (colDef.type == 'int') {
-                                customEditor = {getElement : patternEditor, customEditorParameters : {type : colDef.type}};
+                                customEditor = {getElement: patternEditor, customEditorParameters: {type: colDef.type}};
                             } else if (colDef.type == 'num') {
                                 customEditor = {getElement: patternEditor, customEditorParameters: {type: colDef.type}};
                             } else if (colDef.type == 'num-fmt') {
-                                    formatter = NumberFormatter;
+                                formatter = NumberFormatter;
                             } else {
-                                customEditor = {getElement : patternEditor, customEditorParameters : {type : colDef.type}};
+                                customEditor = {getElement: patternEditor, customEditorParameters: {type: colDef.type}};
                             }
 
-                            if(colDef.lovList != undefined && colDef.lovList != null){
-                                customEditor = {getElement : selectEditor, customEditorParameters : {options : colDef.lovList, multi : colDef.multiSelect}};
-                                if(colDef.multiSelect) formatter = ArrayFormatter;
+                            if (colDef.lovList != undefined && colDef.lovList != null) {
+                                customEditor = {
+                                    getElement: selectEditor,
+                                    customEditorParameters: {options: colDef.lovList, multi: colDef.multiSelect}
+                                };
+                                if (colDef.multiSelect) formatter = ArrayFormatter;
                             }
-                            if(customEditor !== undefined) {
-                                customEditor.customEditorParameters.cellName =  colDef.name;
+                            if (customEditor !== undefined) {
+                                customEditor.customEditorParameters.cellName = colDef.name;
                             }
 
                             /* If the caller has specified a formatter (tied to a type) then use that formatter - it overrides everything else */
-                            if (options.formatters && options.formatters[colDef.name] ) {
+                            if (options.formatters && options.formatters[colDef.name]) {
                                 formatter = options.formatters[colDef.name];
                             }
                             /* If the caller has specified a sorter (tied to a type) then use that sorter - it overrides everything else */
@@ -158,15 +180,18 @@ class SpringrollTable extends React.Component {
                             }
                             /* If the caller has specified an editor (tied to a type) then use that editor - it overrides everything else */
                             if (options.editor && options.editor[colDef.type]) {
-                                customEditor = {getElement : customEditorHandler, customEditorParameters : {editor :options.editor[colDef.type],  colDef : colDef}};
+                                customEditor = {
+                                    getElement: customEditorHandler,
+                                    customEditorParameters: {editor: options.editor[colDef.type], colDef: colDef}
+                                };
                             }
 
                             dataFormatter = (cell, row) => WrapperForFormatter(cell, formatter, colDef, row, that.props.updateResponse);
-                            if(customEditor !== undefined) {
-                                customEditor.customEditorParameters.onRowChange =  this.props.onRowChange;
-                                customEditor.customEditorParameters.cellName =  colDef.name;
+                            if (customEditor !== undefined) {
+                                customEditor.customEditorParameters.onRowChange = this.props.onRowChange;
+                                customEditor.customEditorParameters.cellName = colDef.name;
                             }
-                            let align = colDef.align == undefined? 'left' : colDef.align.toLowerCase();
+                            let align = colDef.align == undefined ? 'left' : colDef.align.toLowerCase();
 
                             return (
                                 <TableHeaderColumn
@@ -190,10 +215,12 @@ class SpringrollTable extends React.Component {
                             )
                         })
                     }
-                    <TableHeaderColumn hidden={this.props.addRow === undefined} width={"50px"} key={'__deleteKey'} dataField={'delete'} editable={ false }
-                                   dataFormat={(cell, row) => DeleteFormatter(cell, row, this.deleteRow)}> {''}
+                    <TableHeaderColumn hidden={this.props.onAddRow === undefined} width={"50px"} key={'__deleteKey'}
+                                       dataField={'delete'} editable={ false }
+                                       dataFormat={(cell, row) => DeleteFormatter(cell, row, this.deleteRow)}> {''}
                     </TableHeaderColumn>
                 </BootstrapTable>
+                }
             </span>
         );
     }

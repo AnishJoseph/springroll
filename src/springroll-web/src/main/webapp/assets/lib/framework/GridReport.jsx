@@ -12,12 +12,16 @@ class GridReport extends React.Component {
         this.handleModalClosed = this.handleModalClosed.bind(this);
         this.onFilterClick = this.onFilterClick.bind(this);
         this.paramsSelected = this.paramsSelected.bind(this);
+        this.toggleParamPanel = this.toggleParamPanel.bind(this);
         this.state = {showFilter : this.props.parameterFirst};
         this.ParameterForm = reduxForm({
             form: 'grid-params:' + this.props.gridName,
             destroyOnUnmount : false,
             initialValues : this.props.params
         })(ReportParams);
+    }
+    toggleParamPanel(){
+        this.setState({showFilter : !this.state.showFilter});
     }
     handleModalClosed(){
         this.setState({showFilter : false});
@@ -33,12 +37,15 @@ class GridReport extends React.Component {
     }
     render() {
         let message = Application.Localize("ui.ReportParameters");
+        let customButtons = [{ className : "springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-tasks",
+            onClick : this.toggleParamPanel,
+            title : Application.Localize('ui.report.parameters'),
+            visible : this.props.gridParams !== undefined && this.props.gridParams.length > 0
+        }];
+        let gridData = this.props.gridData || {data : undefined, columns : undefined, key : undefined};
         return (
             <span>
-                {
-                    this.props.gridData &&
-                    <SpringrollTable data={this.props.gridData.data} columnDefinitions={this.props.gridData.columns} options={this.props.options} editable={false} keyName={this.props.gridData.key} title={Application.Localize(this.props.gridName)}/>
-                }
+                <SpringrollTable customButtons={customButtons} data={gridData.data} columnDefinitions={gridData.columns} options={this.props.options} editable={false} keyName={gridData.key} title={Application.Localize(this.props.gridName)}/>
                 {
                     /* Show the parameters in a MODAL ONLY if the filter is to be shown AND this grid has parameters */
                     (this.state.showFilter &&  this.props.gridParams !== undefined && this.props.gridParams.length > 0) &&
