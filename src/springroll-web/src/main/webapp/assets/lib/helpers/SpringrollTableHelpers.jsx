@@ -18,10 +18,12 @@ export function dateTimeSorter(a, b, order, sortField){
 }
 
 export const selectEditor = (onUpdate, props) => {
+    //FIXME - react-bpptstrap-table sets the defaultValue to '' if the value is undefined or false. It should only check for  undefined
+    let value = props.defaultValue === undefined || props.defaultValue === '' ? false : true;
     return (<ReactSelect
         ref='inputRef'
         options={props.options}
-        onBlur={() => onUpdate(props.defaultValue)}
+        onBlur={() => onUpdate(value)}
         onChange={ value => {
             if (value == null)return;
             let choices = undefined;
@@ -34,7 +36,7 @@ export const selectEditor = (onUpdate, props) => {
             props.onRowChange(changedRowData);
         }}
         multi={props.multi}
-        value={props.defaultValue}
+        value={value}
     />)
 };
 
