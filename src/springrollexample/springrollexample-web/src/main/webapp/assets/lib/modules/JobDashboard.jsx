@@ -9,7 +9,7 @@ function jobDashboardUpdated(receivedPushData) {
 }
 
 function JobDashboard(props) {
-    let options = {cache : true, formatters : {'reviewers' : ReviewLogFormatterForDisplay}};
+    let options = {cache : true, formatters : {'reviewers' : ReviewLogFormatterForDisplay}, 'exportFormatters' : {'reviewers' : ReviewLogFormatterForExport}};
     return <GridReportContainer gridName="JobDashboard" options={options}/>;
 }
 

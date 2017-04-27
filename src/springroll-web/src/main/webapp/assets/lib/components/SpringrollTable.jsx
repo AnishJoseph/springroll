@@ -5,7 +5,9 @@ var moment = require('moment');
 import {each, map, indexOf, filter}  from 'lodash';
 import DebounceInput from 'react-debounce-input';
 import {dateTimeSorter, selectEditor, dateEditor, patternEditor, customEditorHandler} from 'SpringrollTableHelpers';
-import {intPattern, floatPattern, DeleteFormatter, WrapperForFormatter, TextFormatter, DateTimeFormatter, DateFormatter, BooleanFormatter, ArrayFormatter, NumberFormatter} from 'SpringrollTableHelpers';
+import {intPattern, floatPattern, DeleteFormatter, WrapperForFormatter, TextFormatter, DateTimeFormatter, DateFormatter, BooleanFormatter, ArrayFormatter, NumberFormatter, BooleanToString, DateTimeToString, DateToString} from 'SpringrollTableHelpers';
+import {CSVLink} from 'react-csv';
+var json2csv = require('json2csv');
 
 /* SpringrollTable props
     1) data*
@@ -40,10 +42,12 @@ class SpringrollTable extends React.Component {
         this.beforeSaveCell = this.beforeSaveCell.bind(this);
         this.afterSearch = this.afterSearch.bind(this);
         this.search = this.search.bind(this);
+        this.download = this.download.bind(this);
         this.showModified = this.showModified.bind(this);
         this.trClassFormat = this.trClassFormat.bind(this);
         this.deleteRow = this.deleteRow.bind(this);
         this.isModifiedFilterOn = false;
+        this.state = {dataToDownload : []};
     }
     search(e){
         this.refs.table.handleSearch(e.target.value);
@@ -72,14 +76,59 @@ class SpringrollTable extends React.Component {
             this.props.onDeleteRow(row['cid']);
         }
     }
+    download(){
+        let options = this.props.options || {exportFormatters : {}};
+        var that = this;
+        /* this.currentRows has the filtered set of rows (if a search was done) - if undefined it means that no filtering was done */
+        let rowsToDownload = this.currentRows;
+        if(this.currentRows == undefined){
+            rowsToDownload = this.props.data;
+        }
+        let fields = [];
+        each(this.props.columnDefinitions, function (colDef) {
+            var title = colDef.title;
+            if(colDef.hidden)return;
+            var fldDefn = {
+                label: Application.Localize(colDef.title),
+                value: colDef.title,
+                default: ''
+            };
+            if (colDef.type == 'boolean') {
+                fldDefn['value'] = function (row, field, data) {
+                    return BooleanToString(row[title]);
+                }
+            }
+            if (colDef.type == 'date') {
+                fldDefn['value'] = function (row, field, data) {
+                    return DateToString(row[title]);
+                }
+            }
+            if (colDef.type == 'datetime') {
+                fldDefn['value'] = function (row, field, data) {
+                    return DateTimeToString(row[title]);
+                }
+            }
+            /* If the caller has specified a formatter (tied to a type) then use that formatter - it overrides everything else */
+            if (options.exportFormatters !== undefined && options.exportFormatters[colDef.name]) {
+                fldDefn['value'] = function (row, field, data) {
+                    return options.exportFormatters[colDef.name](row[colDef.name]);
+                }
+            }
 
+            fields.push(fldDefn);
+
+        });
+        this.setState({dataToDownload :json2csv({ data: rowsToDownload, fields: fields })});
+    }
     render() {
         var that = this;
         let customButtons = this.props.customButtons || [];
         let options = this.props.options || {};
+        const tableOptions = {
+            afterSearch: this.afterSearch,
+        };
         const cellEditProp = {
             mode: 'click',
-            afterSearch: this.afterSearch,
             blurToSave: true,
             beforeSaveCell: this.beforeSaveCell
         };
@@ -108,7 +157,16 @@ class SpringrollTable extends React.Component {
                                   className="springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-floppy-disk">
                             </span>
                         }
-                        <DebounceInput className="pull-right" minLength={2} debounceTimeout={300} onChange={this.search} placeholder={Application.Localize('ui.search')}/>
+                        {
+                            this.props.data &&
+                            <span>
+                                <DebounceInput className="pull-right" minLength={2} debounceTimeout={300} onChange={this.search} placeholder={Application.Localize('ui.search')}/>
+                                <CSVLink ref={(input) => { this.textInput = input; }} data={this.state.dataToDownload} filename={this.props.title + ".csv"} target="_blank">
+                                    <span onClick={this.download} className="control-panel-icon glyphicon glyphicon-download"/>
+                                </CSVLink>
+                            </span>
+
+                        }
                         {
                             this.props.onAddRow &&
                             <span data-toggle="tooltip" title={Application.Localize('ui.mdm.New')}
@@ -128,7 +186,7 @@ class SpringrollTable extends React.Component {
                     </div>
                 </div>
                 {this.props.data &&
-                    <BootstrapTable ref="table" data={this.props.data} striped hover search={false}
+                    <BootstrapTable options={tableOptions} ref="table" data={this.props.data} striped hover search={false}
                                  keyField={this.props.keyName} height={this.props.height || '800px'} scrollTop={ 'Top' }
                                  multiColumnSort={3} cellEdit={ cellEditProp } trClassName={ this.props.trClassFormat }>
                     {
