@@ -12,7 +12,7 @@ public class GridColumn implements IGridColumn {
     private String title;
     private String type = "text";
     private String numberFormat;
-    private boolean visible = true;
+    private boolean hidden = false;
     private Align align = Align.LEFT;
     private String format;
     private String width;
@@ -56,12 +56,12 @@ public class GridColumn implements IGridColumn {
     }
 
     @Override
-    public boolean isVisible() {
-        return visible;
+    public boolean isHidden() {
+        return hidden;
     }
 
-    public void setVisible(boolean visible) {
-        this.visible = visible;
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 
     @Override

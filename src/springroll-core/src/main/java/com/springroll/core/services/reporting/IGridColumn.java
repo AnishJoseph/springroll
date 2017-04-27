@@ -9,7 +9,7 @@ public interface IGridColumn {
     String getName();
     String getTitle();
     String getType();
-    boolean isVisible();
+    boolean isHidden();
     Align getAlign();
     String getWidth();
     boolean isSortable();

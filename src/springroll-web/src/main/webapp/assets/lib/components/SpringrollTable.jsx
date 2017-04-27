@@ -86,26 +86,26 @@ class SpringrollTable extends React.Component {
         }
         let fields = [];
         each(this.props.columnDefinitions, function (colDef) {
-            var title = colDef.title;
+            var name = colDef.name;
             if(colDef.hidden)return;
             var fldDefn = {
                 label: Application.Localize(colDef.title),
-                value: colDef.title,
+                value: colDef.name,
                 default: ''
             };
             if (colDef.type == 'boolean') {
                 fldDefn['value'] = function (row, field, data) {
-                    return BooleanToString(row[title]);
+                    return BooleanToString(row[name]);
                 }
             }
             if (colDef.type == 'date') {
                 fldDefn['value'] = function (row, field, data) {
-                    return DateToString(row[title]);
+                    return DateToString(row[name]);
                 }
             }
             if (colDef.type == 'datetime') {
                 fldDefn['value'] = function (row, field, data) {
-                    return DateTimeToString(row[title]);
+                    return DateTimeToString(row[name]);
                 }
             }
             /* If the caller has specified a formatter (tied to a type) then use that formatter - it overrides everything else */
@@ -161,7 +161,7 @@ class SpringrollTable extends React.Component {
                             this.props.data &&
                             <span>
                                 <DebounceInput className="pull-right" minLength={2} debounceTimeout={300} onChange={this.search} placeholder={Application.Localize('ui.search')}/>
-                                <CSVLink ref={(input) => { this.textInput = input; }} data={this.state.dataToDownload} filename={this.props.title + ".csv"} target="_blank">
+                                <CSVLink data={this.state.dataToDownload} filename={this.props.title + ".csv"} target="_blank">
                                     <span onClick={this.download} className="control-panel-icon glyphicon glyphicon-download"/>
                                 </CSVLink>
                             </span>

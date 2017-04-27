@@ -9,7 +9,7 @@
     },
     {"name" : "JobDashboard", "namedQuery": "JobDashboardQuery", "key" : "ID",
       "gridColumns":[
-          {"name" : "ID",          "title": "ID",                  "type":"text", "visible" : false, "align" : "LEFT"},
+          {"name" : "ID",          "title": "ID",                  "type":"text", "hidden" : true, "align" : "LEFT"},
           {"name" : "action",      "title": "ui.grid.Action",      "type":"text", "align" : "LEFT"},
           {"name" : "description", "title": "ui.grid.Description", "type":"text", "align" : "LEFT", "width" : "500px"},
           {"name" : "startTime",   "title": "ui.grid.StartTime",   "type":"datetime", "align" : "CENTER", "align" : "CENTER"},
