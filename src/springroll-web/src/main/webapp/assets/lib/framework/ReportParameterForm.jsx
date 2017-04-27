@@ -5,7 +5,7 @@ import ReactSelect from 'react-select';
 import {floatPattern, intPattern} from 'Formatters';
 var moment = require('moment');
 import { DateField } from 'react-date-picker'
-import {pluck}  from 'lodash';
+import {map}  from 'lodash';
 
 /* Fixme there are 2 booleanLovList */
 /* FIXME - for now we have kept the values of theboolean as a string - there seem to be some problem with redux forms and the false value */
@@ -47,7 +47,7 @@ const renderSelect = ({ input, multiSelect, options }) => {
             if(value == null)return;
             let choices = undefined;
             if(multiSelect) {
-                choices = pluck(value, 'value');
+                choices = map(value, 'value');
             } else {
                 choices = value.value;
             }
