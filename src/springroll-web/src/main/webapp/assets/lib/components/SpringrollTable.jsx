@@ -5,7 +5,8 @@ var moment = require('moment');
 import {each, map, indexOf, filter}  from 'lodash';
 import DebounceInput from 'react-debounce-input';
 import {dateTimeSorter, selectEditor, dateEditor, patternEditor, customEditorHandler} from 'SpringrollTableHelpers';
-import {intPattern, floatPattern, DeleteFormatter, WrapperForFormatter, TextFormatter, DateTimeFormatter, DateFormatter, BooleanFormatter, ArrayFormatter, NumberFormatter, BooleanToString, DateTimeToString, DateToString} from 'SpringrollTableHelpers';
+import { DeleteFormatter, WrapperForFormatter, GridNumberFormatter} from 'SpringrollTableHelpers';
+import {intPattern, floatPattern, TextFormatter, DateTimeFormatter, DateFormatter, BooleanFormatter, ArrayFormatter, BooleanToString, DateTimeToString, DateToString} from 'Formatters';
 import {CSVLink} from 'react-csv';
 var json2csv = require('json2csv');
 
@@ -200,7 +201,7 @@ class SpringrollTable extends React.Component {
                                 } else if (colDef.type == 'num') {
                                     customEditor = {getElement: patternEditor, customEditorParameters: {type: colDef.type}};
                                 } else if (colDef.type == 'num-fmt') {
-                                    formatter = NumberFormatter;
+                                    formatter = GridNumberFormatter;
                                 } else {
                                     customEditor = {getElement: patternEditor, customEditorParameters: {type: colDef.type}};
                                 }

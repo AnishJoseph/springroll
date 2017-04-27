@@ -1,7 +1,6 @@
 import React from 'react'
 import Application from 'App.js';
-import ArrayFormatter from 'ArrayFormatter';
-import {DateTimeFormatter, DateFormatter, BooleanFormatter, TextFormatter} from 'Formatters';
+import {DateTimeFormatter, DateFormatter, BooleanFormatter, TextFormatter, ArrayFormatter} from 'Formatters';
 import SpringrollTable from 'SpringrollTable';
 
 function RecordFormatter(value, colDef, isNewRecord) {

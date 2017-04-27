@@ -5,6 +5,7 @@ var moment = require('moment');
 import {isBoolean, isNumber, map}  from 'lodash';
 var numeral = require('numeral');
 import ReactSelect from 'react-select';
+import {DateToString, DateTimeToString, BooleanToString, NumberFormatter} from 'Formatters';
 
 
 export function dateTimeSorter(a, b, order, sortField){
@@ -100,9 +101,6 @@ class PatternEditor extends React.Component {
 
 export const customEditorHandler = (onUpdate, props) => (<props.editor onUpdate={ onUpdate } {...props}/>);
 
-export const floatPattern = new RegExp("^[-+]?[0-9]*\\.?[0-9]*$");
-export const intPattern = new RegExp("^[-+]?[0-9]*$");
-
 export function WrapperForFormatter(cell, formatter, coDef, row, updateResponse) {
     let Formatter = formatter;
     let className = 'hidden';
@@ -134,58 +132,6 @@ export const DeleteFormatter = (cell, row, onDeleteRow) => {
     );
 };
 
-
-export const DateToString = (value) => {
-    return moment(value).format(Application.getMomentFormatForDate());
-};
-export const DateTimeToString = (value) => {
-    return moment(value).format(Application.getMomentFormatForDateTime());
-};
-export const BooleanToString = (value) => {
-    return value ? Application.Localize('ui.true') : Application.Localize('ui.false');
-};
-
-export const ArrayFormatter = ( {value}) => {
-    let valueToDisplay = undefined;
-    if(value !== undefined && value !== null && Array.isArray(value)) {
-        valueToDisplay = value.join();
-    }
-    return (
-        <div> {valueToDisplay} </div>
-    );
-};
-export const BooleanFormatter = ( {value}) => {
-    let valueToDisplay;
-    if(value !== undefined && isBoolean(value)){
-        valueToDisplay = BooleanToString(value);
-    }
-    return (
-        <div> {valueToDisplay} </div>
-    );
-};
-export const TextFormatter = ( {value}) => <div> {value} </div>
-
-export const DateFormatter = ({value}) => {
-    let valueToDisplay;
-    if(value !== undefined && isNumber(value)){
-        valueToDisplay = DateToString(value);
-    }
-    return (
-        <div> {valueToDisplay} </div>
-    );
-};
-
-export const DateTimeFormatter = ({value}) => {
-    let valueToDisplay;
-    if(value !== undefined && isNumber(value)){
-        valueToDisplay = DateTimeToString(value);
-    }
-    return (
-        <div> {valueToDisplay} </div>
-    );
-};
-export const NumberFormatter = ({value, colDef}) => {
-    return (
-        <div> { numeral(value).format(colDef.format)} </div>
-    );
+export const GridNumberFormatter = ({value, colDef}) => {
+    return <NumberFormatter value={value} format={colDef.format}/>
 };
