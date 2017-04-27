@@ -132,6 +132,9 @@ class SpringrollTable extends React.Component {
             blurToSave: true,
             beforeSaveCell: this.beforeSaveCell
         };
+        let addRowClass = this.props.onAddRow  ? '' : ' invisible ';
+        let needsSaveClass = this.props.onAddRow && this.props.needsSave ? '' : ' invisible ';
+        let dataPresentClass = this.props.data ? '' : ' invisible ';
         return (
             <span>
                 <div className="control-panel">
@@ -139,50 +142,22 @@ class SpringrollTable extends React.Component {
                         <span className="text-info toolbar-title">{this.props.title}</span>
                         {
                             customButtons.map ( (button, index) => {
-                                if(button.visible)
-                                return (
-                                    <span key={index} data-toggle="tooltip"
-                                          title={button.title}
-                                          onClick={button.onClick}
-                                          className={button.className}>
-                                    </span>
-                                )
-                                return null;
+                                let visibilityClass = button.visible ? '' : ' invisible ';
+                                return (<span key={index} data-toggle="tooltip" title={button.title} onClick={button.onClick} className={button.className + visibilityClass}> </span> )
                             })
                         }
-                        {
-                            this.props.onAddRow && this.props.needsSave &&
-                            <span data-toggle="tooltip" title={Application.Localize('ui.mdm.Save')}
-                                  onClick={this.props.onSaveClicked}
-                                  className="springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-floppy-disk">
-                            </span>
-                        }
-                        {
-                            this.props.data &&
-                            <span>
-                                <DebounceInput className="pull-right" minLength={2} debounceTimeout={300} onChange={this.search} placeholder={Application.Localize('ui.search')}/>
-                                <CSVLink data={this.state.dataToDownload} filename={this.props.title + ".csv"} target="_blank">
-                                    <span onClick={this.download} className="control-panel-icon glyphicon glyphicon-download"/>
-                                </CSVLink>
-                            </span>
-
-                        }
-                        {
-                            this.props.onAddRow &&
-                            <span data-toggle="tooltip" title={Application.Localize('ui.mdm.New')}
-                                  onClick={this.props.onAddRow}
-                                  className="springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-plus">
-                            </span>
-                        }
-                        {
-                            this.props.onAddRow && this.props.needsSave &&
-                            <span data-toggle="tooltip" title={Application.Localize('ui.mdm.changeToggle')}
-                                  onClick={this.showModified}
-                                  className="springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-filter">
-                            </span>
-                        }
-
-
+                        <span data-toggle="tooltip" title={Application.Localize('ui.mdm.Save')} onClick={this.props.onSaveClicked} className={"springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-floppy-disk" + needsSaveClass }> </span>
+                        <span>
+                            <DebounceInput className={dataPresentClass + "pull-right"} minLength={2} debounceTimeout={300} onChange={this.search} placeholder={Application.Localize('ui.search')}/>
+                            <CSVLink data={this.state.dataToDownload} filename={this.props.title + ".csv"} target="_blank">
+                                <span onClick={this.download} className={dataPresentClass + "springroll-icon pull-right control-panel-icon glyphicon glyphicon-download"}/>
+                            </CSVLink>
+                        </span>
+                        <span data-toggle="tooltip" title={Application.Localize('ui.mdm.New')} onClick={this.props.onAddRow} className={addRowClass + "springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-plus"}> </span>
+                        <span data-toggle="tooltip" title={Application.Localize('ui.mdm.changeToggle')}
+                              onClick={this.showModified}
+                              className={"springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-filter" + needsSaveClass}>
+                        </span>
                     </div>
                 </div>
                 {this.props.data &&
