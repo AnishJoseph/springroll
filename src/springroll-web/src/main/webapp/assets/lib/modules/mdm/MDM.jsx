@@ -1,5 +1,4 @@
 import React from 'react';
-import MDMGrid from 'mdm/MDMTable';
 import { Router, Route } from 'react-router'
 import { NavDropdown, Nav, Navbar, MenuItem } from 'react-bootstrap';
 import SpringrollTable from 'SpringrollTable';
