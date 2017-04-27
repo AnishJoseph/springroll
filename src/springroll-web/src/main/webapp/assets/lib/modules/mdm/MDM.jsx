@@ -105,6 +105,7 @@ class MDM extends React.Component {
                         needsSave={needsSave}
                         trClassFormat={this.trClassFormat}
                         updateResponse={this.props.updateResponse}
+                        downLoadFileName={this.props.masterData.master}
                     />
                 }
             </div>

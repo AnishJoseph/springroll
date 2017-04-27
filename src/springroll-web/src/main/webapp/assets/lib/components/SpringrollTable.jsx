@@ -135,6 +135,7 @@ class SpringrollTable extends React.Component {
         let addRowClass = this.props.onAddRow  ? '' : ' invisible ';
         let needsSaveClass = this.props.onAddRow && this.props.needsSave ? '' : ' invisible ';
         let dataPresentClass = this.props.data ? '' : ' invisible ';
+        let downLoadFileName = this.props.downLoadFileName || this.props.title;
         return (
             <span>
                 <div className="control-panel">
@@ -149,7 +150,7 @@ class SpringrollTable extends React.Component {
                         <span data-toggle="tooltip" title={Application.Localize('ui.mdm.Save')} onClick={this.props.onSaveClicked} className={"springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-floppy-disk" + needsSaveClass }> </span>
                         <span>
                             <DebounceInput className={dataPresentClass + "pull-right"} minLength={2} debounceTimeout={300} onChange={this.search} placeholder={Application.Localize('ui.search')}/>
-                            <CSVLink data={this.state.dataToDownload} filename={this.props.title + ".csv"} target="_blank">
+                            <CSVLink data={this.state.dataToDownload} filename={downLoadFileName + ".csv"} target="_blank">
                                 <span onClick={this.download} className={dataPresentClass + "springroll-icon pull-right control-panel-icon glyphicon glyphicon-download"}/>
                             </CSVLink>
                         </span>
