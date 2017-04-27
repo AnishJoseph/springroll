@@ -28,7 +28,7 @@ export function WrapperForFormatter(cell, formatter, coDef, row, updateResponse)
 }
 
 export const DeleteFormatter = (cell, row, onDeleteRow) => {
-    let classValue = row['id'] === -1 && row['rowIsNew']? "springroll-icon glyphicon glyphicon-trash" : 'springroll-icon glyphicon glyphicon-trash icon-muted';
+    let classValue = row['id'] === -1 && row['rowIsNew']? "control-panel-icon glyphicon glyphicon-trash" : 'control-panel-icon glyphicon glyphicon-trash icon-muted';
     return (
         <span style={{paddingLeft : 5 +'px'}}
               data-toggle="tooltip"
