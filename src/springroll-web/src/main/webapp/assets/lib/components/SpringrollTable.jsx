@@ -46,8 +46,18 @@ class SpringrollTable extends React.Component {
         this.showModified = this.showModified.bind(this);
         this.trClassFormat = this.trClassFormat.bind(this);
         this.deleteRow = this.deleteRow.bind(this);
+        this.print = this.print.bind(this);
         this.isModifiedFilterOn = false;
         this.state = {dataToDownload : []};
+    }
+    print() {
+        var content = document.getElementById(this.props.title);
+        var pri = document.getElementById("ifmcontentstoprint").contentWindow;
+        pri.document.open();
+        pri.document.write(content.innerHTML);
+        pri.document.close();
+        pri.focus();
+        pri.print();
     }
     search(e){
         this.refs.table.handleSearch(e.target.value);
@@ -153,6 +163,7 @@ class SpringrollTable extends React.Component {
                             <CSVLink data={this.state.dataToDownload} filename={downLoadFileName + ".csv"} target="_blank">
                                 <span onClick={this.download} className={dataPresentClass + "springroll-icon pull-right control-panel-icon glyphicon glyphicon-download"}/>
                             </CSVLink>
+                            <span onClick={this.print} className={dataPresentClass + "springroll-icon pull-right control-panel-icon glyphicon glyphicon-print"}/>
                         </span>
                         <span data-toggle="tooltip" title={Application.Localize('ui.mdm.New')} onClick={this.props.onAddRow} className={addRowClass + "springroll-icon pull-right alertActionsPanelItem glyphicon glyphicon-plus"}> </span>
                         <span data-toggle="tooltip" title={Application.Localize('ui.mdm.changeToggle')}
@@ -162,98 +173,100 @@ class SpringrollTable extends React.Component {
                     </div>
                 </div>
                 {this.props.data &&
-                    <BootstrapTable options={tableOptions} ref="table" data={this.props.data} striped hover search={false}
+                    <span id={this.props.title}>
+                        <BootstrapTable  options={tableOptions} ref="table" data={this.props.data} striped hover search={false}
                                  keyField={this.props.keyName} height={this.props.height || '800px'} scrollTop={ 'Top' }
                                  multiColumnSort={3} cellEdit={ cellEditProp } trClassName={ this.props.trClassFormat }>
-                    {
-                        this.props.columnDefinitions.map((colDef, index) => {
-                            let formatter = TextFormatter, dataFormatter, sorter = undefined, customEditor = undefined, filterValue, filterFormatted = false;
-                            if (colDef.type == 'date' || colDef.type === 'datetime') {
-                                let isDateTime = colDef.type === 'datetime';
-                                formatter = isDateTime ? DateTimeFormatter : DateFormatter;
-                                customEditor = {
-                                    getElement: dateEditor,
-                                    customEditorParameters: {isDateTime: isDateTime}
-                                };
-                                sorter = dateTimeSorter;
-                                filterValue = (cell, row) => isDateTime ? moment(cell).format(Application.getMomentFormatForDateTime()) : moment(cell).format(Application.getMomentFormatForDate());
-                            } else if (colDef.type == 'boolean') {
-                                formatter = BooleanFormatter;
-                                customEditor = {
-                                    getElement: selectEditor,
-                                    customEditorParameters: {options: booleanLovList, multi: false}
-                                };
-                            } else if (colDef.type == 'int') {
-                                customEditor = {getElement: patternEditor, customEditorParameters: {type: colDef.type}};
-                            } else if (colDef.type == 'num') {
-                                customEditor = {getElement: patternEditor, customEditorParameters: {type: colDef.type}};
-                            } else if (colDef.type == 'num-fmt') {
-                                formatter = NumberFormatter;
-                            } else {
-                                customEditor = {getElement: patternEditor, customEditorParameters: {type: colDef.type}};
-                            }
+                        {
+                            this.props.columnDefinitions.map((colDef, index) => {
+                                let formatter = TextFormatter, dataFormatter, sorter = undefined, customEditor = undefined, filterValue, filterFormatted = false;
+                                if (colDef.type == 'date' || colDef.type === 'datetime') {
+                                    let isDateTime = colDef.type === 'datetime';
+                                    formatter = isDateTime ? DateTimeFormatter : DateFormatter;
+                                    customEditor = {
+                                        getElement: dateEditor,
+                                        customEditorParameters: {isDateTime: isDateTime}
+                                    };
+                                    sorter = dateTimeSorter;
+                                    filterValue = (cell, row) => isDateTime ? moment(cell).format(Application.getMomentFormatForDateTime()) : moment(cell).format(Application.getMomentFormatForDate());
+                                } else if (colDef.type == 'boolean') {
+                                    formatter = BooleanFormatter;
+                                    customEditor = {
+                                        getElement: selectEditor,
+                                        customEditorParameters: {options: booleanLovList, multi: false}
+                                    };
+                                } else if (colDef.type == 'int') {
+                                    customEditor = {getElement: patternEditor, customEditorParameters: {type: colDef.type}};
+                                } else if (colDef.type == 'num') {
+                                    customEditor = {getElement: patternEditor, customEditorParameters: {type: colDef.type}};
+                                } else if (colDef.type == 'num-fmt') {
+                                    formatter = NumberFormatter;
+                                } else {
+                                    customEditor = {getElement: patternEditor, customEditorParameters: {type: colDef.type}};
+                                }
 
-                            if (colDef.lovList != undefined && colDef.lovList != null) {
-                                customEditor = {
-                                    getElement: selectEditor,
-                                    customEditorParameters: {options: colDef.lovList, multi: colDef.multiSelect}
-                                };
-                                if (colDef.multiSelect) formatter = ArrayFormatter;
-                            }
-                            if (customEditor !== undefined) {
-                                customEditor.customEditorParameters.cellName = colDef.name;
-                            }
+                                if (colDef.lovList != undefined && colDef.lovList != null) {
+                                    customEditor = {
+                                        getElement: selectEditor,
+                                        customEditorParameters: {options: colDef.lovList, multi: colDef.multiSelect}
+                                    };
+                                    if (colDef.multiSelect) formatter = ArrayFormatter;
+                                }
+                                if (customEditor !== undefined) {
+                                    customEditor.customEditorParameters.cellName = colDef.name;
+                                }
 
-                            /* If the caller has specified a formatter (tied to a type) then use that formatter - it overrides everything else */
-                            if (options.formatters && options.formatters[colDef.name]) {
-                                formatter = options.formatters[colDef.name];
-                            }
-                            /* If the caller has specified a sorter (tied to a type) then use that sorter - it overrides everything else */
-                            if (options.sorter && options.sorter[colDef.type]) {
-                                sorter = options.sorter[colDef.type];
-                            }
-                            /* If the caller has specified an editor (tied to a type) then use that editor - it overrides everything else */
-                            if (options.editor && options.editor[colDef.type]) {
-                                customEditor = {
-                                    getElement: customEditorHandler,
-                                    customEditorParameters: {editor: options.editor[colDef.type], colDef: colDef}
-                                };
-                            }
+                                /* If the caller has specified a formatter (tied to a type) then use that formatter - it overrides everything else */
+                                if (options.formatters && options.formatters[colDef.name]) {
+                                    formatter = options.formatters[colDef.name];
+                                }
+                                /* If the caller has specified a sorter (tied to a type) then use that sorter - it overrides everything else */
+                                if (options.sorter && options.sorter[colDef.type]) {
+                                    sorter = options.sorter[colDef.type];
+                                }
+                                /* If the caller has specified an editor (tied to a type) then use that editor - it overrides everything else */
+                                if (options.editor && options.editor[colDef.type]) {
+                                    customEditor = {
+                                        getElement: customEditorHandler,
+                                        customEditorParameters: {editor: options.editor[colDef.type], colDef: colDef}
+                                    };
+                                }
 
-                            dataFormatter = (cell, row) => WrapperForFormatter(cell, formatter, colDef, row, that.props.updateResponse);
-                            if (customEditor !== undefined) {
-                                customEditor.customEditorParameters.onRowChange = this.props.onRowChange;
-                                customEditor.customEditorParameters.cellName = colDef.name;
-                            }
-                            let align = colDef.align == undefined ? 'left' : colDef.align.toLowerCase();
+                                dataFormatter = (cell, row) => WrapperForFormatter(cell, formatter, colDef, row, that.props.updateResponse);
+                                if (customEditor !== undefined) {
+                                    customEditor.customEditorParameters.onRowChange = this.props.onRowChange;
+                                    customEditor.customEditorParameters.cellName = colDef.name;
+                                }
+                                let align = colDef.align == undefined ? 'left' : colDef.align.toLowerCase();
 
-                            return (
-                                <TableHeaderColumn
-                                    dataAlign={align}
-                                    dataSort={colDef.sortable === undefined? true : colDef.sortable}
-                                    sortFunc={sorter}
-                                    width={colDef.width}
-                                    hidden={colDef.hidden}
-                                    filterFormatted={filterFormatted}
-                                    key={index}
-                                    dataFormat={dataFormatter}
-                                    dataField={colDef.name}
-                                    customEditor={ customEditor }
-                                    editable={ this.props.editable === undefined? false : this.props.editable  }
-                                    filterValue={filterValue }
-                                    searchable={this.props.searchable === undefined ? true : this.props.searchable}
-                                    tdStyle={ {whiteSpace: 'normal'} }
-                                >
-                                    {Application.Localize(colDef.title)}
-                                </TableHeaderColumn>
-                            )
-                        })
-                    }
-                    <TableHeaderColumn hidden={this.props.onAddRow === undefined} width={"50px"} key={'__deleteKey'}
-                                       dataField={'delete'} editable={ false }
-                                       dataFormat={(cell, row) => DeleteFormatter(cell, row, this.deleteRow)}> {''}
-                    </TableHeaderColumn>
-                </BootstrapTable>
+                                return (
+                                    <TableHeaderColumn
+                                        dataAlign={align}
+                                        dataSort={colDef.sortable === undefined? true : colDef.sortable}
+                                        sortFunc={sorter}
+                                        width={colDef.width}
+                                        hidden={colDef.hidden}
+                                        filterFormatted={filterFormatted}
+                                        key={index}
+                                        dataFormat={dataFormatter}
+                                        dataField={colDef.name}
+                                        customEditor={ customEditor }
+                                        editable={ this.props.editable === undefined? false : this.props.editable  }
+                                        filterValue={filterValue }
+                                        searchable={this.props.searchable === undefined ? true : this.props.searchable}
+                                        tdStyle={ {whiteSpace: 'normal'} }
+                                    >
+                                        {Application.Localize(colDef.title)}
+                                    </TableHeaderColumn>
+                                )
+                            })
+                        }
+                        <TableHeaderColumn hidden={this.props.onAddRow === undefined} width={"50px"} key={'__deleteKey'}
+                                           dataField={'delete'} editable={ false }
+                                           dataFormat={(cell, row) => DeleteFormatter(cell, row, this.deleteRow)}> {''}
+                        </TableHeaderColumn>
+                        </BootstrapTable>
+                    </span>
                 }
             </span>
         );
