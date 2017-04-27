@@ -5,7 +5,7 @@ var moment = require('moment');
 import {isBoolean, isNumber, map}  from 'lodash';
 var numeral = require('numeral');
 import ReactSelect from 'react-select';
-import {DateToString, DateTimeToString, BooleanToString, NumberFormatter} from 'Formatters';
+import {DateToString, DateTimeToString, BooleanToString, NumberFormatter, intPattern, floatPattern} from 'Formatters';
 
 
 export function dateTimeSorter(a, b, order, sortField){
