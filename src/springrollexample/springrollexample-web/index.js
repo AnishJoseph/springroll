@@ -1,5 +1,4 @@
 import {includes}  from 'lodash';
-require('Springrollcore');
 import Application from 'App';
 
 
@@ -7,6 +6,8 @@ import Application from 'App';
 document.addEventListener("DOMContentLoaded", function(event) {
     Application.setup();
     Promise.all(Application.getPromises()).then(function () {
+        /* Once the app is setup - get the core JS and CSS files */
+        require("Springrollcore");
         Application.clearPromises();
         var user = Application.getUser();
         var modules = user.authorizations;
