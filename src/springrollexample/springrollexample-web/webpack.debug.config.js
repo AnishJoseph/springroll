@@ -132,8 +132,13 @@ var config = {
     },
     plugins: [
         new DashboardPlugin()
-    ]
+    ],
+    devServer: {
+        headers: {
+            'Access-Control-Allow-Origin': '*'
+        }
+    }
 
-}
+};
 
 module.exports = config;
