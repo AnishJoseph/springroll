@@ -38,7 +38,7 @@ class MDMReviewMoreInfo extends React.Component {
         let colDefs = this.props.alert.mdmChangesForReview.colDefs.map((colDef, index) => {
             formattersForExistingRecords[colDef.name] = ExistingRecordFormatter;
             formattersForNewRecords[colDef.name] = NewRecordFormatter;
-            return {type : colDef.type, hidden : colDef.name == 'id', title : colDef.name, name : colDef.name};
+            return {type : colDef.type, hidden : colDef.name == 'id', title : colDef.name, name : colDef.name, width : colDef.width};
         });
         let optionsForExistingRecords = {}, optionsForNewRecords = {};
         optionsForExistingRecords['formatters'] = formattersForExistingRecords;
