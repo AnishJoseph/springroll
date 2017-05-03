@@ -11,6 +11,7 @@ class MDM extends React.Component {
         this.masterChosen = this.masterChosen.bind(this);
         this.saveClicked = this.saveClicked.bind(this);
         this.deleteRow = this.deleteRow.bind(this);
+        this.trClassFormat = this.trClassFormat.bind(this);
         this.editable = this.editable.bind(this);
     }
 
@@ -21,12 +22,43 @@ class MDM extends React.Component {
         this.props.onMdmMasterChosen(masterName);
     }
     trClassFormat(row, rowIndex){
-        if(row['id'] === -1 && row['rowIsNew'] === undefined)
+        if(row['id'] === -1 && row['rowIsNew'] === undefined) {
+            /*  If this is a new row and was not just added
+                i.e its a new row, added by someone is under review
+                 In this case show the row as disabled
+            */
             return 'mdm-disabled';
-        if(row['__hasChanged'] === '__hasChanged')
+        }
+        if(indexOf(this.props.masterData.recIdsUnderReview, row['id'], 0) !== -1) {
+            /* If the row has been changed and is under review dont allow any editing */
+            return 'mdm-disabled';
+        }
+        if(row['__hasChanged'] === '__hasChanged'){
+            /* This row is currently being edited and atleast one col has changed */
             return 'mdm-changed';
+        }
 
         return "mdmTable";
+    }
+    editable(cell, row, rowIndex, columnIndex){
+        if(this.props.updateInProgress) {
+            /* If update is in progress dont allow any editing */
+            return false;
+        }
+        if(row['id'] === -1 && row['rowIsNew'] === true){
+            /* If this is a new row and has just been added then allow editing */
+            return true;
+        }
+        if (this.props.masterData.colDefs[columnIndex].writeable === false) {
+            /* This is not a new row - then uneditable cols cannot be edited */
+            /* Note : If this was a newly added row then we would have returned true earlier */
+            return false;
+        }
+        if(indexOf(this.props.masterData.recIdsUnderReview, row['id'], 0) !== -1) {
+            /* If the row has been changed and is under review dont allow any editing */
+            return false;
+        }
+        return true;
     }
 
     saveClicked(){
@@ -63,15 +95,6 @@ class MDM extends React.Component {
     }
     deleteRow(cid){
         this.props.onMdmMasterDeleteRow(cid);
-    }
-    editable(cell, row, rowIndex, columnIndex){
-        if(this.props.updateInProgress) return false;
-        if(row['id'] === -1 && row['rowIsNew'] === true)return true;
-        if (this.props.masterData.colDefs[columnIndex].writeable === false)
-            return false;
-        if(indexOf(this.props.masterData.recIdsUnderReview, row['id'], 0) !== -1)
-            return false;
-        return true;
     }
 
     render() {
