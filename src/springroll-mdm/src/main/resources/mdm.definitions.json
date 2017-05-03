@@ -56,8 +56,10 @@
         "group" : "Test",
         "masterClassName" : "com.springrollexample.orm.entities.TestTableToCheckMdm",
         "colDefs" : [
-          {"name": "stringVariable",  "writeable" : true, "type": "text", "width" : "500px"},
+          {"name": "stringVariable",  "writeable" : true, "type": "text", "width" : "200px"},
           {"name": "booleanVariable", "writeable" : true, "type": "boolean", "width" : "150px"},
+          {"name": "localDateVariable", "writeable" : true, "type": "date", "width" : "150px"},
+          {"name": "localDateTimeVariable", "writeable" : true, "type": "datetime", "width" : "150px"},
           {"name": "intVariable", "writeable" : true, "type": "int", "width" : "150px"},
           {"name": "floatVariable", "writeable" : true, "type": "num", "width" : "150px"},
           {"name": "longVariable", "writeable" : true, "type": "int", "width" : "150px"},
@@ -70,9 +72,7 @@
           {"name": "doubleCVariable", "writeable" : true, "type": "num", "width" : "150px"},
           {"name": "bigDecimalVariable", "writeable" : true, "type": "num", "width" : "150px"},
           {"name": "bigIntegerVariable", "writeable" : true, "type": "int", "width" : "150px"},
-          {"name": "enumType", "writeable" : true, "type": "int", "lovSource" : "setTime", "width" : "150px"},
-          {"name": "localDateVariable", "writeable" : true, "type": "date", "width" : "150px"},
-          {"name": "localDateTimeVariable", "writeable" : true, "type": "datetime", "width" : "150px"}
+          {"name": "enumType", "writeable" : true, "type": "int", "lovSource" : "setTime", "width" : "150px"}
         ]
       }
   ],
