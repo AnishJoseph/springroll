@@ -47,9 +47,12 @@ class GridReport extends React.Component {
             <span>
                 <SpringrollTable customButtons={customButtons} data={gridData.data} columnDefinitions={gridData.columns} options={this.props.options} editable={false} keyName={gridData.key} title={Application.Localize(this.props.gridName)}/>
                 {
-                    /* Show the parameters in a MODAL ONLY if the filter is to be shown AND this grid has parameters */
+                    /*  Show the parameters in a MODAL ONLY if the filter is to be shown AND this grid has parameters
+                        We set classesForBody as 'noscroll' -  it can be anything - if this is set to null or empty
+                        the Modal becomes scrollable - for params we dont want it scrollable - so we set it to something
+                    * */
                     (this.state.showFilter &&  this.props.gridParams !== undefined && this.props.gridParams.length > 0) &&
-                    <ReviewModal onModalClosed={this.handleModalClosed} title={message}>
+                    <ReviewModal onModalClosed={this.handleModalClosed} title={message} classesForBody="noscroll">
                         <this.ParameterForm params={this.props.gridParams} onSubmit={this.paramsSelected} />
                     </ReviewModal>
                 }

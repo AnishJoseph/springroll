@@ -24,12 +24,13 @@ class ReviewModal extends React.Component {
     }
     render() {
         let footerNeeded = this.props.onSubmit !== undefined || this.props.onDismissAlert !== undefined;
+        let classesForBody = this.props.classesForBody || 'scrollable';
         return (
             <Modal show={this.state.showModal} onHide={this.close} bsSize="large">
                 <Modal.Header closeButton>
                     <Modal.Title>{this.props.title}</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="scrollable">
+                <Modal.Body className={classesForBody}>
                     {this.props.children}
                 </Modal.Body>
                 {
