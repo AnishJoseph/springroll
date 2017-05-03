@@ -43,14 +43,14 @@ export const dateEditor = (onUpdate, props) => (<DateEditor onUpdate={ onUpdate 
 
 class DateEditor extends React.Component {
     focus() {
-        //FIXME - need to talk to react-bootstrap-table and see if we can avoid this dummy focus
+        this.nameInput.focus();
     }
     render() {
         let updateOnDateClick = !this.props.isDateTime;
 
         let dateFormat = this.props.isDateTime ? Application.getMomentFormatForDateTime() : Application.getMomentFormatForDate();
         return (<DateField
-                ref='inputRef'
+                ref={(input) => { this.nameInput = input; }}
                 value={this.props.defaultValue === undefined || this.props.defaultValue == ''? undefined: moment(this.props.defaultValue)}
                 dateFormat={dateFormat}
                 expanded={true}
