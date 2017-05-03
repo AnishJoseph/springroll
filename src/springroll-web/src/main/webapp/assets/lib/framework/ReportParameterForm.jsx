@@ -125,7 +125,7 @@ class ReportParameterForm extends Component {
                             }
                         </div>
                         <button className="submitButton" type="submit" >
-                            <span title={Application.Localize('Apply')} className=" submit glyphicon glyphicon-ok"/>
+                            <span title={Application.Localize('ui.Apply')} className=" submit glyphicon glyphicon-ok"/>
                         </button>
                     </form>
                 </div>
