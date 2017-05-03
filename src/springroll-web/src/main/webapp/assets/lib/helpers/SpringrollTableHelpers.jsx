@@ -32,6 +32,7 @@ export const selectEditor = (onUpdate, props) => {
             }
             let changedRowData = {id : props.row['id'], cid : props.row['cid'], cellName : props.cellName, cellValue : choices};
             props.onRowChange(changedRowData);
+            if(event.keyCode === 9)props.onKeyDown(event);
         }}
         multi={props.multi}
         value={props.defaultValue}
@@ -91,7 +92,7 @@ class PatternEditor extends React.Component {
 
     render() {
         return (
-            <input autoFocus style={{width :"100%"}} type="text" onChange={this.onChange} value={this.props.defaultValue} onBlur={this.onBlur}/>
+            <input autoFocus onKeyDown={this.props.onKeyDown} style={{width :"100%"}} type="text" onChange={this.onChange} value={this.props.defaultValue} onBlur={this.onBlur}/>
         )
     }
 }

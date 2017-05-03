@@ -177,7 +177,7 @@ class SpringrollTable extends React.Component {
                     <span id={this.props.title}>
                         <BootstrapTable  options={tableOptions} ref="table" data={this.props.data} striped hover search={false}
                                  keyField={this.props.keyName} height={this.props.height || '800px'} scrollTop={ 'Top' }
-                                 multiColumnSort={3} cellEdit={ cellEditProp } trClassName={ this.props.trClassFormat }>
+                                 multiColumnSort={3} cellEdit={ cellEditProp } trClassName={ this.props.trClassFormat } keyBoardNav>
                         {
                             this.props.columnDefinitions.map((colDef, index) => {
                                 let formatter = TextFormatter, dataFormatter, sorter = undefined, customEditor = undefined, filterValue, filterFormatted = false;
