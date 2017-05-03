@@ -34,6 +34,7 @@ const renderDate = ({ input, isDateTime }) => {
             updateOnDateClick={updateOnDateClick}
             collapseOnDateClick={true}
             onChange={ (dateString, {dateMoment}) => {
+                if(dateMoment !== null)
                 input.onChange(dateMoment.valueOf());
             }}>
         </DateField>
