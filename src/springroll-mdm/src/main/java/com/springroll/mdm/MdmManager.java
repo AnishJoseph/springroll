@@ -287,7 +287,6 @@ import java.util.stream.Collectors;
 
     @Override
     public Map<String, List<String>> getMdmMasterNames(){
-        init();
         return mdmDefinitions.getMasters().stream().collect(Collectors.groupingBy(mdmDefn -> mdmDefn.getGroup(), Collectors.mapping(c -> c.getMaster(), Collectors.toList())));
     }
 
