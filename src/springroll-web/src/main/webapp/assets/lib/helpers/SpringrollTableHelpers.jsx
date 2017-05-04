@@ -123,7 +123,7 @@ class EditWrapper extends React.Component {
         this.focus = this.focus.bind(this);
     }
     focus() {
-        this.editor.focus();
+        if(this.editor !== undefined)this.editor.focus();
     }
     render() {
         let isEditable = this.props.editable(undefined,this.props.row, undefined,this.props.colIndex);
