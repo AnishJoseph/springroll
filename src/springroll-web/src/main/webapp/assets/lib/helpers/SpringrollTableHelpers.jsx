@@ -18,30 +18,33 @@ export function dateTimeSorter(a, b, order, sortField){
     }
 }
 
-export const selectEditor = (onUpdate, props) => {
-    return (<ReactSelect
-        ref='inputRef'
-        options={props.options}
-        onChange={ value => {
+export class SelectEditor extends React.Component {
+    focus() {
+        this.nameInput.focus();
+    }
+    render() {
+        return (<ReactSelect
+            ref={(input) => { this.nameInput = input; }}
+            options={this.props.options}
+            onChange={ value => {
             if (value == null)return;
             let choices = undefined;
-            if (props.multi) {
+            if (this.props.multi) {
                 choices = map(value, 'value');
             } else {
                 choices = value.value;
             }
-            let changedRowData = {id : props.row['id'], cid : props.row['cid'], cellName : props.cellName, cellValue : choices};
-            props.onRowChange(changedRowData);
-            if(event.keyCode === 9)props.onKeyDown(event);
+            let changedRowData = {id : this.props.row['id'], cid : this.props.row['cid'], cellName : this.props.cellName, cellValue : choices};
+            this.props.onRowChange(changedRowData);
+            if(event.keyCode === 9)this.props.onKeyDown(event);
         }}
-        multi={props.multi}
-        value={props.defaultValue}
-    />)
-};
+            multi={this.props.multi}
+            value={this.props.defaultValue}
+        />)
+    }
+}
 
-export const dateEditor = (onUpdate, props) => (<DateEditor onUpdate={ onUpdate } {...props}/>);
-
-class DateEditor extends React.Component {
+export class DateEditor extends React.Component {
     focus() {
         this.nameInput.focus();
     }
@@ -66,9 +69,7 @@ class DateEditor extends React.Component {
     }
 }
 
-export const patternEditor = (onUpdate, props) => (<PatternEditor onUpdate={ onUpdate } {...props}/>);
-
-class PatternEditor extends React.Component {
+export class PatternEditor extends React.Component {
     constructor(props){
         super(props);
         this.onChange = this.onChange.bind(this);
@@ -79,8 +80,6 @@ class PatternEditor extends React.Component {
         this.props.onUpdate(this.props.defaultValue);
     }
     focus() {
-        console.log("focus");
-        //FIXME - need to talk to react-bootstrap-table and see if we can avoid this dummy focus
     }
     onChange(event){
         let value = event.target.value;
@@ -96,8 +95,6 @@ class PatternEditor extends React.Component {
         )
     }
 }
-
-export const customEditorHandler = (onUpdate, props) => (<props.editor onUpdate={ onUpdate } {...props}/>);
 
 export function WrapperForFormatter(cell, formatter, coDef, row, updateResponse) {
     let Formatter = formatter;
@@ -117,6 +114,24 @@ export function WrapperForFormatter(cell, formatter, coDef, row, updateResponse)
             <div className={className}><span style={{paddingLeft: "4px"}}>{errorMessage}</span></div>
         </span>
     );
+}
+
+export const WrapperForEditor = (onUpdate, props) => (<EditWrapper onUpdate={ onUpdate } {...props}/>);
+
+class EditWrapper extends React.Component {
+    constructor(props){
+        super(props);
+        this.focus = this.focus.bind(this);
+    }
+    focus() {
+        this.editor.focus();
+    }
+    render() {
+        let isEditable = this.props.editable(undefined,this.props.row, undefined,this.props.colIndex);
+        if(isEditable)
+            return <this.props.editor ref={(input) => { this.editor = input; }} onUpdate={ this.props.onUpdate } {...this.props}/>
+        return (<this.props.formatter colDef={this.props.colDef} value={this.props.defaultValue}/>)
+    }
 }
 
 export const DeleteFormatter = (cell, row, onDeleteRow) => {

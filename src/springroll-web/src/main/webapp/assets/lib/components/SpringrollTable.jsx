@@ -4,8 +4,7 @@ import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 var moment = require('moment');
 import {each, map, indexOf, filter}  from 'lodash';
 import DebounceInput from 'react-debounce-input';
-import {dateTimeSorter, selectEditor, dateEditor, patternEditor, customEditorHandler} from 'SpringrollTableHelpers';
-import { DeleteFormatter, WrapperForFormatter, GridNumberFormatter} from 'SpringrollTableHelpers';
+import {dateTimeSorter, SelectEditor, DateEditor, PatternEditor, WrapperForEditor, DeleteFormatter, WrapperForFormatter, GridNumberFormatter} from 'SpringrollTableHelpers';
 import {intPattern, floatPattern, TextFormatter, DateTimeFormatter, DateFormatter, BooleanFormatter, ArrayFormatter, BooleanToString, DateTimeToString, DateToString} from 'Formatters';
 import {CSVLink} from 'react-csv';
 var json2csv = require('json2csv');
@@ -180,65 +179,52 @@ class SpringrollTable extends React.Component {
                                  multiColumnSort={3} cellEdit={ cellEditProp } trClassName={ this.props.trClassFormat } keyBoardNav>
                         {
                             this.props.columnDefinitions.map((colDef, index) => {
-                                let formatter = TextFormatter, dataFormatter, sorter = undefined, customEditor = undefined, filterValue, filterFormatted = false;
+                                let formatter = TextFormatter, dataFormatter, sorter = undefined, customEditorParameters = undefined, filterValue, filterFormatted = false;
                                 if (colDef.type == 'date' || colDef.type === 'datetime') {
                                     let isDateTime = colDef.type === 'datetime';
                                     formatter = isDateTime ? DateTimeFormatter : DateFormatter;
-                                    customEditor = {
-                                        getElement: dateEditor,
-                                        customEditorParameters: {isDateTime: isDateTime}
-                                    };
+                                    customEditorParameters = { editor: DateEditor, isDateTime: isDateTime};
                                     sorter = dateTimeSorter;
                                     filterValue = (cell, row) => isDateTime ? moment(cell).format(Application.getMomentFormatForDateTime()) : moment(cell).format(Application.getMomentFormatForDate());
                                 } else if (colDef.type == 'boolean') {
                                     formatter = BooleanFormatter;
-                                    customEditor = {
-                                        getElement: selectEditor,
-                                        customEditorParameters: {options: booleanLovList, multi: false}
-                                    };
-                                } else if (colDef.type == 'int') {
-                                    customEditor = {getElement: patternEditor, customEditorParameters: {type: colDef.type}};
-                                } else if (colDef.type == 'num') {
-                                    customEditor = {getElement: patternEditor, customEditorParameters: {type: colDef.type}};
+                                    customEditorParameters = { editor: SelectEditor, options: booleanLovList, multi: false};
+                                } else if (colDef.type == 'int' || colDef.type == 'num') {
+                                    customEditorParameters = { editor: PatternEditor, type: colDef.type};
                                 } else if (colDef.type == 'num-fmt') {
                                     formatter = GridNumberFormatter;
                                 } else {
-                                    customEditor = {getElement: patternEditor, customEditorParameters: {type: colDef.type}};
+                                    customEditorParameters = { editor: PatternEditor, type: colDef.type};
                                 }
 
                                 if (colDef.lovList != undefined && colDef.lovList != null) {
-                                    customEditor = {
-                                        getElement: selectEditor,
-                                        customEditorParameters: {options: colDef.lovList, multi: colDef.multiSelect}
-                                    };
+                                    customEditorParameters = { editor: SelectEditor, options: colDef.lovList, multi: colDef.multiSelect};
                                     if (colDef.multiSelect) formatter = ArrayFormatter;
-                                }
-                                if (customEditor !== undefined) {
-                                    customEditor.customEditorParameters.cellName = colDef.name;
                                 }
 
                                 /* If the caller has specified a formatter (tied to a type) then use that formatter - it overrides everything else */
                                 if (options.formatters && options.formatters[colDef.name]) {
                                     formatter = options.formatters[colDef.name];
                                 }
-                                /* If the caller has specified a sorter (tied to a type) then use that sorter - it overrides everything else */
-                                if (options.sorter && options.sorter[colDef.type]) {
-                                    sorter = options.sorter[colDef.type];
+                                /* If the caller has specified a sorter (tied to a name) then use that sorter - it overrides everything else */
+                                if (options.sorter && options.sorter[colDef.name]) {
+                                    sorter = options.sorter[colDef.name];
                                 }
                                 /* If the caller has specified an editor (tied to a type) then use that editor - it overrides everything else */
-                                if (options.editor && options.editor[colDef.type]) {
-                                    customEditor = {
-                                        getElement: customEditorHandler,
-                                        customEditorParameters: {editor: options.editor[colDef.type], colDef: colDef}
-                                    };
+                                if (options.editor && options.editor[colDef.name]) {
+                                    customEditorParameters = { editor: options.editor[colDef.name]};
                                 }
 
                                 dataFormatter = (cell, row) => WrapperForFormatter(cell, formatter, colDef, row, that.props.updateResponse);
-                                if (customEditor !== undefined) {
-                                    customEditor.customEditorParameters.onRowChange = this.props.onRowChange;
-                                    customEditor.customEditorParameters.cellName = colDef.name;
-                                }
-                                let align = colDef.align == undefined ? 'left' : colDef.align.toLowerCase();
+                                let wrapperForEditor = undefined;
+                                customEditorParameters.onRowChange = this.props.onRowChange;
+                                customEditorParameters.cellName = colDef.name;
+                                customEditorParameters.editable = this.props.editable;
+                                customEditorParameters.colIndex = index;
+                                customEditorParameters.formatter = formatter;
+                                customEditorParameters.colDef = colDef;
+                                wrapperForEditor = { getElement : WrapperForEditor, customEditorParameters : customEditorParameters};
+                                let align = colDef.align === undefined ? 'left' : colDef.align.toLowerCase();
 
                                 return (
                                     <TableHeaderColumn
@@ -251,7 +237,7 @@ class SpringrollTable extends React.Component {
                                         key={index}
                                         dataFormat={dataFormatter}
                                         dataField={colDef.name}
-                                        customEditor={ customEditor }
+                                        customEditor={ wrapperForEditor }
                                         editable={ this.props.editable === undefined? false : this.props.editable  }
                                         filterValue={filterValue }
                                         searchable={this.props.searchable === undefined ? true : this.props.searchable}
