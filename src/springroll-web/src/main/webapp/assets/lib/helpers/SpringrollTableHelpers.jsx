@@ -26,18 +26,21 @@ export class SelectEditor extends React.Component {
         return (<ReactSelect
             ref={(input) => { this.nameInput = input; }}
             options={this.props.options}
-            onChange={ value => {
-            if (value == null)return;
-            let choices = undefined;
-            if (this.props.multi) {
-                choices = map(value, 'value');
-            } else {
-                choices = value.value;
+            onChange={
+                value => {
+                    if (value == null)return;
+                    let choices = undefined;
+                    if (this.props.multi) {
+                        choices = map(value, 'value');
+                    } else {
+                        choices = value.value;
+                    }
+                    let changedRowData = {id : this.props.row['id'], cid : this.props.row['cid'], cellName : this.props.cellName, cellValue : choices};
+                    this.props.onRowChange(changedRowData);
+                    //this.props.onUpdate(this.props.defaultValue);
+                    this.props.onKeyDown(event);
+                }
             }
-            let changedRowData = {id : this.props.row['id'], cid : this.props.row['cid'], cellName : this.props.cellName, cellValue : choices};
-            this.props.onRowChange(changedRowData);
-            if(event.keyCode === 9)this.props.onKeyDown(event);
-        }}
             multi={this.props.multi}
             value={this.props.defaultValue}
         />)
@@ -73,14 +76,10 @@ export class PatternEditor extends React.Component {
     constructor(props){
         super(props);
         this.onChange = this.onChange.bind(this);
-        this.onBlur = this.onBlur.bind(this);
         this.pattern = props.type == 'int'? intPattern : props.type == 'num' ? floatPattern : undefined;
     }
-    onBlur(){
-        this.props.onUpdate(this.props.defaultValue);
-    }
-    focus() {
-    }
+    focus() {}
+
     onChange(event){
         let value = event.target.value;
         if(this.pattern === undefined || this.pattern.test(value)){
@@ -91,7 +90,7 @@ export class PatternEditor extends React.Component {
 
     render() {
         return (
-            <input autoFocus onKeyDown={this.props.onKeyDown} style={{width :"100%"}} type="text" onChange={this.onChange} value={this.props.defaultValue} onBlur={this.onBlur}/>
+            <input autoFocus onKeyDown={this.props.onKeyDown} style={{width :"100%"}} type="text" onChange={this.onChange} value={this.props.defaultValue}/>
         )
     }
 }
