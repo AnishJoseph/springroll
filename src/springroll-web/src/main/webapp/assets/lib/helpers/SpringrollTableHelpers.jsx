@@ -43,6 +43,9 @@ export class SelectEditor extends React.Component {
             }
             multi={this.props.multi}
             value={this.props.defaultValue}
+            onInputKeyDown={(event) => {
+                if(event.keyCode === 27) this.props.onKeyDown(event);
+            } }
         />)
     }
 }

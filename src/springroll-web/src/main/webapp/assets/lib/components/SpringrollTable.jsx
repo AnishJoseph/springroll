@@ -262,16 +262,3 @@ class SpringrollTable extends React.Component {
 
 
 export default SpringrollTable;
-
-/*
- {
- this.props.onAddRow !== undefined &&
- <TableHeaderColumn width={"50px"} key={'__deleteKey'} dataField={'delete'} editable={ false }
- dataFormat={(cell, row) => DeleteFormatter(cell, row, this.deleteRow)}> {''}
- </TableHeaderColumn>
- }
-
- */
-
-
-
