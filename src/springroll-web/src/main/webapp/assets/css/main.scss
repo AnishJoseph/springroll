@@ -312,3 +312,7 @@ $select-input-bg:                   $input-bg;
 .mdmTable{
   height: 36px;
 }
+.mdm-body {
+  height: calc(100vh - #{$rootMenuHeight} -  2*#{$marginOnTopAndBottomForBody} - 90px );
+  overflow: scroll;
+}

@@ -173,7 +173,7 @@ class SpringrollTable extends React.Component {
                     </div>
                 </div>
                 {this.props.data &&
-                    <span id={this.props.title}>
+                    <div className="mdm-body">
                         <BootstrapTable  options={tableOptions} ref="table" data={this.props.data} striped hover search={false}
                                  keyField={this.props.keyName} height={this.props.height || '800px'} scrollTop={ 'Top' }
                                  multiColumnSort={3} cellEdit={ cellEditProp } trClassName={ this.props.trClassFormat } keyBoardNav>
@@ -253,7 +253,7 @@ class SpringrollTable extends React.Component {
                                            dataFormat={(cell, row) => DeleteFormatter(cell, row, this.deleteRow)}> {''}
                         </TableHeaderColumn>
                         </BootstrapTable>
-                    </span>
+                    </div>
                 }
             </span>
         );
