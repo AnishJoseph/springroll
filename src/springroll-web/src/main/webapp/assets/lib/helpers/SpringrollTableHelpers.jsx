@@ -62,7 +62,6 @@ export class DateEditor extends React.Component {
                 ref={(input) => { this.nameInput = input; }}
                 value={this.props.defaultValue === undefined || this.props.defaultValue == ''? undefined: moment(this.props.defaultValue)}
                 dateFormat={dateFormat}
-                expanded={true}
                 updateOnDateClick={updateOnDateClick}
                 onChange={ (dateString, {dateMoment}) => {
                     if(dateMoment == null || dateMoment == undefined)return;
