@@ -1,0 +1,37 @@
+FIX Overflow - headers for mdm editor and mdm moreinfo - headers vaishing while scrolling
+
+1) User context - On the syncronous side it is set in SwitchUserFilter (i.e as the HTTP request comes in the context is set for that threa). On the asynchronous side the context is set in JmsEntryPoint (as the event comes off the JMS buss)
+
+
+MDM
+~~~
+1) validation annotations with message - the message value will be used as a message key in server.messages.properties
+
+UI
+~~
+Any property in the properties file (default springroll.properties) that start with "ui." will be available in javascript via Application.getProperty()
+
+i18n
+~~~~
+Apps can have one rerource bundle - any prop key that starts wil 'ui.' will will be available in javascript via Application.Localize
+Application i18n bundle should be named sr.application.messages
+
+
+WEBPACK
+~~~~~~~
+webpack --config debug.webpack.config.js --watch
+
+
+
+Dynamically Updating Grids
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+1) Define a grid in grid.definitions.json
+2) The first column MUST be the key (normally ID of the row) - the column itself can be hidden
+3) Subscribe to the channel that gets the updates -the second param of subscribe SHOULD be a function that returns an 'Action Creator' method.
+This ensures that when a push message is received the infra will invoke the action creator.
+4) Write the appropriate reducers etc for that action
+5) All col headers in the grid will be prepended with ui. - for i18n
+
+
+webpack -d --config webpack.debug.config.js --watch
+node_modules/.bin/webpack-dev-server -d --config webpack.debug.config.js  --port 9080 --inline 
