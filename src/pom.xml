@@ -26,7 +26,7 @@
         <apache.activemq.version.activeio>3.1.4</apache.activemq.version.activeio>
         <aspectj.version>1.8.9</aspectj.version>
         <cometd.version>3.0.10</cometd.version>
-        <apache.commons.io.version>2.4</apache.commons.io.version>
+        <apache.commons.io.version>2.7</apache.commons.io.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
